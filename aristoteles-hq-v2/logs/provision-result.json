@@ -1,0 +1,71 @@
+{
+  "guildId": "1486463776323797142",
+  "createdAt": "2026-03-25T21:44:47.039Z",
+  "created": {
+    "roles": [
+      "Aurelius",
+      "Aristoteles",
+      "Leonardo",
+      "Michelangelo",
+      "Isaac",
+      "Julius",
+      "Steve",
+      "Carl",
+      "Inner Circle",
+      "Observer",
+      "System",
+      "Archive Keeper",
+      "Silent Worker"
+    ],
+    "categories": [
+      "ENTRY",
+      "COMMAND DECK",
+      "CREATIVE",
+      "BUILD",
+      "RESEARCH",
+      "OPS_AND_COMMS",
+      "SYSTEMS",
+      "CRITICAL_REVIEW",
+      "MEMORY_AND_ARCHIVE"
+    ],
+    "channels": [
+      "welcome",
+      "rules-of-engagement",
+      "mission-control",
+      "decisions-for-aurelius",
+      "daily-briefing",
+      "strategic-memos",
+      "priority-queue",
+      "leonardo-studio",
+      "brand-language",
+      "campaigns-and-concepts",
+      "michelangelo-workshop",
+      "prototype-drops",
+      "ship-log",
+      "isaac-lab",
+      "market-intelligence",
+      "tools-and-benchmarks",
+      "julius-desk",
+      "drafts-and-messages",
+      "tracking-board",
+      "steve-lab",
+      "infrastructure",
+      "automation-pipeline",
+      "carl-red-team",
+      "risk-register",
+      "pressure-tests",
+      "completed-projects",
+      "lessons-learned",
+      "reference-library",
+      "graveyard"
+    ],
+    "posts": [
+      "Posted starter content in #welcome",
+      "Posted starter content in #rules-of-engagement",
+      "Posted starter content in #mission-control",
+      "Posted starter content in #daily-briefing",
+      "Posted starter content in #decisions-for-aurelius",
+      "Posted starter content in #carl-red-team"
+    ]
+  }
+}
