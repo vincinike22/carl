@@ -1,0 +1,12 @@
+{
+  "name": "aristoteles-hq-v2",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "provision:discord": "node scripts/provision-discord.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.25.1"
+  }
+}
