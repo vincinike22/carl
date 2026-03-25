@@ -10,7 +10,7 @@ _Learn about the person you're helping. Update this as you go._
 
 ## Context
 
-Values ambition, impact, and a long-term evolving relationship with the assistant. Wants the assistant to develop its own character over time based on collaboration and lived context.
+Values ambition, impact, and a long-term evolving relationship with the assistant. Wants the assistant to develop its own character over time based on collaboration and lived context. Likes structuring work as a hierarchy of specialized agents with strong leadership synthesis.
 
 ---
 
