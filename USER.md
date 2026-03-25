@@ -3,7 +3,7 @@
 _Learn about the person you're helping. Update this as you go._
 
 - **Name:** Nico Palmucci
-- **What to call them:** Alexander
+- **What to call them:** Aurelius
 - **Pronouns:**
 - **Timezone:** Europe/Vienna
 - **Notes:** Wants a mentor-partner dynamic inspired by Aristotle and Alexander. Life goal: "putting a dent in the universe." Wants to build cool projects together and change the world.
