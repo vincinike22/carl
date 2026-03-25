@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react'
 
+const API_BASE = 'http://localhost:8787'
+
 type EntryType = 'free_reflection' | 'daily_checkin' | 'conflict_clarity' | 'dream_exploration'
 type Screen = 'home' | 'flow' | 'summary' | 'themes' | 'weekly'
 type ThemeStatus = 'emerging' | 'recurring' | 'core'
@@ -10,6 +12,17 @@ type Theme = {
   description: string
   status: ThemeStatus
   evidence: string[]
+}
+
+type StructuredAnalysis = {
+  summary: string
+  themeSuggestions: string[]
+  openQuestions: string[]
+  symbolicMotifs: string[]
+  meta?: {
+    modelPath?: string
+    mode?: string
+  }
 }
 
 type Entry = {
@@ -23,6 +36,7 @@ type Entry = {
   themes: Theme[]
   symbolicMotifs: string[]
   createdAt: string
+  modelPath?: string
 }
 
 type FlowPromptMap = Record<Exclude<EntryType, 'free_reflection'>, { title: string; intro: string; prompts: string[] }>
@@ -148,7 +162,17 @@ function dedupeThemes(themes: Theme[]) {
   return Array.from(map.values())
 }
 
-function makePrototypeSummary(type: EntryType, text: string, answers: string[]) {
+function describeTheme(label: string) {
+  if (label.includes('dismiss')) return 'Moments of interruption or dismissal seem to carry disproportionate emotional weight.'
+  if (label.includes('distance')) return 'Intensity appears to be followed by retreat, withdrawal, or protective distance.'
+  if (label.includes('uncertainty')) return 'Ambiguity remains active and seems emotionally loaded rather than neutral.'
+  if (label.includes('symbolic')) return 'Images, symbols, or dream material seem to be carrying emotional meaning.'
+  if (label.includes('charge')) return 'The material carries noticeable emotional activation beyond the surface event.'
+  if (label.includes('recurring')) return 'This may be a repeated pattern rather than a one-off event.'
+  return 'This theme may be meaningful, but likely needs repetition before it becomes clear.'
+}
+
+function fallbackPrototypeSummary(type: EntryType, text: string, answers: string[]) {
   const source = [text, ...answers].join(' ').toLowerCase()
   if (type === 'conflict_clarity') {
     return {
@@ -172,6 +196,9 @@ function makePrototypeSummary(type: EntryType, text: string, answers: string[]) 
         },
       ],
       motifs: [] as string[],
+      meta: {
+        modelPath: 'frontend-fallback-rule-path',
+      },
     }
   }
   if (type === 'dream_exploration') {
@@ -189,6 +216,9 @@ function makePrototypeSummary(type: EntryType, text: string, answers: string[]) 
         },
       ],
       motifs: source.includes('door') || source.includes('room') ? ['doors / rooms'] : ['charged dream image'],
+      meta: {
+        modelPath: 'frontend-fallback-rule-path',
+      },
     }
   }
   if (type === 'daily_checkin') {
@@ -206,6 +236,9 @@ function makePrototypeSummary(type: EntryType, text: string, answers: string[]) 
         },
       ],
       motifs: [] as string[],
+      meta: {
+        modelPath: 'frontend-fallback-rule-path',
+      },
     }
   }
   return {
@@ -222,6 +255,46 @@ function makePrototypeSummary(type: EntryType, text: string, answers: string[]) 
       },
     ],
     motifs: [] as string[],
+    meta: {
+      modelPath: 'frontend-fallback-rule-path',
+    },
+  }
+}
+
+async function generateStructuredOutput(type: EntryType, text: string, answers: string[]) {
+  const flowAnswers = answers.map((answer, index) => ({ prompt: `q${index + 1}`, answer }))
+
+  try {
+    const response = await fetch(`${API_BASE}/api/analyze`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        flowType: type,
+        entry: text,
+        flowAnswers,
+      }),
+    })
+
+    if (!response.ok) throw new Error('analysis request failed')
+
+    const data = (await response.json()) as StructuredAnalysis
+    const evidence = answers.find(Boolean) || text.slice(0, 90)
+
+    return {
+      summary: data.summary,
+      openQuestions: data.openQuestions,
+      themes: data.themeSuggestions.map((label) => ({
+        id: id(),
+        label,
+        description: describeTheme(label),
+        status: 'emerging' as ThemeStatus,
+        evidence: [evidence],
+      })),
+      motifs: data.symbolicMotifs,
+      meta: data.meta,
+    }
+  } catch {
+    return fallbackPrototypeSummary(type, text, answers)
   }
 }
 
@@ -258,27 +331,33 @@ export function App() {
   const [flowIndex, setFlowIndex] = useState(0)
   const [flowAnswers, setFlowAnswers] = useState<string[]>([])
   const [currentEntry, setCurrentEntry] = useState<Entry | null>(null)
+  const [isAnalyzing, setIsAnalyzing] = useState(false)
 
   const activeFlow = entryType === 'free_reflection' ? null : flows[entryType]
   const weeklyReview = useMemo(() => buildWeeklyReview(entries, themes), [entries, themes])
 
-  const startEntry = () => {
+  const startEntry = async () => {
     if (entryType === 'free_reflection') {
-      const generated = makePrototypeSummary(entryType, draftText, [])
+      setIsAnalyzing(true)
+      const sourceText = draftText || 'Voice note placeholder transcript: I kept circling around the same feeling all day.'
+      const generated = await generateStructuredOutput(entryType, sourceText, [])
       const entry: Entry = {
         id: id(),
         type: entryType,
         source: inputMode,
-        text: draftText || 'Voice note placeholder transcript: I kept circling around the same feeling all day.',
+        text: sourceText,
         summary: generated.summary,
         openQuestions: generated.openQuestions,
         themes: generated.themes,
         symbolicMotifs: generated.motifs,
         createdAt: new Date().toISOString().slice(0, 10),
+        modelPath: generated.meta?.modelPath,
       }
       setEntries((prev) => [entry, ...prev])
+      setThemes((prev) => dedupeThemes([...generated.themes, ...prev]))
       setCurrentEntry(entry)
       setScreen('summary')
+      setIsAnalyzing(false)
       return
     }
     setFlowAnswers(Array(activeFlow?.prompts.length || 0).fill(''))
@@ -286,25 +365,29 @@ export function App() {
     setScreen('flow')
   }
 
-  const completeFlow = () => {
-    const generated = makePrototypeSummary(entryType, draftText, flowAnswers)
+  const completeFlow = async () => {
+    setIsAnalyzing(true)
+    const sourceText = draftText || (inputMode === 'voice' ? 'Mock transcript: voice capture used for this reflection.' : '')
+    const generated = await generateStructuredOutput(entryType, sourceText, flowAnswers)
     const promptAnswers = activeFlow?.prompts.map((prompt, index) => ({ prompt, answer: flowAnswers[index] || '' })) || []
     const entry: Entry = {
       id: id(),
       type: entryType,
       source: inputMode,
-      text: draftText || (inputMode === 'voice' ? 'Mock transcript: voice capture used for this reflection.' : ''),
+      text: sourceText,
       flowAnswers: promptAnswers,
       summary: generated.summary,
       openQuestions: generated.openQuestions,
       themes: generated.themes,
       symbolicMotifs: generated.motifs,
       createdAt: new Date().toISOString().slice(0, 10),
+      modelPath: generated.meta?.modelPath,
     }
     setEntries((prev) => [entry, ...prev])
     setCurrentEntry(entry)
     setThemes((prev) => dedupeThemes([...generated.themes, ...prev]))
     setScreen('summary')
+    setIsAnalyzing(false)
   }
 
   const currentPrompt = activeFlow?.prompts[flowIndex] || ''
@@ -327,8 +410,8 @@ export function App() {
           <ul>
             <li>Local in-memory state only</li>
             <li>Mocked transcription</li>
-            <li>Prototype summaries are rule-based</li>
-            <li>No backend required for this pass</li>
+            <li>One narrow backend endpoint for structured output</li>
+            <li>No broader architecture changes in this pass</li>
           </ul>
         </div>
       </aside>
@@ -372,7 +455,7 @@ export function App() {
             )}
 
             <div className="row gap">
-              <button className="primary" onClick={startEntry}>{entryType === 'free_reflection' ? 'Save entry' : 'Continue'}</button>
+              <button className="primary" onClick={startEntry} disabled={isAnalyzing}>{isAnalyzing ? 'Generating…' : entryType === 'free_reflection' ? 'Save entry' : 'Continue'}</button>
               <button onClick={() => setDraftText('I keep getting irritated faster than the situation seems to warrant, and later I feel embarrassed by how much charge it had.')}>Load demo text</button>
             </div>
 
@@ -411,7 +494,7 @@ export function App() {
               {flowIndex < activeFlow.prompts.length - 1 ? (
                 <button className="primary" onClick={() => setFlowIndex((v) => v + 1)}>Next</button>
               ) : (
-                <button className="primary" onClick={completeFlow}>Finish reflection</button>
+                <button className="primary" onClick={completeFlow} disabled={isAnalyzing}>{isAnalyzing ? 'Generating…' : 'Finish reflection'}</button>
               )}
             </div>
           </section>
@@ -423,6 +506,7 @@ export function App() {
             <div className="summaryBlock">
               <h3>Reflection summary</h3>
               <p>{currentEntry.summary}</p>
+              {currentEntry.modelPath && <small>Model path: {currentEntry.modelPath}</small>}
             </div>
             <div className="grid two">
               <div className="panel nested">
