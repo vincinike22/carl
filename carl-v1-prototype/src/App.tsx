@@ -70,7 +70,7 @@ const flows: FlowPromptMap = {
     intro: 'A short exploration of dream images, feeling tone, and possible waking-life resonance.',
     prompts: [
       'What happened in the dream? Describe it in your own words.',
-      'What image, figure, object, or scene stands out most strongly?',
+      'What image, figure, object, or scene stands out to you?',
       'What feeling stayed with you after waking?',
       'Does any part of the dream seem connected to your current waking life?',
       'Does anything in the dream feel familiar, recurring, or strangely charged?',
@@ -305,7 +305,7 @@ function buildWeeklyReview(entries: Entry[], themes: Theme[]) {
 
   return {
     overall:
-      'This week, a possible pattern appears around emotional charge rising quickly around perceived dismissal, uncertainty, or material that feels just out of reach. Across conflict and dream material, the repeated movement is toward protection, distance, or standing outside something not yet fully faced. The underlying tension may involve wanting clearer recognition while also guarding against exposure. This is still emerging, not settled.',
+      'This week, some material seems to gather around emotional charge rising quickly around perceived dismissal, uncertainty, or things that feel just out of reach. Across conflict and dream material, there may be a repeated movement toward protection, distance, or standing outside something not yet fully faced. These are working impressions rather than conclusions.',
     emotionalPatterns: topThemes.map((theme) => `${theme.label} — ${theme.description}`),
     conflictDynamics: [
       'Charge rises quickly after feeling interrupted or misread.',
@@ -393,224 +393,245 @@ export function App() {
   const currentPrompt = activeFlow?.prompts[flowIndex] || ''
 
   return (
-    <div className="shell">
-      <aside className="sidebar">
-        <div>
-          <div className="brand">Carl</div>
-          <div className="subtle">Private reflection prototype</div>
-        </div>
-        <nav className="nav">
-          <button className={screen === 'home' ? 'active' : ''} onClick={() => setScreen('home')}>Home / Capture</button>
-          <button className={screen === 'summary' ? 'active' : ''} onClick={() => setScreen('summary')} disabled={!currentEntry}>Entry Summary</button>
-          <button className={screen === 'themes' ? 'active' : ''} onClick={() => setScreen('themes')}>Themes Memory</button>
-          <button className={screen === 'weekly' ? 'active' : ''} onClick={() => setScreen('weekly')}>Weekly Review</button>
-        </nav>
-        <div className="panel small">
-          <strong>Prototype assumptions</strong>
-          <ul>
-            <li>Local in-memory state only</li>
-            <li>Mocked transcription</li>
-            <li>One narrow backend endpoint for structured output</li>
-            <li>No broader architecture changes in this pass</li>
-          </ul>
-        </div>
-      </aside>
+    <div className="app">
+      <div className="room">
+        <header className="roomHeader">
+          <div className="brandRow">
+            <div className="brand">Carl</div>
+            <div className="subtle">Private reflection, kept simple</div>
+          </div>
+          <nav className="roomNav">
+            <button className={screen === 'home' ? 'active' : ''} onClick={() => setScreen('home')}>Write</button>
+            <button className={screen === 'summary' ? 'active' : ''} onClick={() => setScreen('summary')} disabled={!currentEntry}>Current note</button>
+            <button className={screen === 'themes' ? 'active' : ''} onClick={() => setScreen('themes')}>Working notes</button>
+            <button className={screen === 'weekly' ? 'active' : ''} onClick={() => setScreen('weekly')}>Week</button>
+          </nav>
+        </header>
 
-      <main className="main">
-        {screen === 'home' && (
-          <section className="panel">
-            <h1>Home / Capture</h1>
-            <p className="muted">A private space for reflection and recurring patterns.</p>
-            <div className="row gap">
-              <div>
-                <label>Input mode</label>
-                <div className="segmented">
-                  <button className={inputMode === 'text' ? 'active' : ''} onClick={() => setInputMode('text')}>Write</button>
-                  <button className={inputMode === 'voice' ? 'active' : ''} onClick={() => setInputMode('voice')}>Voice</button>
+        <main className="surface">
+          {screen === 'home' && (
+            <section className="sheet">
+              <h1>A calm place to put words around what is here.</h1>
+              <p className="welcomeLine">You can begin anywhere: what happened today, what is still sitting with you, or what you do not want to lose.</p>
+              <p className="muted softNote">No performance. No fixing. Just a clear place to start.</p>
+
+              <div className="controls">
+                <div>
+                  <label>How you want to begin</label>
+                  <div className="segLine">
+                    <button className={inputMode === 'text' ? 'active' : ''} onClick={() => setInputMode('text')}>Write</button>
+                    <button className={inputMode === 'voice' ? 'active' : ''} onClick={() => setInputMode('voice')}>Voice</button>
+                  </div>
+                </div>
+                <div>
+                  <label>What kind of reflection this is</label>
+                  <select value={entryType} onChange={(e) => setEntryType(e.target.value as EntryType)}>
+                    <option value="free_reflection">Free reflection</option>
+                    <option value="daily_checkin">Daily check-in</option>
+                    <option value="conflict_clarity">Conflict clarity</option>
+                    <option value="dream_exploration">Dream exploration</option>
+                  </select>
                 </div>
               </div>
-              <div>
-                <label>Entry type</label>
-                <select value={entryType} onChange={(e) => setEntryType(e.target.value as EntryType)}>
-                  <option value="free_reflection">Free reflection</option>
-                  <option value="daily_checkin">Daily check-in</option>
-                  <option value="conflict_clarity">Conflict clarity</option>
-                  <option value="dream_exploration">Dream exploration</option>
-                </select>
-              </div>
-            </div>
 
-            {inputMode === 'text' ? (
-              <textarea
-                value={draftText}
-                onChange={(e) => setDraftText(e.target.value)}
-                placeholder="Write what happened, what you felt, or what image stays with you..."
-                rows={9}
-              />
-            ) : (
-              <div className="mockVoice">
-                <div className="voiceBox">Mock voice capture enabled</div>
-                <p className="muted">For prototype purposes, voice is treated as uploaded and transcribed when you continue.</p>
-              </div>
-            )}
-
-            <div className="row gap">
-              <button className="primary" onClick={startEntry} disabled={isAnalyzing}>{isAnalyzing ? 'Generating…' : entryType === 'free_reflection' ? 'Save entry' : 'Continue'}</button>
-              <button onClick={() => setDraftText('I keep getting irritated faster than the situation seems to warrant, and later I feel embarrassed by how much charge it had.')}>Load demo text</button>
-            </div>
-
-            <div className="panel nested">
-              <h3>Recent entries</h3>
-              <div className="stack">
-                {entries.map((entry) => (
-                  <button key={entry.id} className="entryCard" onClick={() => { setCurrentEntry(entry); setScreen('summary') }}>
-                    <div className="entryMeta">{entry.createdAt} · {titleForType(entry.type)}</div>
-                    <div>{entry.summary}</div>
-                  </button>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {screen === 'flow' && activeFlow && (
-          <section className="panel">
-            <h1>{activeFlow.title}</h1>
-            <p className="muted">{activeFlow.intro}</p>
-            <div className="progress">Question {flowIndex + 1} of {activeFlow.prompts.length}</div>
-            <label>{currentPrompt}</label>
-            <textarea
-              rows={8}
-              value={flowAnswers[flowIndex] || ''}
-              onChange={(e) => {
-                const next = [...flowAnswers]
-                next[flowIndex] = e.target.value
-                setFlowAnswers(next)
-              }}
-              placeholder="Write plainly. No need to conclude anything yet."
-            />
-            <div className="row gap">
-              <button onClick={() => setFlowIndex((v) => Math.max(0, v - 1))} disabled={flowIndex === 0}>Back</button>
-              {flowIndex < activeFlow.prompts.length - 1 ? (
-                <button className="primary" onClick={() => setFlowIndex((v) => v + 1)}>Next</button>
+              {inputMode === 'text' ? (
+                <div className="reflectiveInput">
+                  <textarea
+                    value={draftText}
+                    onChange={(e) => setDraftText(e.target.value)}
+                    placeholder="Write plainly. Stay close to what happened and what still feels important."
+                    rows={10}
+                  />
+                </div>
               ) : (
-                <button className="primary" onClick={completeFlow} disabled={isAnalyzing}>{isAnalyzing ? 'Generating…' : 'Finish reflection'}</button>
+                <div className="voiceNote">
+                  <p>Voice stays simple here. Continue when you are ready, and the reflection will use a transcribed note.</p>
+                </div>
               )}
-            </div>
-          </section>
-        )}
 
-        {screen === 'summary' && currentEntry && (
-          <section className="panel">
-            <h1>Entry Summary</h1>
-            <div className="summaryBlock">
-              <h3>Reflection summary</h3>
-              <p>{currentEntry.summary}</p>
-              {currentEntry.modelPath && <small>Model path: {currentEntry.modelPath}</small>}
-            </div>
-            <div className="grid two">
-              <div className="panel nested">
-                <h3>Possible recurring themes</h3>
-                {currentEntry.themes.map((theme) => (
-                  <div key={theme.id} className="themeChipBlock">
-                    <div className="themeHeader">
-                      <strong>{theme.label}</strong>
-                      <span>{theme.status}</span>
-                    </div>
-                    <p>{theme.description}</p>
-                    <small>Evidence: {theme.evidence[0]}</small>
-                  </div>
-                ))}
+              <div className="actionRow">
+                <button className="primary" onClick={startEntry} disabled={isAnalyzing}>{isAnalyzing ? 'Gathering your note…' : entryType === 'free_reflection' ? 'Keep this note' : 'Continue gently'}</button>
+                <button onClick={() => setDraftText('I keep getting irritated faster than the situation seems to warrant, and later I feel embarrassed by how much charge it had.')}>Try sample text</button>
               </div>
-              <div className="panel nested">
-                <h3>Open questions</h3>
-                <ul>
-                  {currentEntry.openQuestions.map((question) => <li key={question}>{question}</li>)}
-                </ul>
-                {currentEntry.symbolicMotifs.length > 0 && (
-                  <>
-                    <h3>Symbolic motifs</h3>
-                    <ul>
-                      {currentEntry.symbolicMotifs.map((motif) => <li key={motif}>{motif}</li>)}
-                    </ul>
-                  </>
+
+              <section className="sheet utilityNote">
+                <h3>Recent notes</h3>
+                <div className="entryList">
+                  {entries.map((entry) => (
+                    <button key={entry.id} className="entryCard" onClick={() => { setCurrentEntry(entry); setScreen('summary') }}>
+                      <div className="entryMeta">{entry.createdAt} · {titleForType(entry.type)}</div>
+                      <div className="entryText">{entry.summary}</div>
+                    </button>
+                  ))}
+                </div>
+              </section>
+            </section>
+          )}
+
+          {screen === 'flow' && activeFlow && (
+            <section className="sheet">
+              <div className="metaLine">Question {flowIndex + 1} of {activeFlow.prompts.length}</div>
+              <h1>{activeFlow.title}</h1>
+              <p className="muted">{activeFlow.intro}</p>
+              <p className="softNote muted">Take your time. Short answers are fine.</p>
+
+              <div className="promptBlock">
+                <p className="promptText">{currentPrompt}</p>
+              </div>
+
+              <textarea
+                rows={10}
+                value={flowAnswers[flowIndex] || ''}
+                onChange={(e) => {
+                  const next = [...flowAnswers]
+                  next[flowIndex] = e.target.value
+                  setFlowAnswers(next)
+                }}
+                placeholder="Write a few honest lines. You do not need to get it exactly right."
+              />
+
+              <div className="actionRow">
+                <button onClick={() => setFlowIndex((v) => Math.max(0, v - 1))} disabled={flowIndex === 0}>Back</button>
+                {flowIndex < activeFlow.prompts.length - 1 ? (
+                  <button className="primary" onClick={() => setFlowIndex((v) => v + 1)}>Continue</button>
+                ) : (
+                  <button className="primary" onClick={completeFlow} disabled={isAnalyzing}>{isAnalyzing ? 'Generating…' : 'Complete reflection'}</button>
                 )}
               </div>
-            </div>
-            <div className="row gap">
-              <button className="primary" onClick={() => { setThemes((prev) => dedupeThemes([...currentEntry.themes, ...prev])); setScreen('themes') }}>Accept themes</button>
-              <button onClick={() => setScreen('home')}>Back to capture</button>
-            </div>
-          </section>
-        )}
+            </section>
+          )}
 
-        {screen === 'themes' && (
-          <section className="panel">
-            <h1>Themes Memory</h1>
-            <p className="muted">Editable recurring themes across entries.</p>
-            <div className="stack">
-              {themes.map((theme) => (
-                <div key={theme.id} className="panel nested">
-                  <div className="themeHeader">
-                    <input
-                      value={theme.label}
-                      onChange={(e) => setThemes((prev) => prev.map((item) => item.id === theme.id ? { ...item, label: e.target.value } : item))}
-                    />
-                    <select
-                      value={theme.status}
-                      onChange={(e) => setThemes((prev) => prev.map((item) => item.id === theme.id ? { ...item, status: e.target.value as ThemeStatus } : item))}
-                    >
-                      <option value="emerging">emerging</option>
-                      <option value="recurring">recurring</option>
-                      <option value="core">core</option>
-                    </select>
-                  </div>
-                  <textarea
-                    rows={2}
-                    value={theme.description}
-                    onChange={(e) => setThemes((prev) => prev.map((item) => item.id === theme.id ? { ...item, description: e.target.value } : item))}
-                  />
-                  <small>Evidence: {theme.evidence.join(' · ')}</small>
+          {screen === 'summary' && currentEntry && (
+            <section className="sheet">
+              <div className="metaLine">{currentEntry.createdAt} · {titleForType(currentEntry.type)}</div>
+              <h1>Your note, held in one place.</h1>
+
+              <section className="archivalBlock">
+                <h3>Summary</h3>
+                <p className="summaryText">{currentEntry.summary}</p>
+                {currentEntry.modelPath && <div className="inlineMeta"><small>Model path: {currentEntry.modelPath}</small></div>}
+              </section>
+
+              <section className="archivalBlock">
+                <h3>Possible patterns</h3>
+                <div className="stack">
+                  {currentEntry.themes.map((theme) => (
+                    <div key={theme.id}>
+                      <div className="memoryHeader">
+                        <strong>{theme.label}</strong>
+                        <span className="statusWord">{theme.status}</span>
+                      </div>
+                      <p>{theme.description}</p>
+                      <small>Evidence: {theme.evidence[0]}</small>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-            <div className="row gap">
-              <button className="primary" onClick={() => setScreen('weekly')}>View weekly review</button>
-            </div>
-          </section>
-        )}
+              </section>
 
-        {screen === 'weekly' && (
-          <section className="panel">
-            <h1>Weekly Review</h1>
-            <p className="muted">Mar 25 – Mar 31</p>
-            <div className="summaryBlock">
-              <h3>Overall pattern summary</h3>
-              <p>{weeklyReview.overall}</p>
-            </div>
-            <div className="grid two">
-              <div className="panel nested">
-                <h3>Recurring emotional patterns</h3>
-                <ul>{weeklyReview.emotionalPatterns.map((item) => <li key={item}>{item}</li>)}</ul>
-                <h3>Recurring conflict dynamics</h3>
-                <ul>{weeklyReview.conflictDynamics.map((item) => <li key={item}>{item}</li>)}</ul>
+              <section className="archivalBlock">
+                <h3>Open questions</h3>
+                <ul className="archiveList">
+                  {currentEntry.openQuestions.map((question) => <li key={question} className="archiveItem">{question}</li>)}
+                </ul>
+              </section>
+
+              {currentEntry.symbolicMotifs.length > 0 && (
+                <section className="archivalBlock">
+                  <h3>Symbolic motifs</h3>
+                  <ul className="archiveList">
+                    {currentEntry.symbolicMotifs.map((motif) => <li key={motif} className="archiveItem">{motif}</li>)}
+                  </ul>
+                </section>
+              )}
+
+              <div className="actionRow">
+                <button className="primary" onClick={() => { setThemes((prev) => dedupeThemes([...currentEntry.themes, ...prev])); setScreen('themes') }}>Keep as a working note</button>
+                <button onClick={() => setScreen('home')}>Back to the page</button>
               </div>
-              <div className="panel nested">
-                <h3>Recurring symbolic motifs</h3>
-                <ul>{weeklyReview.symbolicMotifs.map((item) => <li key={item}>{item}</li>)}</ul>
-                <h3>Possible tensions / polarities</h3>
-                <ul>{weeklyReview.tensions.map((item) => <li key={item}>{item}</li>)}</ul>
+            </section>
+          )}
+
+          {screen === 'themes' && (
+            <section className="sheet">
+              <h1>Working notes</h1>
+              <p className="muted welcomeLine">These are not verdicts. They are provisional notes you can keep, revise, or let go of.</p>
+              <p className="muted">Provisional patterns that may be worth keeping, revising, or discarding.</p>
+              <div className="stack">
+                {themes.map((theme) => (
+                  <div key={theme.id} className="memoryRecord">
+                    <div className="memoryHeader">
+                      <input
+                        value={theme.label}
+                        onChange={(e) => setThemes((prev) => prev.map((item) => item.id === theme.id ? { ...item, label: e.target.value } : item))}
+                      />
+                      <select
+                        value={theme.status}
+                        onChange={(e) => setThemes((prev) => prev.map((item) => item.id === theme.id ? { ...item, status: e.target.value as ThemeStatus } : item))}
+                      >
+                        <option value="emerging">emerging</option>
+                        <option value="recurring">recurring</option>
+                        <option value="core">core</option>
+                      </select>
+                    </div>
+                    <textarea
+                      rows={3}
+                      value={theme.description}
+                      onChange={(e) => setThemes((prev) => prev.map((item) => item.id === theme.id ? { ...item, description: e.target.value } : item))}
+                    />
+                    <div className="inlineMeta"><small>Evidence: {theme.evidence.join(' · ')}</small></div>
+                  </div>
+                ))}
               </div>
-            </div>
-            <div className="panel nested">
-              <h3>Questions to carry forward</h3>
-              <ul>{weeklyReview.carryForward.map((item) => <li key={item}>{item}</li>)}</ul>
-              <h3>One grounded prompt for next week</h3>
-              <p>{weeklyReview.prompt}</p>
-            </div>
-          </section>
-        )}
-      </main>
+              <div className="actionRow">
+                <button className="primary" onClick={() => setScreen('weekly')}>Open weekly review</button>
+              </div>
+            </section>
+          )}
+
+          {screen === 'weekly' && (
+            <section className="sheet">
+              <div className="metaLine">Mar 25 – Mar 31</div>
+              <h1>Weekly review</h1>
+              <p className="muted welcomeLine">A slower pass over the week, gathered into one place without forcing a conclusion.</p>
+
+              <section className="weeklyBlock">
+                <h3>Overall pattern</h3>
+                <p className="summaryText">{weeklyReview.overall}</p>
+              </section>
+
+              <section className="weeklyBlock">
+                <h3>Patterns that may be repeating</h3>
+                <ul className="archiveList">{weeklyReview.emotionalPatterns.map((item) => <li key={item} className="archiveItem">{item}</li>)}</ul>
+              </section>
+
+              <section className="weeklyBlock">
+                <h3>Conflict dynamics that may be repeating</h3>
+                <ul className="archiveList">{weeklyReview.conflictDynamics.map((item) => <li key={item} className="archiveItem">{item}</li>)}</ul>
+              </section>
+
+              <section className="weeklyBlock">
+                <h3>Repeated images</h3>
+                <ul className="archiveList">{weeklyReview.symbolicMotifs.map((item) => <li key={item} className="archiveItem">{item}</li>)}</ul>
+              </section>
+
+              <section className="weeklyBlock">
+                <h3>Possible tensions to keep in view</h3>
+                <ul className="archiveList">{weeklyReview.tensions.map((item) => <li key={item} className="archiveItem">{item}</li>)}</ul>
+              </section>
+
+              <section className="weeklyBlock">
+                <h3>Questions to carry forward</h3>
+                <ul className="archiveList">{weeklyReview.carryForward.map((item) => <li key={item} className="archiveItem">{item}</li>)}</ul>
+              </section>
+
+              <section className="weeklyBlock">
+                <h3>Prompt to carry forward</h3>
+                <p>{weeklyReview.prompt}</p>
+              </section>
+            </section>
+          )}
+        </main>
+      </div>
     </div>
   )
 }
