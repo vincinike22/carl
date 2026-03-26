@@ -1,15 +1,28 @@
 import { useMemo, useState } from 'react'
 
+const API_BASE = 'http://localhost:8787'
+
 type EntryType = 'free_reflection' | 'daily_checkin' | 'conflict_clarity' | 'dream_exploration'
 type Screen = 'home' | 'flow' | 'summary' | 'themes' | 'weekly'
-type ThemeStatus = 'emerging' | 'recurring' | 'core'
+type RecurrenceStrength = 'weak' | 'strong'
 
-type Theme = {
+type Investigation = {
+  patternHypothesis: string
+  counterpattern: string
+  unproven: string
+  chargedFragment: string
+  possibleDisproportion: string
+  unresolvedContradiction: string
+  openQuestions: string[]
+  repeatedImages: string[]
+}
+
+type PatternRecord = {
   id: string
   label: string
   description: string
-  status: ThemeStatus
-  evidence: string[]
+  recurrence: RecurrenceStrength
+  evidence: { entryId: string; createdAt: string; line: string }[]
 }
 
 type Entry = {
@@ -18,10 +31,7 @@ type Entry = {
   source: 'text' | 'voice'
   text: string
   flowAnswers?: { prompt: string; answer: string }[]
-  summary: string
-  openQuestions: string[]
-  themes: Theme[]
-  symbolicMotifs: string[]
+  investigation: Investigation
   createdAt: string
 }
 
@@ -30,46 +40,40 @@ type FlowPromptMap = Record<Exclude<EntryType, 'free_reflection'>, { title: stri
 const flows: FlowPromptMap = {
   daily_checkin: {
     title: 'Daily Check-In',
-    intro: 'A short moment to notice what is quietly asking for attention right now.',
+    intro: 'Capture what has charge, then test whether it belongs to a larger recurrence.',
     prompts: [
-      'What feels most present in you right now?',
-      'What feeling has the most weight or charge?',
-      'What has been lingering beneath the day?',
-      'What are you not quite wanting to face yet?',
-      'What still feels uncertain, unfinished, or hard to name?',
+      'What feels most charged right now?',
+      'What seems disproportionate to the surface event?',
+      'What has been repeating beneath the day?',
+      'What are you tempted to explain away too quickly?',
+      'What remains unresolved or contradictory?',
     ],
   },
   conflict_clarity: {
     title: 'Conflict Clarity',
-    intro: 'A calm pass through conflict, reaction, and what may be repeating underneath it.',
+    intro: 'Isolate the charged part of the conflict and test what may be repeating around it.',
     prompts: [
       'What happened, in the simplest terms?',
-      'What part still feels most charged?',
-      'What in the other person most bothered you?',
-      'Where might some version of that also live in you, even differently?',
-      'Does this resemble an older pattern in your life or relationships?',
-      'What remains unresolved or difficult to admit?',
+      'Which line, gesture, or moment carried the most charge?',
+      'What felt disproportionate in your reaction?',
+      'What in the other person bothered you most?',
+      'Where might some version of that also exist in you?',
+      'What contradiction or unresolved part remains?',
     ],
   },
   dream_exploration: {
     title: 'Dream Exploration',
-    intro: 'A gentle look at dream imagery, feeling tone, and what may be echoing into waking life.',
+    intro: 'Pull out the image with charge, then test whether it belongs to a larger recurrence.',
     prompts: [
       'What happened in the dream?',
-      'What image, figure, or place stands out most strongly?',
-      'What feeling stayed with you after waking?',
-      'Does any part of the dream touch your current waking life?',
-      'What in the dream feels recurring, familiar, or especially charged?',
-      'What should remain open rather than explained too quickly?',
+      'What image or scene carried the most charge?',
+      'What feels disproportionate or strangely intensified about it?',
+      'What in waking life does it seem adjacent to, if anything?',
+      'What feels familiar or repeated here?',
+      'What remains unproven or too easy to overread?',
     ],
   },
 }
-
-const starterPrompts = [
-  'I keep circling around the same feeling and can’t quite settle it.',
-  'Something small hit me harder than it should have today.',
-  'A dream stayed with me, but I do not know why.',
-]
 
 const seedEntries: Entry[] = [
   {
@@ -77,51 +81,36 @@ const seedEntries: Entry[] = [
     type: 'conflict_clarity',
     source: 'text',
     text: 'I got irritated in a call with my cofounder. I felt dismissed fast and then withdrew.',
-    summary:
-      'You describe irritation rising quickly after feeling dismissed. A possible pattern here is that interruption or criticism lands as a threat to dignity, then turns into distance. That may be worth watching without deciding too quickly what it means.',
-    openQuestions: ['What feels threatened first when you feel dismissed?', 'What happens in you just before you pull back?'],
-    symbolicMotifs: [],
     createdAt: '2026-03-23',
-    themes: [
-      {
-        id: 't1',
-        label: 'Sensitivity to dismissal',
-        description: 'Perceived interruption or dismissal quickly creates emotional charge.',
-        status: 'recurring',
-        evidence: ['I felt dismissed fast and then withdrew.'],
-      },
-      {
-        id: 't2',
-        label: 'Withdrawal after charge',
-        description: 'Intensity is followed by stepping back rather than staying in contact.',
-        status: 'emerging',
-        evidence: ['I felt dismissed fast and then withdrew.'],
-      },
-    ],
+    investigation: {
+      patternHypothesis: 'Dismissal may trigger faster emotional escalation than the surface event warrants.',
+      counterpattern: 'It may also be true that the conflict actually contained a real slight and was not only projection.',
+      unproven: 'It is still unproven whether dismissal itself is the trigger, or whether the trigger is loss of status, interruption, or accumulated resentment.',
+      chargedFragment: 'I felt dismissed fast and then withdrew.',
+      possibleDisproportion: 'The speed of the withdrawal may exceed what the immediate interruption alone would explain.',
+      unresolvedContradiction: 'You wanted recognition, but responded by reducing contact.',
+      openQuestions: ['What exactly gets threatened first when you feel dismissed?', 'Where else has this sequence appeared before?'],
+      repeatedImages: [],
+    },
   },
   {
     id: 'e2',
     type: 'dream_exploration',
     source: 'text',
     text: 'I dreamed I was in a house with many locked rooms. I kept hearing movement behind a door.',
-    summary:
-      'The dream gathers around enclosed space, hidden movement, and something sensed but not yet met directly. A possible motif is that something important feels near, though not ready to be forced into explanation.',
-    openQuestions: ['What in waking life currently feels present but unopened?', 'What would it mean to approach this without forcing it?'],
-    symbolicMotifs: ['locked rooms', 'hidden movement'],
     createdAt: '2026-03-24',
-    themes: [
-      {
-        id: 't3',
-        label: 'Closed inner spaces',
-        description: 'Images of sealed or hidden interior spaces recur around uncertainty.',
-        status: 'emerging',
-        evidence: ['house with many locked rooms'],
-      },
-    ],
+    investigation: {
+      patternHypothesis: 'Sealed interior spaces may be showing up when something feels present but not yet accessible.',
+      counterpattern: 'The dream may simply be vivid material from stress or overload, without a stable repeated pattern behind it.',
+      unproven: 'It is unproven whether the locked rooms point to avoidance, curiosity, fear, or just strong dream imagery.',
+      chargedFragment: 'I was in a house with many locked rooms.',
+      possibleDisproportion: 'The number of closed rooms suggests more intensity than the dream scene strictly needs.',
+      unresolvedContradiction: 'The dream implies both proximity and inaccessibility at the same time.',
+      openQuestions: ['What in waking life currently feels near but unopened?', 'Has this image of closed interior space appeared before?'],
+      repeatedImages: ['locked rooms', 'movement behind a door'],
+    },
   },
 ]
-
-const allSeedThemes = dedupeThemes(seedEntries.flatMap((entry) => entry.themes))
 
 function id() {
   return Math.random().toString(36).slice(2, 10)
@@ -130,7 +119,7 @@ function id() {
 function titleForType(type: EntryType) {
   switch (type) {
     case 'free_reflection':
-      return 'Free Reflection'
+      return 'Free Capture'
     case 'daily_checkin':
       return 'Daily Check-In'
     case 'conflict_clarity':
@@ -140,130 +129,150 @@ function titleForType(type: EntryType) {
   }
 }
 
-function subtitleForType(type: EntryType) {
-  switch (type) {
-    case 'free_reflection':
-      return 'Start anywhere. No need to be polished.'
-    case 'daily_checkin':
-      return 'A brief emotional orientation.'
-    case 'conflict_clarity':
-      return 'For conflict, reaction, and projection.'
-    case 'dream_exploration':
-      return 'For dream images and waking echoes.'
-  }
+function extractLines(text: string, answers: string[]) {
+  return [text, ...answers]
+    .flatMap((item) => item.split(/\n+/))
+    .map((line) => line.trim())
+    .filter(Boolean)
 }
 
-function dedupeThemes(themes: Theme[]) {
-  const map = new Map<string, Theme>()
-  themes.forEach((theme) => {
-    const existing = map.get(theme.label)
-    if (!existing) {
-      map.set(theme.label, { ...theme, evidence: [...theme.evidence] })
-      return
-    }
-    existing.evidence = Array.from(new Set([...existing.evidence, ...theme.evidence]))
-    if (existing.status === 'emerging' && theme.status !== 'emerging') existing.status = theme.status
+function findChargedFragment(lines: string[]) {
+  const scored = lines.map((line) => {
+    const lower = line.toLowerCase()
+    let score = 0
+    if (/(dismiss|withdrew|angry|irritat|charge|locked|door|room|avoid|unresolved|contradiction|threat)/.test(lower)) score += 3
+    score += Math.min(3, line.length / 40)
+    return { line, score }
   })
-  return Array.from(map.values())
+  scored.sort((a, b) => b.score - a.score)
+  return scored[0]?.line || ''
 }
 
-function makePrototypeSummary(type: EntryType, text: string, answers: string[]) {
-  const source = [text, ...answers].join(' ').toLowerCase()
+function buildRepeatedImages(corpus: string) {
+  const lower = corpus.toLowerCase()
+  const motifs = []
+  if (/(room|rooms)/.test(lower)) motifs.push('rooms')
+  if (/(door|doors)/.test(lower)) motifs.push('doors')
+  if (/(house)/.test(lower)) motifs.push('house')
+  if (/(shadow)/.test(lower)) motifs.push('shadow')
+  return motifs
+}
+
+function buildInvestigation(type: EntryType, text: string, answers: string[]): Investigation {
+  const lines = extractLines(text, answers)
+  const chargedFragment = findChargedFragment(lines) || text.slice(0, 120)
+  const corpus = [text, ...answers].join(' ')
+  const lower = corpus.toLowerCase()
+  const repeatedImages = buildRepeatedImages(corpus)
+
   if (type === 'conflict_clarity') {
     return {
-      summary:
-        'You describe a conflict that seems to carry more charge than the surface event alone. A possible pattern is that feeling dismissed quickly becomes self-protection, then distance. That does not settle the meaning, but it does suggest a loop worth noticing earlier next time.',
-      openQuestions: ['What gets protected first when charge rises?', 'Where have you felt this pattern before?'],
-      themes: [
-        {
-          id: id(),
-          label: 'Sensitivity to dismissal',
-          description: 'Dismissal or interruption appears to trigger immediate emotional charge.',
-          status: 'emerging' as ThemeStatus,
-          evidence: [answers[1] || text.slice(0, 90)],
-        },
-        {
-          id: id(),
-          label: 'Self-protection through distance',
-          description: 'Conflict seems to move quickly toward withdrawal or internal retreat.',
-          status: 'emerging' as ThemeStatus,
-          evidence: [answers[5] || answers[0] || text.slice(0, 90)],
-        },
-      ],
-      motifs: [] as string[],
+      patternHypothesis: 'The charged part may not be the disagreement itself, but how quickly it turns into felt dismissal and retreat.',
+      counterpattern: 'Another reading is that withdrawal here was proportionate and protective rather than patterned overreaction.',
+      unproven: 'It remains unproven whether dismissal is the recurring trigger, or whether speed, tone, and accumulated strain matter more.',
+      chargedFragment,
+      possibleDisproportion: 'The reaction may have escalated faster than the stated conflict alone would predict.',
+      unresolvedContradiction: 'You wanted to stay seen, but the move was to step back.',
+      openQuestions: ['Where else has this reaction sequence shown up?', 'What happens one second before the withdrawal?'],
+      repeatedImages,
     }
   }
+
   if (type === 'dream_exploration') {
     return {
-      summary:
-        'This dream seems to gather around one charged image rather than a clear conclusion. A possible pattern is that something important feels near, hidden, or not yet fully available to awareness. It is better held gently as a motif than turned into a verdict too quickly.',
-      openQuestions: ['What in waking life currently feels present but unopened?', 'What part of this dream should remain open for now?'],
-      themes: [
-        {
-          id: id(),
-          label: 'Charged hidden imagery',
-          description: 'Dream material points toward what is sensed but not yet fully known.',
-          status: 'emerging' as ThemeStatus,
-          evidence: [answers[1] || text.slice(0, 90)],
-        },
-      ],
-      motifs: source.includes('door') || source.includes('room') ? ['doors / rooms'] : ['charged dream image'],
+      patternHypothesis: 'The dream may be isolating closed or obscured space as a repeated site of tension.',
+      counterpattern: 'It may also be a one-off image with charge but no larger recurrence behind it.',
+      unproven: 'It remains unproven whether the dream imagery maps onto waking life in any stable way.',
+      chargedFragment,
+      possibleDisproportion: 'The image intensity appears greater than the dream narrative strictly requires.',
+      unresolvedContradiction: 'Something feels near enough to sense, but not available enough to meet directly.',
+      openQuestions: ['Has this kind of image appeared before?', 'What part of the image feels charged without explanation?'],
+      repeatedImages,
     }
   }
+
   if (type === 'daily_checkin') {
     return {
-      summary:
-        'Your check-in suggests an active emotional thread that has not fully resolved. One feeling seems to hold the visible charge while something quieter may be sitting underneath it. Nothing here needs a grand interpretation yet, but it feels worth tracking across several days.',
-      openQuestions: ['What feeling sits underneath the one you named first?', 'What keeps this from settling?'],
-      themes: [
-        {
-          id: id(),
-          label: 'Active unresolved tension',
-          description: 'Something emotionally alive continues to remain unsettled.',
-          status: 'emerging' as ThemeStatus,
-          evidence: [answers[2] || text.slice(0, 90)],
-        },
-      ],
-      motifs: [] as string[],
+      patternHypothesis: 'A smaller visible feeling may be standing in for a more persistent recurring tension.',
+      counterpattern: 'This may simply be a passing state rather than evidence of a larger pattern.',
+      unproven: 'It remains unproven whether today belongs to a recurrence or only feels that way because it is fresh.',
+      chargedFragment,
+      possibleDisproportion: 'The intensity may exceed what the immediate day-level trigger would suggest.',
+      unresolvedContradiction: 'Part of you wants clarity, while another part keeps the thread unresolved.',
+      openQuestions: ['What has shown up in this form before?', 'What would count as disconfirming this pattern?'],
+      repeatedImages,
     }
   }
+
   return {
-    summary:
-      'This reflection carries the sense of something emotionally active but not yet named clearly. A pattern may be beginning to take shape here. It does not need to be concluded now, only noticed and returned to if it keeps repeating.',
-    openQuestions: ['What in this entry feels familiar?', 'What seems larger than the immediate moment?'],
-    themes: [
-      {
-        id: id(),
-        label: 'Emerging recurring pattern',
-        description: 'The material suggests a pattern that may become clearer with repetition.',
-        status: 'emerging' as ThemeStatus,
-        evidence: [text.slice(0, 90)],
-      },
-    ],
-    motifs: [] as string[],
+    patternHypothesis: 'The material may point to a repeatable pattern rather than a one-off event.',
+    counterpattern: 'It may also be too early to call this a pattern at all.',
+    unproven: 'It remains unproven what exactly is recurring, and what is only being inferred after the fact.',
+    chargedFragment,
+    possibleDisproportion: 'One part of the entry appears to hold more charge than the surface narrative alone explains.',
+    unresolvedContradiction: 'The entry suggests both recognition and uncertainty at once.',
+    openQuestions: ['Where else has this shown up before?', 'What evidence would weaken this reading?'],
+    repeatedImages,
   }
 }
 
-function buildWeeklyReview(entries: Entry[], themes: Theme[]) {
+function buildPatternRecords(entries: Entry[]) {
+  const candidates = [
+    {
+      id: 'dismissal-sequence',
+      label: 'Dismissal → withdrawal sequence',
+      match: (entry: Entry) => /dismiss|withdraw|retreat|pull back/i.test(entry.text + ' ' + entry.investigation.chargedFragment),
+      description: 'Charge appears to convert quickly into distance or retreat.',
+    },
+    {
+      id: 'closed-space-imagery',
+      label: 'Closed space imagery',
+      match: (entry: Entry) => /room|door|house|locked/i.test(entry.text + ' ' + entry.investigation.repeatedImages.join(' ')),
+      description: 'Closed or obscured spaces appear in the material more than once.',
+    },
+    {
+      id: 'disproportionate-charge',
+      label: 'Disproportionate charge',
+      match: (entry: Entry) => /disproportion|charge|irritat|angry|dismiss/i.test(entry.investigation.possibleDisproportion + ' ' + entry.text),
+      description: 'The reaction appears larger or faster than the surface event alone would explain.',
+    },
+  ]
+
+  return candidates
+    .map((candidate) => {
+      const evidence = entries
+        .filter(candidate.match)
+        .map((entry) => ({
+          entryId: entry.id,
+          createdAt: entry.createdAt,
+          line: entry.investigation.chargedFragment,
+        }))
+
+      if (!evidence.length) return null
+
+      return {
+        id: candidate.id,
+        label: candidate.label,
+        description: candidate.description,
+        recurrence: evidence.length > 1 ? 'strong' : 'weak',
+        evidence,
+      } as PatternRecord
+    })
+    .filter(Boolean) as PatternRecord[]
+}
+
+function buildWeeklyCaseReview(entries: Entry[], patterns: PatternRecord[]) {
   const recent = [...entries].slice(0, 5)
-  const topThemes = themes.slice(0, 3)
-  const motifSet = Array.from(new Set(recent.flatMap((entry) => entry.symbolicMotifs))).slice(0, 3)
+  const chargedFragments = recent.map((entry) => `${entry.createdAt} — ${entry.investigation.chargedFragment}`)
 
   return {
-    overall:
-      'This week, a possible pattern appears around emotional charge gathering quickly around dismissal, uncertainty, or material that feels just out of reach. Across conflict and dream reflections, the repeated movement is toward protection, distance, or standing outside something not yet fully faced. The underlying tension may involve wanting recognition while guarding against exposure. This is still emerging, not settled.',
-    emotionalPatterns: topThemes.map((theme) => `${theme.label} — ${theme.description}`),
-    conflictDynamics: [
-      'Charge rises quickly after feeling interrupted or misread.',
-      'Distance or withdrawal appears as a response to intensity.',
-    ],
-    symbolicMotifs: motifSet.length ? motifSet : ['locked rooms', 'hidden movement'],
-    tensions: ['Recognition vs exposure', 'Control vs contact'],
-    carryForward: [
-      'What happens just before emotional distance begins?',
-      'Where does a wish to be understood become self-protection instead?',
-    ],
-    prompt: 'As the week continues, notice the moment a reaction begins to close rather than speak.',
+    casePosition:
+      'This week’s material does not resolve into one clean conclusion. The stronger working hypothesis is that charge gathers around perceived dismissal, blocked access, or moments where reaction outruns the surface event.',
+    patternStrengths: patterns.map((pattern) => `${pattern.label} — ${pattern.recurrence} recurrence`),
+    strongestFragments: chargedFragments,
+    disproportions: recent.map((entry) => entry.investigation.possibleDisproportion),
+    contradictions: recent.map((entry) => entry.investigation.unresolvedContradiction),
+    unproven: recent.map((entry) => entry.investigation.unproven),
   }
 }
 
@@ -273,26 +282,24 @@ export function App() {
   const [inputMode, setInputMode] = useState<'text' | 'voice'>('text')
   const [draftText, setDraftText] = useState('')
   const [entries, setEntries] = useState<Entry[]>(seedEntries)
-  const [themes, setThemes] = useState<Theme[]>(allSeedThemes)
-  const [flowIndex, setFlowIndex] = useState(0)
   const [flowAnswers, setFlowAnswers] = useState<string[]>([])
+  const [flowIndex, setFlowIndex] = useState(0)
   const [currentEntry, setCurrentEntry] = useState<Entry | null>(null)
 
   const activeFlow = entryType === 'free_reflection' ? null : flows[entryType]
-  const weeklyReview = useMemo(() => buildWeeklyReview(entries, themes), [entries, themes])
+  const patternRecords = useMemo(() => buildPatternRecords(entries), [entries])
+  const weeklyReview = useMemo(() => buildWeeklyCaseReview(entries, patternRecords), [entries, patternRecords])
 
   const startEntry = () => {
     if (entryType === 'free_reflection') {
-      const generated = makePrototypeSummary(entryType, draftText, [])
+      const sourceText = draftText || 'Voice note placeholder transcript: I kept circling around the same feeling all day.'
+      const investigation = buildInvestigation(entryType, sourceText, [])
       const entry: Entry = {
         id: id(),
         type: entryType,
         source: inputMode,
-        text: draftText || 'Voice note placeholder transcript: I kept circling around the same feeling all day.',
-        summary: generated.summary,
-        openQuestions: generated.openQuestions,
-        themes: generated.themes,
-        symbolicMotifs: generated.motifs,
+        text: sourceText,
+        investigation,
         createdAt: new Date().toISOString().slice(0, 10),
       }
       setEntries((prev) => [entry, ...prev])
@@ -306,90 +313,59 @@ export function App() {
   }
 
   const completeFlow = () => {
-    const generated = makePrototypeSummary(entryType, draftText, flowAnswers)
+    const sourceText = draftText || (inputMode === 'voice' ? 'Mock transcript: voice capture used for this investigation.' : '')
+    const investigation = buildInvestigation(entryType, sourceText, flowAnswers)
     const promptAnswers = activeFlow?.prompts.map((prompt, index) => ({ prompt, answer: flowAnswers[index] || '' })) || []
     const entry: Entry = {
       id: id(),
       type: entryType,
       source: inputMode,
-      text: draftText || (inputMode === 'voice' ? 'Mock transcript: voice capture used for this reflection.' : ''),
+      text: sourceText,
       flowAnswers: promptAnswers,
-      summary: generated.summary,
-      openQuestions: generated.openQuestions,
-      themes: generated.themes,
-      symbolicMotifs: generated.motifs,
+      investigation,
       createdAt: new Date().toISOString().slice(0, 10),
     }
     setEntries((prev) => [entry, ...prev])
     setCurrentEntry(entry)
-    setThemes((prev) => dedupeThemes([...generated.themes, ...prev]))
     setScreen('summary')
   }
 
   const currentPrompt = activeFlow?.prompts[flowIndex] || ''
 
   return (
-    <div className="shell">
-      <aside className="sidebar">
-        <div>
-          <div className="brand">Carl</div>
-          <div className="subtle">Private reflection prototype</div>
-        </div>
-        <nav className="nav">
-          <button className={screen === 'home' ? 'active' : ''} onClick={() => setScreen('home')}>Home</button>
-          <button className={screen === 'summary' ? 'active' : ''} onClick={() => setScreen('summary')} disabled={!currentEntry}>Latest reflection</button>
-          <button className={screen === 'themes' ? 'active' : ''} onClick={() => setScreen('themes')}>Themes</button>
-          <button className={screen === 'weekly' ? 'active' : ''} onClick={() => setScreen('weekly')}>Weekly review</button>
-        </nav>
-        <div className="panel small softPanel">
-          <strong>What changed in this pass</strong>
-          <ul>
-            <li>warmer entry language</li>
-            <li>calmer visual rhythm</li>
-            <li>softer prompts without losing seriousness</li>
-            <li>more human summary tone</li>
-          </ul>
-        </div>
-      </aside>
+    <div className="app">
+      <div className="room">
+        <header className="roomHeader">
+          <div className="brandRow">
+            <div className="brand">Carl</div>
+            <div className="subtle">Private pattern investigation</div>
+          </div>
+          <nav className="roomNav">
+            <button className={screen === 'home' ? 'active' : ''} onClick={() => setScreen('home')}>Capture</button>
+            <button className={screen === 'summary' ? 'active' : ''} onClick={() => setScreen('summary')} disabled={!currentEntry}>Current case</button>
+            <button className={screen === 'themes' ? 'active' : ''} onClick={() => setScreen('themes')}>Patterns</button>
+            <button className={screen === 'weekly' ? 'active' : ''} onClick={() => setScreen('weekly')}>Week file</button>
+          </nav>
+        </header>
 
-      <main className="main">
-        {screen === 'home' && (
-          <section className="heroWrap">
-            <div className="hero panel softPanel">
-              <div className="eyebrow">Private · Calm · Serious</div>
-              <h1>A quieter way to notice what keeps returning.</h1>
-              <p className="lead">
-                Carl is a private reflection space for emotional patterns, conflict, dreams, and what remains unresolved.
-                It offers questions and hypotheses, not verdicts.
-              </p>
-              <div className="starterRow">
-                {starterPrompts.map((prompt) => (
-                  <button key={prompt} className="starterChip" onClick={() => setDraftText(prompt)}>{prompt}</button>
-                ))}
-              </div>
-            </div>
+        <main className="surface">
+          {screen === 'home' && (
+            <section className="sheet">
+              <h1>Capture the fragment with charge.</h1>
+              <p className="welcomeLine">Carl is for isolating the charged part, testing recurrence, and keeping interpretation open.</p>
 
-            <section className="panel composerPanel">
-              <div className="sectionTop">
+              <div className="controls">
                 <div>
-                  <div className="sectionLabel">Begin here</div>
-                  <h2>{titleForType(entryType)}</h2>
-                  <p className="muted">{subtitleForType(entryType)}</p>
-                </div>
-              </div>
-
-              <div className="grid two">
-                <div>
-                  <label>Entry mode</label>
-                  <div className="segmented">
+                  <label>Input</label>
+                  <div className="segLine">
                     <button className={inputMode === 'text' ? 'active' : ''} onClick={() => setInputMode('text')}>Write</button>
                     <button className={inputMode === 'voice' ? 'active' : ''} onClick={() => setInputMode('voice')}>Voice</button>
                   </div>
                 </div>
                 <div>
-                  <label>Reflection path</label>
+                  <label>Investigation path</label>
                   <select value={entryType} onChange={(e) => setEntryType(e.target.value as EntryType)}>
-                    <option value="free_reflection">Free reflection</option>
+                    <option value="free_reflection">Free capture</option>
                     <option value="daily_checkin">Daily check-in</option>
                     <option value="conflict_clarity">Conflict clarity</option>
                     <option value="dream_exploration">Dream exploration</option>
@@ -398,183 +374,199 @@ export function App() {
               </div>
 
               {inputMode === 'text' ? (
-                <textarea
-                  value={draftText}
-                  onChange={(e) => setDraftText(e.target.value)}
-                  placeholder="Write plainly. Start with what happened, what stayed with you, or what you cannot quite put down."
-                  rows={8}
-                />
+                <div className="reflectiveInput">
+                  <textarea
+                    value={draftText}
+                    onChange={(e) => setDraftText(e.target.value)}
+                    placeholder="Write the line, moment, image, or reaction that seems to carry more charge than it should."
+                    rows={10}
+                  />
+                </div>
               ) : (
-                <div className="mockVoice softInset">
-                  <div className="voiceBox">Mock voice capture</div>
-                  <p className="muted">For this pass, voice is simulated and converted into a placeholder transcript when you continue.</p>
+                <div className="voiceNote">
+                  <p>Voice remains simple in this prototype. Continue when ready, and Carl will investigate a transcribed note.</p>
                 </div>
               )}
 
-              <div className="row gap wrap">
-                <button className="primary" onClick={startEntry}>{entryType === 'free_reflection' ? 'Save reflection' : 'Continue gently'}</button>
+              <div className="actionRow">
+                <button className="primary" onClick={startEntry}>{entryType === 'free_reflection' ? 'Run investigation' : 'Continue'}</button>
                 <button onClick={() => setDraftText('I keep getting irritated faster than the situation seems to warrant, and later I feel embarrassed by how much charge it had.')}>Use demo entry</button>
               </div>
-            </section>
 
-            <section className="panel softPanel">
-              <div className="sectionTop">
-                <div>
-                  <div className="sectionLabel">Recent material</div>
-                  <h2>What Carl is already holding</h2>
+              <section className="sheet utilityNote">
+                <h3>Recent cases</h3>
+                <div className="entryList">
+                  {entries.map((entry) => (
+                    <button key={entry.id} className="entryCard" onClick={() => { setCurrentEntry(entry); setScreen('summary') }}>
+                      <div className="entryMeta">{entry.createdAt} · {titleForType(entry.type)}</div>
+                      <div className="entryText">{entry.investigation.patternHypothesis}</div>
+                    </button>
+                  ))}
                 </div>
-              </div>
-              <div className="stack">
-                {entries.map((entry) => (
-                  <button key={entry.id} className="entryCard calmCard" onClick={() => { setCurrentEntry(entry); setScreen('summary') }}>
-                    <div className="entryMeta">{entry.createdAt} · {titleForType(entry.type)}</div>
-                    <div>{entry.summary}</div>
-                  </button>
-                ))}
-              </div>
+              </section>
             </section>
-          </section>
-        )}
+          )}
 
-        {screen === 'flow' && activeFlow && (
-          <section className="panel softPanel flowPanel">
-            <div className="eyebrow">{activeFlow.title}</div>
-            <h1>{currentPrompt}</h1>
-            <p className="muted">{activeFlow.intro}</p>
-            <div className="progress">Step {flowIndex + 1} of {activeFlow.prompts.length}</div>
-            <textarea
-              rows={8}
-              value={flowAnswers[flowIndex] || ''}
-              onChange={(e) => {
-                const next = [...flowAnswers]
-                next[flowIndex] = e.target.value
-                setFlowAnswers(next)
-              }}
-              placeholder="Take your time. Plain language is enough."
-            />
-            <div className="row gap wrap">
-              <button onClick={() => setFlowIndex((v) => Math.max(0, v - 1))} disabled={flowIndex === 0}>Back</button>
-              {flowIndex < activeFlow.prompts.length - 1 ? (
-                <button className="primary" onClick={() => setFlowIndex((v) => v + 1)}>Next</button>
-              ) : (
-                <button className="primary" onClick={completeFlow}>Finish reflection</button>
-              )}
-            </div>
-          </section>
-        )}
+          {screen === 'flow' && activeFlow && (
+            <section className="sheet">
+              <div className="metaLine">Step {flowIndex + 1} of {activeFlow.prompts.length}</div>
+              <h1>{activeFlow.title}</h1>
+              <p className="muted">{activeFlow.intro}</p>
 
-        {screen === 'summary' && currentEntry && (
-          <section className="panel softPanel">
-            <div className="sectionLabel">Latest reflection</div>
-            <h1>What may be taking shape</h1>
-            <div className="summaryBlock softInset">
-              <h3>Reflection summary</h3>
-              <p>{currentEntry.summary}</p>
-            </div>
-            <div className="grid two">
-              <div className="panel nested softInset">
-                <h3>Possible recurring themes</h3>
-                {currentEntry.themes.map((theme) => (
-                  <div key={theme.id} className="themeChipBlock">
-                    <div className="themeHeader">
-                      <strong>{theme.label}</strong>
-                      <span>{theme.status}</span>
-                    </div>
-                    <p>{theme.description}</p>
-                    <small>Evidence: {theme.evidence[0]}</small>
-                  </div>
-                ))}
+              <div className="promptBlock">
+                <p className="promptText">{currentPrompt}</p>
               </div>
-              <div className="panel nested softInset">
-                <h3>Questions worth carrying</h3>
-                <ul>
-                  {currentEntry.openQuestions.map((question) => <li key={question}>{question}</li>)}
-                </ul>
-                {currentEntry.symbolicMotifs.length > 0 && (
-                  <>
-                    <h3>Symbolic motifs</h3>
-                    <ul>
-                      {currentEntry.symbolicMotifs.map((motif) => <li key={motif}>{motif}</li>)}</ul>
-                  </>
+
+              <textarea
+                rows={10}
+                value={flowAnswers[flowIndex] || ''}
+                onChange={(e) => {
+                  const next = [...flowAnswers]
+                  next[flowIndex] = e.target.value
+                  setFlowAnswers(next)
+                }}
+                placeholder="Keep it concrete. If a line feels loaded, include the line."
+              />
+
+              <div className="actionRow">
+                <button onClick={() => setFlowIndex((v) => Math.max(0, v - 1))} disabled={flowIndex === 0}>Back</button>
+                {flowIndex < activeFlow.prompts.length - 1 ? (
+                  <button className="primary" onClick={() => setFlowIndex((v) => v + 1)}>Next</button>
+                ) : (
+                  <button className="primary" onClick={completeFlow}>Finish investigation</button>
                 )}
               </div>
-            </div>
-            <div className="row gap wrap">
-              <button className="primary" onClick={() => { setThemes((prev) => dedupeThemes([...currentEntry.themes, ...prev])); setScreen('themes') }}>Keep these themes</button>
-              <button onClick={() => setScreen('home')}>Back home</button>
-            </div>
-          </section>
-        )}
+            </section>
+          )}
 
-        {screen === 'themes' && (
-          <section className="panel softPanel">
-            <div className="sectionLabel">Recurring memory</div>
-            <h1>Themes that may be repeating</h1>
-            <p className="muted">You remain the final authority. Everything here is editable.</p>
-            <div className="stack">
-              {themes.map((theme) => (
-                <div key={theme.id} className="panel nested softInset">
-                  <div className="themeHeader">
-                    <input
-                      value={theme.label}
-                      onChange={(e) => setThemes((prev) => prev.map((item) => item.id === theme.id ? { ...item, label: e.target.value } : item))}
-                    />
-                    <select
-                      value={theme.status}
-                      onChange={(e) => setThemes((prev) => prev.map((item) => item.id === theme.id ? { ...item, status: e.target.value as ThemeStatus } : item))}
-                    >
-                      <option value="emerging">emerging</option>
-                      <option value="recurring">recurring</option>
-                      <option value="core">core</option>
-                    </select>
+          {screen === 'summary' && currentEntry && (
+            <section className="sheet">
+              <div className="metaLine">{currentEntry.createdAt} · {titleForType(currentEntry.type)}</div>
+              <h1>Current case</h1>
+
+              <section className="archivalBlock">
+                <h3>Charged fragment</h3>
+                <p className="summaryText">{currentEntry.investigation.chargedFragment}</p>
+              </section>
+
+              <section className="archivalBlock">
+                <h3>Pattern hypothesis</h3>
+                <p>{currentEntry.investigation.patternHypothesis}</p>
+              </section>
+
+              <section className="archivalBlock">
+                <h3>Counterpattern</h3>
+                <p>{currentEntry.investigation.counterpattern}</p>
+              </section>
+
+              <section className="archivalBlock">
+                <h3>Possible disproportion</h3>
+                <p>{currentEntry.investigation.possibleDisproportion}</p>
+              </section>
+
+              <section className="archivalBlock">
+                <h3>Unresolved contradiction</h3>
+                <p>{currentEntry.investigation.unresolvedContradiction}</p>
+              </section>
+
+              <section className="archivalBlock">
+                <h3>What remains unproven</h3>
+                <p>{currentEntry.investigation.unproven}</p>
+              </section>
+
+              <section className="archivalBlock">
+                <h3>Questions to test next</h3>
+                <ul className="archiveList">
+                  {currentEntry.investigation.openQuestions.map((question) => <li key={question} className="archiveItem">{question}</li>)}
+                </ul>
+              </section>
+
+              {currentEntry.investigation.repeatedImages.length > 0 && (
+                <section className="archivalBlock">
+                  <h3>Repeated images</h3>
+                  <ul className="archiveList">
+                    {currentEntry.investigation.repeatedImages.map((motif) => <li key={motif} className="archiveItem">{motif}</li>)}
+                  </ul>
+                </section>
+              )}
+
+              <div className="actionRow">
+                <button className="primary" onClick={() => setScreen('themes')}>Test recurrence</button>
+                <button onClick={() => setScreen('home')}>Back to capture</button>
+              </div>
+            </section>
+          )}
+
+          {screen === 'themes' && (
+            <section className="sheet">
+              <h1>Pattern records</h1>
+              <p className="muted">Recurrence is only as good as the lines that support it.</p>
+
+              <div className="stack">
+                {patternRecords.map((pattern) => (
+                  <div key={pattern.id} className="memoryRecord">
+                    <div className="memoryHeader">
+                      <strong>{pattern.label}</strong>
+                      <span className="statusWord">{pattern.recurrence} recurrence</span>
+                    </div>
+                    <p>{pattern.description}</p>
+                    <div className="inlineMeta"><small>Appeared in: {pattern.evidence.map((item) => item.createdAt).join(' · ')}</small></div>
+                    <ul className="archiveList">
+                      {pattern.evidence.map((item) => (
+                        <li key={`${pattern.id}-${item.entryId}`} className="archiveItem">
+                          <strong>{item.createdAt}</strong> — {item.line}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                  <textarea
-                    rows={2}
-                    value={theme.description}
-                    onChange={(e) => setThemes((prev) => prev.map((item) => item.id === theme.id ? { ...item, description: e.target.value } : item))}
-                  />
-                  <small>Evidence: {theme.evidence.join(' · ')}</small>
-                </div>
-              ))}
-            </div>
-            <div className="row gap wrap">
-              <button className="primary" onClick={() => setScreen('weekly')}>See weekly review</button>
-            </div>
-          </section>
-        )}
+                ))}
+              </div>
 
-        {screen === 'weekly' && (
-          <section className="panel softPanel">
-            <div className="sectionLabel">Weekly review</div>
-            <h1>The pattern underneath the week</h1>
-            <p className="muted">Mar 25 – Mar 31</p>
-            <div className="summaryBlock softInset">
-              <h3>Overall pattern summary</h3>
-              <p>{weeklyReview.overall}</p>
-            </div>
-            <div className="grid two">
-              <div className="panel nested softInset">
-                <h3>Recurring emotional patterns</h3>
-                <ul>{weeklyReview.emotionalPatterns.map((item) => <li key={item}>{item}</li>)}</ul>
-                <h3>Recurring conflict dynamics</h3>
-                <ul>{weeklyReview.conflictDynamics.map((item) => <li key={item}>{item}</li>)}</ul>
+              <div className="actionRow">
+                <button className="primary" onClick={() => setScreen('weekly')}>Open week file</button>
               </div>
-              <div className="panel nested softInset">
-                <h3>Recurring symbolic motifs</h3>
-                <ul>{weeklyReview.symbolicMotifs.map((item) => <li key={item}>{item}</li>)}</ul>
-                <h3>Possible tensions</h3>
-                <ul>{weeklyReview.tensions.map((item) => <li key={item}>{item}</li>)}</ul>
-              </div>
-            </div>
-            <div className="panel nested softInset">
-              <h3>Questions to carry forward</h3>
-              <ul>{weeklyReview.carryForward.map((item) => <li key={item}>{item}</li>)}</ul>
-              <h3>One grounded prompt for next week</h3>
-              <p>{weeklyReview.prompt}</p>
-            </div>
-          </section>
-        )}
-      </main>
+            </section>
+          )}
+
+          {screen === 'weekly' && (
+            <section className="sheet">
+              <div className="metaLine">Mar 25 – Mar 31</div>
+              <h1>Week file</h1>
+              <p className="muted">A case review of the week’s material, not a wrap-up.</p>
+
+              <section className="weeklyBlock">
+                <h3>Current case position</h3>
+                <p className="summaryText">{weeklyReview.casePosition}</p>
+              </section>
+
+              <section className="weeklyBlock">
+                <h3>Pattern strength</h3>
+                <ul className="archiveList">{weeklyReview.patternStrengths.map((item) => <li key={item} className="archiveItem">{item}</li>)}</ul>
+              </section>
+
+              <section className="weeklyBlock">
+                <h3>Strongest fragments</h3>
+                <ul className="archiveList">{weeklyReview.strongestFragments.map((item) => <li key={item} className="archiveItem">{item}</li>)}</ul>
+              </section>
+
+              <section className="weeklyBlock">
+                <h3>Possible disproportions</h3>
+                <ul className="archiveList">{weeklyReview.disproportions.map((item) => <li key={item} className="archiveItem">{item}</li>)}</ul>
+              </section>
+
+              <section className="weeklyBlock">
+                <h3>Contradictions still active</h3>
+                <ul className="archiveList">{weeklyReview.contradictions.map((item) => <li key={item} className="archiveItem">{item}</li>)}</ul>
+              </section>
+
+              <section className="weeklyBlock">
+                <h3>What remains unproven</h3>
+                <ul className="archiveList">{weeklyReview.unproven.map((item) => <li key={item} className="archiveItem">{item}</li>)}</ul>
+              </section>
+            </section>
+          )}
+        </main>
+      </div>
     </div>
   )
 }
