@@ -1,14 +1,18 @@
 import SwiftUI
 
 struct ContentView: View {
-private let background = Color(red: 247/255, green: 244/255, blue: 239/255)
-private let surface = Color(red: 242/255, green: 238/255, blue: 233/255)
-private let elevated = Color.white.opacity(0.62)
-private let sage = Color(red: 183/255, green: 199/255, blue: 176/255)
-private let lavender = Color(red: 201/255, green: 195/255, blue: 217/255)
-private let paleBlue = Color(red: 199/255, green: 217/255, blue: 232/255)
-private let sand = Color(red: 221/255, green: 208/255, blue: 194/255)
-private let ink = Color(red: 47/255, green: 52/255, blue: 55/255)
+private let background = Color(red: 244/255, green: 239/255, blue: 232/255)
+private let surface = Color(red: 235/255, green: 229/255, blue: 221/255)
+private let elevated = Color.white.opacity(0.90)
+private let sage = Color(red: 118/255, green: 143/255, blue: 112/255)
+private let lavender = Color(red: 132/255, green: 125/255, blue: 166/255)
+private let paleBlue = Color(red: 118/255, green: 147/255, blue: 176/255)
+private let sand = Color(red: 164/255, green: 137/255, blue: 110/255)
+private let ink = Color(red: 31/255, green: 34/255, blue: 38/255)
+private let strongSecondary = Color(red: 78/255, green: 84/255, blue: 90/255)
+private let mutedText = Color(red: 117/255, green: 110/255, blue: 101/255)
+
+@FocusState private var focusedField: ActiveField?
 
 @State private var conversationInput = ""
 @State private var journalDraft = ""
@@ -22,6 +26,11 @@ private let ink = Color(red: 47/255, green: 52/255, blue: 55/255)
 @State private var showingReflectionInfo = false
 @State private var showingImportSheet = false
 @State private var isSending = false
+
+private enum ActiveField: Hashable {
+case conversation
+case journal
+}
 
 @AppStorage("carl_user_id") private var userId: String = UUID().uuidString
 
@@ -109,18 +118,29 @@ VStack(alignment: .leading, spacing: 14) {
 labelRow("Write", tone: .secondary)
 
 TextEditor(text: $conversationInput)
+.foregroundStyle(ink)
+.tint(ink)
+.focused($focusedField, equals: .conversation)
+.submitLabel(.done)
 .frame(minHeight: 126)
 .scrollContentBackground(.hidden)
 .padding(12)
-.background(background)
+.background(Color.white.opacity(0.94))
 .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+.overlay(
+RoundedRectangle(cornerRadius: 20, style: .continuous)
+.stroke(ink.opacity(0.08), lineWidth: 1)
+)
 .overlay(alignment: .topLeading) {
 if conversationInput.isEmpty {
 Text("Write what is on your mind...")
-.foregroundStyle(.secondary)
+.foregroundStyle(strongSecondary)
 .padding(.leading, 18)
 .padding(.top, 20)
 }
+}
+.onTapGesture {
+focusedField = .conversation
 }
 
 HStack {
@@ -171,14 +191,14 @@ chip("Reflection letters enabled", tint: sand)
 featureCard {
 VStack(alignment: .leading, spacing: 18) {
 HStack {
-labelRow("Conversation", tone: .secondary)
+labelRow("Conversation", tone: strongSecondary)
 Spacer()
 chip("1 journal attached", tint: lavender)
 }
 
-ForEach(conversationMessages) { message in
+ForEach(conversationMessages.reversed()) { message in
 conversationBubble(message)
-if message.id != conversationMessages.last?.id {
+if message.id != conversationMessages.first?.id {
 divider
 }
 }
@@ -192,6 +212,14 @@ memorySuggestionCard
 .padding(.horizontal, 20)
 .padding(.top, 12)
 .padding(.bottom, 34)
+}
+.simultaneousGesture(
+DragGesture().onChanged { _ in
+focusedField = nil
+}
+)
+.onTapGesture {
+focusedField = nil
 }
 .background(background.ignoresSafeArea())
 }
@@ -210,18 +238,29 @@ VStack(alignment: .leading, spacing: 14) {
 labelRow("New Entry", tone: .secondary)
 
 TextEditor(text: $journalDraft)
+.foregroundStyle(ink)
+.tint(ink)
+.focused($focusedField, equals: .journal)
+.submitLabel(.done)
 .frame(minHeight: 180)
 .scrollContentBackground(.hidden)
 .padding(12)
-.background(background)
+.background(Color.white.opacity(0.94))
 .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+.overlay(
+RoundedRectangle(cornerRadius: 20, style: .continuous)
+.stroke(ink.opacity(0.08), lineWidth: 1)
+)
 .overlay(alignment: .topLeading) {
 if journalDraft.isEmpty {
 Text("Write freely.")
-.foregroundStyle(.secondary)
+.foregroundStyle(strongSecondary)
 .padding(.leading, 18)
 .padding(.top, 20)
 }
+}
+.onTapGesture {
+focusedField = .journal
 }
 
 ScrollView(.horizontal, showsIndicators: false) {
@@ -340,12 +379,12 @@ mascotSeal(size: 28)
 
 VStack(alignment: .leading, spacing: 2) {
 Text("Reflection Letter")
-.font(.caption)
-.foregroundStyle(.secondary)
+.font(.caption.weight(.semibold))
+.foregroundStyle(mutedText)
 
 Text("February 25 to March 27, 2026")
-.font(.caption)
-.foregroundStyle(.secondary)
+.font(.caption.weight(.medium))
+.foregroundStyle(mutedText)
 }
 }
 
@@ -436,7 +475,7 @@ VStack(alignment: .leading, spacing: 10) {
 HStack(spacing: 8) {
 mascotSeal(size: 24)
 Text("Suggested memory")
-.font(.caption)
+.font(.caption.weight(.semibold))
 .foregroundStyle(sage)
 }
 
@@ -452,8 +491,8 @@ Button {
 showingMemorySuggestion = false
 } label: {
 Text("Dismiss")
-.font(.caption)
-.foregroundStyle(.secondary)
+.font(.caption.weight(.medium))
+.foregroundStyle(mutedText)
 }
 }
 .padding(.top, 2)
@@ -480,6 +519,7 @@ private func sendConversation() {
 let cleaned = conversationInput.trimmingCharacters(in: .whitespacesAndNewlines)
 guard !cleaned.isEmpty, !isSending else { return }
 
+focusedField = nil
 let userText = cleaned
 conversationInput = ""
 conversationMessages.append(ConversationItem(author: .user, text: userText))
@@ -541,6 +581,7 @@ private func saveJournalEntry() {
 let cleaned = journalDraft.trimmingCharacters(in: .whitespacesAndNewlines)
 guard !cleaned.isEmpty else { return }
 
+focusedField = nil
 let newEntry = JournalEntry(
 date: "Today",
 title: String(cleaned.prefix(34)),
@@ -567,8 +608,8 @@ Text(title)
 .foregroundStyle(ink)
 
 Text(subtitle)
-.font(.system(size: 13))
-.foregroundStyle(.secondary)
+.font(.system(size: 13, weight: .medium))
+.foregroundStyle(mutedText)
 }
 
 Spacer()
@@ -597,10 +638,10 @@ RoundedRectangle(cornerRadius: 28, style: .continuous)
 .fill(surface)
 .overlay(
 RoundedRectangle(cornerRadius: 28, style: .continuous)
-.stroke(Color.white.opacity(0.45), lineWidth: 1)
+.stroke(Color.white.opacity(0.65), lineWidth: 1)
 )
 )
-.shadow(color: Color.black.opacity(0.03), radius: 16, y: 8)
+.shadow(color: Color.black.opacity(0.06), radius: 22, y: 10)
 }
 
 @ViewBuilder
@@ -614,11 +655,15 @@ Text(value.uppercased())
 @ViewBuilder
 private func chip(_ title: String, tint: Color) -> some View {
 Text(title)
-.font(.caption)
+.font(.caption.weight(.semibold))
 .foregroundStyle(tint)
 .padding(.horizontal, 11)
 .padding(.vertical, 7)
-.background(tint.opacity(0.16))
+.background(tint.opacity(0.14))
+.overlay(
+Capsule()
+.stroke(tint.opacity(0.18), lineWidth: 1)
+)
 .clipShape(Capsule())
 }
 
@@ -655,14 +700,14 @@ Button {
 selectedJournalMode = title
 } label: {
 Text(title)
-.font(.caption)
-.foregroundStyle(selected ? ink : .secondary)
+.font(.caption.weight(.semibold))
+.foregroundStyle(selected ? ink : mutedText)
 .padding(.horizontal, 14)
 .padding(.vertical, 8)
-.background(selected ? background : Color.clear)
+.background(selected ? Color.white.opacity(0.72) : Color.clear)
 .overlay(
 Capsule()
-.stroke(selected ? ink.opacity(0.16) : Color.secondary.opacity(0.16), lineWidth: 1)
+.stroke(selected ? ink.opacity(0.18) : mutedText.opacity(0.22), lineWidth: 1)
 )
 .clipShape(Capsule())
 }
@@ -677,14 +722,14 @@ Button {
 selectedJourneyFilter = title
 } label: {
 Text(title)
-.font(.caption)
-.foregroundStyle(selected ? ink : .secondary)
+.font(.caption.weight(.semibold))
+.foregroundStyle(selected ? ink : mutedText)
 .padding(.horizontal, 14)
 .padding(.vertical, 8)
-.background(selected ? surface : Color.clear)
+.background(selected ? Color.white.opacity(0.76) : Color.clear)
 .overlay(
 Capsule()
-.stroke(selected ? ink.opacity(0.16) : Color.secondary.opacity(0.16), lineWidth: 1)
+.stroke(selected ? ink.opacity(0.18) : mutedText.opacity(0.22), lineWidth: 1)
 )
 .clipShape(Capsule())
 }
@@ -699,14 +744,14 @@ Button {
 selectedReflectionRange = title
 } label: {
 Text(title)
-.font(.caption)
-.foregroundStyle(selected ? ink : .secondary)
+.font(.caption.weight(.semibold))
+.foregroundStyle(selected ? ink : mutedText)
 .padding(.horizontal, 14)
 .padding(.vertical, 8)
-.background(selected ? surface : Color.clear)
+.background(selected ? Color.white.opacity(0.76) : Color.clear)
 .overlay(
 Capsule()
-.stroke(selected ? ink.opacity(0.16) : Color.secondary.opacity(0.16), lineWidth: 1)
+.stroke(selected ? ink.opacity(0.18) : mutedText.opacity(0.22), lineWidth: 1)
 )
 .clipShape(Capsule())
 }
@@ -720,15 +765,15 @@ if message.author == .carl {
 HStack(spacing: 8) {
 mascotSeal(size: 24)
 Text("Carl")
-.font(.caption)
-.foregroundStyle(.secondary)
+.font(.caption.weight(.semibold))
+.foregroundStyle(mutedText)
 }
 }
 
 Text(message.text)
-.font(.system(size: 16, weight: message.author == .user ? .regular : .light, design: message.author == .carl ? .serif : .default))
-.foregroundStyle(message.author == .user ? ink : ink.opacity(0.84))
-.lineSpacing(2)
+.font(.system(size: 16, weight: message.author == .user ? .medium : .light, design: message.author == .carl ? .serif : .default))
+.foregroundStyle(message.author == .user ? ink : ink.opacity(0.92))
+.lineSpacing(3)
 }
 }
 
@@ -738,7 +783,7 @@ VStack(alignment: .leading, spacing: 8) {
 HStack {
 Text(entry.date)
 .font(.caption)
-.foregroundStyle(.secondary)
+.foregroundStyle(strongSecondary)
 
 Spacer()
 
@@ -751,8 +796,8 @@ Text(entry.title)
 
 Text(entry.preview)
 .font(.system(size: 15))
-.foregroundStyle(ink.opacity(0.72))
-.lineSpacing(2)
+.foregroundStyle(ink.opacity(0.86))
+.lineSpacing(3)
 }
 }
 
@@ -774,7 +819,7 @@ featureCard {
 HStack {
 Text(item.date)
 .font(.caption)
-.foregroundStyle(.secondary)
+.foregroundStyle(strongSecondary)
 
 Spacer()
 
@@ -787,8 +832,8 @@ Text(item.title)
 
 Text(item.body)
 .font(.system(size: 15))
-.foregroundStyle(ink.opacity(0.72))
-.lineSpacing(2)
+.foregroundStyle(ink.opacity(0.86))
+.lineSpacing(3)
 }
 }
 }
@@ -800,8 +845,8 @@ labelRow(title, tone: tint)
 
 Text(body)
 .font(.system(size: serif ? 19 : 15, weight: .light, design: serif ? .serif : .default))
-.foregroundStyle(ink.opacity(serif ? 0.9 : 0.74))
-.lineSpacing(serif ? 4 : 2)
+.foregroundStyle(ink.opacity(serif ? 0.94 : 0.86))
+.lineSpacing(serif ? 4 : 3)
 }
 }
 
@@ -820,7 +865,7 @@ softIcon(systemName: "arrow.down.doc", tint: tint)
 
 Text(subtitle)
 .font(.system(size: 15))
-.foregroundStyle(ink.opacity(0.72))
+.foregroundStyle(ink.opacity(0.86))
 }
 .padding()
 .background(background)
@@ -842,7 +887,7 @@ chip(item.type, tint: item.shared ? sage : sand)
 
 Text(item.subtitle)
 .font(.system(size: 15))
-.foregroundStyle(ink.opacity(0.72))
+.foregroundStyle(ink.opacity(0.86))
 
 Text(item.shared ? "Available to Carl" : "Private for now")
 .font(.caption)
