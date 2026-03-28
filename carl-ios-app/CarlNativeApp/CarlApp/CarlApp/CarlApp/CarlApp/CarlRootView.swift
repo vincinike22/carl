@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct CarlRootView: View {
-    @State private var store = CarlStore()
+    @StateObject private var store = CarlStore()
 
     var body: some View {
         TabView(selection: $store.selectedTab) {

@@ -43,6 +43,7 @@ Capture what matters. Decisions, context, things to remember. Skip the secrets u
 - When someone says "remember this" → update `memory/YYYY-MM-DD.md` or relevant file
 - When you learn a lesson → update AGENTS.md, TOOLS.md, or the relevant skill
 - When you make a mistake → document it so future-you doesn't repeat it
+- For Carl or other iterative code/design work: after each meaningful version or user feedback round, save a recovery snapshot to disk and also save the version in git as a commit so progress is not lost.
 - **Text > Brain** 📝
 
 ## Red Lines
