@@ -4,71 +4,125 @@ struct JourneyView: View {
     @EnvironmentObject private var store: CarlStore
 
     var body: some View {
-        CarlScreen(
-            title: "A visible memory, not a hidden one.",
-            subtitle: "Your journey stays inspectable. Journal entries, saved Carl notes, and reflection letters live on the same timeline so the relationship never becomes opaque."
-        ) {
-            VStack(alignment: .leading, spacing: 16) {
-                ForEach(Array(store.journey.enumerated()), id: \.element.id) { index, item in
-                    JourneyRow(item: item, isLast: index == store.journey.count - 1)
+        ScrollView(showsIndicators: false) {
+            VStack(alignment: .leading, spacing: 18) {
+                topBar(title: "Journey", subtitle: store.journeySubtitle) {
+                    store.presentInfo(.journey)
+                }
+
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 10) {
+                        ForEach(JourneyFilter.allCases) { filter in
+                            filterPill(filter.rawValue, selected: store.selectedJourneyFilter == filter) {
+                                store.selectedJourneyFilter = filter
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 2)
+                }
+
+                VStack(alignment: .leading, spacing: 16) {
+                    ForEach(store.filteredJourneyItems) { item in
+                        timelineRow(item)
+                    }
                 }
             }
+            .padding(.horizontal, 20)
+            .padding(.top, 12)
+            .padding(.bottom, 34)
+        }
+        .background(CarlPalette.background.ignoresSafeArea())
+    }
+
+    @ViewBuilder
+    private func topBar(title: String, subtitle: String, infoAction: @escaping () -> Void) -> some View {
+        HStack(alignment: .center) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.system(size: 30, weight: .light, design: .serif))
+                    .foregroundStyle(CarlPalette.text)
+
+                Text(subtitle)
+                    .font(.system(size: 13))
+                    .foregroundStyle(.secondary)
+            }
+
+            Spacer()
+
+            Button(action: infoAction) {
+                Image(systemName: "info.circle")
+                    .font(.system(size: 18, weight: .medium))
+                    .foregroundStyle(CarlPalette.text.opacity(0.75))
+                    .frame(width: 34, height: 34)
+                    .background(CarlPalette.elevated)
+                    .clipShape(Circle())
+            }
+            .buttonStyle(.plain)
+        }
+    }
+
+    @ViewBuilder
+    private func filterPill(_ title: String, selected: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(title)
+                .font(.caption)
+                .foregroundStyle(selected ? CarlPalette.text : .secondary)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 8)
+                .background(selected ? CarlPalette.surface : Color.clear)
+                .overlay(
+                    Capsule()
+                        .stroke(selected ? CarlPalette.text.opacity(0.16) : Color.secondary.opacity(0.16), lineWidth: 1)
+                )
+                .clipShape(Capsule())
+        }
+        .buttonStyle(.plain)
+    }
+
+    @ViewBuilder
+    private func chip(_ title: String, tint: Color) -> some View {
+        Text(title)
+            .font(.caption)
+            .foregroundStyle(tint)
+            .padding(.horizontal, 11)
+            .padding(.vertical, 7)
+            .background(tint.opacity(0.16))
+            .clipShape(Capsule())
+    }
+
+    @ViewBuilder
+    private func timelineRow(_ item: JourneyItem) -> some View {
+        HStack(alignment: .top, spacing: 14) {
+            ZStack {
+                Circle()
+                    .fill(item.tint.color.opacity(0.22))
+                    .frame(width: 22, height: 22)
+
+                Circle()
+                    .fill(item.tint.color)
+                    .frame(width: 8, height: 8)
+            }
+            .padding(.top, 14)
 
             CarlCard {
-                SectionLabel(text: "Why it matters", tint: CarlPalette.textMuted.opacity(0.65))
-                Text("Carl’s memory is part of the experience, not a black box behind it. You can see what came from you, what Carl noticed, and what was turned into a reflection over time.")
-                    .font(.system(size: 15))
-                    .foregroundStyle(CarlPalette.textMuted)
-                    .lineSpacing(5)
-            }
-        }
-        .navigationTitle("Journey")
-    }
-}
-
-private struct JourneyRow: View {
-    let item: MemoryItem
-    let isLast: Bool
-
-    var body: some View {
-        HStack(alignment: .top, spacing: 14) {
-            VStack(spacing: 0) {
-                Circle()
-                    .fill(item.tint.opacity(0.6))
-                    .frame(width: 12, height: 12)
-                    .overlay(Circle().stroke(item.tint.opacity(0.25), lineWidth: 8))
-                if !isLast {
-                    Rectangle()
-                        .fill(CarlPalette.border)
-                        .frame(width: 1, height: 118)
-                }
-            }
-            VStack(alignment: .leading, spacing: 12) {
                 HStack {
                     Text(item.date)
-                        .font(.system(size: 12, weight: .medium))
-                        .foregroundStyle(CarlPalette.textMuted.opacity(0.55))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+
                     Spacer()
-                    Text(item.kind)
-                        .font(.system(size: 12, weight: .medium))
-                        .foregroundStyle(item.tint)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 6)
-                        .background(Capsule().fill(item.tint.opacity(0.14)))
+
+                    chip(item.kind, tint: item.tint.color)
                 }
 
-                CarlCard(tint: CarlPalette.surface) {
-                    Text(item.title)
-                        .font(.system(size: 18, weight: .light, design: .serif))
-                        .foregroundStyle(CarlPalette.text)
-                    Text(item.body)
-                        .font(.system(size: 15))
-                        .foregroundStyle(CarlPalette.text.opacity(0.72))
-                        .lineSpacing(5)
-                    Text(item.source)
-                        .font(.system(size: 12, weight: .medium))
-                        .foregroundStyle(CarlPalette.textMuted.opacity(0.48))
-                }
+                Text(item.title)
+                    .font(.system(size: 19, weight: .light, design: .serif))
+                    .foregroundStyle(CarlPalette.text)
+
+                Text(item.body)
+                    .font(.system(size: 15))
+                    .foregroundStyle(CarlPalette.text.opacity(0.72))
+                    .lineSpacing(2)
             }
         }
     }

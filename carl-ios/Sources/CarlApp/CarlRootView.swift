@@ -42,7 +42,16 @@ struct CarlRootView: View {
             .tag(CarlTab.reflection)
         }
         .tint(CarlPalette.text)
-        .background(CarlPalette.background.ignoresSafeArea())
+        .sheet(item: $store.activeInfoTopic) { topic in
+            InfoSheet(title: topic.title, text: topic.bodyText)
+                .presentationDetents([.medium])
+        }
+        .sheet(isPresented: $store.showingImportSheet) {
+            ImportView()
+                .environmentObject(store)
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
+        }
         .sheet(isPresented: $store.showingMemoryPreferences) {
             MemoryPreferencesView()
                 .environmentObject(store)

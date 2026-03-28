@@ -1,52 +1,9 @@
 import SwiftUI
 
-struct CarlScreen<Content: View>: View {
-    let title: String
-    let subtitle: String
-    @ViewBuilder let content: Content
-
-    init(title: String, subtitle: String, @ViewBuilder content: () -> Content) {
-        self.title = title
-        self.subtitle = subtitle
-        self.content = content()
-    }
-
-    var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
-                VStack(alignment: .leading, spacing: 14) {
-                    Rectangle()
-                        .fill(CarlPalette.sage.opacity(0.45))
-                        .frame(width: 44, height: 1)
-
-                    Text(title)
-                        .font(.system(size: 34, weight: .light, design: .serif))
-                        .foregroundStyle(CarlPalette.text)
-                        .fixedSize(horizontal: false, vertical: true)
-
-                    Text(subtitle)
-                        .font(.system(size: 17, weight: .regular, design: .default))
-                        .foregroundStyle(CarlPalette.textMuted)
-                        .lineSpacing(5)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-
-                content
-            }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 24)
-        }
-        .background(CarlPalette.background.ignoresSafeArea())
-        .scrollIndicators(.hidden)
-    }
-}
-
 struct CarlCard<Content: View>: View {
-    var tint: Color = CarlPalette.surface
     @ViewBuilder let content: Content
 
-    init(tint: Color = CarlPalette.surface, @ViewBuilder content: () -> Content) {
-        self.tint = tint
+    init(@ViewBuilder content: () -> Content) {
         self.content = content()
     }
 
@@ -57,45 +14,77 @@ struct CarlCard<Content: View>: View {
         .padding(18)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
-            RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .fill(tint)
+            RoundedRectangle(cornerRadius: 28, style: .continuous)
+                .fill(CarlPalette.surface)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 28, style: .continuous)
+                        .stroke(Color.white.opacity(0.45), lineWidth: 1)
+                )
         )
-        .overlay(
-            RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .stroke(CarlPalette.border, lineWidth: 1)
-        )
+        .shadow(color: Color.black.opacity(0.03), radius: 16, y: 8)
     }
 }
 
-struct Pill: View {
+struct InfoSheet: View {
     let title: String
-    var isSelected: Bool = false
+    let text: String
 
     var body: some View {
-        Text(title)
-            .font(.system(size: 12, weight: .medium))
-            .foregroundStyle(isSelected ? CarlPalette.text : CarlPalette.textMuted)
-            .padding(.horizontal, 14)
-            .padding(.vertical, 8)
-            .background(
-                Capsule(style: .continuous)
-                    .fill(isSelected ? CarlPalette.background : .clear)
-            )
-            .overlay(
-                Capsule(style: .continuous)
-                    .stroke(isSelected ? CarlPalette.text.opacity(0.18) : CarlPalette.border, lineWidth: 1)
-            )
+        NavigationStack {
+            VStack(alignment: .leading, spacing: 16) {
+                Text(title)
+                    .font(.system(size: 28, weight: .light, design: .serif))
+
+                Text(text)
+                    .font(.system(size: 16))
+                    .foregroundStyle(.secondary)
+                    .lineSpacing(3)
+
+                Spacer()
+            }
+            .padding(24)
+        }
     }
 }
 
-struct SectionLabel: View {
-    let text: String
-    let tint: Color
+struct MascotSeal: View {
+    var size: CGFloat = 24
 
     var body: some View {
-        Text(text.uppercased())
-            .font(.system(size: 11, weight: .medium))
-            .tracking(2)
-            .foregroundStyle(tint)
+        ZStack {
+            Circle()
+                .fill(CarlPalette.sand.opacity(0.96))
+                .frame(width: size, height: size)
+
+            Circle()
+                .stroke(CarlPalette.sage.opacity(0.50), lineWidth: max(1, size * 0.08))
+                .frame(width: size * 0.92, height: size * 0.92)
+
+            Circle()
+                .stroke(CarlPalette.text.opacity(0.40), lineWidth: max(1, size * 0.035))
+                .frame(width: size * 0.34, height: size * 0.34)
+                .offset(x: -size * 0.12, y: -size * 0.03)
+
+            Circle()
+                .stroke(CarlPalette.text.opacity(0.40), lineWidth: max(1, size * 0.035))
+                .frame(width: size * 0.34, height: size * 0.34)
+                .offset(x: size * 0.12, y: -size * 0.03)
+
+            Rectangle()
+                .fill(CarlPalette.text.opacity(0.40))
+                .frame(width: size * 0.12, height: max(1, size * 0.025))
+                .offset(y: -size * 0.03)
+
+            Path { path in
+                path.move(to: CGPoint(x: size * 0.30, y: size * 0.63))
+                path.addQuadCurve(
+                    to: CGPoint(x: size * 0.70, y: size * 0.63),
+                    control: CGPoint(x: size * 0.50, y: size * 0.76)
+                )
+            }
+            .stroke(CarlPalette.text.opacity(0.38), lineWidth: max(1, size * 0.04))
+            .frame(width: size, height: size)
+        }
+        .shadow(color: CarlPalette.sage.opacity(0.08), radius: 8, y: 4)
     }
 }

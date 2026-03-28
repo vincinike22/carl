@@ -14,6 +14,11 @@ let package = Package(
         .target(
             name: "CarlApp",
             path: "Sources/CarlApp"
+        ),
+        .testTarget(
+            name: "CarlAppTests",
+            dependencies: ["CarlApp"],
+            path: "Tests/CarlAppTests"
         )
     ]
 )

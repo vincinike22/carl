@@ -1,10 +1,9 @@
 import SwiftUI
 
-@main
-struct CarlApp: App {
-    var body: some Scene {
-        WindowGroup {
-            CarlRootView()
-        }
+public struct CarlAppEntryView: View {
+    public init() {}
+
+    public var body: some View {
+        CarlRootView()
     }
 }
