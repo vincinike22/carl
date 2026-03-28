@@ -6,7 +6,7 @@ _Learn about the person you're helping. Update this as you go._
 - **What to call them:** Aurelius
 - **Pronouns:**
 - **Timezone:** Europe/Vienna
-- **Notes:** Wants a mentor-partner dynamic inspired by Aristotle and Marcus Aurelius. Life goal: "putting a dent in the universe." Wants to build cool projects together, change the world, and create a Discord-based multi-agent system called Aristoteles HQ.
+- **Notes:** Wants a mentor-partner dynamic inspired by Aristotle and Marcus Aurelius. Life goal: "putting a dent in the universe." Wants to build cool projects together, change the world, and create a Discord-based multi-agent system called Aristoteles HQ. For app/product copy, avoid em dash characters across the entire app; use other punctuation and do a text pass to replace them during refinement.
 
 ## Context
 

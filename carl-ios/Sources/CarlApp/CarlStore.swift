@@ -12,6 +12,8 @@ final class CarlStore: ObservableObject {
     @Published var showingMemoryPreferences = false
     @Published var memoryAccessMode: MemoryAccessMode = .selectedOnly
     @Published var reflectionAutomationEnabled = true
+    @Published var isSending = false
+    @Published var lastError: String?
 
     @Published var conversationInput = "" { didSet { persistIfPossible() } }
     @Published var journalDraft = "" { didSet { persistIfPossible() } }
@@ -22,10 +24,18 @@ final class CarlStore: ObservableObject {
     @Published var journeyItems: [JourneyItem] = [] { didSet { persistIfPossible() } }
 
     private let persistence: CarlPersistence
+    private let apiClient: CarlAPIClient
+    private let userId: String
     private var isHydrating = false
 
-    init(persistence: CarlPersistence = FileCarlPersistence()) {
+    init(
+        persistence: CarlPersistence = FileCarlPersistence(),
+        apiClient: CarlAPIClient = CarlAPIClient(),
+        userDefaults: UserDefaults = .standard
+    ) {
         self.persistence = persistence
+        self.apiClient = apiClient
+        self.userId = CarlUserIdentity.loadOrCreate(defaults: userDefaults)
         seedDefaults()
         hydrate()
     }
@@ -44,12 +54,31 @@ final class CarlStore: ObservableObject {
         guard !trimmed.isEmpty else { return }
 
         conversationMessages.append(ConversationItem(author: .user, text: trimmed))
-        conversationMessages.append(ConversationItem(author: .carl, text: CarlLogic.response(for: trimmed)))
         if CarlLogic.shouldSuggestMemory(for: trimmed) {
             showingMemorySuggestion = true
         }
         conversationInput = ""
+        isSending = true
+        lastError = nil
         persistIfPossible()
+
+        Task {
+            do {
+                let response = try await apiClient.sendMessage(userId: userId, message: trimmed)
+                await MainActor.run {
+                    self.conversationMessages.append(ConversationItem(author: .carl, text: response.reply))
+                    self.isSending = false
+                    self.persistIfPossible()
+                }
+            } catch {
+                await MainActor.run {
+                    self.conversationMessages.append(ConversationItem(author: .carl, text: CarlLogic.response(for: trimmed)))
+                    self.lastError = String(describing: error)
+                    self.isSending = false
+                    self.persistIfPossible()
+                }
+            }
+        }
     }
 
     func saveJournalEntry() {
