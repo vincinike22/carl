@@ -21,6 +21,9 @@ private let ink = Color(red: 47/255, green: 52/255, blue: 55/255)
 @State private var showingJourneyInfo = false
 @State private var showingReflectionInfo = false
 @State private var showingImportSheet = false
+@State private var isSending = false
+
+@AppStorage("carl_user_id") private var userId: String = UUID().uuidString
 
 @State private var importedItems: [ImportedItem] = [
 ImportedItem(title: "Notion Journal Archive", subtitle: "214 entries • imported yesterday", type: "Notion", shared: true),
@@ -131,14 +134,22 @@ Spacer()
 Button {
 sendConversation()
 } label: {
+if isSending {
+ProgressView()
+.tint(ink)
+.padding(.horizontal, 18)
+.padding(.vertical, 11)
+} else {
 Text("Send")
 .font(.system(size: 14, weight: .medium))
 .foregroundStyle(ink)
 .padding(.horizontal, 18)
 .padding(.vertical, 11)
+}
+}
 .background(sage.opacity(0.34))
 .clipShape(Capsule())
-}
+.disabled(isSending)
 }
 }
 }
@@ -466,29 +477,64 @@ return journeyItems
 }
 
 private func sendConversation() {
-guard !conversationInput.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
+let cleaned = conversationInput.trimmingCharacters(in: .whitespacesAndNewlines)
+guard !cleaned.isEmpty, !isSending else { return }
 
-let textValue = conversationInput
-conversationMessages.append(ConversationItem(author: .user, text: textValue))
+let userText = cleaned
+conversationInput = ""
+conversationMessages.append(ConversationItem(author: .user, text: userText))
+isSending = true
 
-if textValue.lowercased().contains("stay") || textValue.lowercased().contains("leave") {
+Task {
+do {
+let reply = try await sendMessageToBackend(userText)
+await MainActor.run {
+conversationMessages.append(ConversationItem(author: .carl, text: reply.reply))
+showingMemorySuggestion = reply.mode == "synthesize"
+isSending = false
+}
+} catch {
+await MainActor.run {
 conversationMessages.append(
 ConversationItem(
 author: .carl,
-text: "It sounds like the question is no longer only about the role itself. It may also be about which version of yourself feels more alive in each future."
+text: "I tried to reach the server, but the connection failed. Check whether the backend URL is correct and the server is running."
 )
 )
-showingMemorySuggestion = true
-} else {
-conversationMessages.append(
-ConversationItem(
-author: .carl,
-text: "Say a little more. What feels most alive or most unsettled in this for you?"
-)
-)
+isSending = false
+}
+print("Carl backend error:", error)
+}
+}
 }
 
-conversationInput = ""
+private func sendMessageToBackend(_ message: String) async throws -> ChatResponse {
+guard let url = URL(string: "http://89.167.5.112:8787/chat") else {
+throw URLError(.badURL)
+}
+
+let payload = ChatRequest(userId: userId, message: message)
+
+var request = URLRequest(url: url)
+request.httpMethod = "POST"
+request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+request.timeoutInterval = 30
+request.httpBody = try JSONEncoder().encode(payload)
+
+let (data, response) = try await URLSession.shared.data(for: request)
+
+guard let httpResponse = response as? HTTPURLResponse else {
+throw URLError(.badServerResponse)
+}
+
+guard (200...299).contains(httpResponse.statusCode) else {
+let body = String(data: data, encoding: .utf8) ?? "Unknown server error"
+throw NSError(domain: "CarlBackend", code: httpResponse.statusCode, userInfo: [
+NSLocalizedDescriptionKey: body
+])
+}
+
+return try JSONDecoder().decode(ChatResponse.self, from: data)
 }
 
 private func saveJournalEntry() {
@@ -853,6 +899,19 @@ default:
 return sand
 }
 }
+}
+
+private struct ChatRequest: Codable {
+let userId: String
+let message: String
+}
+
+private struct ChatResponse: Codable {
+let reply: String
+let userId: String?
+let model: String?
+let mode: String?
+let risk: String?
 }
 
 private struct InfoSheet: View {

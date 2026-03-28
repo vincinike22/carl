@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		CF47CA522F776B220053E399 /* CarlMini.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CarlMini.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CF47CA522F776B220053E399 /* Carl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Carl.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CF47CA602F77FF9C0053E399 /* Carl-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Carl-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -32,6 +33,7 @@
 		CF47CA492F776B220053E399 = {
 			isa = PBXGroup;
 			children = (
+				CF47CA602F77FF9C0053E399 /* Carl-Info.plist */,
 				CF47CA542F776B220053E399 /* CarlMini */,
 				CF47CA532F776B220053E399 /* Products */,
 			);
@@ -40,7 +42,7 @@
 		CF47CA532F776B220053E399 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				CF47CA522F776B220053E399 /* CarlMini.app */,
+				CF47CA522F776B220053E399 /* Carl.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,9 +50,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		CF47CA512F776B220053E399 /* CarlMini */ = {
+		CF47CA512F776B220053E399 /* Carl */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CF47CA5D2F776B230053E399 /* Build configuration list for PBXNativeTarget "CarlMini" */;
+			buildConfigurationList = CF47CA5D2F776B230053E399 /* Build configuration list for PBXNativeTarget "Carl" */;
 			buildPhases = (
 				CF47CA4E2F776B220053E399 /* Sources */,
 				CF47CA4F2F776B220053E399 /* Frameworks */,
@@ -63,11 +65,11 @@
 			fileSystemSynchronizedGroups = (
 				CF47CA542F776B220053E399 /* CarlMini */,
 			);
-			name = CarlMini;
+			name = Carl;
 			packageProductDependencies = (
 			);
 			productName = CarlMini;
-			productReference = CF47CA522F776B220053E399 /* CarlMini.app */;
+			productReference = CF47CA522F776B220053E399 /* Carl.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -85,7 +87,7 @@
 					};
 				};
 			};
-			buildConfigurationList = CF47CA4D2F776B220053E399 /* Build configuration list for PBXProject "CarlMini" */;
+			buildConfigurationList = CF47CA4D2F776B220053E399 /* Build configuration list for PBXProject "Carl" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -99,7 +101,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				CF47CA512F776B220053E399 /* CarlMini */,
+				CF47CA512F776B220053E399 /* Carl */,
 			);
 		};
 /* End PBXProject section */
@@ -249,10 +251,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = GUX9V8ZY49;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Carl-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -263,8 +268,9 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.nico.CarlMini;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vincinike.carl;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
@@ -280,10 +286,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = GUX9V8ZY49;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Carl-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -294,8 +303,9 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.nico.CarlMini;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vincinike.carl;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
@@ -309,7 +319,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		CF47CA4D2F776B220053E399 /* Build configuration list for PBXProject "CarlMini" */ = {
+		CF47CA4D2F776B220053E399 /* Build configuration list for PBXProject "Carl" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CF47CA5B2F776B230053E399 /* Debug */,
@@ -318,7 +328,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		CF47CA5D2F776B230053E399 /* Build configuration list for PBXNativeTarget "CarlMini" */ = {
+		CF47CA5D2F776B230053E399 /* Build configuration list for PBXNativeTarget "Carl" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CF47CA5E2F776B230053E399 /* Debug */,
