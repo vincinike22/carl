@@ -65,7 +65,7 @@
     if (l.gesehen && C6.sag) {
       var st = station(id), alle = ST.every(function (s) { return fertig(s.id); }), samstag = st.tag === 'Samstag' && [1, 2, 3].every(fertig);
       setTimeout(function () {
-        try { C6.sag(alle ? satz('lernweg.alles', 'Das war dein Wochenende. Alles Weitere wächst aus deinen Ideen.') : samstag ? satz('lernweg.samstag', 'Samstag geschafft. Morgen bauen wir dir ein Werkzeug.') : satz('lernweg.haken', 'Ein Haken im Kalender: „{name}“.').replace('{name}', st.name), { merken: false }); } catch (e) {}
+        try { C6.sag(alle ? satz('lernweg.alles', 'Das war dein Wochenende. Alles Weitere wächst aus deinen Ideen.') : samstag ? satz('lernweg.samstag', 'Samstag geschafft. Morgen zeig ich dir den Rest.') : satz('lernweg.haken', 'Ein Haken im Kalender: „{name}“.').replace('{name}', st.name), { merken: false }); } catch (e) {}
       }, 900);
     }
     if (offen && ansicht) zeige(ansicht);
@@ -84,7 +84,8 @@
     C6.bus.on('space', function (ev) { if (ev && ev.was === 'zettel') naehren('zettel', ev.stringId); });
     C6.bus.on('baustein', function (ev) { if (ev && (ev.was === 'neu' || ev.was === 'erledigt')) naehren('schritt'); });
     C6.bus.on('atlas', function (ev) { if (ev && ev.offen === false) pruefe6(); });
-    C6.bus.on('werkzeug-eigen', function (ev) { if (ev && ev.was === 'gehaengt') hake(4, 'werkzeug'); });
+    // ein Werkzeug vor dem Wochenende (Rezeption): nichts still abhaken – der Haken kommt mit dem Satz, wenn der Lernweg das erste Mal offen ist
+    C6.bus.on('werkzeug-eigen', function (ev) { if (!(ev && ev.was === 'gehaengt')) return; var l = S(); if (l.gesehen) hake(4, 'werkzeug'); else if (!l.fertig[4]) { l.schonGebaut = true; speichern(); } });
     // Helfer: ein Fund, der in einem Space landet (auftrag.js), oder das eigene Ereignis der Helferecke
     C6.bus.on('auftrag', function (ev) { if (ev && ev.was === 'fund') hake(5, 'fund'); });
     C6.bus.on('helfer', function (ev) { if (ev && (ev.was === 'auftrag' || ev.was === 'fund')) hake(5, 'helfer'); });
@@ -263,8 +264,13 @@
   function naechste() { var n = ST.filter(function (s) { return !fertig(s.id); })[0]; return n ? n.id : null; }
   function oeffne(o) {
     o = o || {}; bauen(); hoeren(); pruefe6();
-    var l = S(); if (!l.gesehen) { l.gesehen = Date.now(); speichern(); }
+    var l = S(), erstesMal = !l.gesehen; if (!l.gesehen) { l.gesehen = Date.now(); speichern(); }
     offen = true; C6.lernweg.offen = true;
+    if (l.schonGebaut && !l.fertig[4]) {
+      delete l.schonGebaut; l.fertig[4] = Date.now(); speichern();
+      try { C6.bus && C6.bus.emit('lernweg', { was: 'haken', station: 4, grund: 'rezeption' }); } catch (e) {}
+      setTimeout(function () { try { C6.sag(satz('lernweg.schonGebaut', 'Ein Werkzeug bauen – das hast du an der Rezeption schon geschafft. Der Haken ist deiner.'), { merken: false }); } catch (e) {} }, erstesMal ? 900 : 300);
+    }
     wurzel.hidden = false; D.documentElement.classList.add('c6lw-auf');
     zeige(o.station ? +o.station : 'plan');
     requestAnimationFrame(function () { wurzel.classList.add('c6lw-an'); });

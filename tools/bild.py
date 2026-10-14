@@ -9,7 +9,7 @@ async def main():
         pg=await ctx.new_page(); fehler=[]
         pg.on('console',lambda m: fehler.append(m.text) if m.type=='error' else None)
         pg.on('pageerror',lambda e: fehler.append(str(e)))
-        await pg.goto('file:///home/claude/carl/n13/carl6-test.html'); await pg.wait_for_timeout(800)
+        await pg.goto('file:///home/claude/carl/carl6-test.html'); await pg.wait_for_timeout(800)
         if js: await pg.evaluate(js); await pg.wait_for_timeout(1200)
         await pg.screenshot(path=png)
         print('Fehler:',fehler)

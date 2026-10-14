@@ -256,7 +256,7 @@ document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && hu
 
 /* ====================================================================================
    Blatt 2 · Dein eigenes Modell (erweiternder Bereich): Ollama oder LM Studio auf dem eigenen Rechner,
-   über raffaels C6.lokal. Ohne C6.lokal sagt das Blatt ehrlich, dass es noch nicht geht.
+   über C6.lokal. Ohne C6.lokal sagt das Blatt ehrlich, dass es noch nicht geht.
    ==================================================================================== */
 var LURL = { ollama: 'http://127.0.0.1:11434/v1', lmstudio: 'http://localhost:1234/v1' };
 var lh = null, L = { weg: 'ollama', wo: 'mac', gb: 16, ergebnis: null, modell: '', probe: null, laeuft: false };

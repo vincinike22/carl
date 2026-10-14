@@ -45,6 +45,12 @@ PRUEF_JS = r"""
       if (cs.display === 'none' || cs.visibility === 'hidden' || parseFloat(cs.opacity) < 0.05) return false;
       if (e.hasAttribute('data-sicht') && e.getAttribute('data-sicht') === 'aus') return false;
       if (e.hidden) return false;
+      // ein rollender oder beschnittener Träger zeigt nur, was in seinem Rahmen liegt: weniger als die Hälfte sichtbar = nicht sichtbar
+      if (e !== el && /auto|scroll|hidden|clip/.test(cs.overflowY + ' ' + cs.overflowX)) {
+        const p = e.getBoundingClientRect();
+        const dx = Math.min(r.right, p.right) - Math.max(r.left, p.left), dy = Math.min(r.bottom, p.bottom) - Math.max(r.top, p.top);
+        if (dx <= 0 || dy <= 0 || dx * dy < 0.5 * r.width * r.height) return false;
+      }
     }
     return true;
   };
@@ -186,6 +192,12 @@ BLASE_JS = r"""
       if (cs.display === 'none' || cs.visibility === 'hidden' || parseFloat(cs.opacity) < 0.05) return false;
       if (e.getAttribute && e.getAttribute('data-sicht') === 'aus') return false;
       if (e.hidden) return false;
+      // ein rollender oder beschnittener Träger zeigt nur, was in seinem Rahmen liegt: weniger als die Hälfte sichtbar = nicht sichtbar
+      if (e !== el && /auto|scroll|hidden|clip/.test(cs.overflowY + ' ' + cs.overflowX)) {
+        const p = e.getBoundingClientRect();
+        const dx = Math.min(r.right, p.right) - Math.max(r.left, p.left), dy = Math.min(r.bottom, p.bottom) - Math.max(r.top, p.top);
+        if (dx <= 0 || dy <= 0 || dx * dy < 0.5 * r.width * r.height) return false;
+      }
     }
     return true;
   };
@@ -433,6 +445,17 @@ async def pruefe_geraet(p, geraet, bericht):
         cdp = await ctx.new_cdp_session(pg)
         await pg.evaluate(f"() => C6.geh({json.dumps(reihe[0])})")
         await pg.wait_for_timeout(700)
+        # Wischen hat eine Bedeutung: es blättert überall – über dem Tresen/der Szene (y = 250) wie über einem senkrechten Roller (y = 420)
+        for y_ort, y_probe in (('oben', 250), ('unten', 560)):
+            await touch_wisch(cdp, 330, 60, y_probe)
+            await pg.wait_for_timeout(700)
+            jo1 = await pg.evaluate("() => C6.jetzt")
+            await touch_wisch(cdp, 40, 360, y_probe, schritte=16, ms=320)
+            await pg.wait_for_timeout(700)
+            jo2 = await pg.evaluate("() => C6.jetzt")
+            erg['tests'].append((f'Wischen {y_ort} (y={y_probe}): nach links und zurück', jo1 == reihe[1] and jo2 == reihe[0], f'{reihe[0]}→{jo1}→{jo2}'))
+            if jo2 != reihe[0]:
+                await pg.evaluate(f"() => C6.geh({json.dumps(reihe[0])})"); await pg.wait_for_timeout(700)
         y = 420
         nachbar_sicht = {}
         async def mitte():

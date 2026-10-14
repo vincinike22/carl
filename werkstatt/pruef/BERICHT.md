@@ -1,38 +1,31 @@
 # Prüfbericht Carl 6
 
-08.10.2026 17:48
+14.10.2026 20:43
 
-**Gesamt: grün**
+**Gesamt: nicht grün**
 
-Datei: `/home/claude/carl/n13/carl6-test.html`
+Datei: `/home/claude/carl/carl6-test.html`
 
 ## iphone
 
-Start: `zuhause`
+Start: `rezeption`
 
 | Raum | Fehler | Überlauf | Tippziele < 44 | Überdeckt | Kontrast | Blase/Chips | Scroll | Bild |
 |---|---|---|---|---|---|---|---|---|
-| zuhause | – | – | – | – | – | – | – | `pruef/iphone-zuhause.png` |
-| werkstatt | – | – | – | – | – | – | – | `pruef/iphone-werkstatt.png` |
-| bibliothek | – | – | – | – | – | – | – | `pruef/iphone-bibliothek.png` |
-| fahrrad | – | – | – | – | – | – | – | `pruef/iphone-fahrrad.png` |
-| laden | – | – | – | – | – | – | – | `pruef/iphone-laden.png` |
-| lesesaal | – | – | – | – | – | – | – | `pruef/iphone-lesesaal.png` |
-| netz | – | – | – | – | – | – | – | `pruef/iphone-netz.png` |
-| post | – | – | – | – | – | – | – | `pruef/iphone-post.png` |
-| space | – | – | – | – | – | – | – | `pruef/iphone-space.png` |
-| teleskop | – | – | – | – | – | – | – | `pruef/iphone-teleskop.png` |
-| rundgang | – | – | – | – | – | – | – | `pruef/iphone-rundgang.png` |
+| rezeption | – | – | – | – | – | – | – | `pruef/iphone-rezeption.png` |
+| zuhause | – | – | button.c6k-hk „Hoch in den Himmel“ 101×38 | – | – | Blase ← button.c6z-ding.c6z-fenster „Fenster“ (53 %)<br>Blase bei Chips ← button.c6z-ding.c6z-knaeuel „Fadenknäuel“ (48 %) | – | `pruef/iphone-zuhause.png` |
 
 | Test | Ergebnis | Messung |
 |---|---|---|
-| Blase hält ihre Größe beim Schreiben | grün | 76 76 76 76 76 76 76 76 76 76 76 76 |
+| Blase hält ihre Größe beim Schreiben | grün | 74 74 74 74 74 74 74 74 74 74 74 74 |
 | Antwort-Chips: sichtbar, Wahl kommt an | grün | {"n": 3, "sicht": "visible", "a": "Müde"} |
-| Text tippen, Raum wechseln, zurück: Text noch da | grün | {"dock": "Ein Satz, der bleibt", "raum": null, "scroll": null, "gespeichert": "Ein Satz, der bleibt"} |
+| Text tippen, Raum wechseln, zurück: Text noch da | grün | {"dock": "Ein Satz, der bleibt", "raum": null, "scroll": 120, "gespeichert": "Ein Satz, der bleibt"} |
 | #c6 scrollt nicht nach Tippen und Raumwechsel | grün | 0/0 |
-| Wischen: nach links, zurück, Zupfer bleibt, senkrecht bleibt; Nachbar lugt herein | grün | zuhause→werkstatt→zuhause (1 Zug/Züge zurück), Zupfer zuhause, senkrecht zuhause, Nachbar mitten im Wischen: an x=255 |
+| Wischen oben (y=250): nach links und zurück | grün | rezeption→zuhause→rezeption |
+| Wischen unten (y=560): nach links und zurück | grün | rezeption→zuhause→rezeption |
+| Wischen: nach links, zurück, Zupfer bleibt, senkrecht bleibt; Nachbar lugt herein | grün | rezeption→zuhause→rezeption (1 Zug/Züge zurück), Zupfer rezeption, senkrecht rezeption, Nachbar mitten im Wischen: an x=255 |
 | Wischen: genau ein Zug je Raumwechsel | grün | 1 Zug/Züge zurück |
-| Wischen: langsamer Zug blättert, Zug über Carl blättert | grün | langsam → werkstatt, über Carl → werkstatt |
+| Wischen: langsamer Zug blättert, Zug über Carl blättert | grün | langsam → zuhause, über Carl → zuhause |
 | #c6 scrollt nicht nach Gesten | grün | 0/0 |
 | #c6 bleibt bei scrollIntoView/scrollLeft von außen fest | grün | [0, 0] |
 | Höhenfahrt Boden → Vogelflug → Boden | grün | vogel → boden |
@@ -40,27 +33,18 @@ Start: `zuhause`
 
 ## computer
 
-Start: `zuhause`
+Start: `rezeption`
 
 | Raum | Fehler | Überlauf | Tippziele < 44 | Überdeckt | Kontrast | Blase/Chips | Scroll | Bild |
 |---|---|---|---|---|---|---|---|---|
-| zuhause | – | – | – | – | – | – | – | `pruef/computer-zuhause.png` |
-| werkstatt | – | – | – | – | – | – | – | `pruef/computer-werkstatt.png` |
-| bibliothek | – | – | – | – | – | – | – | `pruef/computer-bibliothek.png` |
-| fahrrad | – | – | – | – | – | – | – | `pruef/computer-fahrrad.png` |
-| laden | – | – | – | – | – | – | – | `pruef/computer-laden.png` |
-| lesesaal | – | – | – | – | – | – | – | `pruef/computer-lesesaal.png` |
-| netz | – | – | – | – | – | – | – | `pruef/computer-netz.png` |
-| post | – | – | – | – | – | – | – | `pruef/computer-post.png` |
-| space | – | – | – | – | – | – | – | `pruef/computer-space.png` |
-| teleskop | – | – | – | – | – | – | – | `pruef/computer-teleskop.png` |
-| rundgang | – | – | – | – | – | – | – | `pruef/computer-rundgang.png` |
+| rezeption | – | – | – | – | – | – | – | `pruef/computer-rezeption.png` |
+| zuhause | – | – | button.c6k-hk „Hoch in den Himmel“ 101×38 | – | – | – | – | `pruef/computer-zuhause.png` |
 
 | Test | Ergebnis | Messung |
 |---|---|---|
-| Blase hält ihre Größe beim Schreiben | grün | 81 81 81 81 81 81 81 81 81 81 81 81 |
+| Blase hält ihre Größe beim Schreiben | grün | 79 79 79 79 79 79 79 79 79 79 79 79 |
 | Antwort-Chips: sichtbar, Wahl kommt an | grün | {"n": 3, "sicht": "visible", "a": "Müde"} |
-| Text tippen, Raum wechseln, zurück: Text noch da | grün | {"dock": "Ein Satz, der bleibt", "raum": null, "scroll": null, "gespeichert": "Ein Satz, der bleibt"} |
+| Text tippen, Raum wechseln, zurück: Text noch da | grün | {"dock": "Ein Satz, der bleibt", "raum": null, "scroll": 61, "gespeichert": "Ein Satz, der bleibt"} |
 | #c6 scrollt nicht nach Tippen und Raumwechsel | grün | 0/0 |
 | Höhenfahrt Boden → Vogelflug → Boden | grün | vogel → boden |
 | Keine Konsolenfehler in den Tests | grün |  |
