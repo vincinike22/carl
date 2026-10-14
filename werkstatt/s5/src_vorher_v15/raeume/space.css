@@ -1,0 +1,72 @@
+/* Bausteine an der Leine: Anhänger aus Packpapier, neben dem Kernsatz */
+.c6k-sp .c6z-sp-anh{display:block;min-height:56px;padding:12px 7px 8px;border:1.5px solid #2b2722;border-radius:3px 3px 10px 10px;background:#f1e3c4;box-shadow:2px 3px 0 rgba(43,39,34,.22);text-align:left;color:#2b2722;font:inherit}
+.c6k-sp .c6z-sp-anh::after{content:"";position:absolute;right:7px;top:7px;width:6px;height:6px;border-radius:50%;border:1.3px solid #2b2722;background:#fbf7f0;opacity:.7}
+.c6z-sp-anh-oben{display:flex;align-items:center;gap:4px;margin:0 0 3px;font:600 10.5px/1.1 Figtree,system-ui,sans-serif;letter-spacing:.02em;color:#5f5a52;white-space:nowrap;overflow:hidden}
+.c6z-sp-anh-zeichen{flex:none;display:inline-block;width:15px;height:15px}
+.c6z-sp-anh-zeichen svg{display:block;width:100%;height:100%}
+.c6k-sp .c6z-sp-anh-text{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font:600 16px/1.02 Caveat,cursive;color:#2b2722;overflow-wrap:break-word;-webkit-hyphens:auto;hyphens:auto}
+.c6k-sp .c6z-sp-anh-bald .c6z-sp-anh-oben{color:#a3301f}
+.c6k-sp .c6z-sp-anh-getan{background:#e3ead2}
+.c6k-sp .c6z-sp-anh-getan .c6z-sp-anh-oben{color:#4f6b34}
+.c6k-sp .c6z-sp-anh:hover{transform:rotate(0) translateY(1px)}
+.c6k-sp .c6z-sp-anh:focus-visible{outline:2px solid var(--hand,#b4460c);outline-offset:3px}
+.c6k-sp-computer .c6z-sp-anh{min-height:72px;padding:15px 10px 10px}
+.c6k-sp-computer .c6z-sp-anh-oben{font-size:12px}
+.c6k-sp-computer .c6z-sp-anh-zeichen{width:17px;height:17px}
+.c6k-sp-computer .c6z-sp-anh-text{font-size:19.5px;-webkit-line-clamp:3}
+
+/* Wetter geht leise: ein Schauer zieht ab, Nebel hebt sich */
+.c6z-sp-wetter,.c6z-sp-w-wetter{transition:opacity 1.6s ease}
+.c6z-sp-wetter.c6z-sp-w-geht,.c6z-sp-w-wetter.c6z-sp-w-geht{opacity:0}
+.c6z-sp-w-geht .c6z-sp-nebel{transform:translateY(-18px);transition:transform 1.6s ease}
+
+/* Der Platz für ein späteres echtes Programm, ehrlich und leise */
+.c6z-sp-lw-spaeter{margin-top:14px;padding-top:10px;border-top:1px dashed rgba(43,39,34,.25);font:italic 400 13.5px/1.4 Fraunces,Georgia,serif;color:#5f5a52}
+
+@media (prefers-reduced-motion:reduce){.c6z-sp-wetter,.c6z-sp-w-wetter{transition:none}}
+
+/* im Blatt „An der Leine“ stehen die Anhänger groß zwischen den Zetteln */
+.c6k-sp .c6z-sp-anh-gross{position:relative;min-height:84px;padding:16px 12px 12px;transform:rotate(var(--r,0deg))}
+.c6k-sp .c6z-sp-anh-gross .c6z-sp-anh-text{font-size:21px;-webkit-line-clamp:4}
+
+/* Computer: ein durchgehender Ort. Die Zeichnung füllt die Bühne, Titel und Gespräch liegen darin,
+   die Places stehen als Wegweiser am Weg neben Carl. */
+.c6k-sp.c6k-sp-computer{display:block;padding:0}
+.c6k-sp-computer .c6z-sp-welt{position:absolute;inset:0;height:auto;margin:0;-webkit-mask-image:none;mask-image:none}
+.c6k-sp-computer .c6k-sp-kopf{position:absolute;left:auto;right:136px;top:0;z-index:7;padding:58px 0 0}
+.c6k-sp-computer .c6z-sp-unter{background:rgba(251,247,240,.72);border-radius:8px;padding:2px 8px;margin-left:12px}
+.c6k-sp-computer .c6k-sp-pult{position:absolute;right:28px;top:224px;width:min(330px,32%);max-height:min(38%,320px);margin:0;padding:0;z-index:7;justify-content:flex-start}
+.c6k-sp-computer .c6k-sp-pult[data-leer]{display:none}
+.c6k-sp-computer .c6k-sp-faden{background:rgba(251,247,240,.86);box-shadow:2px 3px 0 rgba(43,39,34,.14);border:1.5px solid rgba(43,39,34,.2)}
+.c6k-sp-computer .c6z-sp-fuss{display:none!important}
+.c6k-sp-computer .c6k-sp-blaettern{display:none}
+/* der Wegweiser: Pfosten im Boden, Schilder zeigen zu den Orten */
+.c6k-sp-computer .c6z-sp-welt>.c6z-sp-pfahl{position:absolute;left:calc(50% + var(--sp-carl,240px) * .5 + 26px);bottom:3%;z-index:6;width:auto;padding:0 0 0 22px}
+.c6k-sp-computer .c6z-sp-welt>.c6z-sp-pfahl .c6z-sp-stamm{top:-30px;bottom:-4px}
+.c6k-sp-computer .c6z-sp-welt>.c6z-sp-pfahl .c6k-sp-wahl-spur{max-height:min(330px,46vh);padding:10px 16px 26px 0}
+.c6k-sp-computer .c6z-sp-welt>.c6z-sp-pfahl .c6z-sp-schild{min-height:40px}
+/* Wolken und Sonne bleiben unter der Wegzeile oben */
+.c6k-sp-computer .c6z-sp-wetter{top:70px}
+.c6k-sp-computer .c6z-sp-welt>.c6z-sp-sonne{margin-top:56px}
+
+/* s4 · weniger: Unterzeile und Blumentopf fallen weg (der Faden zeigt das Wachsen schon mit Perlen) */
+.c6k-sp .c6z-sp-unter{display:none}
+.c6k-sp .c6z-sp-pflanze{display:none}
+/* das leere Gespräch sagt nichts: weg, auch am iPhone */
+.c6k-sp .c6k-sp-pult[data-leer]{display:none}
+
+/* iPhone: der Wegweiser steht in der Szene rechts neben Carl; die Szene bekommt den frei gewordenen Platz */
+.c6k-sp:not(.c6k-sp-computer):not(.c6k-sp-leer) .c6z-sp-welt{flex:1 1 auto;height:auto;min-height:340px;max-height:none}
+.c6k-sp:not(.c6k-sp-computer) .c6k-sp-pult{flex:0 1 auto;max-height:34%}
+.c6k-sp:not(.c6k-sp-computer) .c6z-sp-welt>.c6z-sp-pfahl{position:absolute;left:calc(50% + var(--sp-carl,130px) * .42 + 10px);right:auto;bottom:3%;z-index:6;margin:0;padding:0 0 0 13px;overflow:visible;touch-action:auto;width:auto}
+.c6k-sp:not(.c6k-sp-computer) .c6z-sp-welt>.c6z-sp-pfahl .c6z-sp-stamm{display:block;position:absolute;left:0;top:-18px;bottom:-3px;width:11px;border:2px solid var(--tusche);border-radius:3px 3px 1px 1px;box-sizing:border-box;background:linear-gradient(90deg,rgba(255,255,255,.22),rgba(255,255,255,0) 45%,rgba(43,39,34,.14)),#c99d63}
+.c6k-sp:not(.c6k-sp-computer) .c6z-sp-welt>.c6z-sp-pfahl .c6z-sp-pfahl-kontakt{display:block;left:4px;bottom:-5px;width:54px;height:10px;margin-left:-22px}
+.c6k-sp:not(.c6k-sp-computer) .c6z-sp-welt>.c6z-sp-pfahl .c6k-sp-wahl-spur{flex-direction:column;align-items:flex-start;gap:6px;width:auto;min-width:0;max-height:46%;max-height:min(230px,30vh);overflow-y:auto;overflow-x:visible;scrollbar-width:none;padding:8px 14px 18px 0;background:none;touch-action:pan-y}
+.c6k-sp:not(.c6k-sp-computer) .c6z-sp-welt>.c6z-sp-pfahl .c6k-sp-wahl-spur::-webkit-scrollbar{display:none}
+.c6k-sp:not(.c6k-sp-computer) .c6z-sp-welt>.c6z-sp-pfahl .c6z-sp-schild{min-height:44px;gap:6px;padding:2px 14px 2px 10px;border-radius:3px 5px 5px 3px;transform-origin:0 50%}
+.c6k-sp:not(.c6k-sp-computer) .c6z-sp-welt>.c6z-sp-pfahl .c6z-sp-schild::before{display:none}
+.c6k-sp:not(.c6k-sp-computer) .c6z-sp-welt>.c6z-sp-pfahl .c6z-sp-schild::after{content:'';position:absolute;right:-8px;top:50%;width:13px;height:13px;margin-top:-6.5px;border:2px solid var(--tusche);border-left:0;border-bottom:0;border-radius:0 3px 0 0;background:inherit;transform:rotate(45deg);box-shadow:2px -1.5px 0 rgba(43,39,34,.3)}
+.c6k-sp:not(.c6k-sp-computer) .c6z-sp-welt>.c6z-sp-pfahl .c6z-sp-schild-leer::after{border-style:dashed;border-color:#8a8378;box-shadow:none;background:rgba(251,247,240,.6)}
+.c6k-sp:not(.c6k-sp-computer) .c6z-sp-welt>.c6z-sp-pfahl .c6k-sp-mini{display:none}
+.c6k-sp:not(.c6k-sp-computer) .c6z-sp-welt>.c6z-sp-pfahl .c6k-sp-wahl-name{font-size:13.5px}
+.c6k-sp:not(.c6k-sp-computer) .c6z-sp-welt>.c6z-sp-pfahl .c6z-sp-schild-nadel{left:-7px;top:-10px;width:20px;height:20px}

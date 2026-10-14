@@ -1,0 +1,409 @@
+// Der Beamer: ein kleines Gerät, das Blätter, Bilder und Seiten an eine Wand im Space wirft.
+(function () {
+  var C6 = window.C6 = window.C6 || {};
+  var D = document;
+  var T = '#2b2722', P = '#fbf7f0';
+
+  function S() { return C6.S || (C6.S = {}); }
+  function roh() { var s = S(); if (!s.beamer || typeof s.beamer !== 'object' || Array.isArray(s.beamer)) s.beamer = {}; return s.beamer; }
+  function aendern(fn) {
+    if (typeof C6.aendern === 'function') C6.aendern(function (s) { if (!s.beamer || typeof s.beamer !== 'object') s.beamer = {}; fn(s.beamer); });
+    else { fn(roh()); try { C6.speichern && C6.speichern(); } catch (e) {} }
+  }
+  function esc(t) { return String(t == null ? '' : t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function kurz(t, n) { t = String(t || '').replace(/\s+/g, ' ').trim(); return t.length > n ? t.slice(0, n - 1).trim() + '…' : t; }
+  function neueId() { return 'b' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+  function satz(k, ersatz) { try { var s = C6.stimme && C6.stimme.sag(k); return typeof s === 'string' && s ? s : ersatz; } catch (e) { return ersatz; } }
+  function bus(n, d) { try { C6.bus && C6.bus.emit(n, d); } catch (e) {} }
+  function mach(tag, cls, vater, text) { var e = D.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; if (vater) vater.appendChild(e); return e; }
+  function hostVon(url) { try { return new URL(url).hostname.replace(/^www\./, ''); } catch (e) { return ''; } }
+  function urlOk(u) { u = String(u || '').trim(); if (!/^https?:\/\//i.test(u)) u = u ? 'https://' + u : ''; try { var x = new URL(u); return /^https?:$/.test(x.protocol) ? x.href : ''; } catch (e) { return ''; } }
+  var ARTEN = /^(bild|link|seite|ergebnis|graph|anbindung)$/;
+  var ANBINDUNGEN = ['Whoop', 'Fitbit', 'Strava'];
+
+  /* ---------- Blätter des Beamers je Space ---------- */
+  var api = {
+    zeige: function (sid, b) {
+      sid = sid || '';
+      if (!b || !ARTEN.test(b.art)) return null;
+      var id = neueId(), ts = Date.now();
+      var d = { id: id, art: b.art, titel: kurz(b.titel || '', 80), ts: ts };
+      if (b.url) d.url = String(b.url).slice(0, 400000);
+      if (b.text) d.text = String(b.text).slice(0, 6000);
+      if (b.daten && typeof b.daten === 'object') d.daten = b.daten;
+      if (b.quelle && typeof b.quelle === 'object') d.quelle = b.quelle;
+      aendern(function (st) {
+        var a = Array.isArray(st[sid]) ? st[sid] : (st[sid] = []);
+        // dasselbe Blatt (gleiche Quelle) wird ersetzt, nicht verdoppelt
+        var i = -1;
+        a.forEach(function (x, j) { if (d.quelle && d.quelle.lauf && x.quelle && x.quelle.lauf === d.quelle.lauf) i = j; });
+        if (i >= 0) { d.id = a[i].id; a[i] = d; } else a.push(d);
+        if (a.length > 30) a.splice(0, a.length - 30);
+      });
+      bus('beamer', { was: 'neu', sid: sid, id: d.id, art: d.art });
+      return d.id;
+    },
+    blaetter: function (sid) { var a = roh()[sid || '']; return Array.isArray(a) ? a.slice() : []; },
+    entferne: function (sid, id) {
+      sid = sid || '';
+      aendern(function (st) { if (Array.isArray(st[sid])) st[sid] = st[sid].filter(function (x) { return x.id !== id; }); });
+      bus('beamer', { was: 'weg', sid: sid, id: id });
+    },
+    // das Blatt des Beamers (als Baustein-Inhalt oder im Projektor)
+    bauen: function (el, daten, a) { return blattUI(el, (a && a.sid) || '', a || {}); },
+    oeffne: function (sid, o) {
+      o = o || {};
+      if (!C6.projektor || !C6.projektor.auf) return Promise.resolve(null);
+      return C6.projektor.auf({ titel: 'Beamer', inhalt: function (el) { blattUI(el, sid || '', { sid: sid || '', seite: o.seite }); } });
+    },
+    zeichen: zeichen,
+    geraet: geraet,
+    geraetInnen: geraetInnen,
+    anbindungen: ANBINDUNGEN.slice()
+  };
+  C6.beamer = api;
+
+  /* ---------- Zeichnungen: aus Kreis und Quadrat ---------- */
+  // Zeichen 48×48: Quadrat (Gehäuse), Kreis (Linse), Dreieck (Licht)
+  function zeichen() {
+    return '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 20 L8 8 L30 15 L30 25 Z" fill="#fff0c9" stroke="none"/>' +
+      '<rect x="18" y="20" width="24" height="18" rx="5" fill="#d9bf93" stroke="' + T + '" stroke-width="2.5"/>' +
+      '<circle cx="22" cy="29" r="6" fill="#e6efee" stroke="' + T + '" stroke-width="2.5"/><circle cx="22" cy="29" r="2.2" fill="' + T + '"/>' +
+      '<path d="M22 40 V44 M36 40 V44" stroke="' + T + '" stroke-width="2.5" stroke-linecap="round"/><circle cx="35" cy="24" r="1.8" fill="' + T + '"/></svg>';
+  }
+  // Das Gerät selbst (ohne Kegel), Ursprung = Linse; schaut nach links. Breite ~64 Einheiten.
+  function geraetInnen(f) {
+    f = f || '#d9bf93';
+    return '<g class="c6w-bm-koerper">' +
+      '<rect x="-6" y="-14" width="58" height="30" rx="7" fill="' + f + '" stroke="' + T + '" stroke-width="2.5"/>' +
+      '<rect x="-6" y="-14" width="58" height="30" rx="7" fill="url(#c6w-bm-eig)" stroke="none"/>' +
+      '<path d="M6 -14 V16" stroke="' + T + '" stroke-width="1.6" opacity=".35"/>' +
+      '<circle cx="0" cy="0" r="9" fill="#e6efee" stroke="' + T + '" stroke-width="2.5"/><circle cx="0" cy="0" r="4.2" fill="#fff0c9" stroke="' + T + '" stroke-width="1.6"/><circle cx="-1.6" cy="-1.6" r="1.2" fill="#fff"/>' +
+      '<circle cx="40" cy="-7" r="2.6" fill="' + T + '"/><circle cx="32" cy="-7" r="1.6" fill="' + T + '" opacity=".5"/>' +
+      '<path d="M4 16 V21 M40 16 V21" stroke="' + T + '" stroke-width="3" stroke-linecap="round"/></g>';
+  }
+  // Gerät mit Lichtkegel auf eine Wand/Leinwand (für die Landschaft und das Blatt). o: {titel, leer, breit, hoch, farbe}
+  function geraet(o) {
+    o = o || {};
+    var w = o.breit || 200, h = o.hoch || 120;
+    var titel = o.titel ? kurz(o.titel, 26) : '';
+    var leer = !titel;
+    var zeilen = titel ? titel.split(' ').reduce(function (z, x) { if (!z.length || (z[z.length - 1] + ' ' + x).length > 14) z.push(x); else z[z.length - 1] += ' ' + x; return z; }, []).slice(0, 2) : [];
+    return '<svg class="c6w-bm-geraet" viewBox="0 0 200 120" aria-hidden="true" width="' + w + '" height="' + h + '">' +
+      '<defs><linearGradient id="c6w-bm-eig" x1="0" y1="0" x2="1" y2="0"><stop offset=".6" stop-color="#2b2722" stop-opacity="0"/><stop offset="1" stop-color="#2b2722" stop-opacity=".16"/></linearGradient>' +
+      '<linearGradient id="c6w-bm-kegel" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#fff6dc" stop-opacity=".9"/><stop offset="1" stop-color="#fff6dc" stop-opacity=".12"/></linearGradient></defs>' +
+      // Wand-Blatt (Quadrat)
+      '<g class="c6w-bm-wandblatt"><rect x="14" y="10" width="92" height="66" rx="3" fill="' + (leer ? '#f6f0e6' : P) + '" stroke="' + (leer ? '#8a8378' : T) + '" stroke-width="2"' + (leer ? ' stroke-dasharray="5 4"' : '') + '/>' +
+      (leer ? '' : '<rect x="14" y="10" width="92" height="6" fill="' + (o.farbe || '#2f5f8a') + '" stroke="' + T + '" stroke-width="1.6"/>') +
+      zeilen.map(function (z, i) { return '<text x="60" y="' + (40 + i * 18) + '" text-anchor="middle" class="c6w-bm-wandtext">' + esc(z) + '</text>'; }).join('') + '</g>' +
+      // Lichtkegel (Dreieck) von der Linse zur Wand
+      '<path class="c6w-bm-licht" d="M140 86 L106 12 L106 76 Z" fill="url(#c6w-bm-kegel)"/>' +
+      '<g class="c6w-bm-staub" aria-hidden="true"><circle cx="118" cy="40" r="1.3" fill="#fff"/><circle cx="126" cy="62" r="1.1" fill="#fff"/><circle cx="112" cy="54" r="1" fill="#fff"/></g>' +
+      // Kontaktschatten, Gerät
+      '<ellipse cx="172" cy="108" rx="30" ry="4.5" fill="rgba(43,39,34,.16)"/>' +
+      '<g transform="translate(140,86)">' + geraetInnen(o.farbe ? '#d9bf93' : '#d9bf93') + '</g></svg>';
+  }
+
+  // Das Gemälde in der Landschaft: oben die Wand mit dem letzten Bild als Miniatur, unten das Gerät, das es hinwirft.
+  // Ohne Bild: eine helle leere Fläche mit einer Bleistiftzeile. viewBox 90×98 (wie das Ding-Feld 64×70).
+  function zeilenVon(t, n, max) {
+    return String(t || '').split(' ').reduce(function (z, x) { if (!z.length || (z[z.length - 1] + ' ' + x).length > n) z.push(x); else z[z.length - 1] += ' ' + x; return z; }, []).slice(0, max);
+  }
+  function miniatur(s, farbe) {
+    var x0 = 6, y0 = 6, w = 62, h = 44, b = s && s.b, art = s ? (s.lauf ? 'ergebnis' : b.art) : '';
+    var band = '<rect x="' + x0 + '" y="' + y0 + '" width="' + w + '" height="4" fill="' + (farbe || '#2f5f8a') + '"/>';
+    if (!s) return '<text x="37" y="25" text-anchor="middle" class="c6w-bm-mini-blei">Hier zeig ich</text><text x="37" y="38" text-anchor="middle" class="c6w-bm-mini-blei">dir Bilder</text>';
+    if (art === 'bild' && b.url && /^(https?:|data:image\/)/i.test(b.url)) {
+      return '<clipPath id="c6w-bm-mclip"><rect x="' + x0 + '" y="' + y0 + '" width="' + w + '" height="' + h + '" rx="2"/></clipPath>' +
+        '<image href="' + esc(b.url) + '" x="' + x0 + '" y="' + y0 + '" width="' + w + '" height="' + h + '" preserveAspectRatio="xMidYMid slice" clip-path="url(#c6w-bm-mclip)"/>';
+    }
+    if (art === 'graph') {
+      return band + [10, 18, 14, 24, 20].map(function (v, i) { return '<rect x="' + (14 + i * 10) + '" y="' + (46 - v) + '" width="6" height="' + v + '" rx="1" fill="' + (farbe || '#2f5f8a') + '" opacity=".75"/>'; }).join('') +
+        '<path d="M11 46.5 H64" stroke="' + T + '" stroke-width="1.2"/>';
+    }
+    if (art === 'seite' || art === 'link') {
+      return '<rect x="' + x0 + '" y="' + y0 + '" width="' + w + '" height="7" fill="#e7dfd2"/><circle cx="11" cy="9.5" r="1.3" fill="' + T + '"/><circle cx="15" cy="9.5" r="1.3" fill="' + T + '" opacity=".5"/>' +
+        '<text x="37" y="29" text-anchor="middle" class="c6w-bm-mini-titel">' + esc(kurz(b.titel || hostVon(b.url), 16)) + '</text>' +
+        '<path d="M14 37 H60 M14 42 H48" stroke="#8a8378" stroke-width="1.6" stroke-linecap="round"/>';
+    }
+    var titel = s.lauf ? (s.lauf.titel || 'Blatt') : (b.titel || 'Blatt');
+    var z = zeilenVon(kurz(titel, 30), 15, 2);
+    return band + z.map(function (t, i) { return '<text x="37" y="' + (24 + i * 11) + '" text-anchor="middle" class="c6w-bm-mini-titel">' + esc(t) + '</text>'; }).join('') +
+      '<path d="M16 ' + (z.length > 1 ? 43 : 35) + ' H58' + (z.length > 1 ? '' : ' M16 41 H48') + '" stroke="#8a8378" stroke-width="1.6" stroke-linecap="round"/>';
+  }
+  function wandbild(sid) {
+    var s = seitenVon(sid)[0] || null, f = fadenVon(sid), farbe = f ? f.farbe : null;
+    return '<svg class="c6w-bm-wandbild" viewBox="0 0 90 98" aria-hidden="true">' +
+      '<defs><linearGradient id="c6w-bm-eig" x1="0" y1="0" x2="1" y2="0"><stop offset=".6" stop-color="#2b2722" stop-opacity="0"/><stop offset="1" stop-color="#2b2722" stop-opacity=".16"/></linearGradient>' +
+      '<linearGradient id="c6w-bm-wkegel" x1="1" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#fff6dc" stop-opacity=".85"/><stop offset="1" stop-color="#fff6dc" stop-opacity=".1"/></linearGradient></defs>' +
+      // Lichtkegel von der Linse zur Unterkante der Wand
+      '<path class="c6w-bm-licht" d="M62 82 L8 48 L64 48 Z" fill="url(#c6w-bm-wkegel)"/>' +
+      '<g class="c6w-bm-staub"><circle cx="44" cy="62" r="1.2" fill="#fff"/><circle cx="54" cy="70" r="1" fill="#fff"/></g>' +
+      // die Wand: Schatten, Fläche, Bild
+      '<rect x="7" y="7" width="64" height="46" rx="3" fill="rgba(43,39,34,.18)"/>' +
+      '<rect x="5" y="5" width="64" height="46" rx="3" fill="' + (s ? P : '#fffaf0') + '" stroke="' + T + '" stroke-width="1.8"/>' +
+      '<g class="c6w-bm-wandlicht">' + miniatur(s, farbe) + '</g>' +
+      '<rect x="5" y="5" width="64" height="46" rx="3" fill="none" stroke="' + T + '" stroke-width="1.8"/>' +
+      // Kontaktschatten, Gerät
+      '<ellipse cx="78" cy="95" rx="15" ry="2.6" fill="rgba(43,39,34,.18)"/>' +
+      '<g transform="translate(62,82) scale(.5)">' + geraetInnen('#d9bf93') + '</g></svg>';
+  }
+  // das Gemälde im Feld nachziehen, wenn ein neues Bild auf den Beamer kommt (nur der eine Knoten)
+  function feldNachziehen() {
+    var sid = ''; try { sid = (C6.space && C6.space.jetzt && C6.space.jetzt()) || ''; } catch (e) { sid = ''; }
+    if (!sid) return;
+    [].forEach.call(D.querySelectorAll('.c6z-bs-ding[data-art="beamer"] .c6z-bs-ding-bild'), function (b) { b.innerHTML = wandbild(sid); });
+  }
+  // einmal überhaupt: beim ersten Setzen sagt Carl, was der Beamer tut (ersetzt den allgemeinen Satz zum Setzen)
+  function erstesSetzen(d) {
+    if (!d || d.was !== 'neu' || d.art !== 'beamer') return;
+    var st = C6.S || {}; if (st.beamerErstGesagt) return;
+    if (typeof C6.aendern === 'function') C6.aendern(function (s) { s.beamerErstGesagt = true; }); else st.beamerErstGesagt = true;
+    var r = st.spaces && st.spaces[d.sid], warte = r && !r.ziehenGesagt ? 4600 : 60;
+    setTimeout(function () {
+      var jetzt = ''; try { jetzt = (C6.space && C6.space.jetzt && C6.space.jetzt()) || ''; } catch (e) {}
+      if (C6.jetzt !== 'space' || jetzt !== d.sid || !C6.sag) return;
+      try { C6.sag(satz('beamer.erst', 'Das ist mein Beamer. Was ich dir zeigen will, wirft er an die Wand.'), { merken: false }); } catch (e) {}
+    }, warte);
+  }
+  try {
+    if (C6.bus) {
+      C6.bus.on('beamer', function () { feldNachziehen(); });
+      C6.bus.on('strings', function (d) { if (d && d.was === 'lauf') feldNachziehen(); });
+      C6.bus.on('baustein', erstesSetzen);
+    }
+  } catch (e) {}
+
+  /* ---------- Das Blatt des Beamers: Seiten zum Wischen ---------- */
+  function laeufeVon(sid) { try { return sid && C6.geruest && C6.geruest.inSpace ? C6.geruest.inSpace(sid) : []; } catch (e) { return []; } }
+  function bausteineVon(sid) { try { return C6.bausteine && typeof C6.bausteine.alle === 'function' ? (C6.bausteine.alle(sid) || []) : []; } catch (e) { return []; } }
+  function fadenVon(sid) { try { return sid && C6.strings ? C6.strings.hol(sid) : null; } catch (e) { return null; } }
+
+  // Seiten: eigene Blätter des Beamers + die Gerüst-Blätter des Space (live), neueste zuerst
+  function seitenVon(sid) {
+    var eigene = api.blaetter(sid), schon = {};
+    eigene.forEach(function (b) { if (b.quelle && b.quelle.lauf) schon[b.quelle.lauf] = 1; });
+    var s = eigene.map(function (b) { return { id: b.id, art: b.art, b: b, ts: b.ts }; });
+    laeufeVon(sid).forEach(function (l) { if (!schon[l.id] && l.t) s.push({ id: 'l:' + l.id, art: 'ergebnis', lauf: l, ts: l.ts }); });
+    s.sort(function (a, b) { return b.ts - a.ts; });
+    return s;
+  }
+
+  // Zahlen aus einem Baustein lesen, so tolerant wie möglich: Tage mit Werten oder bloße Tage
+  function zahlenAus(bs) {
+    var d = (bs && bs.daten) || {}, reihe = [], einheit = d.einheit || '';
+    var quelle = Array.isArray(d.eintraege) ? d.eintraege : Array.isArray(d.tage) ? d.tage : Array.isArray(d.perlen) ? d.perlen : Array.isArray(d.werte) ? d.werte : Array.isArray(d) ? d : null;
+    if (!quelle) return null;
+    quelle.forEach(function (e) {
+      if (e == null) return;
+      if (typeof e === 'string') { reihe.push({ tag: e.slice(0, 10), v: 1 }); return; }
+      if (typeof e === 'number') { reihe.push({ tag: '', v: e }); return; }
+      var tag = e.tag || (e.ts ? new Date(e.ts).toISOString().slice(0, 10) : '') || (e.t && /^\d{4}-\d\d-\d\d/.test(e.t) ? e.t.slice(0, 10) : '');
+      var v = [e.v, e.wert, e.std, e.stunden, e.h, e.n, e.menge].filter(function (x) { return typeof x === 'number' && isFinite(x); })[0];
+      if (v == null) v = 1;
+      reihe.push({ tag: tag, v: v });
+    });
+    if (!reihe.length) return null;
+    // je Tag zusammenfassen, letzte 14
+    var je = {}, ord = [];
+    reihe.forEach(function (r) { var k = r.tag || ('#' + ord.length); if (!(k in je)) { je[k] = 0; ord.push(k); } je[k] += r.v; });
+    ord = ord.slice(-14);
+    return { punkte: ord.map(function (k) { return { tag: k, v: je[k] }; }), einheit: einheit, name: bs.name || (bs.art || 'Baustein') };
+  }
+  function graphSvg(z) {
+    var p = z.punkte, n = p.length, w = 300, h = 120, max = Math.max.apply(null, p.map(function (x) { return x.v; }).concat([1]));
+    var bw = Math.min(28, (w - 20) / n - 6);
+    var balken = p.map(function (x, i) {
+      var bh = Math.max(3, (x.v / max) * (h - 36)), bx = 10 + i * ((w - 20) / n) + ((w - 20) / n - bw) / 2;
+      var lab = x.tag && x.tag.charAt(0) !== '#' ? x.tag.slice(8, 10) + '.' : '';
+      return '<rect x="' + bx.toFixed(1) + '" y="' + (h - 24 - bh).toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + bh.toFixed(1) + '" rx="3" fill="#2f5f8a" stroke="' + T + '" stroke-width="1.6"/>' +
+        (lab ? '<text x="' + (bx + bw / 2).toFixed(1) + '" y="' + (h - 8) + '" text-anchor="middle" class="c6w-bm-graphtext">' + esc(lab) + '</text>' : '');
+    }).join('');
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" class="c6w-bm-graph" role="img" aria-label="' + esc(z.name) + ', ' + n + ' Tage"><path d="M8 ' + (h - 24) + ' H' + (w - 8) + '" stroke="' + T + '" stroke-width="2"/>' + balken + '</svg>';
+  }
+
+  function blattUI(el, sid, a) {
+    el.classList.add('c6w-bm');
+    var faden = fadenVon(sid);
+    el.innerHTML =
+      '<div class="c6w-bm-oben"><div class="c6w-bm-bild"></div><div class="c6w-bm-wort"><b>Beamer</b><small>' + (faden ? 'In „' + esc(kurz(faden.titel, 30)) + '“' : 'Ohne Projekt') + '</small></div></div>' +
+      '<div class="c6w-bm-wand"><div class="c6w-bm-seiten" data-c6-kein-wisch tabindex="0" aria-label="Bilder des Beamers, wischen oder blättern"></div>' +
+      '<p class="c6w-bm-leer" hidden></p></div>' +
+      '<div class="c6w-bm-nav"><button type="button" class="c6w-bm-vor" aria-label="Voriges Bild">‹</button><span class="c6w-bm-punkte" aria-live="polite"></span><button type="button" class="c6w-bm-nach" aria-label="Nächstes Bild">›</button></div>' +
+      '<div class="c6w-bm-tun" role="group" aria-label="Auf den Beamer legen">' +
+      '<button type="button" data-tu="bild">Bild zeigen</button><button type="button" data-tu="seite">Seite zeigen</button><button type="button" data-tu="graph">Zahlen zeichnen</button></div>' +
+      '<div class="c6w-bm-form" hidden></div>' +
+      '<p class="c6w-bm-bleistift c6w-bm-anbindung">' + esc(satz('beamer.anbindung', 'Anbindung geplant: ' + ANBINDUNGEN.join(', ') + '. Noch kommt hier nichts an, und ich spiele nichts vor.')) + '</p>';
+    var bild = el.querySelector('.c6w-bm-bild'), seiten = el.querySelector('.c6w-bm-seiten'), leer = el.querySelector('.c6w-bm-leer'), punkte = el.querySelector('.c6w-bm-punkte'), form = el.querySelector('.c6w-bm-form');
+    var S_ = { list: [], i: 0, off: null };
+
+    function zeichneSeiten(bleibBei) {
+      S_.list = seitenVon(sid);
+      seiten.textContent = '';
+      var erste = S_.list[0];
+      bild.innerHTML = geraet({ titel: erste ? titelVon(erste) : '', farbe: faden ? faden.farbe : null, breit: 150, hoch: 90 });
+      leer.hidden = !!S_.list.length;
+      leer.textContent = satz('beamer.leer', 'Der Beamer wartet. Gib mir ein Bild, eine Seite oder ein Blatt.');
+      S_.list.forEach(function (s, i) {
+        var sec = mach('section', 'c6w-bm-seite', seiten);
+        sec.setAttribute('data-id', s.id); sec.setAttribute('data-c6-bild', ''); sec.setAttribute('aria-label', 'Bild ' + (i + 1) + ' von ' + S_.list.length + ': ' + titelVon(s));
+        seiteFuellen(sec, s);
+      });
+      var ziel = 0;
+      if (bleibBei) S_.list.forEach(function (s, i) { if (s.id === bleibBei) ziel = i; });
+      S_.i = ziel;
+      setTimeout(function () { geheZu(ziel, false); }, 0);
+      punkteZeichnen();
+    }
+    function titelVon(s) {
+      if (s.lauf) return (s.lauf.titel || 'Blatt') + ': ' + kurz(s.lauf.t, 40);
+      var b = s.b; return b.titel || (b.art === 'seite' || b.art === 'link' ? hostVon(b.url) : b.art === 'bild' ? 'Bild' : b.art === 'graph' ? 'Zahlen' : b.art === 'anbindung' ? 'Anbindung' : 'Blatt');
+    }
+    function punkteZeichnen() {
+      punkte.textContent = '';
+      if (!S_.list.length) { punkte.textContent = 'Kein Bild'; return; }
+      S_.list.forEach(function (s, i) { var d = mach('i', i === S_.i ? 'c6w-bm-jetzt' : '', punkte); d.setAttribute('aria-hidden', 'true'); });
+      mach('span', 'c6w-bm-sr', punkte, 'Bild ' + (S_.i + 1) + ' von ' + S_.list.length);
+    }
+    function geheZu(i, sanft) {
+      if (!S_.list.length) return;
+      i = Math.max(0, Math.min(S_.list.length - 1, i)); S_.i = i;
+      var sec = seiten.children[i];
+      if (sec) seiten.scrollTo({ left: sec.offsetLeft - seiten.offsetLeft, behavior: sanft && !C6.ruhig ? 'smooth' : 'auto' });
+      punkteZeichnen();
+    }
+    seiten.addEventListener('scroll', function () {
+      var w = seiten.clientWidth || 1, i = Math.round(seiten.scrollLeft / w);
+      if (i !== S_.i && i >= 0 && i < S_.list.length) { S_.i = i; punkteZeichnen(); }
+    }, { passive: true });
+    el.querySelector('.c6w-bm-vor').addEventListener('click', function () { geheZu(S_.i - 1, true); });
+    el.querySelector('.c6w-bm-nach').addEventListener('click', function () { geheZu(S_.i + 1, true); });
+    seiten.addEventListener('keydown', function (e) { if (e.key === 'ArrowLeft') { e.preventDefault(); geheZu(S_.i - 1, true); } if (e.key === 'ArrowRight') { e.preventDefault(); geheZu(S_.i + 1, true); } });
+
+    function seiteFuellen(sec, s) {
+      var b = s.b, art = s.art, h = '';
+      if (art === 'ergebnis') {
+        var l = s.lauf, text = l ? (C6.geruest && C6.geruest.text ? C6.geruest.text(l) : l.t) : (b.text || '');
+        var kopf = l ? (l.titel || 'Blatt') : (b.titel || 'Blatt');
+        h = '<div class="c6w-bm-papier"><p class="c6w-bm-kicker">Blatt · ' + esc(kopf) + '</p>' +
+          String(text).split(/\n+/).filter(Boolean).slice(0, 12).map(function (z, i) { return '<p class="' + (i ? 'c6w-bm-zeile' : 'c6w-bm-erg') + '">' + esc(z) + '</p>'; }).join('') +
+          ((l || (b.quelle && b.quelle.lauf)) && C6.geruest && C6.geruest.zeigeBlatt ? '<button type="button" class="c6w-bm-knopf" data-blatt="' + esc(l ? l.id : b.quelle.lauf) + '">Blatt öffnen</button>' : '') + '</div>';
+      } else if (art === 'bild') {
+        h = '<figure class="c6w-bm-figur"><img src="' + esc(b.url) + '" alt="' + esc(b.titel || 'Bild auf dem Beamer') + '" loading="lazy">' + (b.titel ? '<figcaption>' + esc(b.titel) + '</figcaption>' : '') + '</figure>';
+      } else if (art === 'seite') {
+        h = '<div class="c6w-bm-fremd"><p class="c6w-bm-kicker"><span class="c6w-bm-bleistift">Fremde Seite</span> · ' + esc(hostVon(b.url)) + '</p>' +
+          '<div class="c6w-bm-rahmen"><iframe title="' + esc(b.titel || hostVon(b.url)) + '" sandbox="allow-scripts allow-forms allow-popups" referrerpolicy="no-referrer" loading="lazy"></iframe>' +
+          '<div class="c6w-bm-karte c6w-bm-nichtda" hidden><p>' + esc(b.titel || hostVon(b.url)) + '</p><p class="c6w-bm-bleistift">Einbetten lässt sie sich hier nicht. Ich kann sie nur öffnen.</p></div></div>' +
+          '<a class="c6w-bm-knopf" href="' + esc(b.url) + '" target="_blank" rel="noopener noreferrer">Öffnen</a></div>';
+      } else if (art === 'link') {
+        h = '<div class="c6w-bm-karte"><p class="c6w-bm-kicker">Verweis · ' + esc(hostVon(b.url)) + '</p><p class="c6w-bm-erg">' + esc(b.titel || b.url) + '</p><a class="c6w-bm-knopf" href="' + esc(b.url) + '" target="_blank" rel="noopener noreferrer">Öffnen</a></div>';
+      } else if (art === 'graph') {
+        var bs = bausteineVon(sid).filter(function (x) { return b.daten && x.id === b.daten.von; })[0];
+        var z = bs ? zahlenAus(bs) : null;
+        h = '<div class="c6w-bm-papier"><p class="c6w-bm-kicker">Zahlen · ' + esc(b.titel || (bs && (bs.name || bs.art)) || 'Baustein') + '</p>' +
+          (z ? graphSvg(z) + '<p class="c6w-bm-zeile">' + z.punkte.length + (z.punkte.length === 1 ? ' Tag' : ' Tage') + (z.einheit ? ' · ' + esc(z.einheit) : '') + '. Nur gezeichnet, nicht bewertet.</p>'
+            : '<p class="c6w-bm-bleistift">Noch keine Zahlen da. Sobald der Baustein etwas sammelt, zeichne ich sie hier.</p>') + '</div>';
+      } else if (art === 'anbindung') {
+        h = '<div class="c6w-bm-karte c6w-bm-anb"><p class="c6w-bm-kicker">Anbindung</p><p class="c6w-bm-erg">' + esc(b.titel) + '</p><p class="c6w-bm-bleistift">Anbindung geplant. Noch kommt hier nichts an, und ich spiele nichts vor.</p></div>';
+      }
+      sec.innerHTML = h + (b ? '<button type="button" class="c6w-bm-weg" aria-label="Vom Beamer nehmen">Vom Beamer nehmen</button>' : '');
+      if (art === 'seite') {
+        var fr = sec.querySelector('iframe'), karte = sec.querySelector('.c6w-bm-nichtda'), fertig = false;
+        fr.addEventListener('load', function () { fertig = true; });
+        fr.addEventListener('error', function () { fr.hidden = true; karte.hidden = false; });
+        fr.src = b.url;
+        setTimeout(function () { if (!fertig && sec.isConnected) { fr.hidden = true; karte.hidden = false; } }, 8000);
+      }
+      var bk = sec.querySelector('[data-blatt]');
+      if (bk) bk.addEventListener('click', function () { try { C6.geruest.zeigeBlatt(bk.getAttribute('data-blatt'), { zurueck: { beamer: sid } }); } catch (e) {} });
+      var weg = sec.querySelector('.c6w-bm-weg');
+      if (weg) weg.addEventListener('click', function () { api.entferne(sid, b.id); zeichneSeiten(); });
+    }
+
+    /* ----- Hinlegen: Bild, Seite, Zahlen, Anbindung ----- */
+    var offenTu = null;
+    function formZu() { form.hidden = true; form.innerHTML = ''; offenTu = null; [].forEach.call(el.querySelectorAll('.c6w-bm-tun button'), function (b) { b.setAttribute('aria-expanded', 'false'); }); }
+    function formAuf(tu, knopf) {
+      if (offenTu === tu) { formZu(); return; }
+      formZu(); offenTu = tu; form.hidden = false; knopf.setAttribute('aria-expanded', 'true');
+      if (tu === 'bild') {
+        form.innerHTML = '<label class="c6w-bm-lab" for="c6w-bm-url">Bild von einer Adresse</label><div class="c6w-bm-zeile2"><input id="c6w-bm-url" class="c6w-bm-feld" type="url" inputmode="url" placeholder="https://…" autocomplete="off"><button type="button" class="c6w-bm-knopf" data-ok="url">Zeigen</button></div>' +
+          '<p class="c6w-bm-oder">oder</p><label class="c6w-bm-datei"><input type="file" accept="image/*"><span class="c6w-bm-knopf">Bild vom Gerät wählen</span></label>' +
+          '<p class="c6w-bm-bleistift">Das Bild bleibt auf deinem Gerät. Ich lade nichts hoch.</p><p class="c6w-bm-hinweis" hidden></p>';
+        var inp = form.querySelector('#c6w-bm-url'), hin = form.querySelector('.c6w-bm-hinweis');
+        form.querySelector('[data-ok="url"]').addEventListener('click', function () {
+          var u = urlOk(inp.value); if (!u) { hin.hidden = false; hin.textContent = 'Das sieht nicht wie eine Adresse aus.'; return; }
+          var id = api.zeige(sid, { art: 'bild', url: u, titel: hostVon(u) }); formZu(); zeichneSeiten(id);
+        });
+        inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); form.querySelector('[data-ok="url"]').click(); } });
+        form.querySelector('input[type=file]').addEventListener('change', function (ev) {
+          var f = ev.target.files && ev.target.files[0]; if (!f) return;
+          if (f.size > 2 * 1024 * 1024) { hin.hidden = false; hin.textContent = 'Das Bild ist größer als 2 MB. Ein kleineres bitte.'; return; }
+          hin.hidden = false; hin.textContent = 'Ich leg es auf …';
+          verkleinere(f).then(function (url) {
+            if (!url) { hin.textContent = 'Das konnte ich nicht lesen.'; return; }
+            var id = api.zeige(sid, { art: 'bild', url: url, titel: kurz(f.name.replace(/\.[^.]+$/, ''), 40) }); formZu(); zeichneSeiten(id);
+          });
+        });
+        setTimeout(function () { try { inp.focus({ preventScroll: true }); } catch (e) {} }, 50);
+      } else if (tu === 'seite') {
+        form.innerHTML = '<label class="c6w-bm-lab" for="c6w-bm-seite">Adresse der Seite</label><div class="c6w-bm-zeile2"><input id="c6w-bm-seite" class="c6w-bm-feld" type="url" inputmode="url" placeholder="https://…" autocomplete="off"><button type="button" class="c6w-bm-knopf" data-ok="seite">Zeigen</button></div>' +
+          '<p class="c6w-bm-bleistift">' + esc(satz('beamer.fremd', 'Eine fremde Seite. Ich zeig sie nur, ich kenn sie nicht.')) + '</p><p class="c6w-bm-hinweis" hidden></p>';
+        var inp2 = form.querySelector('#c6w-bm-seite'), hin2 = form.querySelector('.c6w-bm-hinweis');
+        form.querySelector('[data-ok="seite"]').addEventListener('click', function () {
+          var u = urlOk(inp2.value); if (!u) { hin2.hidden = false; hin2.textContent = 'Das sieht nicht wie eine Adresse aus.'; return; }
+          var id = api.zeige(sid, { art: 'seite', url: u, titel: hostVon(u) }); formZu(); zeichneSeiten(id);
+        });
+        inp2.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); form.querySelector('[data-ok="seite"]').click(); } });
+        setTimeout(function () { try { inp2.focus({ preventScroll: true }); } catch (e) {} }, 50);
+      } else if (tu === 'graph') {
+        var bs = bausteineVon(sid).filter(function (x) { return x.art !== 'beamer' && x.art !== 'harness' && x.art !== 'anbindung'; });
+        if (!bs.length) form.innerHTML = '<p class="c6w-bm-bleistift">Noch liegt kein Baustein mit Zahlen in diesem Space. Setz einen aus dem Regal, dann zeichne ich.</p>';
+        else form.innerHTML = '<p class="c6w-bm-lab">Welche Zahlen?</p><div class="c6w-bm-chips">' + bs.map(function (x) { return '<button type="button" data-von="' + esc(x.id) + '">' + esc(x.name || x.art) + '</button>'; }).join('') + '</div>';
+        [].forEach.call(form.querySelectorAll('[data-von]'), function (k) {
+          k.addEventListener('click', function () { var x = bs.filter(function (y) { return y.id === k.getAttribute('data-von'); })[0]; var id = api.zeige(sid, { art: 'graph', titel: x.name || x.art, daten: { von: x.id } }); formZu(); zeichneSeiten(id); });
+        });
+      }
+    }
+    [].forEach.call(el.querySelectorAll('.c6w-bm-tun button'), function (b) { b.setAttribute('aria-expanded', 'false'); b.addEventListener('click', function () { formAuf(b.getAttribute('data-tu'), b); }); });
+
+    zeichneSeiten(a.seite || null);
+    if (C6.bus) {
+      var off1 = C6.bus.on('beamer', function (d) { if (!el.isConnected) { off1 && off1(); return; } if (d && (d.sid || '') === (sid || '')) zeichneSeiten(d.id); });
+      var off2 = C6.bus.on('strings', function (d) { if (!el.isConnected) { off2 && off2(); return; } if (d && d.was === 'lauf') zeichneSeiten(S_.list[S_.i] && S_.list[S_.i].id); });
+    }
+    return { zeige: function (id) { zeichneSeiten(id); }, zu: formZu };
+  }
+
+  // Bild verkleinern (längste Seite ≤ 1200 px), als data-URL; bleibt im Gerät
+  function verkleinere(f) {
+    return new Promise(function (ok) {
+      var url = URL.createObjectURL(f), img = new Image();
+      img.onload = function () {
+        try {
+          var m = 1200, s = Math.min(1, m / Math.max(img.naturalWidth, img.naturalHeight));
+          var c = D.createElement('canvas'); c.width = Math.max(1, Math.round(img.naturalWidth * s)); c.height = Math.max(1, Math.round(img.naturalHeight * s));
+          c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+          var out = c.toDataURL('image/jpeg', 0.82);
+          if (out.length > 700000) { s = 0.6; var c2 = D.createElement('canvas'); c2.width = Math.round(c.width * s); c2.height = Math.round(c.height * s); c2.getContext('2d').drawImage(c, 0, 0, c2.width, c2.height); out = c2.toDataURL('image/jpeg', 0.72); }
+          URL.revokeObjectURL(url); ok(out.length > 900000 ? '' : out);
+        } catch (e) { URL.revokeObjectURL(url); ok(''); }
+      };
+      img.onerror = function () { URL.revokeObjectURL(url); ok(''); };
+      img.src = url;
+    });
+  }
+
+  /* ---------- Als Baustein ---------- */
+  var baustein = {
+    id: 'beamer', name: 'Beamer',
+    zeichen: zeichen(),
+    kurz: 'Wirft Blätter, Bilder und Seiten an die Wand.',
+    bauen: function (el, daten, a) { return blattUI(el, (a && a.sid) || '', a || {}); },
+    bild: function (sid) { var s = seitenVon(sid)[0]; var f = fadenVon(sid); return geraet({ titel: s ? (s.lauf ? s.lauf.titel : (s.b.titel || s.b.art)) : '', farbe: f ? f.farbe : null }); },
+    // das Gemälde in der Landschaft (der Space, in dem es gerade liegt)
+    gemaelde: function () { var sid = ''; try { sid = (C6.space && C6.space.jetzt && C6.space.jetzt()) || ''; } catch (e) { sid = ''; } return wandbild(sid); }
+  };
+  try { if (C6.bausteine && typeof C6.bausteine.registriere === 'function') C6.bausteine.registriere(baustein); } catch (e) {}
+  api.baustein = baustein;
+})();

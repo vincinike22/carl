@@ -1,0 +1,18 @@
+/* Zweites Album · Keimflug-Regeln aus src/kern.css */
+.c6s-flug{outline:none;position:fixed;inset:0;z-index:900;background:#141a33;color:#eef0ff;touch-action:none;user-select:none;-webkit-user-select:none;animation:c6s-ein .32s cubic-bezier(.3,.7,.3,1)}
+.c6s-flug.c6s-zu{animation:c6s-aus .3s ease-in forwards}
+.c6s-flug[hidden]{display:none}
+.c6s-flug-cv{position:absolute;inset:0;display:block}
+.c6s-flug .c6s-rund{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);background:#1d2445;color:#eef0ff;border-color:#aab2dc;box-shadow:3px 3px 0 #0b0f22}
+.c6s-flug-pause{left:12px}
+.c6s-flug-zu{right:12px}
+.c6s-flug-zahl{position:absolute;top:calc(env(safe-area-inset-top,0px) + 20px);left:0;right:0;text-align:center;font:700 26px/1 Caveat,cursive;color:#eef0ff;pointer-events:none}
+.c6s-flug-hinweis{position:absolute;left:16px;right:16px;bottom:calc(env(safe-area-inset-bottom,0px) + 54px);text-align:center;font:600 24px/1.2 Caveat,cursive;color:#aab2dc;pointer-events:none;transition:opacity .6s}
+.c6s-flug-hinweis.c6s-weg{opacity:0}
+.c6s-flug-karte{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(320px,calc(100% - 32px));background:#1d2445;border:2px solid #aab2dc;border-radius:16px;box-shadow:3px 3px 0 #0b0f22;padding:20px;display:flex;flex-direction:column;gap:12px}
+.c6s-flug-karte[hidden]{display:none}
+.c6s-flug-titel{margin:0;font:600 24px/1.2 Fraunces,Georgia,serif}
+.c6s-flug-text{margin:0 0 4px;font:400 16px/1.4 Figtree,system-ui,sans-serif;color:#aab2dc}
+.c6s-flug .c6s-knopf{background:#eef0ff;color:#141a33;border-color:#eef0ff;box-shadow:3px 3px 0 #0b0f22}
+.c6s-flug .c6s-knopf.c6s-leise{background:transparent;color:#eef0ff;border-color:#aab2dc}
+@media (prefers-reduced-motion: reduce){.c6s-flug,.c6s-flug.c6s-zu{animation-duration:.01s}}

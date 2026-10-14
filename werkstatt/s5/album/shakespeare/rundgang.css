@@ -1,0 +1,16 @@
+/* Rundgang: dieselbe Hand wie der Rahmen der Welt – feine Tusche, weicher Papierschatten aus dem Raumlicht */
+#c6r-schicht .c6r-blase{border-width:1.5px;border-radius:16px;box-shadow:var(--c6k-schwebt,0 12px 28px -10px rgba(43,39,34,.32));padding:13px 18px 14px}
+#c6r-schicht .c6r-blase::after{border-right-width:1.5px;border-bottom-width:1.5px;bottom:-8px;width:13px;height:13px;margin-left:-6.5px}
+#c6r-schicht .c6r-chip{border-width:1.5px;box-shadow:var(--c6k-schwebt,none)}
+#c6r-schicht .c6r-chip:active{transform:translateY(1px);box-shadow:none}
+#c6r-schicht .c6r-farbe i{border-width:1.5px}
+#c6r-schicht .c6r-feld{border-width:1.5px}
+#c6r-schicht .c6r-los{border-width:1.5px;box-shadow:none}
+#c6r-schicht .c6r-los:disabled{border-color:var(--b)}
+@media (min-width:820px){
+  #c6r-schicht .c6r-blase::after{left:-8px;bottom:34px;margin:0}
+}
+/* Sockenfarben am Computer in einer Reihe, keine Waise in Zeile zwei */
+@media (min-width:820px){
+  #c6r-schicht .c6r-tafel[data-art="farbe"]{max-width:780px}
+}

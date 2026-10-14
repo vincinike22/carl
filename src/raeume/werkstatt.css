@@ -1,0 +1,138 @@
+/* Werkstatt: ein Raum, ein Licht. Unter der Szene (Band über dem Dock) läuft der Boden weiter, zum Rand hin etwas dunkler wie in der Szene. */
+.c6w-werkstatt{background:linear-gradient(to bottom,#e4d6bf 0,#dccdb2 100%)}
+
+/* Schreibstube: ein Raum mit Fenster, die Tische stehen auf dem Boden (keine Karten) */
+.c6w-stube{background:linear-gradient(to bottom,rgba(43,39,34,0) 0,rgba(43,39,34,0) 58%,rgba(43,39,34,.06) 100%),radial-gradient(ellipse 70% 55% at 50% 38%,rgba(255,244,214,.55),rgba(255,244,214,0) 70%),repeating-linear-gradient(90deg,#efe6d6 0 84px,#e4d9c6 84px 86px)}
+.c6w-stube-saal{position:relative;flex:1;display:flex;flex-direction:column;justify-content:flex-end;min-height:420px;margin:8px -70px -24px -16px;padding:0 16px 18px}
+.c6w-stube-saal::before{content:"";position:absolute;left:0;right:0;bottom:0;height:46%;background:linear-gradient(to bottom,#e4d6bf,#dccdb2);border-top:2.5px solid #2b2722}
+.c6w-stube-fenster{position:absolute;width:150px;height:auto;right:84px;top:6px}
+.c6w-tische{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:0 10px;margin:0;align-items:end}
+.c6w-tisch{background:none;padding:4px 2px 8px;border-radius:14px}
+.c6w-tisch:hover{background:rgba(251,247,240,.45)}
+.c6w-tisch[aria-current="true"]{background:rgba(251,247,240,.7);box-shadow:none}
+.c6w-tisch:nth-child(-n+2){transform:scale(.9);transform-origin:50% 100%;margin-bottom:-8px}
+.c6w-tisch[data-zu] .c6w-tisch-bild{filter:grayscale(.85);opacity:.62}
+.c6w-tisch-status{background:rgba(251,247,240,.75);border:1.5px solid transparent;font-weight:600;text-align:center}
+.c6w-tisch[data-zu] .c6w-tisch-status{background:transparent;color:#5e564d;padding-left:0;padding-right:0}
+.c6w-stube-brief{animation:c6w-brief-kommt .7s cubic-bezier(.2,.8,.2,1) both}
+@keyframes c6w-brief-kommt{from{transform:translate(30px,40px) rotate(-30deg);opacity:0}}
+@media (min-width:600px){
+  .c6w-stube-saal{margin:8px -96px -28px -40px;padding:0 40px 22px;min-height:440px}
+  .c6w-stube-fenster{width:190px;right:130px;top:0}
+  .c6w-tische{grid-template-columns:repeat(4,1fr);max-width:1180px;width:100%;margin:0 auto;gap:0 12px}
+  .c6w-tisch:nth-child(-n+2){transform:none;margin-bottom:0}
+  .c6w-tisch:nth-child(even){transform:scale(.92);transform-origin:50% 100%}
+}
+/* Auftrag an die Spürnase und ihr Fundbrief */
+.c6w-auftrag{margin:4px 0 0}
+.c6w-auftrag-frage{display:block;margin:0 0 6px;font:600 15px/1.3 Figtree,system-ui,sans-serif;color:#2b2722}
+.c6w-auftrag-zeile{display:flex;gap:8px;flex-wrap:wrap}
+.c6w-auftrag-feld{flex:1 1 180px;min-height:44px;box-sizing:border-box;padding:0 12px;border:2px solid #2b2722;border-radius:12px;background:#fff;font:500 16px Figtree,system-ui,sans-serif;color:#2b2722}
+.c6w-auftrag-feld:focus-visible{outline:3px solid #b4460c;outline-offset:1px}
+.c6w-auftrag-status{min-height:1.2em;margin:8px 0 0;font:600 19px/1.25 Caveat,cursive;color:#5e564d}
+.c6w-liest .c6w-auftrag-status{animation:c6w-liest 1.4s ease-in-out infinite}
+@keyframes c6w-liest{50%{opacity:.45}}
+.c6w-fund{margin:0 0 14px;padding:12px 14px;background:#fffbf1;border-radius:4px 12px 4px 4px;box-shadow:0 1px 0 #2b2722,0 6px 18px rgba(43,39,34,.12)}
+.c6w-fund-kopf{display:flex;align-items:center;gap:6px;margin:0 0 6px;font:600 13px/1.3 Figtree,system-ui,sans-serif;letter-spacing:.04em;color:#5e564d}
+.c6w-fund-kopf svg,.c6w-tisch-status svg{width:18px;height:18px;flex:none;color:#2b2722}
+.c6w-fund-text{font:400 16px/1.5 Fraunces,Georgia,serif;color:#2b2722;max-height:40vh;overflow:auto}
+.c6w-fund-knoepfe{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+@media (prefers-reduced-motion:reduce){.c6w-stube-brief,.c6w-liest .c6w-auftrag-status{animation:none}}
+.c6w-tisch[data-zu] .c6w-tisch-status{display:block;max-width:15em}
+.c6w-tisch[data-zu] .c6w-tisch-status svg{display:inline-block;vertical-align:-3px;margin-right:4px}
+@media (max-width:599px){
+  .c6w-stube-saal::before{height:70%}
+  .c6w-stube-fenster{width:96px;right:72px;top:0}
+}
+/* iPhone: das Blatt eines Tisches bleibt unter Regler und Nadel (rechte Spalte oben) */
+@media (max-width:599px){.c6w-tb{max-height:calc(100% - 200px)}}
+/* s4: die Schreibstube braucht keinen eigenen Kopf (Faden oben sagt, wo man ist; Zurück, Esc und Wischen führen hinaus) */
+.c6w-nur-vorlesen{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.c6w-stube-saal{margin-top:0}
+/* s4: die Tische stehen in der Mitte des Raums, das Nachtfenster hängt über der Spürnase */
+@media (min-width:600px){
+  .c6w-stube-saal{justify-content:center;padding-top:40px}
+  .c6w-stube-saal::before{height:52%}
+  .c6w-stube-fenster{width:210px;left:12%;right:auto;top:auto;bottom:calc(52% + 150px)}
+  .c6w-tische{margin-bottom:6vh}
+}
+@media (min-width:600px){
+  .c6w-stube-saal{justify-content:flex-end;padding-top:0}
+  .c6w-stube-saal::before{height:34%}
+  .c6w-stube-fenster{bottom:calc(34% + 190px)}
+  .c6w-tische{margin-bottom:2vh}
+}
+/* Mondlicht aus dem Fenster fällt auf den Tisch der Spürnase */
+@media (min-width:600px){
+  .c6w-stube-fenster{width:260px;left:9%;bottom:calc(34% + 170px)}
+  .c6w-stube-saal{background:radial-gradient(ellipse 34% 46% at 20% 62%,rgba(190,206,240,.28),rgba(190,206,240,0) 70%)}
+}
+.c6w-stube:focus{outline:none}
+@media (min-width:600px){
+  .c6w-stube-fenster{width:300px;left:50%;transform:translateX(-50%);bottom:calc(34% + 210px)}
+  .c6w-stube-saal{background:radial-gradient(ellipse 46% 58% at 50% 48%,rgba(190,206,240,.3),rgba(190,206,240,0) 72%)}
+}
+@media (max-width:599px){.c6w-stube-fenster{width:140px;left:22px;right:auto;top:44px}}
+
+/* s5: die Helferecke öffnet ihr Blatt in der Werkstatt, über dem Feld, nie darunter */
+.c6w-helfer-blatt{z-index:6;bottom:calc(var(--c6-unten,0px) + 12px);max-height:calc(100% - var(--c6-unten,0px) - 84px)}
+@media (min-width:600px){.c6w-helfer-blatt{right:96px;bottom:calc(var(--c6-unten,0px) + 16px)}}
+.c6w-tb-mehr{margin:14px 0 0;font:500 14px/1.4 Figtree,system-ui,sans-serif;color:#5e564d}
+.c6w-tb-lehre{margin-left:6px;padding:0;min-height:44px;border:0;background:none;font:600 14px Figtree,system-ui,sans-serif;color:#2b2722;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.c6w-tb-lehre:focus-visible{outline:3px solid #b4460c;outline-offset:2px;border-radius:4px}
+/* s5 · Veto: Namen an der Wand am iPhone mindestens 13 px */
+.c6k[data-geraet=iphone] .c6w-wand .c6w-schild{font-size:30px}
+
+/* s7 · der Verwalter: liest, und schläft über den Büchern ein, wenn lange niemand kommt */
+.c6w-hf-zu,.c6w-hf-z{display:none}
+.c6w-hf-schlaf .c6w-hf-auf{display:none}
+.c6w-hf-schlaf .c6w-hf-zu,.c6w-hf-schlaf .c6w-hf-z{display:inline}
+.c6w-hf-schlaf .c6w-stube-figur{transform:rotate(6deg);transform-box:fill-box;transform-origin:50% 100%;transition:transform .8s ease}
+.c6w-hf-schlaf .c6w-hf-z text{animation:c6w-z 2.6s ease-in-out infinite}
+.c6w-hf-schlaf .c6w-hf-z text+text{animation-delay:.9s}
+@keyframes c6w-z{0%{opacity:0;transform:translate(0,6px)}40%{opacity:1}100%{opacity:0;transform:translate(6px,-10px)}}
+html.c6k-ruhig .c6w-hf-schlaf .c6w-hf-z text{animation:none}
+.c6w-schild-klein{font-size:20px}
+.c6w-anh .c6w-ding-innen{transform-origin:50% 0}
+.c6w-anh:hover .c6w-ding-innen{transform:rotate(-4deg)}
+
+/* s11 · eine gelebte Werkstatt: Lupe, Lampe, Lochwand antworten; Ferdl atmet, die Lampe pendelt kaum, Späne fallen, das Fenster kennt die Uhr */
+/* Ferdl atmet (die Figur, nicht der Tisch) */
+.c6w-ws-atmet{transform-box:fill-box;transform-origin:50% 100%;animation:c6w-ws-atmet 4.6s ease-in-out infinite}
+@keyframes c6w-ws-atmet{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.022) scaleX(1.006)}}
+.c6w-hf-schlaf .c6w-ws-atmet{animation-duration:6.5s}
+/* Die Lupe: klein auf dem Tisch; angehoben zeigt sie den Zettel groß */
+.c6w-lupe .c6w-ding-innen{transform-origin:50% 50%}
+.c6w-lupe:hover .c6w-ding-innen{transform:translateY(-2px)}
+.c6w-lupe-gross{opacity:0;transform:scale(.12);transform-box:fill-box;transform-origin:62% 100%;transition:transform .42s cubic-bezier(.3,1.3,.4,1),opacity .25s ease;pointer-events:none}
+.c6w-lupe-an .c6w-lupe-gross{opacity:1;transform:none}
+.c6w-lupe-an .c6w-lupe-klein{opacity:0;transition:opacity .2s}
+.c6w-lupe-klein{transition:opacity .2s .25s}
+.c6w-lupe-text{font:600 15px Caveat,cursive;fill:#2b2722}
+/* Die Lampe aus: der Raum dunkelt, Kegel und Raumlicht gehen, Ferdls Tischlampe wirft ihren Schein */
+.c6w-aus-decke{opacity:0;transition:opacity .75s ease}
+.c6w-lampe-aus .c6w-aus-decke{opacity:.5}
+.c6w-g-raumlicht,.c6w-kegel,.c6w-staub,.c6w-ferdl-schein,.c6w-birne{transition:opacity .75s ease,fill .4s ease}
+.c6w-lampe-aus .c6w-g-raumlicht,.c6w-lampe-aus .c6w-kegel,.c6w-lampe-aus .c6w-staub{opacity:0}
+.c6w-ferdl-schein{opacity:0}
+.c6w-lampe-aus .c6w-ferdl-schein{opacity:1}
+.c6w-lampe-aus .c6w-birne{fill:#d9d2c3}
+.c6w-lampe-aus .c6w-stube-licht{opacity:.95}
+.c6w-sofort *{transition:none!important}
+.c6w-werkstatt .c6w-schieber{transition:background-color .75s ease}
+.c6w-werkstatt.c6w-aus-raum .c6w-schieber{background:#7a746e}
+.c6w-fenster-schein{transition:opacity .75s ease}
+.c6w-ws-wolke{animation:c6w-ws-wolke 46s linear infinite}
+@keyframes c6w-ws-wolke{from{transform:translateX(-10px)}to{transform:translateX(70px)}}
+/* Lochwand: Anhänger lassen sich an einen anderen Haken ziehen */
+.c6w-anh{touch-action:none}
+.c6w-anh.c6w-zieht .c6w-ding-innen{transition:none;filter:drop-shadow(0 6px 6px rgba(43,39,34,.28))}
+.c6w-anh.c6w-zieht:hover .c6w-ding-innen{transform:none}
+.c6w-baustein{transform-box:fill-box;transform-origin:50% 50%}
+/* Halten (Kern): das Ding hellt leise auf, mehr nicht */
+.c6w-ding.c6k-haelt .c6w-ding-innen{filter:drop-shadow(0 0 6px rgba(255,226,160,.8))}
+@media (prefers-reduced-motion:reduce){
+  .c6w-ws-atmet,.c6w-ws-wolke{animation:none}
+  .c6w-lupe-gross,.c6w-lupe-klein,.c6w-aus-decke,.c6w-g-raumlicht,.c6w-kegel,.c6w-staub,.c6w-ferdl-schein,.c6w-birne,.c6w-fenster-schein{transition:none}
+}
+html.c6k-ruhig .c6w-ws-atmet,html.c6k-ruhig .c6w-ws-wolke{animation:none}

@@ -1,0 +1,13 @@
+# s11 · Vetos von Rune und Rams (als Otto, echte Klicks) · Vitruvians Entscheidungen
+
+Befund: Staunen trägt bei Tageszeiten, Lupe, Kerze, Lexikon; 0 Konsolenfehler; keine Geste mit zwei Bedeutungen; Lebenszeichen leiser als Carl. Drei Brüche gegen die Wahrheit (Rune) und drei gegen den Gebrauch (Rams).
+
+1. **Ein Satz gilt nur, wo er wahr ist** (Rune V1, angenommen): Staunen-Blasen verschwinden beim Raumwechsel (Bus `'raum'`) und beim Zustandswechsel des Dings (Kerze aus → kein „warm“ mehr; die Räume rufen `C6.staunen.zu(id)` oder der Kern räumt bei `'raum'`). → raffael (Kern), rothko (Kerze-Satz je Zustand).
+2. **Fakten auf der Buchseite** (Rune V2, angenommen): Große Welle = Farbholzschnitt in vielen Abzügen, kein „Original“; das Buch zeigt nur die Bilder, die in diesem Raum wirklich hängen (4 am Computer, 2 am iPhone), nicht fünf. → monet.
+3. **Kein Bau-Versprechen ohne sichtbaren Bau** (Rune V3, angenommen): Die Bausteine setzen sich **groß in der Mitte** zusammen (≥ 120 px am iPhone), dann fliegt das Werkzeug an seinen Platz; oder das Versprechen fällt weg. Miyazaki baut es groß. → miyazaki.
+4. **Licht aus heißt nicht lesen aus** (Rams V1, angenommen): Bei Lampe aus bleiben Leiste, Feld und Dock lesbar – die Dunkelheit liegt nur auf der Szene, nie auf dem Rahmen. → miyazaki.
+5. **Fenster und Schild am iPhone** (Rams V2, angenommen): `zeichneEcke()` auch in `stelle()`; Fenster ganz im Bild, Schild vollständig („Hier hängen bald deine Werkzeuge“), Halten erreichbar. → miyazaki.
+6. **Tippziele ≥ 44 px** (Rams V3, angenommen mit Maß): Anhänger, Ovale, Lupe bekommen unsichtbare Trefferflächen ≥ 44 px (Form bleibt). Zu „+12 Bedienelemente“: Vitruvian entscheidet **Dinge zum Denken sind keine Bedienelemente** – sie sind Dinge im Raum, die antworten; Entscheidung 1 meinte Knöpfe, Menüs, Schalter. Aber: fünf Porträt-Ovale sind eine Handlung („Meister eintragen“) – ein Tipp auf irgendein leeres Oval öffnet dieselbe Karte, kein Oval trägt eigenes Verhalten. → miyazaki (Anhänger, Lupe), rothko (Ovale).
+7. **P2, alle umsetzen:** `lesesaal.js:309` Dunkel-Rect `pointer-events:none` (Himmel-Halten feuert); `lesesaal.css:18` „Dein Platz“ ≥ 11 px; Kerze an/aus deutlich unterscheidbar (Raumlicht, nicht nur Flamme); Treppe ab dem zweiten Gang kurz (≤ 0,9 s) – rothko. `bibliothek.js:660` aria-pressed echt – monet. Staub auf heller Wand in Wandfarbe-dunkler statt Ocker-Flecken; Fenster-Tipp sagt in allen Räumen dasselbe Muster (Carl schaut hinaus, ein Satz zur Zeit) – raffael (Staub-Standard je Hintergrund), miyazaki/monet (Fenster-Satz).
+
+Regel aus s11 (für LEHREN): **Ein Ding zum Denken ist kein Knopf – aber es braucht Trefferfläche, Wahrheit je Zustand und einen Satz, der mit dem Raum verschwindet.**

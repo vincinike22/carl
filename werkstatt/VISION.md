@@ -1,0 +1,30 @@
+# Carl 6 · Die nächste Entwicklung (Nachtschicht 08.10.2026)
+
+Für alle Meister verbindlich. Das hier ist kein weiterer Feinschliff von v5. Am Sonntag kam nach dem Hackathon-Prototyp eine Fassung, die hundertmal besser war: vom Alten inspiriert, aber neu gebaut. v5 haben wir seither bis zum Maximum ausgearbeitet. Jetzt ist der nächste Sprung dran. **Nichts ist fixiert:** Einführung, Space, Bau, UI und Carls Gestalt dürfen neu entstehen. Das Alte ist Inspiration, kein Gerüst.
+
+## nicos Gedanken vom Spaziergang (Kern, sinngemäß; Zitate wörtlich)
+1. **Brainware statt Software.** Software wird künftig individuell gebaut, von Sprachmodellen mit so viel Wissen über den Menschen wie möglich, und zwar für genau eine Aufgabe oder ein Projekt. Carl soll dieses Ökosystem sein. Du gibst Carl deine „Hardware“ (Gedanken, Gewohnheiten, Projekte), und er holt heraus, was nötig ist, um deine **Strings** zu entwirren und ihr Potential zu erweitern.
+2. **Strings → Netz.** Jeder String wird mit seinem Anfang an das Ende des vorherigen gebunden, so dass er den größtmöglichen Raum aufnimmt. Mit Carl spannt man daraus ein **Netz** in einem Raum, der durch die Zeit in Bewegung bleibt und sich immer erneuert, um möglichst viel deiner Zeit einzufangen.
+3. **Einfachheit wie ein Baby.** Wörtlich: „simplicity ist die reinste form der Kunst. Denn nichts einfaches sieht schwer aus. Doch Meister lassen die höchsten Werke, kinderleicht aussehen“. Ein Baby wirkt wie das einfachste menschliche Wesen und ist gerade deshalb seiner reinsten Form am nächsten. Carl soll so wirken: einfach, rein, lebendig.
+4. **Das Gerüst ist unser Meisterwerk.** Wir bauen das Gerüst und machen Vorschläge, wohin es gehen könnte. Verziert und angepasst wird es vom Menschen selbst, nur für sich. Sein Gerüst kann er im **„App Store“** mit anderen angehenden Meistern teilen, als Anstoß für deren Kreativität.
+5. **Vogelflug.** Wörtlich: „most people’s perception of reality is limited to the ground. only what they see exists. make them see their thoughts … like a bird flying over them seeing where they merge.“ Der Mensch soll seine Gedanken von oben sehen und erkennen, wo sie zusammenlaufen.
+6. **Kollektives Teleskop.** Wer seine Blickwinkel teilt, baut mit anderen gemeinsam ein Teleskop („wie das James Webb“). Daraus entstehen neue Blickwinkel.
+7. **Gewohnheiten & vergangenes Ich.** Gewohnheiten begleiten und Erfahrungen verarbeiten, verknüpft mit früheren Erfahrungen oder neuen Blickwinkeln. Carl hält dich im Jetzt, wie ein treuer kleiner Hauself-Helfer (eigene Figur, keine fremde), und verbindet dich zugleich mit deinem vergangenen Ich. Er hat ein perfektes Gedächtnis, arbeitet mit großer Liebe und will dir eine Freude machen. Am liebsten trägt er deine Socken 🧦.
+8. **Ordnung aus Chaos. Die Nadel.** Wörtlich: „to find the needle in the haystack you need to burn the haystack down & that’s when the 🪡 appears bright red in its truest form“. Die rote Nadel ist das Bild für den einen wahren Satz, der übrig bleibt, wenn das Durcheinander wegbrennt. (Sie passt zu Carls rotem Faden #d62a26 und zur Schneiderinnen-Nadel aus dem Feedback.)
+9. **Magie.** Nach einem Podcast, nicos Notiz: „Be the person the magic gets done to not the one understanding it … It becomes magic by being perceived as such. not by doing.“ Der Mensch soll staunen, nicht die Technik verstehen müssen. Darum zeigt die App keine Technik: kein „Werkzeug konfigurieren“, keine Fachwörter, keine Zahnräder. Carl sagt dir, was du tun kannst, um ihm seine Kräfte zu geben, und dann geschieht es einfach.
+10. **Das ganze Widget, der „App Store“.** Kenne die Oberflächen und Eigenheiten anderer Programme und Ideen, die zu einem guten Nutzererlebnis geführt haben, und nimm auf, was Carl hilft. Er muss nicht alles können, aber aus dem jetzigen Potential das Bestmögliche holen.
+
+## Was daraus für Carl 6 folgt (Vitruvian + Rune, mit Psis Haltung)
+- **Eine Welt mit drei Höhen statt vieler Bildschirme.** Über die Höhe zoomt man zwischen den Ebenen, ohne harten Bildschirmwechsel:
+  - **Boden · bei Carl** (das Jetzt): Man steht mit Carl in seinem Raum. Carl ist das Interface, man redet mit ihm und er arbeitet.
+  - **Vogelflug · deine Strings**: Man sieht die eigenen Gedanken als Fäden (Projekte, Ideen, Gewohnheiten) wie Landschaft von oben, und wo sie sich treffen, entstehen Knoten. Das ist das Netz.
+  - **Teleskop · die anderen**: geteilte Gerüste anderer Meister. Im Prototyp ehrlich als Beispiel gekennzeichnet; das ist der „App Store“.
+- **Gerüst (Brainware):** Carl baut dir für eine Aufgabe ein kleines eigenes Werkzeug, das Gerüst, als Vorschlag. Du verzierst und passt es an, es gehört dir, und du kannst es teilen. Die alten Werkzeuge (Brücke, Gegenspieler, Recherche, Skizze, Festhalten, Morgenbrief …) sind fertige Gerüste in Carls Werkstatt.
+- **Die rote Nadel:** Wenn ein Durcheinander geklärt ist, bleibt ein Satz übrig, und der wird als rote Nadel ins Netz gesteckt. Mit derselben Nadel steckt nico Feedback an jede Stelle der App (Kommentar-Nadel).
+- **Carls Gestalt neu:** einfach wie ein Baby, plüschig und lebendig. Kiesel, Keimblattpaar, Bernstein-Augen, Wangen und Beinchen dürfen neu interpretiert werden, solange er erkennbar Carl bleibt. Er atmet, schaut, freut sich und trägt Socken.
+- **Magie statt Erklärung:** Jede Erklärung, die Technik zeigt, fliegt raus. Carl zeigt dir etwas, und du staunst.
+- **Kein Neuladen. Nie.** Eine durchgehende Bühne mit weichen Kamerafahrten.
+- **Ohne Strafe:** Gewohnheiten werden begleitet, nicht gezählt. Kein Streak und kein Druck.
+
+## Weiterhin gültig (nicos Feedback vom 08.10.: NICO_FEEDBACK_0800.md)
+Space = Interface · Projektor am Computer · Werkstatt mit aufgehängten Werkzeugen · Bibliothek = Über mich · Kennenlernen als Rundgang durch Carls Zuhause, bei dem er sich zusammenbaut · BMX mit eigenem Rad (mehrere Parks, Challenges, Reifen) · Münzen aus Geheimnissen · Kleiderladen wie ein Avatar-Baukasten · Wisch-Leisten am iPhone · Kommentar direkt an der Stelle (wie in einem Design-Werkzeug) · nichts gestrichelt · nichts überdeckt · Bein richtig benannt · kein „das“-Rätsel.

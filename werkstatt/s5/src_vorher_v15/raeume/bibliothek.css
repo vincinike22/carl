@@ -1,0 +1,10 @@
+/* s4 · Die Geheimtür ist Teil der Regalwand: an der Fuge kein Strich, erst ein Lichtspalt, dann schwingt das Regal mit seinen Büchern auf */
+.c6w-tuer-spalt{opacity:0;transition:opacity .35s ease;pointer-events:none;filter:drop-shadow(0 0 6px #ffd98a)}
+.c6w-zieht .c6w-tuer-spalt{opacity:.95}
+.c6w-auf .c6w-tuer-spalt{opacity:0;transition-delay:.4s}
+.c6w-tuer-schatten{opacity:0;transition:opacity 1.1s ease;pointer-events:none}
+.c6w-auf .c6w-tuer-schatten{opacity:.55}
+.c6w-zieht .c6w-tuerblatt{transform:skewY(-.8deg) scaleX(.975)}
+.c6w-auf .c6w-tuerblatt{transform:skewY(-8deg) scaleX(.1)}
+.c6w-tuerblatt{transition:transform 1.25s cubic-bezier(.55,.04,.22,1)}
+@media (prefers-reduced-motion:reduce){.c6w-tuer-spalt,.c6w-tuer-schatten{transition:none}}

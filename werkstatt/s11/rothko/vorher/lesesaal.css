@@ -1,0 +1,42 @@
+/* Lesesaal: zwei Möbel im Licht – deine Funde, deine Meister */
+.c6w-ls-moebel{position:absolute;z-index:3;display:flex;justify-content:center;align-items:flex-end;gap:30px}
+.c6w-ls-regal{position:relative;flex:0 0 auto;width:var(--bw,200px);height:100%;padding:0;border:0;background:none;cursor:pointer;transition:transform .35s cubic-bezier(.3,.7,.3,1),filter .35s ease,opacity .35s ease}
+.c6w-ls-bild,.c6w-ls-bild svg{position:absolute;inset:0;display:block;width:100%;height:100%;overflow:visible}
+.c6w-ls-regal::after{content:"";position:absolute;left:-4%;right:-4%;bottom:-6px;height:8px;border-radius:2px;background:linear-gradient(#7a5638,#4a3122);box-shadow:0 5px 10px rgba(0,0,0,.45)}
+.c6w-ls-licht{position:absolute;left:-30%;right:-30%;top:-30%;height:70%;border-radius:50%;background:radial-gradient(closest-side,rgba(255,226,160,.45),rgba(255,226,160,0));pointer-events:none;opacity:.8;transition:opacity .35s ease}
+.c6w-ls-regal:hover,.c6w-ls-regal:focus-visible{transform:translateY(-5px);filter:drop-shadow(0 0 14px rgba(255,222,150,.5))}
+.c6w-ls-regal:hover .c6w-ls-licht{opacity:1}
+.c6w-ls-regal:focus-visible{outline:3px solid #e6c987;outline-offset:4px}
+.c6w-ls-plakette{position:absolute;left:14%;right:14%;top:12%;padding:4px 4px;border-radius:3px;background:linear-gradient(#d7b45f,#b98f3c);border:1.5px solid #5a3d17;box-shadow:0 2px 3px rgba(0,0,0,.35);font:700 clamp(12px,1vw + 6px,17px)/1.15 Fraunces,Georgia,serif;color:#2b1a0c;text-align:center;white-space:nowrap}
+.c6w-ls-ini{font:700 15px Fraunces,Georgia,serif;fill:#e6c987}
+.c6w-ls-leerplatz{animation:c6w-atmet 3.6s ease-in-out infinite}
+.c6w-ls-offen{z-index:40;filter:drop-shadow(0 0 22px rgba(255,222,150,.8))}
+.c6w-ls-offen .c6w-ls-plakette{opacity:0;transition:opacity .2s}
+.c6w-ls-waehlt .c6w-ls-regal:not(.c6w-ls-offen){opacity:.2}
+/* Blatt */
+.c6w-ls-bkopf{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 4px}
+.c6w-ls-intro{margin:0 0 12px}
+.c6w-ls-carlk{margin:4px 0 0;font:italic 400 17px/1.4 Fraunces,Georgia,serif;color:#3d3832}
+.c6w-ls-funde{list-style:none;margin:14px 0 0;padding:0}
+.c6w-ls-fund{display:grid;grid-template-columns:44px 1fr;gap:10px;padding:12px 0;border-bottom:1px solid #d9ccb2}
+.c6w-ls-fund b{display:block;font:600 18px/1.25 Fraunces,Georgia,serif;overflow-wrap:anywhere}
+.c6w-ls-fart{display:grid;place-items:center;width:40px;height:40px;border-radius:8px;background:#2b2722;color:#fbf5e8;font:700 12px Figtree,sans-serif}
+.c6w-ls-fnotiz{margin:4px 0 0;font:600 20px/1.25 Caveat,cursive}
+.c6w-ls-fbild{display:block;max-width:100%;max-height:180px;margin:6px 0;border-radius:4px}
+.c6w-ls-fmeta{display:block;margin:4px 0 0;font:500 13.5px Figtree,sans-serif;color:#5f5345}
+.c6w-ls-ftun{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.c6w-ls-ftun .c6w-knopf{min-height:44px;display:inline-flex;align-items:center;text-decoration:none}
+.c6w-ls-ort{font:600 14px Figtree,sans-serif;color:#2c6a4f}
+.c6w-ls-ort::before{content:"✓ "}
+.c6w-ls-eform .c6w-haupt{margin-top:8px;width:100%}
+.c6w-mliste{list-style:none;margin:0 0 14px;padding:0}
+.c6w-ls-blatt .c6w-mliste button{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;padding:8px 4px;border:0;border-bottom:1px solid #d9ccb2;background:none;text-align:left;cursor:pointer;color:#2b2722}
+.c6w-ls-blatt .c6w-mliste i{flex:none;display:grid;place-items:center;width:40px;height:48px;border-radius:50%;background:#2a1d14;border:3px solid #c9a24f;color:#e6c987;font:700 14px Fraunces,Georgia,serif;font-style:normal}
+.c6w-ls-blatt .c6w-mliste b{display:block;font:600 18px Fraunces,Georgia,serif}
+.c6w-ls-blatt .c6w-mliste small{display:block;font:italic 400 14px Fraunces,Georgia,serif;color:#5f5345}
+.c6w-ls-mneu .c6w-haupt{width:100%}
+.c6w-ls-mfrage{margin:18px 0 10px;padding:14px 16px;background:#fff6dc;border-radius:6px;box-shadow:0 1px 2px rgba(43,39,34,.15)}
+.c6w-ls-mfrage-satz{margin:0 0 4px;font:400 21px/1.3 Fraunces,Georgia,serif;color:#2b2722}
+.c6w-ls-blink{animation:c6w-ls-blink 1.6s ease}
+@keyframes c6w-ls-blink{0%,100%{background:transparent}25%{background:rgba(230,201,135,.45)}}
+@media (prefers-reduced-motion:reduce){.c6w-ls-regal,.c6w-ls-blink,.c6w-ls-leerplatz{transition:none;animation:none}}

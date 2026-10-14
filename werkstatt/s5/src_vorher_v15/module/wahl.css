@@ -1,0 +1,36 @@
+/* Vorschläge wie gute Rückfragen: eine Wahl = runder Pfeil (tippen und fertig), mehrere = Kästchen + Weiter */
+
+/* Einzelwahl als Chip: Text, dann ein runder Pfeil */
+.c6k-chip-eins{padding:8px 9px 8px 18px}
+.c6k-rund{order:2;width:24px;height:24px;flex:none;border-radius:50%;box-sizing:border-box;border:2px solid var(--tusche);background:var(--feld);display:grid;place-items:center;transition:background .2s ease,transform .25s cubic-bezier(.3,1.3,.5,1)}
+.c6k-rund svg{width:16px;height:16px;fill:none;stroke:var(--tusche);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.c6k-chip-eins:hover .c6k-rund{transform:translateX(2px)}
+.c6k-chip-eins.c6k-gewaehlt .c6k-rund{background:var(--tusche);transform:translateX(3px)}
+.c6k-chip-eins.c6k-gewaehlt .c6k-rund svg{stroke:var(--karte)}
+
+/* Karte: Einzelwahl mit Erklärzeilen oder Mehrfachwahl, untereinander */
+.c6k .c6k-chips[data-art]{left:12px;right:12px;overflow:visible;padding:0 0 8px;touch-action:auto}
+.c6k[data-geraet=computer] .c6k-chips[data-art]{left:0;right:0;margin:0 auto;width:min(620px,calc(100% - 48px))}
+.c6k-chips[data-art] .c6k-chips-spur{flex-direction:column;flex-wrap:nowrap;align-items:stretch;gap:0;width:100%;margin:0;padding:6px;box-sizing:border-box;
+ max-height:min(48vh,380px);overflow-y:auto;overscroll-behavior:contain;
+ background:var(--karte);border:1.5px solid var(--tusche);border-radius:18px;box-shadow:var(--c6k-schwebt)}
+.c6k-wahl-kopf{margin:0;padding:6px 10px 6px 12px;font:italic 400 15px/1.2 Fraunces,Georgia,serif;color:var(--leise)}
+.c6k-chip.c6k-wahl{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;margin:0;padding:8px 12px;box-sizing:border-box;white-space:normal;text-align:left;
+ border:0;border-radius:12px;box-shadow:none;background:none;transition:background .15s ease,opacity .3s ease}
+.c6k-chip.c6k-wahl+.c6k-chip.c6k-wahl{box-shadow:inset 0 1px 0 var(--linie)}
+.c6k-chip.c6k-wahl:hover,.c6k-chip.c6k-wahl:focus-visible{background:var(--gedrueckt)}
+.c6k-chip.c6k-wahl:active{transform:none;box-shadow:none;background:var(--gedrueckt)}
+.c6k-chip.c6k-wahl.c6k-gewaehlt{background:var(--gedrueckt);box-shadow:none}
+.c6k-wahl .c6k-chip-text{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}
+.c6k-wahl-name{font:600 15.5px/1.25 Figtree,system-ui,sans-serif}
+.c6k-wahl-hinweis{font:italic 400 13.5px/1.3 Fraunces,Georgia,serif;color:var(--leise)}
+.c6k-wahl .c6k-kreuz{width:22px;height:22px;border-radius:6px}
+.c6k-wahl.c6k-gewaehlt .c6k-kreuz{background:var(--karte)}
+
+/* Weiter: rechts unten in der Karte; ohne Wahl leise „Keins davon“ */
+.c6k-chips[data-art] .c6k-chip.c6k-fertig{align-self:flex-end;display:inline-flex;align-items:center;gap:8px;margin:8px 4px 2px;padding:8px 12px 8px 18px;min-height:44px;border-radius:22px;box-shadow:2px 2px 0 var(--tusche);white-space:nowrap}
+.c6k-fertig-pfeil{display:grid;place-items:center}
+.c6k-fertig-pfeil svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.c6k-chip.c6k-fertig.c6k-leer{background:var(--karte);color:var(--leise);border-color:var(--linie);box-shadow:none}
+.c6k-entschieden .c6k-chip.c6k-fertig{opacity:1}
+.c6k-ruhig .c6k-rund{transition:none}

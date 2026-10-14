@@ -1,0 +1,71 @@
+/* Kieselpark · Anzeige über dem Spiel */
+.c6s-park{background:#f4eee4}
+.c6s-park.c6s-abend{--c6s-leise:#7a5a4c}
+.c6s-park-kopf{gap:0}
+.c6s-park-name{font:600 13px/1.2 Figtree,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;opacity:.8}
+.c6s-park-punkte{font:700 40px/1 Caveat,cursive;min-height:40px;text-shadow:0 1px 0 rgba(255,253,247,.7)}
+.c6s-park.c6s-nacht .c6s-park-punkte{text-shadow:0 1px 6px rgba(0,0,0,.5)}
+.c6s-park-zeit{display:inline-flex;align-items:center;gap:6px;margin-top:4px;font:600 14px/1 Figtree,system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.c6s-park-zeit i{--teil:1;width:16px;height:16px;border-radius:50%;border:2px solid currentColor;background:conic-gradient(currentColor calc(var(--teil)*360deg),transparent 0)}
+.c6s-park-zeit.c6s-knapp{color:#b8333a}
+.c6s-park-combo{position:absolute;right:16px;top:calc(env(safe-area-inset-top,0px) + 74px);display:flex;flex-direction:column;align-items:flex-end;pointer-events:none;transition:opacity .4s,transform .4s}
+.c6s-park-combo b{font:700 34px/1 Caveat,cursive}
+.c6s-park-combo span{font:600 13px/1.2 Figtree,system-ui,sans-serif;opacity:.75}
+.c6s-park-combo.c6s-weg{opacity:0;transform:translateY(-6px)}
+.c6s-park-trick{top:26%;display:flex;flex-direction:column;align-items:center;gap:2px;font:700 32px/1.05 Caveat,cursive;text-align:center}
+.c6s-park.c6s-nacht .c6s-park-trick{text-shadow:0 1px 8px rgba(0,0,0,.6)}
+.c6s-park:not(.c6s-nacht) .c6s-park-trick{text-shadow:0 1px 0 rgba(255,253,247,.8),0 0 12px rgba(255,253,247,.7)}
+.c6s-t-zeile{display:flex;align-items:center;gap:8px;font:600 15px/1.2 Figtree,system-ui,sans-serif}
+.c6s-t-zeile em{font-style:normal;padding:2px 9px;border-radius:999px;border:1.5px solid currentColor}
+.c6s-t-zeile .c6s-t-sauber{background:#5f7f3e;border-color:#5f7f3e;color:#fbf7f0}
+.c6s-t-zeile .c6s-t-wackelig{background:#e2b93b;border-color:#e2b93b;color:#2b2722}
+.c6s-t-zeile .c6s-t-sturz{background:#b8333a;border-color:#b8333a;color:#fbf7f0}
+.c6s-t-zeile b{font:700 22px/1 Caveat,cursive}
+.c6s-park-hilfe{bottom:calc(env(safe-area-inset-bottom,0px) + 22px);gap:6px 20px;font:600 21px/1.25 Caveat,cursive;color:#fbf7f0;text-shadow:0 1px 4px rgba(0,0,0,.55)}
+.c6s-park-hilfe span{display:inline-flex;align-items:center;gap:6px}
+.c6s-park-hilfe kbd{font:600 12px/1 Figtree,system-ui,sans-serif;padding:3px 6px;border-radius:6px;border:1.5px solid currentColor;margin:0 2px}
+.c6s-g{width:22px;height:22px;flex:none;border:2px solid currentColor;border-radius:50%;position:relative}
+.c6s-g::after{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;border:solid currentColor;border-width:2px 2px 0 0;transform:translate(-65%,-50%) rotate(45deg)}
+.c6s-g-zieh::after{transform:translate(-50%,-30%) rotate(-45deg)}
+.c6s-g-dreh{border-style:dashed}
+.c6s-g-dreh::after{transform:translate(-50%,-50%) rotate(135deg)}
+@media (max-width:600px){.c6s-park-hilfe{flex-direction:column;align-items:center;font-size:20px}}
+.c6s-park-ende{position:absolute;left:0;right:0;top:0;bottom:0;margin:auto;height:max-content;max-height:calc(100% - 32px);overflow:auto;box-sizing:border-box;z-index:4;width:min(360px,calc(100% - 32px));background:#fbf7f0;color:#2b2722;border:2px solid #2b2722;border-radius:18px;box-shadow:4px 4px 0 #2b2722;padding:20px 20px 18px;text-align:center;animation:c6s-ein .32s cubic-bezier(.3,.7,.3,1)}
+.c6s-park-ende[hidden]{display:none}
+.c6s-e-klein{margin:0;font:600 13px/1.3 Figtree,system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#6f6a61}
+.c6s-e-punkte{margin:6px 0 0;font:700 64px/1 Caveat,cursive}
+.c6s-e-punkte small{font-size:26px}
+.c6s-e-beste{margin:2px 0 12px;font:400 15px/1.3 Figtree,system-ui,sans-serif;color:#6f6a61}
+.c6s-park-ende .c6s-park-ch{text-align:left;margin:0 auto 16px;max-width:280px}
+.c6s-park-ende .c6s-neu em{font:700 17px/1 Caveat,cursive;color:#b8333a;font-style:normal}
+.c6s-e-knoepfe{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.c6s-e-knoepfe .c6s-leise{background:#fbf7f0;color:#2b2722}
+.c6s-park.c6s-ende-auf .c6s-park-trick,.c6s-park.c6s-ende-auf .c6s-park-combo,.c6s-park.c6s-ende-auf .c6s-park-hilfe{visibility:hidden}
+.c6s-park.c6s-karte-auf .c6s-park-combo{visibility:hidden}
+.c6s-park-wahl.c6s-abendkarte{background:#f6e3cf}
+.c6s-park-beste{font-weight:600}
+.c6s-park-vorschau{border-radius:12px;background:linear-gradient(#f6efe2,#efe4cf)}
+
+/* s4: Menü mit einer Mitte, Lohn an jeder Herausforderung, Münzen auf der Ende-Karte */
+.c6s-park-karte-kopf{display:flex;align-items:center;gap:14px}
+.c6s-park-karte-kopf .c6s-park-vorschau{flex:none;background:none;border-radius:0;width:150px;height:122px}
+.c6s-park-satz[hidden]{display:none}
+.c6s-park-garage{margin:6px 0 0;padding:6px 0;border:0;background:none;font:600 15px/1.2 Figtree,system-ui,sans-serif;color:#2b2722;text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:4px;cursor:pointer;min-height:44px}
+.c6s-park-garage::after{content:" ›"}
+.c6s-park-garage:focus-visible{outline:3px solid #b4460c;outline-offset:2px;border-radius:6px}
+.c6s-ch-lohn{display:flex;align-items:center;gap:5px;margin-top:2px;font:500 13px/1.3 Figtree,system-ui,sans-serif;opacity:.72}
+.c6s-ch-lohn i{width:10px;height:10px;border-radius:50%;border:1.5px solid currentColor;flex:none}
+.c6s-ok .c6s-ch-lohn{display:none}
+.c6s-ok>span:last-child{opacity:.6;text-decoration:line-through;text-decoration-thickness:1px}
+.c6s-park-wahl .c6s-park-los.c6s-leise{background:transparent;color:inherit;border-color:currentColor;box-shadow:none}
+.c6s-park-wahl.c6s-nachtkarte .c6s-park-los.c6s-leise{background:transparent;color:#eef0ff;border-color:#eef0ff}
+.c6s-e-muenzen{display:flex;align-items:center;justify-content:center;gap:8px;margin:0 0 12px;font:600 15px/1.3 Figtree,system-ui,sans-serif}
+.c6s-park-ende .c6s-park-ch{margin-bottom:14px}
+.c6s-park-ende .c6s-neu em{font:600 13px/1 Figtree,system-ui,sans-serif;color:#5f7f3e;font-style:normal}
+.c6s-park-ende .c6s-neu>span:last-child{text-decoration:none;opacity:1}
+@media (max-width:600px){.c6s-park-karte-kopf .c6s-park-vorschau{width:120px;height:98px}}
+.c6s-park.c6s-ende-auf .c6s-park-kopf{visibility:hidden}
+.c6s-park-karte>:first-child{margin-top:auto}
+.c6s-park-karte>:last-child{margin-bottom:auto}
+.c6s-park-karte-kopf>div{text-align:left}
+@media (max-width:600px){.c6s-park-karte-kopf .c6s-park-titel{font-size:28px}.c6s-park-garage{font-size:14px}}

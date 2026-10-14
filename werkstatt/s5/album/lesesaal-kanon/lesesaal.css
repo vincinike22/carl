@@ -1,0 +1,108 @@
+/* Karte des Wissens, lebendig: Bleistift → Tinte, schlafende Orte erwachen, Spuren verblassen */
+.c6w-ls-ksvg{overflow:hidden}
+.c6m-weg-fern{opacity:.38}
+.c6m-tinte{opacity:.13;pointer-events:none}
+.c6w-ls-weg{pointer-events:none}
+/* die Feder schreibt nur, solange Tinte fließt */
+.c6m-feder{opacity:0;transition:opacity .35s ease;pointer-events:none}
+.c6m-feder.c6m-feder-an{opacity:1}
+/* Fußspuren und Staub */
+.c6m-tritt{fill:#6b5a40;opacity:0;animation:c6m-tritt 3.4s ease-out forwards;pointer-events:none}
+@keyframes c6m-tritt{0%{opacity:.55}60%{opacity:.32}100%{opacity:0}}
+.c6m-staubwolke{fill:#cdb88f;opacity:0;transform-box:fill-box;transform-origin:center;animation:c6m-staub 1.1s ease-out forwards;pointer-events:none}
+@keyframes c6m-staub{0%{opacity:.7;transform:translate(0,0) scale(.6)}100%{opacity:0;transform:translate(0,-7px) scale(1.9)}}
+/* schlafende Orte: blass wie Bleistift */
+.c6w-ls-station .c6w-ding-innen{transition:opacity .6s ease}
+.c6w-ls-station:not(.c6w-ls-war):not(.c6m-wach) .c6w-ding-innen{opacity:.5}
+.c6w-ls-station:not(.c6w-ls-war):not(.c6m-wach) .c6w-ls-ort{fill:#6f6250}
+.c6w-ls-ort{transition:fill .6s ease}
+/* erwachte Orte: Fenster leuchtet, Fahne weht, Tintenklecks unter dem Punkt */
+.c6m-fenster{transition:fill .5s ease}
+.c6w-ls-war .c6m-fenster,.c6m-wach .c6m-fenster{fill:#f2b640}
+.c6m-szene{opacity:0;transition:opacity .4s ease}
+.c6w-ls-war .c6m-szene,.c6m-wach .c6m-szene{opacity:1}
+.c6m-fahne{transform-box:fill-box;transform-origin:0 50%;animation:c6m-weht 3.2s ease-in-out infinite}
+@keyframes c6m-weht{0%,100%{transform:scaleX(1) skewY(0)}50%{transform:scaleX(.88) skewY(4deg)}}
+.c6m-funke{opacity:0}
+.c6m-klecks{opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(.2);transition:opacity .4s ease,transform .5s cubic-bezier(.3,1.6,.5,1)}
+.c6w-ls-war .c6m-klecks,.c6m-wach .c6m-klecks{opacity:.22;transform:none}
+/* der Augenblick des Erwachens: Licht schwillt an, Fahne steigt, Funken fliegen */
+.c6m-erwacht .c6m-ortlicht{animation:c6m-licht 1.6s ease-out}
+@keyframes c6m-licht{0%{opacity:0;transform:scale(.3)}35%{opacity:1;transform:scale(1.35)}100%{opacity:1;transform:none}}
+.c6m-ortlicht{transform-box:fill-box;transform-origin:center}
+.c6m-erwacht .c6m-szene{animation:c6m-steigt .9s cubic-bezier(.3,1.4,.5,1)}
+@keyframes c6m-steigt{0%{opacity:0;transform:translateY(12px)}100%{opacity:1;transform:none}}
+.c6m-erwacht .c6m-funke{animation:c6m-funke 1.5s ease-out forwards}
+@keyframes c6m-funke{0%{opacity:0;transform:translate(0,4px)}20%{opacity:1}100%{opacity:0;transform:translate(0,-22px)}}
+.c6m-wach .c6m-ortlicht{animation:c6m-atmet 3.6s ease-in-out 1.6s infinite}
+@keyframes c6m-atmet{0%,100%{opacity:.85}50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.c6m-fahne,.c6m-tritt,.c6m-staubwolke,.c6m-erwacht .c6m-ortlicht,.c6m-erwacht .c6m-szene,.c6m-erwacht .c6m-funke,.c6m-wach .c6m-ortlicht{animation:none}.c6m-tritt,.c6m-staubwolke{display:none}}
+/* Zurück und Weiter bleiben in einer Zeile, auch am iPhone */
+.c6w-ls-weiter{flex-wrap:nowrap}
+.c6w-ls-weiter .c6w-ls-zur{min-width:0;flex:0 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.c6w-ls-weiter .c6w-ls-vor,.c6w-ls-weiter .c6w-ls-alle2{flex:0 0 auto}
+
+/* ——— s2 · Regalgänge: an der Wand entlang, jeder Gang ein Bereich ——— */
+.c6w-ls-gang{position:absolute;z-index:3}
+/* s3 · alle Gänge auf einen Blick: eine Galerie, kein Schieben */
+.c6w-ls-gzeile{position:absolute;inset:0}
+.c6w-ls-regal{position:absolute;padding:0;border:0;background:none;cursor:pointer;transform:scale(var(--sk,1));transform-origin:50% 100%;transition:transform .35s cubic-bezier(.3,.7,.3,1),filter .35s ease,opacity .35s ease}
+.c6w-ls-regal svg{position:absolute;inset:0;display:block;width:100%;height:100%;overflow:visible}
+.c6w-ls-licht{position:absolute;left:-30%;right:-30%;top:-28%;height:70%;border-radius:50%;background:radial-gradient(closest-side,rgba(255,226,160,.42),rgba(255,226,160,0));pointer-events:none;transition:opacity .35s ease;opacity:.75}
+.c6w-ls-regal:hover,.c6w-ls-regal:focus-visible{transform:translateY(-5px) scale(var(--sk,1));filter:drop-shadow(0 0 12px rgba(255,222,150,.5))}
+.c6w-ls-regal:hover .c6w-ls-licht{opacity:1}
+.c6w-ls-regal:focus-visible{outline:3px solid #e6c987;outline-offset:3px}
+.c6w-ls-plakette{position:absolute;left:5%;right:5%;top:13%;padding:3px 2px;border-radius:3px;background:linear-gradient(#d7b45f,#b98f3c);border:1.5px solid #5a3d17;box-shadow:0 2px 3px rgba(0,0,0,.35);font:700 clamp(10.5px,.9vw + 4px,14px)/1.15 Fraunces,Georgia,serif;color:#2b1a0c;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.c6w-ls-zahl{top:auto;bottom:6%;right:8%}
+.c6w-ls-hinein{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:2px dashed rgba(230,201,135,.75);border-radius:999px 999px 8px 8px;color:#f6ecd4;font:600 14px/1.2 Figtree,sans-serif;text-align:center;padding:0 6px;box-sizing:border-box}
+.c6w-ls-hinein small{font:500 12px/1.25 Figtree,sans-serif;opacity:.85}
+.c6w-ls-hplus{width:40px;height:40px;font-size:26px}
+/* Öffnen: das gewählte Regal tritt vor, seine Flügel gehen auf, die anderen treten zurück */
+.c6w-ls-fluegel{transform-box:fill-box;transition:transform .5s cubic-bezier(.4,0,.2,1) .05s}
+.c6w-ls-fl-l{transform-origin:0 50%}.c6w-ls-fl-r{transform-origin:100% 50%}
+.c6w-ls-offen{z-index:40!important;filter:drop-shadow(0 0 22px rgba(255,222,150,.8))}
+.c6w-ls-offen .c6w-ls-fl-l{transform:perspective(300px) rotateY(-80deg)}
+.c6w-ls-offen .c6w-ls-fl-r{transform:perspective(300px) rotateY(80deg)}
+.c6w-ls-offen .c6w-ls-plakette{opacity:0;transition:opacity .2s}
+.c6w-ls-regal::after{content:"";position:absolute;left:-4%;right:-4%;bottom:-5px;height:7px;border-radius:2px;background:linear-gradient(#7a5638,#4a3122);box-shadow:0 4px 8px rgba(0,0,0,.45)}
+.c6w-ls-waehlt .c6w-ls-regal:not(.c6w-ls-offen){opacity:.25;filter:blur(1px)}
+@media (prefers-reduced-motion:reduce){.c6w-ls-fluegel,.c6w-ls-regal{transition:none}}
+/* Bereich von nah */
+.c6w-ls-rtitel{font:600 15px Fraunces,Georgia,serif;fill:#2b2722}
+.c6w-ls-rgold{fill:#e6c987}
+.c6w-ls-rtinte{font:700 18px Caveat,cursive;fill:#2b2722}
+.c6w-ls-rbuch,.c6w-ls-rfund,.c6w-ls-rolle{cursor:pointer}
+.c6w-ls-rbuch .c6w-ding-innen,.c6w-ls-rbuch:hover{filter:drop-shadow(0 0 6px rgba(255,222,150,.6))}
+.c6w-ls-rolle:hover,.c6w-ls-rfund:hover{filter:drop-shadow(0 0 8px rgba(255,222,150,.8))}
+.c6w-ls-intro{margin:0 0 10px}
+.c6w-ls-carlk{margin:4px 0 0;font:italic 400 17px/1.4 Fraunces,Georgia,serif;color:#3d3832}
+.c6w-ls-zw{margin:18px 0 6px;font:700 12px Figtree,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#5f5345}
+.c6w-ls-buecher,.c6w-ls-funde,.c6w-ls-karten{list-style:none;margin:0;padding:0}
+.c6w-ls-buecher li,.c6w-ls-fund{padding:10px 0 12px;border-bottom:1px solid #d9ccb2}
+.c6w-ls-buecher b,.c6w-ls-fund b{display:block;font:600 18px/1.25 Fraunces,Georgia,serif}
+.c6w-ls-fmeta{display:block;margin:2px 0 0;font:500 13.5px Figtree,sans-serif;color:#5f5345}
+.c6w-ls-fund{display:grid;grid-template-columns:44px 1fr;gap:10px}
+.c6w-ls-fart{display:grid;place-items:center;width:40px;height:40px;border-radius:8px;background:#2b2722;color:#fbf5e8;font:700 12px Figtree,sans-serif}
+.c6w-ls-fnotiz{margin:4px 0 0;font:600 20px/1.25 Caveat,cursive}
+.c6w-ls-fbild{display:block;max-width:100%;max-height:180px;margin:6px 0;border-radius:4px}
+.c6w-ls-ftun{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.c6w-ls-ftun .c6w-knopf{min-height:44px;display:inline-flex;align-items:center;text-decoration:none}
+.c6w-ls-karten{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0}
+.c6w-ls-karten button{display:inline-flex;align-items:center;gap:8px;min-height:44px}
+.c6w-ls-karten i,.c6w-ls-eok i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px}
+.c6w-ls-zurkarte,.c6w-ls-hinlegen{margin-top:12px}
+.c6w-ls-eform .c6w-haupt{margin-top:8px;width:100%}
+.c6w-ls-eok{margin-top:14px;padding:14px 16px;background:#fff6dc;border-radius:6px;box-shadow:0 1px 2px rgba(43,39,34,.15)}
+.c6w-ls-umstellen button{font-size:14px;min-height:44px}
+.c6w-ls-blink{animation:c6w-ls-blink 1.6s ease}
+@keyframes c6w-ls-blink{0%,100%{background:transparent}25%{background:rgba(230,201,135,.45)}}
+@media (prefers-reduced-motion:reduce){.c6w-ls-regal,.c6w-ls-blink{transition:none;animation:none}}
+.c6w-ls-neu{animation:c6w-ls-neu .9s cubic-bezier(.3,1.3,.5,1) both}
+@keyframes c6w-ls-neu{0%{opacity:0;transform:translateY(-60px)}100%{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.c6w-ls-neu{animation:none}}
+/* s4 · auf einen Faden */
+.c6w-ls-buecher .c6w-ls-bfaden,.c6w-ls-ffaden,.c6w-ls-leg{margin-top:8px;min-height:44px}
+.c6w-ls-gelegt{opacity:.75}
+.c6w-ls-gelegt::before{content:"✓ "}
+.c6w-ls-schild{font:700 15px Fraunces,Georgia,serif;fill:#2b1a0c;letter-spacing:.02em}
+.c6w-ls-schild-g{font-size:24px}

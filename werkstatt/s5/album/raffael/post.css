@@ -1,0 +1,60 @@
+/* Zweites Album · Regeln des Post-Raums aus src/kern.css */
+.c6p-anf{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 8px;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.c6p-anf::-webkit-scrollbar{display:none}
+.c6p-anf[hidden]{display:none}
+.c6p-raum{--p-papier:#f4eee4;--p-karte:#fbf7f0;--p-feld:#fffdf9;--p-tusche:#2b2722;--p-leise:#6f6a61;--p-linie:#d8cfc0;--p-orange:#e8621a;--p-otinte:#b4460c;--p-rot:#d62a26;--p-blei:#8a8378;--p-weich:cubic-bezier(.22,.8,.26,1);
+.c6p-wand{position:absolute;inset:0;background:linear-gradient(180deg,#f6f1e8 0,#f4eee4 62%,#efe7da 100%)}
+.c6p-boden{position:absolute;left:0;right:0;bottom:calc(var(--p-unten) + var(--p-feldh));height:2px;background:var(--p-linie)}
+.c6p-boden::after{content:"";position:absolute;left:0;right:0;top:2px;height:44px;background:linear-gradient(rgba(43,39,34,.05),rgba(43,39,34,0))}
+.c6p-leine{position:absolute;left:0;right:0;top:var(--c6-oben,calc(env(safe-area-inset-top,0px) + 52px));bottom:calc(var(--p-unten) + var(--p-feldh) + 2px);z-index:2}
+.c6p-haken{position:absolute;top:14px;width:10px;height:10px;border-radius:50%;background:var(--p-karte);border:2px solid var(--p-tusche);box-sizing:border-box}
+.c6p-haken-l{left:10px}.c6p-haken-r{right:10px}
+.c6p-schnur{position:absolute;left:14px;right:14px;top:18px;height:0;border-top:2px solid var(--p-tusche);transform:scaleY(1);opacity:.85}
+.c6p-schnur::after{content:"";position:absolute;left:0;right:0;top:0;height:14px;border-radius:0 0 50% 50%/0 0 100% 100%;border-bottom:2px solid var(--p-tusche);opacity:.75}
+.c6p-zettelreihe{position:absolute;left:0;right:0;top:22px;bottom:0;display:flex;align-items:flex-start;gap:14px;padding:12px 16px 8px 16px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;outline:none}
+.c6p-zettelreihe::-webkit-scrollbar{display:none}
+.c6p-fenster{position:absolute;left:14px;top:calc(var(--c6-oben,calc(env(safe-area-inset-top,0px) + 52px)) + 30px);width:80px;opacity:.95}
+.c6p-fenster-bild{display:block;width:100%;height:auto}
+.c6p-zettelreihe{padding-left:106px}
+.c6p-regal{position:absolute;right:16px;top:calc(var(--c6-oben,calc(env(safe-area-inset-top,0px) + 52px)) + 136px);width:132px;pointer-events:none}
+.c6p-regal-bild{display:block;width:100%;height:auto}
+.c6p-regal-wandschatten{fill:rgba(43,39,34,var(--p-sa));opacity:.7;transform:translate(calc(var(--p-sdx) * .5),calc(var(--p-sdy) * .5))}
+.c6p-regal-kontakt{fill:rgba(43,39,34,var(--p-sa));transform-box:fill-box;transform-origin:50% 50%;transform:translate(calc(var(--p-sdx) * .4),0) scaleX(1.1)}
+.c6p-tisch{position:absolute;left:calc(50% - 68px);bottom:calc(var(--p-unten) + var(--p-feldh) - 2px);width:84px;z-index:2}
+.c6p-tisch-bild{display:block;width:100%;height:auto}
+.c6p-zettelreihe:focus-visible{outline:3px solid var(--p-otinte);outline-offset:-3px;border-radius:8px}
+.c6p-carl{position:absolute;left:4%;bottom:calc(var(--p-unten) + var(--p-feldh) + 2px);z-index:3}
+.c6p-kasten{position:absolute;right:7%;bottom:calc(var(--p-unten) + var(--p-feldh) - 2px);width:96px;z-index:3}
+.c6p-kasten-bild{display:block;width:100%;height:auto}
+.c6p-kasten-schatten{fill:rgba(43,39,34,var(--p-sa));transform:translate(calc(var(--p-sdx) * .6),0) scaleX(1.15);transform-origin:60px 229px}
+.c6p-kasten-zahl{position:absolute;left:4px;top:30px;min-width:22px;height:22px;border-radius:11px;background:var(--p-tusche);color:var(--p-karte);font:700 12px/22px Figtree,sans-serif;text-align:center;padding:0 5px;border:2px solid var(--p-karte);box-sizing:content-box}
+.c6p-kasten-zahl[hidden]{display:none}
+.c6p-schild{position:absolute;right:-4px;bottom:22px;width:150px;margin:0;padding:5px 8px 6px;background:var(--p-karte);border:2px solid var(--p-tusche);border-radius:8px;box-shadow:var(--p-sdx) var(--p-sdy) 0 rgba(43,39,34,var(--p-sa));font:500 14px/1.2 Caveat,cursive;color:var(--p-tusche);text-align:left;box-sizing:border-box;z-index:1}
+.c6p-schild::before{content:"";position:absolute;left:50%;top:-9px;width:2px;height:9px;margin-left:-1px;background:var(--p-tusche)}
+.c6p-schild:empty{display:none}
+.c6p-anf{position:absolute;left:0;right:0;bottom:calc(var(--p-unten) - 4px);z-index:4;display:flex;gap:8px;overflow-x:auto;padding:4px 12px 8px;box-sizing:border-box;scrollbar-width:none;overscroll-behavior-x:contain}
+.c6p-anf::-webkit-scrollbar{display:none}
+.c6p-anf[hidden]{display:none}
+.c6p-raum.c6p-ohne-anf{--p-feldh:8px}
+.c6p-anf .c6p-chip{box-shadow:2px 2px 0 var(--p-tusche);transition:transform .12s,box-shadow .12s}
+.c6p-anf .c6p-chip:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--p-tusche)}
+.c6p-leer .c6p-zettelreihe::before{content:"";display:none}
+  .c6p-raum{--p-feldh:66px}
+  .c6p-raum.c6p-ohne-anf{--p-feldh:10px}
+  .c6p-anf{left:50%;transform:translateX(-50%);width:min(760px,100%);justify-content:center}
+  .c6p-leine{left:50%;transform:translateX(-50%);width:min(1120px,100%)}
+  .c6p-zettelreihe{padding:14px 24px 8px 190px;gap:18px}
+  .c6p-fenster{left:24px;width:150px}
+  .c6p-tisch{width:150px;left:calc(50% - 20px)}
+  .c6p-regal{right:calc(50% - 300px);top:auto;bottom:calc(var(--p-unten) + var(--p-feldh) + 200px);width:150px}
+  .c6p-carl{left:calc(50% - 400px)}
+  .c6p-carl{left:calc(50% - 400px)}
+  .c6p-kasten{right:calc(50% - 440px);width:112px}
+  .c6p-schild{font-size:16px;width:200px;right:-10px;bottom:26px}
+@media (max-height:700px){.c6p-regal{display:none}.c6p-raum{--p-feldh:56px}.c6p-raum.c6p-ohne-anf{--p-feldh:8px}.c6p-carl{left:6%}.c6p-tisch{display:none}}
+@media (prefers-reduced-motion:reduce){.c6p-raum *,.c6p-raum *::before,.c6p-raum *::after{animation:none!important;transition:none!important}}
+html.c6k-ruhig .c6p-raum *,html.c6k-ruhig .c6p-raum *::before,html.c6k-ruhig .c6p-raum *::after{animation:none!important;transition:none!important}
+.c6p-raum:not(.c6p-aktiv) .c6p-z{animation:none!important}
+  .c6p-raum{--p-feldh:110px}
+  .c6p-anf{flex-wrap:wrap;justify-content:center;row-gap:6px;column-gap:6px;overflow:visible;padding:4px 8px 8px}
+  .c6p-anf .c6p-chip{padding:0 11px;font-size:14px}

@@ -1,0 +1,15 @@
+/* Himmel: Der neue Planet wohnt im Bild (der leere Kreis auf der Bahn). Der Knopf bleibt für Tastatur und Vorlesen. */
+.c6w-himmel .c6w-netz-unten [data-tu="neu"]:not(:focus-visible){position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.c6w-himmel .c6w-wink{bottom:calc(var(--c6-unten,0px) + 28px)}
+/* Teleskop: nur vom Himmel aus, als Ding am Rand der Bühne */
+.c6w-h-teleskop{position:absolute;left:14px;bottom:calc(var(--c6-unten,0px) + 12px);z-index:4;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:56px;min-height:56px;padding:4px 6px;background:none;border:0;cursor:pointer;color:#c9cfee;font:600 12px/1.1 Figtree,system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+.c6w-h-teleskop svg{width:44px;height:44px;filter:drop-shadow(0 3px 6px rgba(5,8,20,.5));transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+.c6w-h-teleskop:hover svg,.c6w-h-teleskop:focus-visible svg{transform:rotate(-8deg) translateY(-2px)}
+.c6w-h-teleskop:focus-visible{outline:3px solid #f0a830;outline-offset:2px;border-radius:12px}
+.c6w-himmel.c6w-blatt-auf .c6w-h-teleskop,.c6w-himmel.c6w-im-rundgang .c6w-h-teleskop{opacity:0;pointer-events:none}
+@media (min-width:820px){.c6w-h-teleskop{left:24px;bottom:calc(var(--c6-unten,0px) + 20px)}}
+@media (max-width:819px){.c6w-h-teleskop{left:auto;right:12px}}
+@media (max-width:819px){.c6w-himmel .c6w-wink{padding:0 76px 0 16px}}
+/* die geparkte Couch, solange Carl vergnügt herumfliegt */
+.c6w-h-couch{position:absolute;left:0;top:0;z-index:2;pointer-events:none;transform-origin:40% 50%;will-change:transform}
+.c6w-h-couch[hidden]{display:none}

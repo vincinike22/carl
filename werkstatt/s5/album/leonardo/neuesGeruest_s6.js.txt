@@ -1,0 +1,9 @@
+// s6: altes „Neues Gerüst“ (Frage → C6.geruest.neu → bearbeite). Ersetzt durch C6.werkzeug.oeffne().
+  function neuesGeruest() {
+    return frag(satz('werkstatt.neuFrage', 'Für welche Aufgabe soll ich dir eins bauen?'), [], { frei: true, id: 'c6w-neu' }).then(function (a) {
+      a = antwort(a); if (!a) return null;
+      try { C6.carl && C6.carl.stimmung('arbeitet'); } catch (e) {}
+      leise(satz('werkstatt.bauMoment', 'Ich bau dir eins. Einen Moment.'));
+      return C6.geruest.neu(a).then(function (g) { if (!offen()) throw ABBRUCH; return bearbeite(g, true); });
+    });
+  }

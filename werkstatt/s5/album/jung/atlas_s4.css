@@ -1,0 +1,271 @@
+/* Freundschaftsbuch: ein echtes, oft geöffnetes Buch. Papier in Schichten, Linien wie im Freundebuch, eingeklebte Dinge. */
+.c6r-at{--at-papier:#fbf6ec;--at-papier2:#f3e9d6;--at-falz:#e6d8bd;--at-linie:rgba(74,96,128,.32);--at-tinte:#2b2722;--at-klebe:rgba(224,203,156,.74);--at-zettel:#fffaf0}
+/* Einband: Rosé-Leinen als Farbschichten, ohne aufgedruckte Struktur */
+.c6r-at-buch{background:linear-gradient(160deg,#c6948a 0%,#b37d73 48%,#9f6a61 100%)}
+.c6r-at-buch::before{display:none}
+/* Buchblock: Kanten der Seiten unter dem Papier */
+.c6r-at-seiten{box-shadow:1px 1px 0 #ece2ce,2px 2px 0 #dccfb4,3px 3px 0 #ebe1cd,4px 4px 0 #d6c8ab,5px 5px 0 rgba(43,39,34,.28)}
+/* Papier: zum Falz hin dunkler, wie eine gewölbte Seite */
+.c6r-at-seite{background:linear-gradient(90deg,var(--at-falz) 0,var(--at-papier2) 4%,var(--at-papier) 22%,var(--at-papier) 82%,#f7efdf 100%)}
+.c6r-at-doppel .c6r-at-seite:first-child{background:linear-gradient(270deg,var(--at-falz) 0,var(--at-papier2) 4%,var(--at-papier) 22%,var(--at-papier) 82%,#f7efdf 100%)}
+.c6r-at-seite.c6r-at-innen{background:linear-gradient(90deg,#e2d2b2 0,#efe2c8 5%,#f4ead6 40%,#f1e5cd 100%)}
+.c6r-at-doppel .c6r-at-seite.c6r-at-innen:first-child{background:linear-gradient(270deg,#e2d2b2 0,#efe2c8 5%,#f4ead6 40%,#f1e5cd 100%)}
+.c6r-at-seitenzahl{font-size:19px}
+
+/* Innendeckel */
+.c6r-at-gedruckt{margin:0;font:italic 400 17px/1.3 Fraunces,Georgia,serif;color:#6f6a61}
+.c6r-at-linie{min-width:62%;min-height:1.15em;padding:0 12px 2px;border-bottom:1.5px solid var(--at-linie);margin:2px 0 8px!important}
+.c6r-at-innen .c6r-at-duschrift.c6r-at-gross{font-size:52px;font-weight:700}
+.c6r-at-gepresst{position:relative;width:112px;height:112px;margin:14px 0 4px;transform:none;rotate:-9deg;filter:drop-shadow(1px 2px 1.5px rgba(43,39,34,.2))}
+.c6r-at-gepresst svg{width:100%;height:100%}
+.c6r-at-klebe{position:absolute;width:40px;height:14px;background:var(--at-klebe);pointer-events:none}
+.c6r-at-klebe-a{left:-6px;top:30px;transform:rotate(-34deg)}
+.c6r-at-klebe-b{right:-4px;top:26px;transform:rotate(30deg)}
+.c6r-at-seit{margin-top:6px!important;font-size:15px}
+
+/* Überschriften und Fragen wie gedruckt, Antworten von Hand auf Linien */
+.c6r-at-titel{font-size:30px}
+.c6r-at-unter{font:italic 400 16px/1.4 Fraunces,Georgia,serif;color:#6f6a61}
+.c6r-at-fb{margin:0 0 14px}
+.c6r-at-frage{margin:14px 0 0;font:italic 400 17px/1.3 Fraunces,Georgia,serif;color:#5d574e}
+.c6r-at .c6w-du{margin:0}
+.c6r-at .c6w-satz,.c6r-at .c6w-zier{display:none}
+.c6r-at .c6w-lab{margin:14px 0 0;font:italic 400 17px/1.3 Fraunces,Georgia,serif;color:#5d574e}
+.c6r-at-fb-baut .c6w-lab{display:none}
+.c6r-at .c6w-feld{display:block;width:100%;box-sizing:border-box;min-height:44px;margin:0 0 2px;padding:6px 2px 0;border:0;border-bottom:1.5px solid var(--at-linie);border-radius:0;background:transparent;box-shadow:none;color:var(--at-tinte);font:600 26px/1.25 Caveat,cursive}
+.c6r-at textarea.c6w-feld{min-height:80px;padding:3px 2px 0;border-bottom:0;resize:none;line-height:38px;background:repeating-linear-gradient(180deg,transparent 0 36.5px,var(--at-linie) 36.5px 38px)}
+.c6r-at .c6w-feld:focus{outline:none;border-bottom-color:#e8621a;background-color:rgba(232,98,26,.05)}
+.c6r-at .c6w-zeile{gap:4px}
+.c6r-at .c6w-zeile .c6w-feld{margin:0}
+.c6r-at .c6w-weg.c6w-weg{border:0;border-radius:50%;color:#8a8378;background:transparent}
+.c6r-at .c6w-weg.c6w-weg:hover{color:#a02a1f;background:rgba(214,42,38,.07)}
+.c6r-at .c6w-dazu{min-height:44px;margin:6px 0 0;padding:0 4px;border:0;background:none;box-shadow:none;color:#8a3b14;font:700 22px Caveat,cursive;cursor:pointer;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
+.c6r-at .c6w-dazu::before{content:"+ "}
+.c6r-at .c6w-leise{margin:8px 0 0;font:500 21px/1.25 Caveat,cursive;color:#8a8378}
+.c6r-at .c6w-arten{margin:8px 0 4px;gap:6px}
+.c6r-at .c6w-arten button{min-height:44px;padding:0 14px;border:1.5px solid transparent;border-radius:24px;background:transparent;color:var(--at-tinte);font:700 24px Caveat,cursive}
+.c6r-at .c6w-arten button:hover{border-color:var(--at-linie)}
+.c6r-at .c6w-arten button[aria-checked="true"]{background:transparent;color:var(--at-tinte);border:2px solid #b4460c;border-radius:48% 52% 46% 54%/56% 44% 56% 44%}
+.c6r-at-versprechen{margin:20px 0 0;padding:12px 0 0;border-top:1.5px solid var(--at-linie);font-size:18px;line-height:1.4;color:#3d3832}
+
+/* Carl über sich: Foto eingeklebt, Zeilen liniert */
+.c6r-at-foto{border:0;box-shadow:1px 2px 3px rgba(43,39,34,.22);transform:none;rotate:3.5deg}
+.c6r-at-ecke{background:var(--at-klebe)}
+.c6r-at-carl dd{border-bottom-color:var(--at-linie)}
+
+/* Damals: eingeklebte Zettel */
+.c6r-at-momente{list-style:none;margin:10px 0 0;padding:0 4px}
+.c6r-at-moment{position:relative;margin:0 0 18px;padding:14px 16px 12px;background:var(--at-zettel);box-shadow:0 1px 2px rgba(43,39,34,.14),0 3px 8px rgba(43,39,34,.06);transform:none;rotate:-.8deg}
+.c6r-at-moment:nth-child(2n){transform:none;rotate:.9deg;margin-left:10px}
+.c6r-at-moment:nth-child(3n){margin-left:4px;margin-right:8px}
+.c6r-at-moment>.c6r-at-klebe{left:50%;top:-7px;margin-left:-20px;transform:rotate(-3deg)}
+.c6r-at-m-kopf{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:0}
+.c6r-at-m-was{font:700 11.5px/1.3 Figtree,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#8a3b14}
+.c6r-at-m-wann{flex:none;font-size:19px;color:#6f6a61}
+.c6r-at-m-text{margin:2px 0 0;font-size:25px;line-height:1.2;color:var(--at-tinte);overflow-wrap:anywhere}
+.c6r-at-m-erste{background:#fff4d8;padding:18px 18px 14px}
+.c6r-at-m-erste .c6r-at-m-text{font-size:30px}
+.c6r-at-m-kern::after{content:"";position:absolute;left:-5px;top:12px;width:11px;height:11px;border-radius:50%;background:#d62a26;box-shadow:inset -2px -2px 0 rgba(0,0,0,.18),1px 2px 2px rgba(43,39,34,.3)}
+.c6r-at-m-knoten,.c6r-at-m-faden,.c6r-at-m-perle{padding-left:24px}
+.c6r-at-m-knoten::before{content:"";position:absolute;left:9px;top:12px;bottom:12px;width:5px;border-radius:3px;background:linear-gradient(var(--m-farbe,#2f5f8a),var(--m-farbe2,#b7852a))}
+.c6r-at-m-faden::before{content:"";position:absolute;left:10px;top:12px;bottom:12px;width:3px;border-radius:2px;background:var(--m-farbe,#2f5f8a)}
+.c6r-at-m-perle::before{content:"";position:absolute;left:8px;top:15px;width:10px;height:10px;border-radius:50%;background:var(--m-farbe,#8ea37a);box-shadow:inset -2px -2px 0 rgba(0,0,0,.18)}
+.c6r-at-mehr{margin:-6px 0 12px;text-align:center;font-size:16px;color:#6f6a61}
+.c6r-at-leer{margin:24px 0 0;font-size:19px;line-height:1.45;color:#5d574e}
+
+/* Briefe an Carl: Briefpapier statt Kästen */
+.c6r-at-briefe li{transform:none!important;rotate:-.6deg;border:0;border-radius:2px;padding:12px 16px 12px;background:var(--at-zettel);box-shadow:0 1px 2px rgba(43,39,34,.14),0 3px 8px rgba(43,39,34,.06)}
+.c6r-at-briefe .c6r-at-duschrift{font-size:25px;line-height:1.2}
+.c6r-at-briefe .c6r-at-datum{margin:2px 0 6px}
+.c6r-at-briefe .c6r-at-antwort{padding-top:6px;border-top:1px solid var(--at-linie)}
+.c6r-at-schreib textarea.c6r-at-feld{border:0;min-height:76px;padding:2px;line-height:36px;font-size:24px;background:repeating-linear-gradient(180deg,transparent 0 34.5px,var(--at-linie) 34.5px 36px)}
+
+/* Anhang */
+.c6r-at-anhang{margin:0 0 2px;font:700 12px Figtree,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#8a3b14}
+.c6r-at-still{cursor:default;box-sizing:border-box}
+.c6r-at-still::after{display:none}
+.c6r-at-jetzt{margin-top:4px;font-size:15px!important;color:#3d3832!important}
+
+/* Umblättern: das Blatt dunkelt, wenn es sich vom Licht wegdreht; sein Schatten wandert über die Seite darunter */
+.c6r-at-falte{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;background:linear-gradient(90deg,rgba(43,39,34,.32),rgba(43,39,34,.12) 55%,rgba(43,39,34,.04))}
+.c6r-at-falte-h{background:linear-gradient(270deg,rgba(43,39,34,.32),rgba(43,39,34,.12) 55%,rgba(43,39,34,.04))}
+.c6r-at-wurf{position:absolute;top:0;bottom:0;left:0;right:0;z-index:3;pointer-events:none;opacity:0;transform-origin:0 50%;background:linear-gradient(90deg,rgba(43,39,34,.26),rgba(43,39,34,.1) 40%,rgba(43,39,34,0) 80%)}
+.c6r-at-wurf-doppel{left:50%}
+@media (prefers-reduced-motion:reduce){.c6r-at-falte,.c6r-at-wurf{display:none}}
+@media (min-width:820px){
+  .c6r-at-titel{font-size:34px}
+  .c6r-at-innen .c6r-at-duschrift.c6r-at-gross{font-size:60px}
+}
+
+/* Seitenzahl unten auf der Seite, nicht unter dem letzten Absatz */
+.c6r-at-seite{display:flex;flex-direction:column}
+.c6r-at-seite>.c6r-at-inhalt{width:100%;flex:0 0 auto}
+.c6r-at-seite>.c6r-at-seitenzahl{position:static;margin:auto 0 -18px;padding-top:14px;align-self:flex-end}
+.c6r-at-doppel .c6r-at-seite:first-child>.c6r-at-seitenzahl{align-self:flex-start}
+.c6r-at-carl dt{font:italic 400 15px Fraunces,Georgia,serif;color:#5d574e}
+
+/* ---------- s2: mehr Seiten, Seitenkurve, Einkleben und Schreiben ---------- */
+.c6r-at-seiten,.c6r-at-seite{touch-action:pan-y pinch-zoom}
+.c6r-at-seite{-webkit-user-select:none;user-select:none}
+.c6r-at-seite input,.c6r-at-seite textarea{-webkit-user-select:text;user-select:text}
+.c6r-at-seite.c6r-at-lp{background:linear-gradient(270deg,var(--at-falz) 0,var(--at-papier2) 4%,var(--at-papier) 22%,var(--at-papier) 82%,#f7efdf 100%);border-radius:8px 3px 3px 8px}
+
+/* Freundebuch-Zeilen: Frage gedruckt, Antwort von Hand */
+.c6r-at-zeile-hand{margin:0 0 4px}
+.c6r-at-zeile-hand .c6r-at-frage{display:block;margin:12px 0 0}
+.c6r-at-hand{border-bottom:1.5px solid var(--at-linie)!important;font:600 26px/1.25 Caveat,cursive!important;color:var(--at-tinte);caret-color:#2c5aa0;padding:4px 2px 0!important}
+.c6r-at-hand::placeholder{color:#a39b8e;font-weight:500}
+.c6r-at-abstand{margin-top:26px!important}
+.c6r-at-mag{list-style:none;margin:6px 0 0;padding:0}
+.c6r-at-mag li{padding:8px 0 6px;border-bottom:1.5px solid var(--at-linie);font-size:18px;line-height:1.4;color:#3d3832}
+.c6r-at-fussnote{margin:14px 0 0;font:italic 400 14px/1.4 Fraunces,Georgia,serif;color:#8a8378}
+
+/* Pläne */
+.c6r-at-plaene{list-style:none;margin:6px 0 4px;padding:0}
+.c6r-at-plan{position:relative;display:flex;flex-wrap:wrap;align-items:center;gap:0 8px;padding:2px 0;border-bottom:1.5px solid var(--at-linie)}
+.c6r-at-plan .c6r-at-haken{flex:1;min-width:0}
+.c6r-at-plan .c6r-at-haken input{accent-color:#8a3b14}
+.c6r-at-plan-t{font-size:25px;line-height:1.15;overflow-wrap:anywhere;background:linear-gradient(#8a3b14,#8a3b14) no-repeat 0 55%/0 2px;transition:background-size .5s cubic-bezier(.3,.7,.3,1),color .4s}
+.c6r-at-plan-fertig .c6r-at-plan-t{background-size:100% 2px;color:#6f6a61}
+.c6r-at-geschafft{order:3;flex-basis:100%;margin:-6px 0 6px 34px;font:700 11.5px/1.3 Figtree,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#b4460c}
+.c6r-at-geschafft:empty{display:none}
+.c6r-at-weg{flex:none;min-width:44px;min-height:44px;padding:0 8px;border:0;background:none;color:#8a8378;font:500 15px Figtree,sans-serif;cursor:pointer;border-radius:22px}
+.c6r-at-weg:hover,.c6r-at-weg.c6r-at-sicher{color:#a02a1f;background:rgba(214,42,38,.07)}
+.c6r-at-planform{flex-direction:row;align-items:flex-end;gap:10px;margin-top:10px}
+.c6r-at-planform .c6r-at-feld{flex:1;min-width:0}
+.c6r-at-planform .c6r-at-knopf{flex:none}
+
+/* Unser Jahr */
+.c6r-at-jahr{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0 14px}
+.c6r-at-mo{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-height:66px;padding:6px 7px;border:1.5px solid rgba(43,39,34,.18);border-radius:8px;background:rgba(255,253,248,.6);color:var(--at-tinte);cursor:pointer;text-align:left;box-sizing:border-box;min-width:0}
+.c6r-at-mo-name{font:600 13px Figtree,sans-serif;letter-spacing:.04em;color:#5d574e}
+.c6r-at-mo-spaeter{opacity:.5}
+.c6r-at-mo-jetzt .c6r-at-mo-name{color:#b4460c}
+.c6r-at-mo-jetzt::after{content:"";position:absolute;inset:-4px;border:2px solid #b4460c;border-radius:48% 52% 46% 54%/56% 44% 56% 44%;pointer-events:none;opacity:.55}
+.c6r-at-mo[aria-pressed="true"]{background:#fff4d8;border-color:rgba(43,39,34,.5)}
+.c6r-at-mo-punkte{display:flex;flex-wrap:wrap;gap:3px}
+.c6r-at-mo-punkte i{width:8px;height:8px;border-radius:50%;box-shadow:inset -1.5px -1.5px 0 rgba(0,0,0,.16)}
+.c6r-at-mo-wort{max-width:100%;font-size:19px;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.c6r-at-mo-titel{margin:0;font:600 20px Fraunces,Georgia,serif}
+.c6r-at-mo-leer{margin:4px 0 0;font-size:16px;color:#5d574e}
+.c6r-at-mo-liste{list-style:none;margin:6px 0 0;padding:0}
+.c6r-at-mo-liste li{display:flex;gap:8px;align-items:baseline;padding:3px 0;font:400 15px/1.35 Figtree,sans-serif;color:#3d3832}
+.c6r-at-mo-liste li i{flex:none;width:9px;height:9px;border-radius:50%;transform:translateY(-1px)}
+
+/* Seitenangabe = Inhalt */
+.c6r-at-nr{border:0;cursor:pointer}
+.c6r-at-nr::after{content:" ▾";font-size:11px;color:var(--at-leise)}
+.c6r-at-liste{position:absolute;z-index:12;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 74px);transform:translateX(-50%);width:min(320px,calc(100% - 32px));max-height:min(62vh,520px);overflow-y:auto;box-sizing:border-box;padding:8px;background:#fbf6ec;border:2px solid var(--at-tusche);border-radius:14px;box-shadow:2px 3px 0 var(--at-tusche),0 14px 30px rgba(43,39,34,.3)}
+.c6r-at-liste[hidden]{display:none}
+.c6r-at-liste-kopf{margin:4px 8px 4px;font:700 11.5px Figtree,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#8a3b14}
+.c6r-at-liste-e{display:flex;justify-content:space-between;align-items:baseline;gap:10px;width:100%;min-height:44px;padding:0 10px;border:0;border-radius:8px;background:none;color:var(--at-tusche);font:400 17px Fraunces,Georgia,serif;cursor:pointer;text-align:left}
+.c6r-at-liste-e:hover{background:rgba(232,98,26,.08)}
+.c6r-at-liste-e.c6r-at-hier{background:#fff4d8}
+.c6r-at-liste-nr{font:600 18px Caveat,cursive;color:var(--at-leise)}
+
+/* Die Seitenkurve */
+.c6r-at-kurve{position:absolute;top:0;left:0;z-index:5;pointer-events:none}
+.c6r-at-kurve-rechts{left:50%}
+.c6r-at-k-front,.c6r-at-k-unter{position:absolute;inset:0;overflow:hidden}
+.c6r-at-k-unter{z-index:1;border-radius:3px 8px 8px 3px}
+.c6r-at-k-front{z-index:2}
+.c6r-at-k-flapw{position:absolute;left:0;top:0;width:100%;height:100%;z-index:3;filter:drop-shadow(calc(var(--k-wurf,6px) * -.6) calc(var(--k-wurf,6px) * .35) var(--k-wurf,6px) rgba(43,39,34,.28))}
+.c6r-at-k-flap{position:absolute;left:0;top:0;transform-origin:0 0;overflow:hidden}
+.c6r-at-k-rueck{position:absolute;inset:0;background:linear-gradient(270deg,#e9dcc2,#f3e9d6 8%,#f6eedd);overflow:hidden}
+.c6r-at-k-durch{opacity:.07;transform:scaleX(-1);filter:blur(.4px);background:none!important;box-shadow:none!important}
+.c6r-at-k-glanz{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.c6r-at-k-band{position:absolute;left:0;top:0;transform-origin:0 0}
+/* Wölbung: dunkel im Knick, gleich danach ein Lichtstreif, zum Rand hin wieder leicht im Schatten */
+.c6r-at-k-licht{background:linear-gradient(90deg,rgba(43,39,34,.26) 0,rgba(43,39,34,.06) 3%,rgba(255,252,244,.55) 9%,rgba(255,252,244,.12) 24%,rgba(255,252,244,0) 42%,rgba(43,39,34,.05) 72%,rgba(43,39,34,.13) 100%)}
+.c6r-at-k-schlag{background:linear-gradient(90deg,rgba(43,39,34,.3) 0,rgba(43,39,34,.12) 30%,rgba(43,39,34,0) 100%)}
+
+/* Einkleben: von oben aufgelegt, angedrückt, das Klebeband zuletzt */
+.c6r-at-neu:not(.c6r-at-los) .c6r-at-kleb{opacity:0}
+.c6r-at-neu:not(.c6r-at-los) .c6r-at-handlauf{clip-path:inset(0 100% 0 0)}
+.c6r-at-los .c6r-at-kleb{animation:c6r-at-kleben .62s cubic-bezier(.2,.8,.3,1) both}
+.c6r-at-los .c6r-at-kleb .c6r-at-klebe{animation:c6r-at-band .3s ease-out both;animation-delay:inherit}
+.c6r-at-handlauf{display:inline;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.c6r-at-los .c6r-at-handlauf{animation:c6r-at-schreibt .85s cubic-bezier(.45,.1,.4,1) both}
+@keyframes c6r-at-kleben{0%{opacity:0;transform:translate(8px,-22px) scale(1.07);filter:drop-shadow(0 16px 12px rgba(43,39,34,.22))}55%{opacity:1;transform:translate(0,1px) scale(.985);filter:drop-shadow(0 2px 2px rgba(43,39,34,.12))}100%{opacity:1;transform:none;filter:none}}
+@keyframes c6r-at-band{0%{scale:0 1;opacity:0}100%{scale:1 1;opacity:1}}
+@keyframes c6r-at-schreibt{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+/* Schreiben: frische Tinte ist blau und glänzt, dann trocknet sie */
+.c6r-at-tinte{animation:c6r-at-tinte 1.4s ease-out}
+@keyframes c6r-at-tinte{0%{color:#2c5aa0;text-shadow:0 0 1px rgba(44,90,160,.55);box-shadow:inset 0 -2px 0 rgba(44,90,160,.7)}100%{text-shadow:none;box-shadow:inset 0 -2px 0 rgba(44,90,160,0)}}
+/* Geschafft-Stempel */
+.c6r-at-stempelt{animation:c6r-at-stempel .5s cubic-bezier(.22,.8,.26,1) both;transform-origin:0 50%}
+@keyframes c6r-at-stempel{0%{opacity:0;transform:scale(1.8) rotate(-6deg)}60%{opacity:1;transform:scale(.94) rotate(1deg)}100%{transform:none}}
+html.c6k-ruhig .c6r-at *{animation:none!important}
+@media (prefers-reduced-motion:reduce){.c6r-at *{animation:none!important}.c6r-at-neu:not(.c6r-at-los) .c6r-at-kleb{opacity:1}.c6r-at-neu:not(.c6r-at-los) .c6r-at-handlauf{clip-path:none}}
+@media (min-width:820px){.c6r-at-jahr{gap:8px}.c6r-at-mo{min-height:72px}}
+.c6r-at-fuss .c6r-at-nr{width:auto;height:auto;min-height:44px;max-width:calc(100% - 150px);padding:6px 14px;border:0;border-radius:16px;background:rgba(251,247,240,.94);box-shadow:none;font:500 14px/1.25 Figtree,sans-serif;color:var(--at-tusche);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.c6r-at-zeile-hand .c6r-at-hand{min-height:40px}
+.c6r-at-liste-e{align-items:center}
+
+/* ---------- s3: großes Buch, Registerreiter, Rand zum Blättern, Gerät und Sprachmodell ---------- */
+.c6r-at-buch{width:calc(100% - 52px);max-width:640px;height:calc(100% - 150px);margin:0 30px 0 0}
+@media (min-width:820px){
+  .c6r-at-buch{width:calc(100% - 120px);max-width:1440px;height:calc(100% - 128px);max-height:1000px;margin:-4px 30px 0 0;padding:14px}
+  .c6r-at-seite{padding:34px 44px 40px}
+  .c6r-at-inhalt{max-width:560px}
+}
+/* Reiter: farbige Pappstreifen, die rechts aus dem Buch schauen */
+.c6r-at-reiter{position:absolute;top:22px;bottom:22px;right:-31px;width:32px;display:flex;flex-direction:column;gap:5px;z-index:-1}
+.c6r-at-reit{flex:1 1 0;max-height:118px;min-height:44px;width:30px;padding:0;border:1.5px solid var(--at-tusche);border-left:0;border-radius:0 9px 9px 0;background:var(--reit);color:var(--at-tusche);
+  writing-mode:vertical-rl;font:600 12.5px/1 Figtree,sans-serif;letter-spacing:.03em;cursor:pointer;box-shadow:inset 6px 0 6px -4px rgba(43,39,34,.28);transition:transform .2s cubic-bezier(.3,.7,.3,1),width .2s;transform-origin:0 50%}
+.c6r-at-reit:hover{transform:translateX(2px)}
+.c6r-at-reit-an{width:34px;font-weight:700;box-shadow:inset 3px 0 4px -3px rgba(43,39,34,.2),2px 2px 0 var(--at-tusche)}
+.c6r-at-reiter{pointer-events:auto}
+.c6r-at-buch{isolation:isolate}
+.c6r-at-buch>.c6r-at-seiten{z-index:1}
+@media (min-width:820px){.c6r-at-reiter{top:34px;bottom:34px}.c6r-at-reit{font-size:13.5px}}
+/* Eselsohr unten rechts: hier fasst man an, ein Tipp auf den Rand blättert */
+.c6r-at-seiten::before{content:"";position:absolute;right:0;bottom:0;width:30px;height:30px;z-index:3;pointer-events:none;border-radius:0 0 8px 0;
+  background:linear-gradient(135deg,transparent 50%,#e7dabf 50%,#f4ead6 70%,#e2d3b5);box-shadow:-2px -2px 4px rgba(43,39,34,.12)}
+@media (hover:hover){.c6r-at-seite{cursor:default}}
+/* Gerät */
+.c6r-at-verarbeitet{margin:2px 0 14px;padding:10px 14px;background:#fff4d8;border-radius:4px;rotate:-.4deg;font-size:17px;line-height:1.4;color:#3d3832;box-shadow:0 1px 2px rgba(43,39,34,.14)}
+.c6r-at-verarbeitet[hidden]{display:none}
+.c6r-at-zwischen{margin:22px 0 2px;padding-top:16px;border-top:1.5px solid var(--at-linie);font:600 22px Fraunces,Georgia,serif}
+.c6r-at-modelle2{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;margin:4px 0 16px}
+.c6r-at-modell{display:flex;flex-direction:column;align-items:center;gap:4px;min-height:96px;padding:10px 6px 8px;border:2px solid rgba(43,39,34,.25);border-radius:14px;background:#fffdf8;color:var(--at-tusche);cursor:pointer;transition:transform .15s,border-color .15s}
+.c6r-at-modell:hover{border-color:var(--at-tusche)}
+.c6r-at-modell[aria-checked="true"]{border-color:var(--at-tusche);background:#fff4d8;box-shadow:2px 2px 0 var(--at-tusche)}
+.c6r-at-modell-bild svg{width:44px;height:44px;display:block}
+html:not(.c6k-ruhig) .c6r-at-modell[aria-checked="true"] svg{animation:c6r-at-stempelt .42s cubic-bezier(.22,.8,.26,1) both}
+.c6r-at-modell-name{font:600 14px/1.2 Figtree,sans-serif;text-align:center}
+.c6r-at-merk{position:relative;margin:10px 4px 6px;padding:18px 18px 14px;background:var(--at-zettel);rotate:.5deg;box-shadow:0 1px 2px rgba(43,39,34,.14),0 3px 8px rgba(43,39,34,.06)}
+.c6r-at-merk>.c6r-at-klebe{left:50%;top:-7px;margin-left:-20px;transform:rotate(-3deg)}
+.c6r-at-merk-kopf{margin:0 0 6px;font:700 11.5px Figtree,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#8a3b14}
+.c6r-at-merk dl{display:grid;grid-template-columns:auto 1fr;gap:2px 12px;margin:0 0 8px}
+.c6r-at-merk dt{font:italic 400 15px/1.6 Fraunces,Georgia,serif;color:#6f6a61}
+.c6r-at-merk dd{margin:0;font-size:22px;line-height:1.2}
+.c6r-at-merk-ehrlich{margin:0 0 10px;font:400 13.5px/1.4 Figtree,sans-serif;color:#6f6a61}
+.c6r-at-handlauf,.c6r-at-los .c6r-at-handlauf{display:block}
+.c6r-at-verarbeitet{margin:6px 0 14px}
+
+/* ---------- s4: weniger, und jede Seite mit einer Mitte ---------- */
+.c6r-at-fuss .c6r-at-nr{position:absolute;width:1px;height:1px;min-height:0;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.c6r-at-fuss{gap:22px}
+.c6r-at-liste{display:none!important}
+/* Pläne: der Weg in einen Space */
+.c6r-at-plan-hin{order:4;flex-basis:100%;display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;margin:-4px 0 6px 34px;font-size:15px;color:#3d3832}
+.c6r-at-plan-hin:empty{display:none}
+.c6r-at-inspace,.c6r-at-hingehen{min-height:44px;padding:0 4px;border:0;background:none;color:#8a3b14;font:600 14px Figtree,sans-serif;cursor:pointer;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
+.c6r-at-inspace{color:#6f6a61;text-decoration-style:dotted}
+.c6r-at-wahl1{display:flex;flex-direction:column;gap:6px;width:100%;margin:2px 0 4px}
+.c6r-at-w1{display:flex;align-items:center;gap:10px;min-height:44px;padding:4px 14px 4px 6px;border:1.5px solid rgba(43,39,34,.3);border-radius:24px;background:#fffdf8;color:var(--at-tusche);font:500 15px Figtree,sans-serif;cursor:pointer;text-align:left}
+.c6r-at-w1:hover{border-color:var(--at-tusche)}
+.c6r-at-w1-rund{flex:none;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;color:#fff;font:700 18px/1 Figtree,sans-serif}
+.c6r-at-w1-nein{justify-content:center;border-style:dashed;color:#6f6a61}
+/* Damals: ein Moment mit Ort führt dorthin */
+.c6r-at-m-geht{cursor:pointer;transition:translate .2s cubic-bezier(.3,.7,.3,1),box-shadow .2s}
+.c6r-at-m-geht:hover{translate:0 -2px;box-shadow:0 2px 3px rgba(43,39,34,.16),0 8px 16px rgba(43,39,34,.1)}
+.c6r-at-m-geht:focus-visible{outline:3px solid #b4460c;outline-offset:3px}
+.c6r-at-m-geht .c6r-at-m-was::after{content:"  ›";color:#b4460c}
+/* Briefe: das Schreiben ist die Mitte */
+.c6r-at-schreib textarea.c6r-at-feld{min-height:144px;font-size:27px;line-height:40px;background:repeating-linear-gradient(180deg,transparent 0 38.5px,var(--at-linie) 38.5px 40px)}
+.c6r-at-s-brief .c6r-at-schreib{margin-top:10px}
+.c6r-at-s-brief .c6r-at-briefe{order:2}
+.c6r-at-jetzt-denken{margin:-8px 0 10px;font:400 13.5px/1.4 Figtree,sans-serif;color:#6f6a61}
+@media (max-width:819px){.c6r-at-planform{flex-direction:column;align-items:stretch}.c6r-at-planform .c6r-at-knopf{align-self:flex-start}}

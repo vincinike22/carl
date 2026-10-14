@@ -1,0 +1,1 @@
+Kanon-Gänge (Philosophie … Technik mit Büchern und Carls Kommentar), Karten des Wissens mit Wanderung, Lexikon-Mappe und Einordnen nach Gängen. Zurückholen: lesesaal.js/.css aus diesem Ordner nach src/raeume/ kopieren (Stand s4).

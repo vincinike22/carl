@@ -1,0 +1,36 @@
+/* s4 · Die Geheimtür ist Teil der Regalwand: an der Fuge kein Strich, erst ein Lichtspalt, dann schwingt das Regal mit seinen Büchern auf */
+.c6w-tuer-spalt{opacity:0;transition:opacity .35s ease;pointer-events:none;filter:drop-shadow(0 0 6px #ffd98a)}
+.c6w-zieht .c6w-tuer-spalt{opacity:.95}
+.c6w-auf .c6w-tuer-spalt{opacity:0;transition-delay:.4s}
+.c6w-tuer-schatten{opacity:0;transition:opacity 1.1s ease;pointer-events:none}
+.c6w-auf .c6w-tuer-schatten{opacity:.55}
+.c6w-zieht .c6w-tuerblatt{transform:skewY(-.8deg) scaleX(.975)}
+.c6w-auf .c6w-tuerblatt{transform:skewY(-8deg) scaleX(.1)}
+.c6w-tuerblatt{transition:transform 1.25s cubic-bezier(.55,.04,.22,1)}
+@media (prefers-reduced-motion:reduce){.c6w-tuer-spalt,.c6w-tuer-schatten{transition:none}}
+/* s5 · Das blaue Lexikon schimmert leise, bis die Tür einmal offen war */
+.c6w-lex-schimmer .c6w-ding-innen{animation:c6w-lex-schimmer 5.5s ease-in-out infinite}
+@keyframes c6w-lex-schimmer{0%,70%,100%{filter:none}82%{filter:drop-shadow(0 0 7px rgba(255,226,150,.85)) brightness(1.12)}}
+@media (prefers-reduced-motion:reduce){.c6w-lex-schimmer .c6w-ding-innen{animation:none}}
+/* s7 · Wand: Lampen und Bilder */
+.c6w-gemaelde .c6w-ding-innen{transition:transform .35s cubic-bezier(.3,.7,.3,1)}
+.c6w-gemaelde:hover .c6w-ding-innen{filter:drop-shadow(0 0 8px rgba(255,222,150,.6))}
+.c6w-gemaelde.c6w-tipp .c6w-ding-innen{animation:c6w-bild-wackel .9s ease}
+@keyframes c6w-bild-wackel{20%{transform:rotate(-1.6deg)}45%{transform:rotate(1.1deg)}70%{transform:rotate(-.5deg)}100%{transform:none}}
+.c6w-gemaelde .c6w-ding-innen{transform-box:fill-box;transform-origin:50% 0}
+.c6w-wandlampe ellipse:first-child{animation:c6w-lampe-atmet 6s ease-in-out infinite}
+@keyframes c6w-lampe-atmet{50%{opacity:.82}}
+/* s7 · Geheimtür: ein Rucken, die Bücher zittern, Staub rieselt, Licht fällt durch den Spalt, dann schwingt das Regal in die Tiefe */
+.c6w-tuerblatt{transition:none}
+.c6w-zieht .c6w-tuerblatt{animation:c6w-tuer-ruck .42s ease-in-out both}
+@keyframes c6w-tuer-ruck{0%{transform:none}30%{transform:translateX(-1.2px) skewY(-.3deg) scaleX(.992)}55%{transform:translateX(1px) skewY(.2deg) scaleX(.988)}80%{transform:translateX(-.6px) skewY(-.5deg) scaleX(.98)}100%{transform:skewY(-.8deg) scaleX(.975)}}
+.c6w-auf .c6w-tuerblatt{animation:c6w-tuer-schwing 1.5s cubic-bezier(.45,.05,.2,1) both}
+@keyframes c6w-tuer-schwing{0%{transform:skewY(-.8deg) scaleX(.975)}35%{transform:skewY(-4deg) scaleX(.72)}70%{transform:skewY(-7.5deg) scaleX(.24)}88%{transform:skewY(-8.3deg) scaleX(.07)}100%{transform:skewY(-8deg) scaleX(.1)}}
+.c6w-tuer-schatten{transition:opacity 1.5s cubic-bezier(.45,.05,.2,1)}
+.c6w-auf .c6w-tuer-schatten{opacity:.62}
+.c6w-tuer-staub circle{opacity:0}
+.c6w-zieht .c6w-tuer-staub circle{animation:c6w-staub-fall 1.8s ease-in both}
+@keyframes c6w-staub-fall{0%{opacity:0;transform:translate(0,0)}15%{opacity:.9}100%{opacity:0;transform:translate(6px,90px)}}
+.c6w-tuer-licht{opacity:0;transition:opacity 1.2s ease .3s;pointer-events:none}
+.c6w-auf .c6w-tuer-licht{opacity:1}
+@media (prefers-reduced-motion:reduce){.c6w-zieht .c6w-tuerblatt,.c6w-auf .c6w-tuerblatt,.c6w-zieht .c6w-tuer-staub circle,.c6w-gemaelde.c6w-tipp .c6w-ding-innen,.c6w-wandlampe ellipse:first-child{animation:none}.c6w-auf .c6w-tuerblatt{transform:skewY(-8deg) scaleX(.1)}}

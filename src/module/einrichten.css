@@ -1,0 +1,53 @@
+/* Einrichten: ein Blatt aus Papier, Karten wie im Schrank, Griffe an gestellten Dingen */
+.c6e-blatt{position:absolute;z-index:30;left:12px;right:12px;bottom:calc(var(--c6-unten,140px) + 6px);max-height:min(46vh,380px);overflow-y:auto;overscroll-behavior:contain;padding:8px 14px 12px;border-radius:20px;border:2px solid var(--tusche,#2b2722);background:var(--karte,#fbf7f0);color:var(--tusche,#2b2722);box-shadow:4px 4px 0 var(--tusche,#2b2722)}
+.c6e-kopf{display:flex;align-items:center;gap:10px;position:sticky;top:-8px;background:var(--karte,#fbf7f0);z-index:1;padding:4px 0 6px}
+.c6e-titel{font:600 20px/1.1 Fraunces,Georgia,serif}
+.c6e-hinweis{flex:1 1 auto;min-width:0;font:400 italic 14px/1.3 Fraunces,Georgia,serif;color:var(--leise,#6f6a61)}
+.c6e-fertig{flex:none;min-height:44px;padding:0 18px;border-radius:22px;border:2px solid var(--tusche,#2b2722);background:var(--tusche,#2b2722);color:var(--karte,#fbf7f0);font:600 15px/1 Figtree,system-ui,sans-serif;cursor:pointer;box-shadow:2px 2px 0 var(--orange,#e8621a)}
+.c6e-reihen{display:flex;gap:8px;overflow-x:auto;padding:2px 0 8px;scrollbar-width:none}
+.c6e-reihen::-webkit-scrollbar{display:none}
+.c6e-reihe,.c6e-chip{flex:none;min-height:44px;padding:0 16px;border-radius:22px;border:2px solid var(--tusche,#2b2722);background:var(--karte,#fbf7f0);color:var(--tusche,#2b2722);font:600 15px/1 Figtree,system-ui,sans-serif;cursor:pointer}
+.c6e-reihe.c6e-an,.c6e-chip.c6e-an{background:var(--tusche,#2b2722);color:var(--karte,#fbf7f0)}
+.c6e-karten{display:flex;flex-wrap:wrap;gap:10px;padding:4px 2px 6px}
+.c6e-themakopf{flex:0 0 100%;font:600 13px/1.3 Figtree,system-ui,sans-serif;color:var(--leise,#6f6a61);margin-top:4px}
+.c6e-karte{flex:0 0 104px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 6px;border-radius:14px;border:2px solid var(--tusche,#2b2722);background:var(--karte,#fbf7f0);color:var(--tusche,#2b2722);box-shadow:3px 3px 0 var(--tusche,#2b2722);cursor:grab;touch-action:pan-x;-webkit-tap-highlight-color:transparent;transition:transform .18s cubic-bezier(.3,.7,.3,1)}
+.c6e-karte.c6e-gewaehlt{background:var(--gedrueckt,#efe7da);transform:translateY(-4px);box-shadow:3px 7px 0 var(--orange,#e8621a)}
+.c6e-bild{flex:none;width:76px;height:58px;display:block;overflow:visible}
+.c6e-bild svg{display:block;width:76px;height:58px;overflow:visible}
+.c6e-bild-ufo svg{width:76px;height:58px}
+.c6e-name{font:600 13px/1.2 Figtree,system-ui,sans-serif;text-align:center}
+.c6e-preis{display:flex;align-items:center;gap:3px;min-height:18px;font:500 13px/1 Figtree,system-ui,sans-serif;color:var(--leise,#6f6a61)}
+.c6e-preis span{color:var(--tusche,#2b2722);font-weight:600}
+.c6e-karte:focus-visible,.c6e-reihe:focus-visible,.c6e-chip:focus-visible,.c6e-fertig:focus-visible,.c6e-griff:focus-visible{outline:3px solid var(--fokus,#b4460c);outline-offset:2px}
+.c6e-tun{display:flex;align-items:center;gap:12px;padding-top:6px;font:600 15px/1.2 Figtree,system-ui,sans-serif}
+.c6e-tun[hidden]{display:none}
+.c6e-weg{min-height:44px;padding:0 16px;border-radius:22px;border:2px solid var(--fokus,#b4460c);background:var(--karte,#fbf7f0);color:var(--fokus,#b4460c);font:600 15px/1 Figtree,system-ui,sans-serif;cursor:pointer}
+/* Tipp-Platzieren: der Raum wartet auf den Tipp */
+.c6e-fang{position:absolute;z-index:25;cursor:copy;border:2px dashed rgba(232,98,26,.65);border-radius:14px;background:rgba(255,236,200,.12);animation:c6e-warte 1.6s ease-in-out infinite}
+@keyframes c6e-warte{50%{background:rgba(255,236,200,.26)}}
+.c6e-geist{position:fixed;z-index:9999;width:80px;pointer-events:none;translate:-50% -90%;opacity:.85;filter:drop-shadow(3px 5px 0 rgba(43,39,34,.2))}
+.c6e-geist svg{display:block;width:100%;height:auto}
+/* Griffe an gestellten Dingen */
+.c6e-griffe{position:absolute;z-index:24;pointer-events:none}
+.c6e-griff{position:absolute;translate:-50% -50%;min-width:44px;min-height:44px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:0;border:0;background:none;cursor:grab;pointer-events:auto;touch-action:none}
+.c6e-griff i{width:16px;height:16px;border-radius:50%;background:var(--karte,#fbf7f0);border:2.5px solid var(--orange,#e8621a);box-shadow:0 0 0 3px rgba(251,247,240,.7)}
+.c6e-griff span{padding:2px 7px;border-radius:8px;background:rgba(43,39,34,.82);color:var(--karte,#fbf7f0);font:600 11px/1.2 Figtree,system-ui,sans-serif;white-space:nowrap}
+.c6e-griff.c6e-an i{background:var(--orange,#e8621a)}
+/* Kleinigkeiten in den Zeichnungen */
+.c6e-funkel{animation:c6e-funkel 2.4s ease-in-out infinite}
+@keyframes c6e-funkel{50%{opacity:.45}}
+.c6e-ufo-licht{animation:c6e-funkel 2s ease-in-out infinite}
+@media (max-width:819px){
+  .c6e-karten{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:10px}
+  .c6e-karten::-webkit-scrollbar{display:none}
+  .c6e-themakopf{flex:none;align-self:center}
+  .c6e-chip{flex:none}
+}
+@media (min-width:820px){
+  .c6e-blatt{left:auto;right:max(76px,6%);top:calc(var(--c6-oben,60px) + 12px);bottom:auto;width:min(440px,40%);max-height:calc(100% - var(--c6-oben,60px) - var(--c6-unten,140px) - 30px)}
+}
+html.c6k-ruhig .c6e-funkel,html.c6k-ruhig .c6e-ufo-licht,html.c6k-ruhig .c6e-fang{animation:none}
+@media (prefers-reduced-motion: reduce){.c6e-funkel,.c6e-ufo-licht,.c6e-fang{animation:none}}
+
+/* Tipp-Platzieren am iPhone: das Blatt macht sich klein, der Raum ist frei */
+.c6e-klein .c6e-reihen,.c6e-klein .c6e-karten,.c6e-klein .c6e-tun{display:none!important}

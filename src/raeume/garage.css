@@ -1,0 +1,145 @@
+/* Die Garage: ein warmer Raum, eine Hängelampe. Wand und Boden treffen sich an einer Naht (--g-naht, von fahrrad.js gemessen). */
+.c6s-fahrrad.c6s-garage{background:#e2d2b6}
+.c6s-g-raum{position:absolute;inset:0;overflow:hidden;z-index:0;pointer-events:none}
+.c6s-g-wand{position:absolute;left:0;right:0;top:0;height:var(--g-naht,62%);
+  background:repeating-linear-gradient(90deg,rgba(43,39,34,0) 0 62px,rgba(43,39,34,.075) 62px 64px),linear-gradient(180deg,#d6bf9b,#e4d1b1 70%,#dcc6a2)}
+.c6s-g-wand::after{content:"";position:absolute;left:0;right:0;bottom:0;height:12px;background:#b98d5f;border-top:2px solid var(--tusche,#2b2722);border-bottom:2px solid var(--tusche,#2b2722)}
+.c6s-g-boden{position:absolute;left:0;right:0;top:var(--g-naht,62%);bottom:0;width:100%;height:auto}
+.c6s-g-boden{height:calc(100% - var(--g-naht,62%))}
+/* Das eine Licht: Fleck an der Wand, Kegel, Lichtpfütze am Boden, zu den Rändern dunkler */
+.c6s-g-kegel{position:absolute;left:var(--g-lx,50%);top:var(--g-ly,20%);width:min(64vw,720px);height:calc(var(--g-naht,62%) - var(--g-ly,20%) + 90px);translate:-50% 0;
+  clip-path:polygon(46% 0,54% 0,100% 100%,0 100%);background:linear-gradient(180deg,rgba(255,231,182,.42),rgba(255,231,182,.08) 70%,rgba(255,231,182,0))}
+.c6s-g-licht{position:absolute;inset:0;
+  background:radial-gradient(240px 190px at var(--g-lx,50%) var(--g-ly,20%),rgba(255,228,170,.6),rgba(255,228,170,0) 72%),
+    radial-gradient(min(42vw,460px) 70px at var(--g-lx,50%) calc(var(--g-naht,62%) + 64px),rgba(255,232,182,.55),rgba(255,232,182,0) 78%),
+    radial-gradient(120% 110% at var(--g-lx,50%) 34%,rgba(43,39,34,0) 46%,rgba(43,39,34,.26) 100%)}
+.c6s-g-lampe{position:absolute;top:0;width:64px;height:120px;translate:-50% 0;transform-origin:50% 0;
+  background:linear-gradient(var(--tusche,#2b2722),var(--tusche,#2b2722)) 50% 0/2.4px calc(100% - 60px) no-repeat;animation:c6s-g-pendel 11s ease-in-out infinite}
+.c6s-g-lampe svg{position:absolute;left:0;bottom:0;width:64px;height:80px;display:block;overflow:visible}
+@keyframes c6s-g-pendel{0%,100%{transform:rotate(.6deg)}50%{transform:rotate(-.6deg)}}
+
+/* Rad, Carl, Schatten: der Raum hat einen eigenen Boden */
+.c6s-garage .c6s-f-szene::before{display:none}
+.c6s-garage .c6s-r-boden>path,.c6s-garage .c6s-r-spur{display:none}
+.c6s-garage .c6s-f-rad{transform:none;transition:width .32s cubic-bezier(.3,.7,.3,1),left .5s cubic-bezier(.3,.7,.3,1),opacity .3s}
+.c6s-garage .c6s-f-carl{translate:-50% 0;z-index:2}
+.c6s-garage .c6s-f-carl.c6s-schwebt{animation:c6s-l-abheben .9s cubic-bezier(.3,.7,.3,1) both,c6s-l-bob 4.6s ease-in-out .9s infinite}
+.c6s-garage .c6s-f-carl.c6s-landet{animation:c6s-l-landen .65s cubic-bezier(.3,.7,.3,1) both}
+
+/* Möbel an der Wand */
+.c6s-g-moebel{position:absolute;inset:0;z-index:0;transition:opacity .3s}
+.c6s-g-moebel>*{position:absolute}
+.c6s-g-bank svg,.c6s-g-ding svg{display:block;width:100%;height:auto;overflow:visible}
+.c6s-g-bank::after,.c6s-g-ding::after{content:"";position:absolute;left:4%;right:4%;bottom:-6px;height:12px;border-radius:50%;background:radial-gradient(closest-side,rgba(43,39,34,.22),rgba(43,39,34,0));z-index:-1;pointer-events:none}
+.c6s-g-glas{position:absolute;aspect-ratio:.75;padding:0;border:0;background:none;cursor:pointer;translate:-50% 0;transform-origin:50% 100%;z-index:1;-webkit-tap-highlight-color:transparent;transition:opacity .3s}
+.c6s-g-glas svg{display:block;width:100%;height:100%;overflow:visible}
+.c6s-g-glas::before{content:"";position:absolute;inset:-8px}
+.c6s-g-ding{padding:0;margin:0;border:0;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .25s cubic-bezier(.3,.7,.4,1)}
+.c6s-g-ding:active{transform:scale(.98)}
+.c6s-g-ding:focus-visible,.c6s-g-glas:focus-visible,.c6s-g-tor:focus-visible{outline:3px solid var(--fokus,#b4460c);outline-offset:4px;border-radius:8px}
+.c6s-garage .c6s-g-spiegel{right:auto;display:flex;flex-direction:column;align-items:center}
+.c6s-garage .c6s-g-spiegel::after{left:16%;right:16%}
+
+/* Das Tor zum Kieselpark: hochgerollt, draußen geht der Tag */
+.c6s-g-tor{padding:0;margin:0;border:3px solid var(--tusche,#2b2722);border-bottom:0;border-radius:6px 6px 0 0;background:#b98d5f;cursor:pointer;-webkit-tap-highlight-color:transparent;overflow:visible}
+.c6s-g-aussen{position:absolute;left:7px;right:7px;top:7px;bottom:0;overflow:hidden;background:#e6ebec;border:2px solid var(--tusche,#2b2722);border-bottom:0}
+.c6s-g-aussen>*{position:absolute}
+.c6s-g-aussen .c6s-f-himmel{inset:0;height:auto;background:linear-gradient(180deg,#cfe0e6 0%,#eef0e6 100%)}
+.c6s-fahrrad[data-zeit=abend] .c6s-g-aussen .c6s-f-himmel{background:linear-gradient(180deg,#e9c9b3 0%,#f3e2cc 100%)}
+.c6s-fahrrad[data-zeit=nacht] .c6s-g-aussen .c6s-f-himmel{background:linear-gradient(180deg,#39436a 0%,#6c7393 100%)}
+.c6s-g-aussen .c6s-f-huegel{left:-10%;right:-10%;width:120%;top:auto;bottom:14%;height:42%}
+.c6s-g-aussen .c6s-f-wolke{width:42%;top:22%;left:8%}
+.c6s-g-aussen .c6s-f-wolke2{width:48%;top:34%;left:50%}
+.c6s-g-aussen .c6s-f-sonne{width:24%;top:var(--c6s-sonne-y,20%)}
+.c6s-g-weg{left:0;right:0;bottom:0;height:15%;background:#d8c7a9;border-top:2px solid #b9a888}
+.c6s-g-aussen .c6s-f-wimpel{left:auto;right:10%;top:auto;bottom:13%;width:26%}
+.c6s-g-aussen .c6s-f-vogel{left:28%;right:auto;top:auto;bottom:14%;width:15%}
+.c6s-g-rolle{position:absolute;left:5px;right:5px;top:5px;height:20%;border:2px solid var(--tusche,#2b2722);border-radius:3px;background:repeating-linear-gradient(180deg,#d2bc98 0 10px,#9c7f5c 10px 12px);box-shadow:0 4px 0 rgba(43,39,34,.18)}
+.c6s-g-schild{position:absolute;left:50%;top:9%;translate:-50% 0;display:flex;align-items:center;gap:8px;min-height:48px;padding:4px 14px 4px 16px;border-radius:14px;border:2px solid var(--tusche,#2b2722);background:var(--tusche,#2b2722);color:var(--karte,#fbf7f0);box-shadow:3px 3px 0 var(--orange,#e8621a);white-space:nowrap;text-align:left;transition:transform .18s cubic-bezier(.3,.7,.3,1),box-shadow .18s}
+.c6s-g-tor:active .c6s-g-schild{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--orange,#e8621a)}
+html.c6r-an .c6s-g-schild{visibility:hidden}
+
+/* Blätter: das Teil-Blatt rechts, der Schrank links (Computer) */
+.c6s-g-kleid .c6s-l-kats{padding:4px 0 8px;margin:0 -4px}
+.c6s-g-kleid .c6s-l-karten{padding:6px 2px 10px;margin:0 -2px}
+.c6s-g-kleid .c6s-l-tun{padding:0;min-height:52px}
+.c6s-g-kkopf{display:flex;align-items:center;gap:10px;position:sticky;top:-4px;background:var(--karte,#fbf7f0);z-index:1;padding-top:4px}
+.c6s-g-kkopf .c6s-f-btitel{flex:1 1 auto}
+.c6s-garage .c6s-g-lieb{position:relative;left:auto;bottom:auto;top:auto;right:auto;min-height:44px;display:flex;align-items:center}
+.c6s-garage .c6s-g-lieb .c6s-l-schild{font-size:19px;padding:4px 10px 6px}
+
+@media (min-width:820px){
+  .c6s-garage .c6s-f-blatt:not(.c6s-g-kleid){left:auto;right:max(76px,7%)}
+  .c6s-garage .c6s-g-kleid{left:max(24px,2%);right:auto;width:min(540px,47%)}
+  .c6s-g-schrank-auf .c6s-f-rad{opacity:.28}
+  .c6s-g-schrank-auf .c6s-g-tor{opacity:.28}
+  .c6s-garage .c6s-g-kleid .c6s-l-kats,.c6s-garage .c6s-g-kleid .c6s-l-karten{justify-content:flex-start}
+  .c6s-garage .c6s-g-kleid .c6s-l-karten{flex-wrap:wrap;overflow:visible}
+  .c6s-garage .c6s-g-kleid .c6s-l-karte{flex-basis:118px}
+  .c6s-garage .c6s-g-kleid .c6s-l-kats{flex-wrap:wrap}
+}
+@media (max-width:819px){
+  .c6s-garage .c6s-f-carl{z-index:1}
+  .c6s-garage .c6s-f-rad{z-index:2}
+  .c6s-blatt-auf .c6s-g-moebel{opacity:0;pointer-events:none}
+  .c6s-g-schrank-auf .c6s-f-rad{opacity:0;pointer-events:none}
+  .c6s-g-schrank-auf .c6s-g-tor,.c6s-g-schrank-auf .c6s-g-bank{opacity:0;pointer-events:none}
+  .c6s-g-tor,.c6s-g-bank{transition:opacity .3s}
+  .c6s-g-schild{left:50%;translate:-50% 0;top:4%;min-height:44px;padding:3px 10px 3px 12px;gap:6px}
+  .c6s-garage .c6s-g-schild b{font-size:20px}
+  .c6s-garage .c6s-l-glas{border-width:4px}
+  .c6s-g-kleid{max-height:min(54vh,400px)}
+}
+html.c6k-ruhig .c6s-g-lampe{animation:none}
+@media (prefers-reduced-motion: reduce){.c6s-g-lampe{animation:none}.c6s-garage .c6s-f-carl.c6s-schwebt{animation:none;transform:translateY(-34px)}}
+.c6s-g-schrankplatz{inset:0;pointer-events:none}
+.c6s-g-schrankplatz>*{position:absolute;pointer-events:auto}
+
+/* s4: Schild nur mit Namen und Münze; Schrankblatt ohne Titel, nur so hoch wie nötig */
+.c6s-g-schild b{font:700 23px/1 Caveat,cursive}
+.c6s-g-schild .c6s-muenze path:first-child{stroke:#fbf7f0}
+.c6s-g-kkopf{justify-content:space-between;margin-bottom:4px}
+.c6s-garage .c6s-g-kleid{flex:none}
+.c6s-g-kleid .c6s-l-tun:not(:has(button:not([hidden]))){display:none}
+.c6s-g-kleid .c6s-l-tun{justify-content:flex-end}
+
+/* s5 · E7: Punkte ruhen unsichtbar. Ein Tipp aufs Rad lässt die Teile nacheinander aufglimmen, ein zweiter öffnet eins. */
+.c6s-garage .c6s-f-pkt{pointer-events:none}
+.c6s-garage.c6s-wach .c6s-f-pkt,.c6s-garage.c6s-einladen .c6s-f-pkt,.c6s-garage .c6s-f-pkt.c6s-neu{pointer-events:auto}
+.c6s-garage .c6s-f-pkt-kern{width:12px;height:12px;border:0;background:var(--tusche,#2b2722);opacity:0;transform:scale(.4);box-shadow:0 0 0 0 rgba(255,214,150,0);transition:opacity .28s,transform .3s cubic-bezier(.3,.7,.3,1),box-shadow .3s}
+.c6s-garage.c6s-wach .c6s-f-pkt-kern,.c6s-garage.c6s-einladen .c6s-f-pkt-kern,.c6s-garage .c6s-f-pkt:focus-visible .c6s-f-pkt-kern{opacity:1;transform:scale(1);box-shadow:0 0 0 4px rgba(255,222,160,.8),0 0 16px 7px rgba(255,196,110,.5)}
+.c6s-garage .c6s-f-pkt.c6s-hell .c6s-f-pkt-kern{transform:scale(1.35);transition-delay:0ms}
+.c6s-garage .c6s-f-pkt.c6s-neu .c6s-f-pkt-kern{opacity:1;transform:scale(.9);background:#e2b93b;box-shadow:0 0 0 2px var(--tusche,#2b2722),0 0 12px 5px rgba(226,185,59,.55)}
+.c6s-garage.c6s-wach .c6s-f-pkt:nth-child(1) .c6s-f-pkt-kern{transition-delay:0ms}
+.c6s-garage.c6s-wach .c6s-f-pkt:nth-child(2) .c6s-f-pkt-kern{transition-delay:120ms}
+.c6s-garage.c6s-wach .c6s-f-pkt:nth-child(3) .c6s-f-pkt-kern{transition-delay:240ms}
+.c6s-garage.c6s-wach .c6s-f-pkt:nth-child(4) .c6s-f-pkt-kern{transition-delay:360ms}
+.c6s-garage.c6s-wach .c6s-f-pkt:nth-child(5) .c6s-f-pkt-kern{transition-delay:480ms}
+.c6s-garage.c6s-wach .c6s-f-pkt:nth-child(6) .c6s-f-pkt-kern{transition-delay:600ms}
+.c6s-garage.c6s-wach .c6s-f-pkt:nth-child(7) .c6s-f-pkt-kern{transition-delay:720ms}
+.c6s-garage.c6s-wach .c6s-f-pkt:nth-child(8) .c6s-f-pkt-kern{transition-delay:840ms}
+.c6s-garage.c6s-wach .c6s-f-pkt:nth-child(9) .c6s-f-pkt-kern{transition-delay:960ms}
+.c6s-garage.c6s-wach .c6s-f-pkt:nth-child(10) .c6s-f-pkt-kern{transition-delay:1080ms}
+html.c6k-ruhig .c6s-garage .c6s-f-pkt-kern{transition-delay:0ms!important}
+/* Schrank offen: das Rad ist nicht antippbar (auch nicht seine Punkte) */
+.c6s-g-schrank-auf .c6s-f-rad,.c6s-g-schrank-auf .c6s-f-rad *{pointer-events:none!important}
+@media (max-width:819px){.c6s-g-schrank-auf .c6s-f-rad{visibility:hidden}}
+
+/* s7: UFO vor dem Garagentor (eigene Zeichnung aus einrichten.js) */
+.c6s-g-ufo{position:absolute;z-index:1;translate:-50% 0;padding:0;border:0;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent;animation:c6s-g-ufo-schweb 4.8s ease-in-out infinite}
+.c6s-g-ufo svg{display:block;width:100%;height:auto;overflow:visible;filter:drop-shadow(2px 4px 0 rgba(43,39,34,.16))}
+.c6s-g-ufo-zu{animation:none}
+.c6s-g-ufo-zu svg{filter:saturate(.25) brightness(.92) drop-shadow(2px 4px 0 rgba(43,39,34,.14))}
+.c6s-g-ufo:focus-visible{outline:3px solid var(--fokus,#b4460c);outline-offset:4px;border-radius:12px}
+@keyframes c6s-g-ufo-schweb{50%{transform:translateY(-6px) rotate(-1.5deg)}}
+.c6s-g-schrank-auf .c6s-g-ufo{opacity:.28;pointer-events:none}
+@media (max-width:819px){.c6s-g-schrank-auf .c6s-g-ufo{opacity:0}}
+html.c6k-ruhig .c6s-g-ufo{animation:none}
+@media (prefers-reduced-motion: reduce){.c6s-g-ufo{animation:none}}
+/* s8: das UFO wacht auf */
+.c6s-g-ufo-wacht{animation:c6s-g-ufo-wacht 1.9s cubic-bezier(.3,.7,.3,1)}
+.c6s-g-ufo-wacht::after{content:"";position:absolute;left:50%;top:40%;width:10px;height:10px;border-radius:50%;translate:-50% -50%;box-shadow:-60px -30px 0 2px #e2b93b,50px -40px 0 1px #8db4d6,-40px 30px 0 1px #e39aae,70px 20px 0 2px #6f9a5b,0 -60px 0 1px #e2b93b;animation:c6s-g-funken 1.4s ease-out both}
+@keyframes c6s-g-ufo-wacht{0%{transform:translateY(0)}20%{transform:translateY(6px) scale(1.04,.94)}45%{transform:translateY(-34px) rotate(-8deg)}70%{transform:translateY(-22px) rotate(8deg)}100%{transform:none}}
+@keyframes c6s-g-funken{0%{opacity:0;transform:scale(.2)}30%{opacity:1}100%{opacity:0;transform:scale(1.6)}}
+html.c6k-ruhig .c6s-g-ufo-wacht,html.c6k-ruhig .c6s-g-ufo-wacht::after{animation:none}
+@media (prefers-reduced-motion: reduce){.c6s-g-ufo-wacht,.c6s-g-ufo-wacht::after{animation:none}}

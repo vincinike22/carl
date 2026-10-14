@@ -1,0 +1,39 @@
+/* Zuhause: Ordnung und Wärme */
+/* die Wand bekommt ein warmes Holzpaneel unten und eine ganz leise Tapete */
+.c6z-wand{background:
+  radial-gradient(120% 90% at 20% 30%,rgba(255,252,244,.7),rgba(255,252,244,0) 60%),
+  repeating-linear-gradient(90deg,rgba(201,162,122,0) 0 26px,rgba(201,162,122,.07) 26px 28px),
+  var(--papier,#f4eee4)}
+.c6z-wand::after{content:"";position:absolute;left:0;right:0;bottom:0;height:72px;border-top:2.5px solid rgba(43,39,34,.55);
+  background:repeating-linear-gradient(90deg,rgba(43,39,34,0) 0 118px,rgba(43,39,34,.13) 118px 120px),linear-gradient(180deg,#ead9bd,#e2cdab);
+  box-shadow:inset 0 6px 0 rgba(255,252,244,.35)}
+.c6z-computer .c6z-wand::after{height:96px}
+.c6z-stube[data-zeit=nacht] .c6z-wand::after{filter:brightness(.8)}
+
+/* ein großer runder Teppich unter Carls Sofa, mit Kante und Muster */
+.c6z-stube .c6z-teppich{width:min(calc(100% + 40px),calc(var(--c6z-carl) * 1.85));height:calc(var(--c6z-carl) * .25);bottom:calc(var(--c6z-fuss) - var(--c6z-carl) * .07);
+  background:radial-gradient(closest-side,#e9c9a0 0 22%,#d6a77a 23% 26%,#ecd3b1 27% 44%,#c98b6b 45% 48%,#ecd3b1 49% 70%,#d6a77a 71% 74%,#e6c69c 75% 90%,#c98b6b 91% 100%)}
+.c6z-stube.c6z-computer .c6z-teppich{width:calc(var(--c6z-carl) * 2.3);height:calc(var(--c6z-carl) * .3)}
+.c6z-stube .c6z-teppich::after{width:62%;height:56%;border:2px dashed rgba(43,39,34,.16)}
+
+/* das Fadenknäuel liegt rechts auf dem Teppich, die Notizen links bleiben frei; die Ablage rückt daneben */
+.c6z-stube.c6z-computer .c6z-knaeuel{left:calc(50% + var(--c6z-carl) * .5);bottom:calc(var(--c6z-fuss) - 18px);width:110px}
+.c6z-stube.c6z-computer .c6z-ablage{left:calc(50% + var(--c6z-carl) * .5 + 128px)}
+
+/* Zimmerpflanze */
+.c6m-gruen{display:none;pointer-events:none;bottom:calc(100% - var(--c6z-boden) - 34px);width:92px;z-index:1}
+.c6m-gruen svg{display:block;width:100%;height:auto;position:relative}
+.c6m-gruen .c6m-schatten{bottom:2px}
+.c6m-gruen .c6m-blattwerk{transform-origin:55px 128px;animation:c6m-gruen-atmet 7s ease-in-out infinite alternate}
+@keyframes c6m-gruen-atmet{to{transform:rotate(1.4deg)}}
+.c6z-stube[data-zeit=nacht] .c6m-gruen{filter:brightness(.78) saturate(.85)}
+
+/* iPhone: das Fahrradbild hängt frei links oben an der Wand */
+.c6z-stube:not(.c6z-computer) .c6z-bild{display:block;left:24px;right:auto;top:calc(env(safe-area-inset-top,0px) + 166px);width:84px;max-width:none;transform:rotate(-2deg)}
+
+@media (prefers-reduced-motion:reduce){.c6m-gruen .c6m-blattwerk{animation:none}}
+
+/* s4 · das Bücherbord führt in die Bibliothek, auch am iPhone */
+.c6z-stube .c6m-regal{pointer-events:auto;cursor:pointer}
+.c6z-stube:not(.c6z-computer) .c6m-regal{display:block;left:14px;top:calc(env(safe-area-inset-top,0px) + 240px);width:132px}
+.c6m-regal:focus-visible{outline:3px solid #b4460c;outline-offset:4px;border-radius:6px}
