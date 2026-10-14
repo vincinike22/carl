@@ -8,6 +8,7 @@
   function kurz(t, n) { t = String(t == null ? '' : t).trim(); return t.length > n ? t.slice(0, n - 1).trim() + '…' : t; }
   // Carls Sätze kommen aus stimme.js (werkzeug.*); die Ersatzsätze hier gelten nur, wenn ein Schlüssel fehlt
   function stimme(k, w, ersatz) { try { var t = C6.stimme && C6.stimme.fest ? C6.stimme.fest('werkzeug.' + k, w || {}) : ''; if (t && !/\{[a-z]+\}/.test(t)) return t; } catch (e) {} return ersatz; }
+  function rzStimme(k, w, ersatz) { try { var t = C6.stimme && C6.stimme.fest ? C6.stimme.fest('rezeption.' + k, w || {}) : ''; if (t && !/\{[a-z]+\}/i.test(t)) return t; } catch (e) {} return ersatz; }
   function bus(was, d) { try { C6.bus && C6.bus.emit('werkzeug-eigen', Object.assign({ was: was }, d || {})); } catch (e) {} }
   function S() { var s = C6.S || (C6.S = {}); if (!s.werkzeug || typeof s.werkzeug !== 'object') s.werkzeug = { liste: [], daten: {} }; if (!Array.isArray(s.werkzeug.liste)) s.werkzeug.liste = []; if (!s.werkzeug.daten) s.werkzeug.daten = {}; return s.werkzeug; }
   function merken() { try { C6.speichern && C6.speichern(); } catch (e) {} }
@@ -16,7 +17,7 @@
   var MON = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
   var WT = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
   function datumText(iso) { var m = /^(\d{4})-(\d\d)-(\d\d)$/.exec(iso || ''); if (!m) return ''; return (+m[3]) + '. ' + MON[+m[2] - 1]; }
-  var FARBEN = { wert: '#4f7fa8', tag: '#8a6a3c', haken: '#5f7f3e', zaehler: '#2f5f8a', liste: '#a95f33', kalender: '#b7852a', notiz: '#7d4a74', frage: '#2c7a6e' };
+  var FARBEN = { wert: '#4f7fa8', tag: '#8a6a3c', haken: '#5f7f3e', zaehler: '#2f5f8a', liste: '#a95f33', kalender: '#8a6200', notiz: '#7d4a74', frage: '#2c7a6e' };
 
   /* ---------- Zeichen (48er-Feld, eine Hand mit den Wandzeichen) ---------- */
   var ZEICHEN = {
@@ -68,6 +69,8 @@
   function nameAus(s, ersatz) {
     var t = String(s).replace(/[„“"!.]/g, ' ').replace(/\s+/g, ' ').trim(), m;
     if ((m = /\bob ich (?:heute |schon )?((?:\S+ ){0,2}?\S+?) (?:bin|habe|hab|war|hatte)\b/i.exec(t)) || (m = /\bob ich (?:heute |schon )?([a-zäöüß]+)/i.exec(t))) return gross1(kurz(m[1], 26)) + '?';
+    // „wie lange ich gelesen hab“, „wie oft ich gelaufen bin“ → das Wort des Menschen, nicht „Messen“
+    if ((m = /\bwie (?:lange|oft|viel|weit|schwer) ich (?:heute |schon |am tag |jeden tag )?(?:[\wäöüß]+ ){0,3}?([a-zäöüß]{3,}) (?:bin|habe|hab|war|hatte|bleibe|schlafe)\b/i.exec(t)) && !/^(aufschreiben|notieren|sehen|wissen|haben|sein)$/i.test(m[1])) return gross1(kurz(m[1], 26));
     if ((m = /\ban (?:das|den|die|dem|meine[nmr]?|mein) ([A-ZÄÖÜ][\wäöüß]+(?: (?:für|von|mit) [\wäöüß]+)?)/.exec(t))) return kurz(m[1], 28);
     if ((m = /\bwie viele ([A-ZÄÖÜ][\wäöüß]+)/.exec(t))) return m[1];
     if ((m = /\bfür (?:den|die|das) ([A-ZÄÖÜ][\wäöüß]+)/.exec(t))) return m[1];
@@ -88,6 +91,8 @@
     if (einh || /wiege|gewicht|geschlafen|schlaf|puls|blutdruck|messen|wie lange|wie weit|wie schwer|\d+\s*(kg|km|h|min)\b/i.test(s)) sp = { name: nameAus(s, 'Messen'), teile: [{ t: 'wert', text: 'Heute' + (einh ? ' in ' + einh : ''), einheit: einh || (/schlaf/i.test(s) ? 'h' : /wiege|gewicht/i.test(s) ? 'kg' : '') }] };
     else if (/satz am tag|satz des tages|tagebuch|was heute war|jeden abend einen satz|jeden tag einen satz|foto des tages/i.test(s)) sp = { name: nameAus(s, 'Ein Satz am Tag'), teile: [{ t: 'tag', text: 'Ein Satz für heute' }] };
     else if (/frage|rückblick|rueckblick|reflekt/i.test(s)) sp = { name: nameAus(s, 'Fragen'), teile: [{ t: 'frage', text: '', fragen: ['Was war heute gut?', 'Was hat gehakt?', 'Was nimmst du mit?'] }] };
+    // Zählen schlägt die Gewohnheit: „jeden Abend, wie viele Seiten“ ist ein Zähler, kein Haken
+    else if (/wie oft|zähl|zaehl|anzahl|wie viele/i.test(s)) sp = { name: nameAus(s, 'Zähler'), teile: [{ t: 'zaehler', text: 'Heute' }] };
     else if (/jeden tag|täglich|taeglich|jeden morgen|jeden abend|gewohnheit|immer wenn|gelaufen|getrunken|meditier|geübt|geuebt/i.test(s)) sp = { name: nameAus(s, 'Jeden Tag'), teile: [{ t: 'haken', text: 'Heute geschafft?' }] };
     else if (/termin|erinner|am \d|\d\.\s*\d|geburtstag|bis zum|bis montag|bis dienstag|bis mittwoch|bis donnerstag|bis freitag|morgen|deadline/i.test(s)) sp = { name: nameAus(s, 'Termin'), teile: [{ t: 'datum', text: '', wann: datumAus(s) }] };
     else if (/wie oft|zähl|zaehl|anzahl|wie viele|seiten|kilometer|gläser|glaeser/i.test(s)) sp = { name: nameAus(s, 'Zähler'), teile: [{ t: 'zaehler', text: 'Heute' }] };
@@ -108,12 +113,16 @@
       '{"name":"<höchstens drei Wörter, Deutsch>","zeichen":"haken|zaehler|liste|kalender|notiz|frage","teile":[ … ]}\n' +
       'Bausteine: {"t":"haken","text":"…"} (jeden Tag abhaken) · {"t":"zaehler","text":"…","ziel":Zahl oder weglassen} · {"t":"wert","text":"…","einheit":"kg|km|h|…"} (einen Wert am Tag messen) · {"t":"tag","text":"…"} (ein Satz am Tag) · {"t":"liste","text":"…","punkte":["…"]} · {"t":"datum","text":"…","wann":"JJJJ-MM-TT"} (heute ist ' + tag() + ') · {"t":"notiz","text":"…"} · {"t":"frage","text":"…","fragen":["…"]}.';
     var p = C6.denk ? Promise.resolve(C6.denk(bitte, { kontext: 'Werkstatt, ein Werkzeug bauen', stumm: true })).catch(function () { return ''; }) : Promise.resolve('');
-    var zeit = new Promise(function (r) { setTimeout(function () { r(''); }, 25000); });
+    var zuSpaet = false;
+    var zeit = new Promise(function (r) { setTimeout(function () { zuSpaet = true; r(''); }, 25000); });
     return Promise.race([p, zeit]).then(function (t) {
       var m = /\{[\s\S]*\}/.exec(String(t || '')), sp = null;
       if (m) { try { sp = bereinige(JSON.parse(m[0]), satz); } catch (e) { sp = null; } }
       if (sp) { sp.von = 'denk'; return sp; }
-      return ausVorlage(satz);
+      var v = ausVorlage(satz);
+      // warum eine Vorlage (nicht gespeichert, nur für die ehrliche Kosten-Zeile): zu lange gewartet, kein Mitdenken, oder Antwort unbrauchbar
+      try { Object.defineProperty(v, 'grund', { value: zuSpaet ? 'zeit' : (String(t || '').trim() ? 'unbrauchbar' : 'leer'), enumerable: false }); } catch (e) {}
+      return v;
     });
   }
 
@@ -169,7 +178,7 @@
     if (t.t === 'wert') {
       var lw = dd.log || {}, he = lw[tag()], hw = wertV(he), heE = wertE(he, t);
       var ein = heE ? ' ' + esc(heE) : '';
-      if (klein) return '<div class="c6wz-teil"><p class="c6wz-gross">' + (hw != null ? esc(zahlText(hw)) + ein : '–') + '</p></div>';
+      if (klein) return '<div class="c6wz-teil">' + (hw != null ? '<p class="c6wz-gross">' + esc(zahlText(hw)) + ein + '</p>' : '<p class="c6wz-text">noch nichts</p>') + '</div>';
       return '<div class="c6wz-teil c6wz-wert"><p class="c6wz-text">' + esc(t.text) + '</p><form class="c6wz-wert-form" data-i="' + i + '"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Wert für heute' + (t.einheit ? ' in ' + esc(t.einheit) : '') + '" placeholder="heute" value="' + (hw != null && heE === (t.einheit || '') ? esc(zahlText(hw)) : '') + '">' + (t.einheit ? '<span class="c6wz-einheit">' + esc(t.einheit) + '</span>' : '') + '<button type="submit" class="c6wz-rund c6wz-plus" aria-label="Eintragen">✓</button></form></div>';
     }
     if (t.t === 'tag') {
@@ -286,14 +295,22 @@
   /* ---------- Der Ablauf „Neues Werkzeug“ (ein Blatt über dem Raum) ---------- */
   var blatt = null, sitzung = 0;
   var leihe = null;
-  function feldZurueck() { if (leihe) { var z = leihe; leihe = null; try { z(); } catch (e) {} } }
+  function feldZurueck() { if (leihe) { var z = leihe; leihe = null; try { z(); } catch (e) {} if (rz && !rz.fertig) rzEmit('rezeption-frei', { satz: rz.satz }); } }
   // das eine Feld unten fragt, was das Blatt braucht; ohne Kern-Leihe bleibt das Feld im Blatt (Rückfall)
   function feldLeihen(platz, nimm) {
     feldZurueck();
     if (!(C6.feld && typeof C6.feld.leihen === 'function')) return false;
-    try { leihe = C6.feld.leihen({ platzhalter: platz, nimm: function (t) { leihe = null; nimm(t); return false; } }); return true; } catch (e) { leihe = null; return false; }
+    try { leihe = C6.feld.leihen({ platzhalter: platz, nimm: function (t) { leihe = null; nimm(t); if (rz && !rz.fertig) rzEmit('rezeption-frei', { satz: rz.satz }); return false; } }); return true; } catch (e) { leihe = null; return false; }
   }
-  function zu() { feldZurueck(); if (!blatt) return; var b = blatt; blatt = null; b.classList.remove('c6wz-an'); setTimeout(function () { if (b.parentNode) b.parentNode.removeChild(b); }, C6.ruhig ? 0 : 260); }
+  // An der Rezeption: ein Satz, ein Blatt, nach „Passt“ steht das Werkzeug neben Carl (ohne Space); wer schließt, ohne zu nehmen, verliert nichts
+  var rz = null;
+  function rzEmit(name, d) { try { C6.bus && C6.bus.emit(name, d); } catch (e) {} }
+  function zu() {
+    feldZurueck();
+    var r = rz; rz = null;
+    if (r && !r.fertig) rzEmit('rezeption-zu', { satz: r.satz, bei: r.bei });
+    if (!blatt) return; var b = blatt; blatt = null; b.classList.remove('c6wz-an'); setTimeout(function () { if (b.parentNode) b.parentNode.removeChild(b); }, C6.ruhig ? 0 : 260);
+  }
   function blattAuf(titel) {
     zu();
     try { if (C6.darstellung && C6.darstellung.offen && C6.darstellung.zu) C6.darstellung.zu(); } catch (e) {}
@@ -321,29 +338,106 @@
     [].forEach.call(el.querySelectorAll('.c6wz-vorlage'), function (b) { b.onclick = function () { var v = VORLAGEN.filter(function (x) { return x.id === b.dataset.v; })[0]; if (inp) inp.value = v.satz; bauen(v.satz, o.sid, nr); }; });
     if (o.satz) bauen(o.satz, o.sid, nr); else if (inp) setTimeout(function () { try { if (C6.geraet === 'computer') inp.focus(); } catch (e) {} }, 300);
   }
-  function bauen(satz, sid, nr) {
+  function uhr() { return (window.performance && performance.now) ? performance.now() : Date.now(); }
+  // r (nur an der Rezeption): {satz, bei, gedacht} – dann endet „Passt“ nicht mit „Wo soll es stehen?“, sondern neben Carl
+  function bauen(satz, sid, nr, r) {
     if (!blatt || nr !== sitzung) return;
     feldZurueck();
     var el = blatt.querySelector('.c6wz-inhalt');
-    el.innerHTML = '<h3 class="c6wz-titel">„' + esc(kurz(satz, 90)) + '“</h3><p class="c6wz-baut" aria-live="polite">' + esc(stimme('baut', null, 'Ich bau es dir …')) + '</p>';
-    baue(satz).then(function (sp) {
+    var bautT = r ? rzStimme('baut', null, stimme('baut', null, 'Ich bau es dir …')) : stimme('baut', null, 'Ich bau es dir …');
+    var kopfSatz = r ? r.satz : satz, letztesAnders = r && r.anders && r.anders.length ? r.anders[r.anders.length - 1] : '';
+    var bautH = '<h3 class="c6wz-titel">„' + esc(kurz(kopfSatz, 90)) + '“</h3>' + (letztesAnders ? '<p class="c6wz-leise c6wz-anders-zeile">Anders: ' + esc(kurz(letztesAnders, 90)) + '</p>' : '') +
+      (r ? '' : '<p class="c6wz-baut" aria-live="polite">' + esc(bautT) + '</p>') + (r ? '<p class="c6wz-leise c6wz-uhr"></p>' : '');
+    if (r) rzEmit('rezeption-moment', { was: 'baut' });
+    // an der Rezeption bleibt nach „Anders“ das alte Werkzeug stehen, bis das neue da ist
+    var altV = r ? el.querySelector('.c6wz-vorschau') : null;
+    if (altV) { altV.classList.add('c6wz-alt'); [].forEach.call(el.querySelectorAll('.c6wz-wahl, .c6wz-wunsch, .c6wz-unten, .c6wz-anders-zeile, .c6wz-inhalt > .c6wz-leise:first-child'), function (x) { x.remove(); }); el.insertAdjacentHTML('beforeend', bautH.replace(/^<h3[\s\S]*?<\/h3>/, '')); }
+    else el.innerHTML = bautH;
+    var takt = null, uhrEl = el.querySelector('.c6wz-uhr');
+    if (uhrEl) { try { takt = C6.beispiele && C6.beispiele.uhr ? C6.beispiele.uhr(uhrEl) : null; } catch (e) { takt = null; } if (!takt) uhrEl.remove(); }
+    var t0 = uhr();
+    // an der Rezeption: welcher Kopf gefragt wurde, merkt sich das Blatt beim Start (nicht erst nach Passt)
+    var ab = null;
+    if (r) { try { ab = C6.bus.on('denkt', function (d) { if (d && typeof d === 'object' && d.an && d.kopf) { r.kopfGefragt = d.kopf; r.modellGefragt = d.modell || null; } }); } catch (e) { ab = null; } }
+    // ein Beispiel wird beim ersten Mal sofort aus der Vorlage gebaut: wahr, schnell, ohne Kopf; „Anders“ danach ist der eigene Wunsch und darf denken
+    var bau = r && r.sofort ? Promise.resolve(ausVorlage(satz)) : baue(satz);
+    if (r) r.sofort = false;
+    if (r && r.alt && letztesAnders) bau = bau.then(function (sp) { return sp && sp.von === 'vorlage' ? andersAusVorlage(r.alt, letztesAnders, sp) : sp; });
+    bau.then(function (sp) {
+      if (takt) { try { takt.weg(); } catch (e) {} }
+      if (ab) { try { ab(); } catch (e) {} }
       if (!blatt || nr !== sitzung) return;
-      if (!sp) { oeffne({ sid: sid }); return; }
+      if (r) { r.gedacht = (r.gedacht || 0) + Math.max(0, Math.round(uhr() - t0)); r.grund = sp && sp.von === 'vorlage' ? (sp.grund || 'leer') : null; }
+      if (!sp) { if (r) zu(); else oeffne({ sid: sid }); return; }
       bus('gebaut', {});
-      el.innerHTML = '<p class="c6wz-leise">' + esc(sp.von === 'vorlage' ? stimme('vorlage', null, 'Mitdenken kann ich hier noch nicht, darum aus einer Vorlage. Probier es aus.') : stimme('gebaut', null, 'So hab ich es gebaut. Probier es aus.')) + '</p>' +
+      var gebautT = sp.von === 'vorlage' ? stimme('vorlage', null, 'Mitdenken kann ich hier noch nicht, darum aus einer Vorlage. Probier es aus.') : stimme('gebaut', null, 'So hab ich es gebaut. Probier es aus.');
+      if (r) {
+        // der Satz des Menschen bleibt der Satz; Änderungswünsche stehen getrennt daneben
+        sp.satz = kurz(r.satz, 200);
+        if (r.anders && r.anders.length) sp.anders = r.anders.slice(); else delete sp.anders;
+        // ohne Kopf kann „Anders“ gleich bleiben – dann sagt Carl das, statt „probier es aus“
+        var gleich = !!(r.alt && letztesAnders && sp.von === 'vorlage' && abdruck(sp) === abdruck(r.alt));
+        if (gleich) { r.anders.pop(); if (r.anders.length) sp.anders = r.anders.slice(); else delete sp.anders; } // ein Wunsch, der nichts geändert hat, wird nicht als eingebaut gemerkt
+        r.alt = sp;
+        rzEmit('rezeption-moment', { was: gleich ? 'gleich' : (r.grund === 'zeit' ? 'gewartet' : (sp.von === 'vorlage' ? 'gebautVorlage' : 'gebaut')) });
+      }
+      el.innerHTML = (r ? '<h3 class="c6wz-titel">„' + esc(kurz(r.satz, 90)) + '“</h3>' + (letztesAnders && !gleich ? '<p class="c6wz-leise c6wz-anders-zeile">Anders: ' + esc(kurz(letztesAnders, 90)) + '</p>' : '') : '<p class="c6wz-leise">' + esc(gebautT) + '</p>') +
         '<div class="c6wz-vorschau"></div>' +
         '<div class="c6wz-wahl"><button type="button" class="c6wz-knopf c6wz-haupt" data-w="passt">Passt</button><button type="button" class="c6wz-knopf" data-w="anders">Anders</button></div>';
       male(el.querySelector('.c6wz-vorschau'), sp);
-      el.querySelector('[data-w=passt]').onclick = function () { wohin(sp, sid, nr); };
+      el.querySelector('[data-w=passt]').onclick = function () { if (r) rzFertig(sp, r); else wohin(sp, sid, nr); };
       el.querySelector('[data-w=anders]').onclick = function () {
         var w = el.querySelector('.c6wz-wahl');
         var andersT = stimme('anders', null, 'Was soll anders sein?');
-        if (feldLeihen(andersT, function (a) { bauen(satz + '. Anders: ' + a, sid, nr); })) { w.outerHTML = '<p class="c6wz-leise c6wz-unten">' + esc(andersT) + ' Schreib es unten ins Feld.</p>'; return; }
+        var weiter = function (a) { if (r) { r.anders = (r.anders || []).concat([kurz(a, 120)]); bauen(r.satz + '. Anders: ' + r.anders.join('. Anders: '), sid, nr, r); } else bauen(satz + '. Anders: ' + a, sid, nr, r); };
+        if (feldLeihen(andersT, weiter)) { w.outerHTML = '<p class="c6wz-leise c6wz-unten">' + esc(andersT) + ' Schreib es unten ins Feld.</p>'; return; }
         w.outerHTML = '<form class="c6wz-wunsch c6wz-anders"><input type="text" maxlength="200" placeholder="' + esc(stimme('anders', null, 'Was soll anders sein?')) + '" aria-label="' + esc(stimme('anders', null, 'Was soll anders sein?')) + '"><button type="submit" class="c6wz-knopf c6wz-haupt">Neu bauen</button></form>';
         var af = el.querySelector('.c6wz-anders'), ai = af.querySelector('input'); ai.focus();
-        af.onsubmit = function (e) { e.preventDefault(); var a = ai.value.trim(); if (!a) { ai.focus(); return; } bauen(satz + '. Anders: ' + a, sid, nr); };
+        af.onsubmit = function (e) { e.preventDefault(); var a = ai.value.trim(); if (!a) { ai.focus(); return; } weiter(a); };
       };
     });
+  }
+  // Rezeption: das Werkzeug hängt ohne Space (sid = null); der Raum stellt es neben Carl und sagt, was er sich gemerkt hat
+  function abdruck(sp) { return JSON.stringify({ n: sp.name, t: (sp.teile || []).map(function (t) { var x = Object.assign({}, t); delete x.k; return x; }) }); }
+  // „Anders“ ohne Kopf: wie beim Umbauen – gleiche Art wird ersetzt, sonst kommt der Baustein dazu; der Name bleibt (höchstens „und Minuten“)
+  function andersAusVorlage(alt, a, sp) {
+    var neuT = ausVorlage(a).teile[0], teile = (alt.teile || []).slice(), j = -1;
+    // kein Bauwort im Wunsch (die Vorlage macht nur eine Notiz daraus): dann bleibt es ehrlich gleich, statt eine Notiz anzuhängen
+    if (!neuT || neuT.t === 'notiz') { var same = Object.assign({}, sp, { name: alt.name, zeichen: alt.zeichen, farbe: alt.farbe, teile: (alt.teile || []).map(function (t) { var x = Object.assign({}, t); delete x.k; return x; }) }); try { Object.defineProperty(same, 'grund', { value: sp.grund || 'leer', enumerable: false }); } catch (e) {} return same; }
+    teile.forEach(function (u, i) { if (u.t === neuT.t) j = i; });
+    var dazu = /\b(auch|dazu|zusätzlich|außerdem|noch)\b/i.test(a), nm = alt.name;
+    var WORT = { km: 'Kilometer', kg: 'Kilo', h: 'Stunden', min: 'Minuten', l: 'Liter', m: 'Meter', cm: 'Zentimeter' };
+    if (j >= 0 && !dazu && !(neuT.t === 'wert' && teile[j].einheit && neuT.einheit !== teile[j].einheit)) teile[j] = neuT;
+    else { teile.push(neuT); var zus = neuT.einheit ? WORT[neuT.einheit] || neuT.einheit : ''; if (zus && nm.indexOf(zus) < 0) nm = kurz(nm.replace(/\?$/, '') + ' und ' + zus, 28); }
+    var wt = teile.slice(-3).filter(function (x) { return x.t === 'wert' && x.einheit; });
+    if (wt.length >= 2) nm = kurz(wt.map(function (x) { return WORT[x.einheit] || x.einheit; }).join(' und '), 28);
+    var out = Object.assign({}, sp, { name: nm, zeichen: alt.zeichen, farbe: alt.farbe, teile: teile.slice(-3).map(function (t) { var x = Object.assign({}, t); delete x.k; return x; }) });
+    try { Object.defineProperty(out, 'grund', { value: sp.grund || 'leer', enumerable: false }); } catch (e) {}
+    return out;
+  }
+  function rzFertig(sp, r) {
+    if (!blatt || r !== rz || r.fertig) return;
+    var w = haenge(sp, null);
+    if (!w) return;
+    r.fertig = true;
+    // der Kopf: der beim Bau gefragte (Bus 'denkt'); nur zur Not der zuletzt im Kern vermerkte
+    var md = {}; try { md = C6.mitdenken ? (C6.mitdenken() || {}) : {}; } catch (e) { md = {}; }
+    var gefragt = sp.von !== 'vorlage' || r.grund === 'unbrauchbar' || r.grund === 'zeit';
+    var kopf = gefragt ? (r.kopfGefragt || (sp.von !== 'vorlage' ? md.kopf : null) || null) : null;
+    var modell = kopf ? (r.modellGefragt || (kopf === md.kopf ? md.modell : null) || null) : null;
+    var d = { id: w.id, satz: w.satz, gedacht: r.gedacht || 0, von: sp.von === 'vorlage' ? 'vorlage' : 'denk', grund: r.grund || null, kopf: kopf, modell: modell, bei: r.bei || null };
+    zu();
+    rzEmit('rezeption-gebaut', d);
+  }
+  function rezeption(satz, o) {
+    o = o || {};
+    satz = String(satz || '').trim();
+    if (!satz) return false;
+    var nr = ++sitzung;
+    blattAuf('Neues Werkzeug');
+    rz = { satz: satz, bei: o.bei || null, sofort: !!o.bei, gedacht: 0, fertig: false, anders: [], alt: null };
+    bauen(satz, null, nr, rz);
+    return true;
   }
   function wohin(sp, sid, nr) {
     var el = blatt.querySelector('.c6wz-inhalt');
@@ -366,11 +460,11 @@
         var s = b.getAttribute('data-sid'), f = C6.strings && C6.strings.hol(s);
         var w = haenge(sp, s);
         el.innerHTML = kopf + '<p class="c6wz-satz">' + esc(stimme('steht', { werkzeug: w.name, titel: kurz(f ? f.titel : '', 30) }, '„' + w.name + '“ steht jetzt in „' + kurz(f ? f.titel : '', 30) + '“, neben mir.')) + '</p>' +
-          '<div class="c6wz-wahl"><button type="button" class="c6wz-knopf c6wz-haupt" data-w="hin">Hingehen</button><button type="button" class="c6wz-link" data-w="tele">Ins Teleskop hängen</button></div>';
+          '<div class="c6wz-wahl"><button type="button" class="c6wz-knopf c6wz-haupt" data-w="hin">Hingehen</button>' + (eintraegeZaehlen(w.id) > 0 ? '<button type="button" class="c6wz-link" data-w="tele">Ins Teleskop hängen</button>' : '') + '</div>';
         male(el.querySelector('.c6wz-mini'), w, { klein: true });
         el.querySelector('[data-w=hin]').onclick = function () { zu(); if (C6.space && C6.space.oeffne) C6.space.oeffne(s); };
         var tb = el.querySelector('[data-w=tele]');
-        tb.onclick = function () { teilen(w.id, true); tb.disabled = true; tb.textContent = stimme('geteilt', null, 'Hängt im Teleskop. Andere dürfen es sich nehmen.'); };
+        if (tb) tb.onclick = function () { teilen(w.id, true); tb.disabled = true; tb.textContent = stimme('geteilt', null, 'Hängt im Teleskop. Andere dürfen es sich nehmen.'); };
     }
   }
   /* ---------- Das Werkzeug-Blatt: heute, der Verlauf als Bild, und ein ehrlicher Satz von Carl ---------- */
@@ -495,7 +589,7 @@
         '<button type="button" class="c6d-zettel" style="--r:-1.2deg;--f:' + esc((f && f.farbe) || T) + '" data-hin="1" aria-label="' + esc('Zettel vom ' + datumText(tag(new Date(bz.z.ts))) + ': ' + bz.z.t + '. Antippen öffnet den Space') + '"><i class="c6d-klammer" aria-hidden="true"></i><small>' + esc(datumText(tag(new Date(bz.z.ts)))) + '</small><span>' + esc(kurz(bz.z.t, 80)) + '</span></button>' +
         '<p class="c6wz-bezug-satz">' + esc(bz.satz) + '</p></div></div>' : '') +
       '<div class="c6wz-wahl"><button type="button" class="c6wz-knopf" data-w="anders">Anders</button></div>' +
-      '<div class="c6wz-leiste">' + ((w.fassungen || []).length ? '<button type="button" class="c6wz-link" data-w="alt">Zurück zur alten Fassung</button>' : '') + ((w.spaeter || []).length ? '<button type="button" class="c6wz-link" data-w="neuer">Wieder die neuere</button>' : '') + '<button type="button" class="c6wz-link" data-w="tele">' + (w.teleskop ? 'Aus dem Teleskop nehmen' : 'Ins Teleskop hängen') + '</button><button type="button" class="c6wz-link" data-w="weg">Wegräumen</button></div>';
+      '<div class="c6wz-leiste">' + ((w.fassungen || []).length ? '<button type="button" class="c6wz-link" data-w="alt">Zurück zur alten Fassung</button>' : '') + ((w.spaeter || []).length ? '<button type="button" class="c6wz-link" data-w="neuer">Wieder die neuere</button>' : '') + ((w.teleskop || eintraegeZaehlen(w.id) > 0) ? '<button type="button" class="c6wz-link" data-w="tele">' + (w.teleskop ? 'Aus dem Teleskop nehmen' : 'Ins Teleskop hängen') + '</button>' : '') + '<button type="button" class="c6wz-link" data-w="weg">Wegräumen</button></div>';
     var platz = el.querySelector('.c6wz-gross-platz'), vl = el.querySelector('.c6wz-verlauf'), cs = el.querySelector('.c6wz-carl-satz');
     function frisch() { var dd = daten(w); vl.innerHTML = verlauf(w, dd); cs.textContent = aufgreifen(w, dd); var bs = el.querySelector('.c6wz-bezug-satz'), b2 = bezugSatz(w, dd); if (bs && b2) bs.textContent = b2.satz; }
     var m = male(platz, w, {});
@@ -508,7 +602,7 @@
     el.querySelector('[data-w=anders]').onclick = function () { umbauen(w); };
     var altK = el.querySelector('[data-w=alt]'); if (altK) altK.onclick = function () { if (zurueckZurAlten(id)) gross(id); };
     var neuK2 = el.querySelector('[data-w=neuer]'); if (neuK2) neuK2.onclick = function () { if (wiederNeuer(id)) gross(id); };
-    el.querySelector('[data-w=tele]').onclick = function () { teilen(w.id, !w.teleskop); gross(id); };
+    var teleK = el.querySelector('[data-w=tele]'); if (teleK) teleK.onclick = function () { teilen(w.id, !w.teleskop); gross(id); };
     el.querySelector('[data-w=weg]').onclick = function () {
       entferne(id); zu();
       var rw = { text: 'Weggeräumt. Deine Einträge bleiben.', knopf: 'Zurückholen', tun: function () { zurueckholen(id); } };
@@ -676,8 +770,8 @@
   }
 
   C6.werkzeug = {
-    baue: baue, male: male, alle: alle, hol: hol, haenge: haenge, entferne: entferne, zeichen: zeichen,
-    vorlagen: VORLAGEN, oeffne: oeffne, gross: gross, zu: zu, erinnerungen: erinnerungen,
+    baue: baue, ausVorlage: ausVorlage, male: male, alle: alle, hol: hol, haenge: haenge, entferne: entferne, zeichen: zeichen,
+    vorlagen: VORLAGEN, oeffne: oeffne, rezeption: rezeption, gross: gross, zu: zu, erinnerungen: erinnerungen,
     zurueckholen: zurueckholen, weggeraeumt: weggeraeumt, fuerImmer: fuerImmer,
     fach: function () { fachOeffnen(); },
     fassungen: function (id) { var w = hol(id); return w ? (w.fassungen || []).slice() : []; }, zurueck: zurueckZurAlten,

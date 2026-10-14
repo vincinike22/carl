@@ -1,0 +1,103 @@
+/* Rezeption · die Welt hinter allem: Wand, Fenster, Tresen, Lampe, Tasse, Glocke.
+   Nichts hier ist lauter als der Satz und das Feld. Alles liegt in .c6rz-welt (absolut, z-index 0).
+   Tresenkante: --c6rw-tresen auf .c6rz (Abstand vom oberen Bühnenrand); der Raum darf sie überschreiben. */
+.c6rz{--c6rw-tresen:calc(var(--c6-oben,54px) + 250px)}
+.c6k[data-geraet=computer] .c6rz{--c6rw-tresen:38%}
+.c6rz-welt{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.c6rw{position:absolute;inset:0;overflow:hidden;
+  --c6rw-h1:#bcd8e8;--c6rw-h2:#dcebf0;--c6rw-wand:#f1e8d9;--c6rw-wand2:#e6dac6;--c6rw-schein:rgba(255,246,214,.55);--c6rw-dunkel:0;--c6rw-lampe:0;
+  --c6rw-holz:#cfa776;--c6rw-holz2:#b98d5e;--c6rw-boden:#e8dcc9;--c6rw-boden2:#dfd1bb}
+.c6rw[data-zeit=morgen]{--c6rw-h1:#dfe9ef;--c6rw-h2:#f6d9b4;--c6rw-wand:#f5ead7;--c6rw-schein:rgba(255,232,190,.6)}
+.c6rw[data-zeit=abend]{--c6rw-h1:#c7a0b4;--c6rw-h2:#f0b47e;--c6rw-wand:#eddcc6;--c6rw-wand2:#dfcbb0;--c6rw-schein:rgba(250,190,120,.34);--c6rw-dunkel:.05;--c6rw-lampe:1}
+.c6rw[data-zeit=nacht]{--c6rw-h1:#1f2744;--c6rw-h2:#2f3b5e;--c6rw-wand:#d9d0c0;--c6rw-wand2:#c8bda9;--c6rw-schein:rgba(170,186,240,.12);--c6rw-dunkel:.10;--c6rw-lampe:1;--c6rw-boden:#d3c6b0;--c6rw-boden2:#c7b9a2}
+.c6rw>*{position:absolute}
+
+/* Wand bis zur Tresenkante, darunter Boden */
+.c6rw-wand{left:0;right:0;top:0;height:var(--c6rw-tresen);background:
+  radial-gradient(120% 90% at 22% 28%,rgba(255,252,244,.55),rgba(255,252,244,0) 60%),
+  repeating-linear-gradient(90deg,rgba(201,162,122,0) 0 26px,rgba(201,162,122,.06) 26px 28px),
+  linear-gradient(180deg,var(--c6rw-wand),var(--c6rw-wand2));transition:background 1.2s ease}
+.c6rw-boden{left:0;right:0;top:var(--c6rw-tresen);bottom:0;background:
+  repeating-linear-gradient(180deg,rgba(43,39,34,0) 0 34px,rgba(43,39,34,.06) 34px 35.5px),linear-gradient(180deg,var(--c6rw-boden),var(--c6rw-boden2) 70%);transition:background 1.2s ease}
+/* der Schein des Fensters fällt schräg auf Wand und Tresen */
+.c6rw-schein{left:0;width:56%;top:calc(var(--c6rw-tresen) - 150px);height:220px;background:linear-gradient(180deg,var(--c6rw-schein),rgba(255,255,255,0));
+  clip-path:polygon(8% 0,50% 0,100% 100%,30% 100%);transition:background 1.5s ease}
+.c6k[data-geraet=computer] .c6rw-schein{left:max(0px,calc(50% - 600px));width:560px;top:calc(var(--c6rw-tresen) - 130px);height:200px;clip-path:polygon(6% 0,40% 0,100% 100%,30% 100%)}
+/* abends und nachts dunkelt der Raum ein wenig */
+.c6rw::after{content:"";position:absolute;inset:0;background:#1a2244;opacity:calc(var(--c6rw-dunkel) * 1);transition:opacity 1.2s ease;pointer-events:none}
+
+/* Fenster oben links: Himmel nach der Uhr */
+.c6rw-fenster{left:5%;top:calc(var(--c6-oben,54px) + 14px);width:100px}
+.c6k[data-geraet=computer] .c6rw-fenster{left:max(28px,calc(50% - 530px));top:auto;bottom:calc(100% - var(--c6rw-tresen) + 90px);width:190px}
+.c6rw-fenster svg{display:block;width:100%;height:auto;overflow:visible}
+.c6rw-himmel-1{stop-color:var(--c6rw-h1)}.c6rw-himmel-2{stop-color:var(--c6rw-h2)}
+.c6rw-himmel-1,.c6rw-himmel-2{transition:stop-color 1.2s ease}
+.c6rw-sonne,.c6rw-mond,.c6rw-sterne,.c6rw-abendlicht{opacity:0;transition:opacity 1s ease}
+.c6rw[data-zeit=morgen] .c6rw-sonne,.c6rw[data-zeit=mittag] .c6rw-sonne{opacity:1}
+.c6rw[data-zeit=morgen] .c6rw-sonne{transform:translate(-30px,26px)}
+.c6rw[data-zeit=abend] .c6rw-abendlicht{opacity:1}
+.c6rw[data-zeit=nacht] .c6rw-mond,.c6rw[data-zeit=nacht] .c6rw-sterne{opacity:1}
+.c6rw-sonne{transition:opacity 1s ease,transform 1.2s ease}
+.c6rw-huegel{transition:fill 1.2s ease;fill:#b7c4a3}
+.c6rw[data-zeit=abend] .c6rw-huegel{fill:#9a9c80}
+.c6rw[data-zeit=nacht] .c6rw-huegel{fill:#3a4461}
+
+/* Tresen: eine Holzkante quer über die ganze Breite, vorne Paneele, darunter ein Sockel */
+.c6rw-tresen{left:0;right:0;top:var(--c6rw-tresen);height:92px}
+.c6k[data-geraet=computer] .c6rw-tresen{height:118px;left:max(0px,calc(50% - 560px));right:max(0px,calc(50% - 560px))}
+.c6k[data-geraet=computer] .c6rw-kante{left:-6px;right:-6px;border-radius:3px 3px 0 0}
+.c6k[data-geraet=computer] .c6rw-front,.c6k[data-geraet=computer] .c6rw-sockel{border-left:2.5px solid var(--tusche,#2b2722);border-right:2.5px solid var(--tusche,#2b2722)}
+.c6k[data-geraet=computer] .c6rw-tresen::after{left:-8px;right:-8px}
+.c6rw-kante{position:absolute;left:0;right:0;top:0;height:16px;background:linear-gradient(180deg,#e2c08f,var(--c6rw-holz));border-top:2.5px solid var(--tusche,#2b2722);border-bottom:2px solid rgba(43,39,34,.55);box-shadow:0 4px 0 rgba(43,39,34,.08)}
+.c6rw-front{position:absolute;left:0;right:0;top:18px;bottom:10px;background:
+  repeating-linear-gradient(90deg,rgba(43,39,34,0) 0 118px,rgba(43,39,34,.16) 118px 120px),
+  linear-gradient(180deg,var(--c6rw-holz),var(--c6rw-holz2));box-shadow:inset 0 10px 0 rgba(255,252,244,.18)}
+.c6rw-sockel{position:absolute;left:0;right:0;bottom:0;height:10px;background:#8c6a44;border-top:2px solid var(--tusche,#2b2722);border-bottom:2px solid rgba(43,39,34,.45)}
+.c6rw-tresen::after{content:"";position:absolute;left:0;right:0;top:100%;height:34px;background:linear-gradient(180deg,rgba(43,39,34,.14),rgba(43,39,34,0))}
+.c6rw[data-zeit=nacht] .c6rw-kante,.c6rw[data-zeit=nacht] .c6rw-front{filter:brightness(.86)}
+
+/* Tischlampe links auf dem Tresen; leuchtet abends und nachts */
+.c6rw-lampe{left:calc(50% - 150px);top:var(--c6rw-tresen);width:48px;transform:translateY(-100%);margin-top:3px}
+.c6k[data-geraet=computer] .c6rw-lampe{left:calc(50% - 330px);width:88px}
+.c6rw-lampe svg{display:block;width:100%;height:auto;overflow:visible}
+.c6rw-glut{position:absolute;left:50%;top:30%;width:760%;aspect-ratio:1;transform:translate(-46%,-36%);border-radius:50%;background:radial-gradient(closest-side,rgba(246,200,106,.34),rgba(246,200,106,.1) 45%,rgba(246,200,106,0));opacity:var(--c6rw-lampe);transition:opacity 1.2s ease;pointer-events:none}
+.c6rw-birne{transition:fill .8s ease}
+.c6rw[data-zeit=abend] .c6rw-birne,.c6rw[data-zeit=nacht] .c6rw-birne{fill:#ffe9a8}
+.c6rw-lampenschein{opacity:0;transition:opacity 1s ease}
+.c6rw[data-zeit=abend] .c6rw-lampenschein,.c6rw[data-zeit=nacht] .c6rw-lampenschein{opacity:.35}
+
+/* Tasse rechts von Carl: das eine Lebenszeichen, Dampf steigt leise */
+.c6rw-tasse{left:calc(50% + 70px);top:var(--c6rw-tresen);width:40px;transform:translateY(-100%);margin-top:3px}
+.c6k[data-geraet=computer] .c6rw-tasse{left:calc(50% + 60px);width:64px}
+.c6rw-tasse svg{display:block;width:100%;height:auto;overflow:visible}
+.c6rw-dampf{fill:none;stroke:rgba(255,255,255,.85);stroke-width:2.2;stroke-linecap:round;opacity:0;transform-box:fill-box;transform-origin:50% 100%;animation:c6rw-dampf 5.2s ease-in-out infinite}
+.c6rw-dampf+.c6rw-dampf{animation-duration:6.4s;animation-delay:1.7s}
+@keyframes c6rw-dampf{0%{opacity:0;transform:translateY(4px) scale(.9)}25%{opacity:.75}70%{opacity:.35}100%{opacity:0;transform:translateY(-18px) scale(1.12)}}
+.c6rw[data-zeit=nacht] .c6rw-dampf{stroke:rgba(255,255,255,.6)}
+html.c6k-ruhig .c6rw-dampf{animation:none;opacity:.45;transform:none}
+
+/* Tischglocke rechts: das eine Ding zum Denken. Antippen = sie klingelt sichtbar; mehr tut sie nicht. */
+.c6rw-glocke{pointer-events:auto;left:calc(50% + 122px);top:var(--c6rw-tresen);width:56px;height:56px;margin:-50px 0 0 -8px;padding:0 0 4px;border:0;background:none;cursor:pointer;display:flex;align-items:flex-end;justify-content:center;-webkit-tap-highlight-color:transparent;touch-action:manipulation;border-radius:50%}
+.c6k[data-geraet=computer] .c6rw-glocke{left:calc(50% + 180px);width:76px;height:76px;margin:-70px 0 0 -8px}
+.c6rw-glocke svg{display:block;width:42px;height:auto;overflow:visible}
+.c6k[data-geraet=computer] .c6rw-glocke svg{width:62px}
+.c6rw-glocke:focus-visible{outline:3px solid var(--fokus,#b4460c);outline-offset:2px}
+.c6rw-kuppel{transform-box:fill-box;transform-origin:50% 100%;transition:transform .18s cubic-bezier(.3,1.4,.5,1)}
+.c6rw-knopf{transform-box:fill-box;transform-origin:50% 100%;transition:transform .12s ease}
+.c6rw-klingt .c6rw-knopf{transform:translateY(3px)}
+.c6rw-klingt .c6rw-kuppel{animation:c6rw-kuppel .55s cubic-bezier(.3,1.5,.5,1)}
+@keyframes c6rw-kuppel{0%{transform:scale(1.04,.94)}40%{transform:scale(.98,1.03)}100%{transform:none}}
+.c6rw-ring{fill:none;stroke:var(--tusche,#2b2722);stroke-width:1.6;opacity:0;transform-box:fill-box;transform-origin:50% 50%}
+.c6rw-klingt .c6rw-ring{animation:c6rw-ring .7s ease-out both}
+.c6rw-klingt .c6rw-ring+.c6rw-ring{animation-delay:.14s}
+@keyframes c6rw-ring{0%{opacity:.55;transform:scale(.6)}100%{opacity:0;transform:scale(1.9)}}
+.c6rw-glocke.c6k-haelt svg{filter:drop-shadow(0 0 6px rgba(255,226,160,.85))}
+.c6rw-glocke:active .c6rw-knopf{transform:translateY(3px)}
+html.c6k-ruhig .c6rw-klingt .c6rw-kuppel,html.c6k-ruhig .c6rw-klingt .c6rw-ring{animation:none}
+html.c6k-ruhig .c6rw-klingt .c6rw-ring{opacity:.4;transform:scale(1.4)}
+@media (prefers-reduced-motion:reduce){
+  .c6rw-dampf,.c6rw-klingt .c6rw-kuppel,.c6rw-klingt .c6rw-ring{animation:none}
+  .c6rw-dampf{opacity:.45;transform:none}
+  .c6rw-wand,.c6rw-boden,.c6rw-schein,.c6rw::after,.c6rw-glut,.c6rw-sonne,.c6rw-mond,.c6rw-sterne,.c6rw-abendlicht,.c6rw-huegel,.c6rw-himmel-1,.c6rw-himmel-2{transition:none}
+}
+/* iPhone: der Lesebereich bleibt frei, die Welt hält sich an den Rand */

@@ -693,7 +693,9 @@ function chrome() {
   hoeheKnopf.setAttribute('data-runter', h === 'boden' ? 'nein' : 'ja');
   hoeheKnopf.setAttribute('aria-label', h === 'boden' ? 'Hoch in den ' + hkWort : 'Hinunter auf den Boden');
   var imRundgang = !!(C6.rundgang && C6.rundgang.an) || (!inReihe(d) && hoeheVon(d) === 'boden' && d.leiste === false);
-  wurzel.toggleAttribute('data-ohne-regler', hoehenDa < 2 || d.regler === false || imRundgang);
+  // def.regler: false = nie; eine Funktion entscheidet je Lage (z. B. die Rezeption: kein Himmel, solange es keinen Space gibt)
+  var ohneRegler = typeof d.regler === 'function' ? d.regler() === false : d.regler === false;
+  wurzel.toggleAttribute('data-ohne-regler', hoehenDa < 2 || ohneRegler || imRundgang);
   wurzel.toggleAttribute('data-rundgang', imRundgang);
   wurzel.setAttribute('data-licht', d.licht === 'nacht' || (h === 'teleskop' && d.licht !== 'tag') ? 'nacht' : 'tag');
   wurzel.toggleAttribute('data-ohne-leiste-raum', d.leiste === false);
@@ -1625,8 +1627,9 @@ function entwurfId() {
   return d && typeof d.entwurf === 'string' && d.entwurf ? 'raum:' + d.entwurf : 'dock';
 }
 function carlName() { var du = C6.S.du || {}; return (du.carlName && String(du.carlName).trim()) || 'Carl'; }
-var eigenerPlatzhalter = null; // {t, raum, modus}: was ein Raum gerade ins Feld fragt (gilt nur in diesem Raum)
-/* Ein Blatt darf das eine Feld kurz leihen: eigener Platzhalter, der Satz geht an nimm(satz) */
+var eigenerPlatzhalter = null; // bleibt nur noch als Merker (Räume überschreiben die Frage im Feld nicht mehr)
+/* Ein Blatt darf das eine Feld kurz leihen: eigener Platzhalter, der Satz geht an nimm(satz).
+   Eine sanfte Leihe (o.sanft, für einen Raum, dessen Feld nach einem Satz fragt) lässt Chips sichtbar und tritt hinter eine offene freie Frage zurück. */
 var leihe = null;
 function gibZurueck(l) {
   if (!l || leihe !== l) return;
@@ -1641,10 +1644,10 @@ C6.feld = {
     o = o || {};
     if (leihe) gibZurueck(leihe);
     if (wzOffen) wzAuf(false);
-    var l = { platzhalter: String(o.platzhalter || 'Woran denkst du gerade?'), nimm: typeof o.nimm === 'function' ? o.nimm : function () {}, vorher: feld.value, raum: C6.jetzt };
+    var l = { platzhalter: String(o.platzhalter || 'Woran denkst du gerade?'), nimm: typeof o.nimm === 'function' ? o.nimm : function () {}, vorher: feld.value, raum: C6.jetzt, sanft: !!o.sanft };
     leihe = l;
-    feld.value = o.text ? String(o.text) : '';
-    wurzel.setAttribute('data-feld-geliehen', '');
+    feld.value = o.text ? String(o.text) : (l.sanft ? feld.value : '');
+    if (!l.sanft) wurzel.setAttribute('data-feld-geliehen', '');
     groesseFeld();
     platzhalter();
     if (o.fokus !== false) { try { feld.focus({ preventScroll: true }); } catch (e) {} }
@@ -1707,18 +1710,18 @@ function abschicken() {
   feld.value = '';
   try { C6.S.entwurf[id] = ''; } catch (e) {}
   groesseFeld();
-  // geliehenes Feld: der Satz gehört dem Blatt, das es geliehen hat
-  if (leihe) {
+  // geliehenes Feld: der Satz gehört dem Blatt, das es geliehen hat (eine sanfte Leihe lässt einer offenen freien Frage den Vortritt)
+  // „/werkzeug …“ wirkt überall gleich, auch im Space, in einer offenen Frage oder bei sanfter Leihe (vor jedem Raum)
+  var sm = t.charAt(0) === '/' && (!leihe || leihe.sanft) ? t.match(/^\/(\S+)(?:\s+([\s\S]*))?$/) : null;
+  if (sm) {
+    var st = slSuche(sm[1]);
+    if (st.length && st[0].r <= 1) { feld.value = (sm[2] || '').trim(); wzNimm(st[0].g); return; }
+  }
+  if (leihe && !(leihe.sanft && frage && frage.frei && frage.raum === C6.jetzt)) {
     var l = leihe, bleibt = false;
     try { bleibt = l.nimm(t) === true; } catch (err) { fehler('feld.leihen', err); }
     if (!bleibt) gibZurueck(l);
     return;
-  }
-  // „/werkzeug …“ wirkt überall gleich, auch im Space oder in einer offenen Frage (vor jedem Raum)
-  var sm = t.charAt(0) === '/' ? t.match(/^\/(\S+)(?:\s+([\s\S]*))?$/) : null;
-  if (sm) {
-    var st = slSuche(sm[1]);
-    if (st.length && st[0].r <= 1) { feld.value = (sm[2] || '').trim(); wzNimm(st[0].g); return; }
   }
   // das Feld behält den Fokus: wer gleich weiterschreibt, verliert kein Zeichen (wie in jedem Gespräch)
   // eine echte Abwäge- oder Planungsfrage ist keine Antwort auf Carls offene Bitte um einen Satz: sie will eine Antwort (Darstellung)
@@ -2615,7 +2618,7 @@ function norm(t) {
   return String(t || '').toLowerCase().replace(/ä/g, 'a').replace(/ö/g, 'o').replace(/ü/g, 'u').replace(/ß/g, 'ss').replace(/[„“"'’]/g, '');
 }
 function slDarf() {
-  return !leihe && entwurfId().indexOf('raum:') !== 0 && !wurzel.hasAttribute('data-rundgang') && !D.documentElement.classList.contains('c6r-an') && !wurzel.hasAttribute('data-ohne-dock');
+  return !(leihe && !leihe.sanft) && entwurfId().indexOf('raum:') !== 0 && !wurzel.hasAttribute('data-rundgang') && !D.documentElement.classList.contains('c6r-an') && !wurzel.hasAttribute('data-ohne-dock');
 }
 function slLies() {
   var v = feld.value;
@@ -3674,6 +3677,8 @@ C6.bus.on('raum', function (id) {
   weiterBald(id, 900);
 });
 C6.bus.on('space', function () { weiterBald(C6.jetzt, 900); });
+// ein neuer Space kann den Himmel-Knopf freigeben (Räume mit regler-Funktion)
+C6.bus.on('strings', function (d) { if (d && d.was === 'neu' && raeume[C6.jetzt] && typeof raeume[C6.jetzt].regler === 'function') chrome(); });
 C6.bus.on('geraet', function () { weiterBald(C6.jetzt, 400); });
 C6.bus.on('geraet', function () { platzhalter(); });
 

@@ -1,0 +1,64 @@
+[  2.6s] raum=rezeption
+[  2.6s] Carl sagt: 'Ich bin Carl. Sag mir einen Satz, ich bau dir was.'
+[  2.6s] Feld-Platzhalter: 'Was soll ich dir bauen?'
+[  2.6s] Beispiele: {"karten": 6, "ganzSichtbar": 6, "teils": 6, "kennz": "EIN BEISPIEL", "verb": "So eins für mich", "himmel": false}
+[  2.9s] bild 01-start
+[  3.0s] tipp erstes Beispiel (316x52 px)
+[  3.9s] Blatt: 'Neues Werkzeug'
+[  3.9s] Blatt oben: 'Probier es aus. Ändern geht gleich.'
+[  3.9s] Blatt Knöpfe: ['Passt', 'Anders']
+[  4.2s] bild 02-beispiel-blatt
+[  4.2s] tipp Passt (76x44 px)
+[  5.4s] Carl sagt: 'Das hab ich mir gemerkt: „Draußen?“, aus meinem Beispiel. Jetzt ist es deins.'
+[  5.4s] Karte: 'DAS HAB ICH MIR GEMERKT\n\nDein Satz\n„Ich will jeden Tag sehen, ob ich draußen war.“\nName\nDraußen?\n\nGedacht hab ich hier nicht, das ist eine Vorlage. Gekostet hat sie nichts.\n\nStimmt so nicht'
+[  5.4s] Kosten: 'Gedacht hab ich hier nicht, das ist eine Vorlage. Gekostet hat sie nichts.'
+[  5.4s] Blase (Kern): None
+[  5.4s] angekommen=True fertig=False
+[  5.7s] bild 03-gemerkt
+[  5.7s] tipp Werkzeug-Name (groß öffnen) (106x44 px)
+[  6.5s] Groß: 'Werkzeug\n\nDraußen?\n\nHeute geschafft?\n\nDo\nFr\nSa\nSo\nMo\nDi\nheute\n\nDIE LETZTEN VIER WOCHEN\n\nAnders\nIns Teleskop hängen\nWegräumen'
+[  6.7s] bild 04-gross
+[  6.7s] tipp Schließen (44x44 px)
+[  7.3s] Carl sagt nach Groß: 'Das hab ich mir gemerkt: „Draußen?“, aus meinem Beispiel. Jetzt ist es deins.'
+[  7.3s] Feld liegt bei y=773 (sichtbar bis 767) → wischen
+[  7.8s] tipp Feld (528x44 px)
+[  8.3s] Bau: None | Uhr: None
+[  8.5s] bild 05-bau
+[  8.5s] gebaut nach 0.6s
+[  8.5s] Blatt oben: 'Probier es aus. Ändern geht gleich.'
+[  8.6s] Werkzeug im Blatt: 'Gläser\n\nHeute\n\n−\n0\n+'
+[  8.8s] bild 06-gebaut
+[  8.8s] tipp Anders (88x44 px)
+[  9.4s] Anders-Satz: 'Was soll anders sein? Schreib es unten ins Feld.' | Platzhalter: 'Was soll anders sein?'
+[  9.7s] bild 07-anders
+[  9.7s] Feld liegt bei y=773 (sichtbar bis 767) → wischen
+[ 10.2s] tipp Feld (528x44 px)
+[ 10.6s] alt bleibt stehen: False
+[ 10.6s] neu gebaut: 'Probier es aus. Ändern geht gleich.\n\nGläser\n\nHeute\n\n−\n0\n+\nPasst\nAnders'
+[ 10.9s] bild 08-anders-gebaut
+[ 10.9s] tipp Passt (76x44 px)
+[ 12.1s] Carl sagt: 'Das hab ich mir gemerkt: deinen Satz „Ich will zählen, wie viele Gläser Wasser ich am Tag trinke. Anders: mit Ziel acht Gläser“ und dein Werkzeug „Gläser“. Beides gehört dir.'
+[ 12.1s] Karte: 'DAS HAB ICH MIR GEMERKT\n\nDein Satz\n„Ich will zählen, wie viele Gläser Wasser ich am Tag trinke. Anders: mit Ziel acht Gläser“\nName\nGläser\n\nGedacht hab ich hier nicht, das ist eine Vorlage. Gekostet hat sie nichts.\n\nStimmt so nicht'
+[ 12.1s] Gespeichert: [{"name": "Draußen?", "satz": "Ich will jeden Tag sehen, ob ich draußen war.", "sid": null, "von": "vorlage", "teile": ["haken"]}, {"name": "Gläser", "satz": "Ich will zählen, wie viele Gläser Wasser ich am Tag trinke. Anders: mit Ziel acht Gläser", "sid": null, "von": "vorlage", "teile": ["zaehler"]}]
+[ 12.4s] bild 09-gemerkt2
+[ 12.4s] tipp Stimmt so nicht (109x44 px)
+[ 13.0s] Korrektur: 'So stimmt es\n\nDein Satz\nName\nSo stimmt es\nDoch so lassen'
+[ 13.3s] bild 10-korrektur
+[ 13.3s] tipp So stimmt es (128x44 px)
+[ 14.2s] Carl sagt: 'Gut. So merk ich es mir.'
+[ 14.2s] Karte: 'DAS HAB ICH MIR GEMERKT\n\nDein Satz\n„Ich will zählen, wie viele Gläser Wasser ich am Tag trinke. Anders: mit Ziel acht Gläser“\nName\nWasser\n\nGedacht hab ich hier nicht, das ist eine Vorlage. Gekostet hat sie nichts.\n\nStimmt so nicht'
+[ 14.5s] bild 11-berichtigt
+[ 14.5s] Zuhause liegt bei y=833 (sichtbar bis 767) → wischen
+[ 15.0s] tipp Zuhause (84x54 px)
+[ 16.8s] raum=zuhause Blase: None Platzhalter: 'Woran denkst du gerade?'
+[ 16.8s] Werkzeug im Zuhause sichtbar: 0
+[ 17.1s] bild 12-zuhause
+[ 17.2s] Rezeption liegt bei y=833 (sichtbar bis 767) → wischen
+[ 17.7s] tipp Rezeption (84x54 px)
+[ 19.2s] raum=rezeption Carl sagt: 'Gut. So merk ich es mir.' Platzhalter: 'Was soll ich dir bauen?'
+[ 19.2s] Karte noch da: True
+[ 19.4s] bild 13-zurueck
+[ 21.5s] nach Neuladen raum=rezeption Carl sagt: 'Ich bin Carl. Sag mir einen Satz, ich bau dir was.'
+[ 21.5s] meins: 2 Karte: False Beispiele: draussen,glaeser,kilometer,wandern,blumen,rueckblick
+[ 21.7s] bild 14-neuladen
+[ 21.7s] Konsolenfehler: []

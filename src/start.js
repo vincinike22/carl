@@ -26,8 +26,10 @@ setTimeout(function () {
   var R = C6.raeume, ziel = null;
   var m = location.hash.match(/raum=([\w-]+)/);
   var fertig = !!(C6.S.du && C6.S.du.fertig);
+  var eigene = 0; try { eigene = C6.werkzeug && C6.werkzeug.alle ? C6.werkzeug.alle().length : 0; } catch (e) { eigene = 0; }
+  // Ein Fremder (kein Rundgang gemacht, kein eigenes Werkzeug) kommt an die Rezeption; der Rundgang startet nur über #raum=rundgang
   if (m && R[m[1]]) ziel = m[1];
-  else if (!fertig && R.rundgang) ziel = 'rundgang';
+  else if (!fertig && !eigene && R.rezeption) ziel = 'rezeption';
   else if (C6.S.ort && R[C6.S.ort.raum] && C6.S.ort.raum !== 'rundgang') ziel = C6.S.ort.raum;
   else if (R.zuhause) ziel = 'zuhause';
   else { var k = Object.keys(R); ziel = k[0] || null; }

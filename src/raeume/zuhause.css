@@ -130,3 +130,22 @@
 .c6z-stube:not(.c6z-computer) .c6m-kalender{transform:rotate(-1deg)}
 .c6z-stube:not(.c6z-computer) .c6z-sessel{left:58px;width:86px}
 @media (max-height:740px){.c6z-stube:not(.c6z-computer) .c6z-sessel{left:56px;width:74px}}
+
+/* s12 · deine Werkzeuge ohne Space: eine kleine, stille Reihe am Boden (leiser als Brett und Brief); leer → nichts */
+.c6z-meine{position:absolute;z-index:4;right:10px;bottom:calc(var(--c6z-fuss) - 40px);width:280px;height:0;overflow:visible;display:grid;gap:8px;pointer-events:none}
+.c6z-meine[hidden],.c6z-meine:empty{display:none}
+.c6z-meine>*{pointer-events:auto}
+.c6z-meine .c6rz-wz{cursor:pointer;min-height:44px}
+.c6z-meine .c6rz-wz>*{pointer-events:none}
+.c6z-meine .c6rz-wz:focus-visible{outline:3px solid #b4460c;outline-offset:4px;border-radius:8px}
+.c6z-meine .c6rz-wz{position:absolute;right:0;bottom:0;width:280px;transform:scale(.56);transform-origin:100% 100%}
+.c6z-meine .c6rz-wz .c6wz-werkzeug{box-shadow:0 1px 0 #2b2722,0 4px 10px rgba(43,39,34,.1)}
+/* iPhone: nur das neueste, auf dem Teppich neben dem Sofa */
+.c6z-stube:not(.c6z-computer) .c6z-meine .c6rz-wz:nth-child(n+2){display:none}
+.c6z-stube:not(.c6z-computer) .c6z-meine .c6rz-wz{padding-top:18px;box-sizing:content-box}
+/* Computer: bis zu zwei übereinander, am Boden rechts neben dem Teppich */
+.c6z-stube.c6z-computer .c6z-meine{right:40px;bottom:calc(var(--c6-unten,140px) + 10px)}
+.c6z-stube.c6z-computer .c6z-meine .c6rz-wz{transform:scale(.8)}
+.c6z-stube.c6z-computer .c6z-meine .c6rz-wz:nth-child(2){bottom:78px}
+.c6z-stube.c6z-computer .c6z-meine .c6rz-wz:nth-child(n+3){display:none}
+.c6z-stube[data-zeit=nacht] .c6z-meine{filter:brightness(.9)}

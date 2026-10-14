@@ -1,0 +1,71 @@
+/* Rezeption: Carl am Tresen, sein Satz darüber, deine Werkzeuge und die Beispiele auf dem Boden davor.
+   Die Welt (hinter allem) kommt aus einem eigenen Modul und setzt --c6rw-tresen (Tresenkante von oben); hier nur ein Ersatzmaß. */
+.c6rz{position:absolute;inset:0;overflow:hidden;--c6rw-tresen:calc(var(--c6-oben,54px) + 250px);--c6rz-tresen-hoch:92px}
+/* am Computer liegt die Tresenkante höher als in der Welt vorgesehen (50 %), damit der Boden davor Platz für Werkzeug und Beispiele hat */
+.c6k[data-geraet=computer] .c6-buehne .c6rz{--c6rw-tresen:38%;--c6rz-tresen-hoch:118px}
+.c6rz-welt{position:absolute;inset:0;z-index:0}
+
+/* Carl steht links der Mitte auf der Tresenkante; rechts von ihm bleibt Platz für Tasse und Glocke der Welt */
+.c6rz-carl{position:absolute;z-index:2;left:calc(50% - 60px);top:var(--c6rw-tresen);width:120px;height:120px;transform:translateY(-100%);pointer-events:none}
+.c6rz-carl .c6z-figur{width:100%;pointer-events:auto}
+
+/* Carls Satz: eine Blase wie die im Kern, fest über seinem Kopf, nach rechts offen */
+.c6rz-satz{position:absolute;z-index:3;left:calc(50% - 56px);right:16px;top:calc(var(--c6-oben,54px) + 10px);margin:0;padding:11px 14px 12px;box-sizing:border-box;pointer-events:none;
+ background:var(--karte,#fbf7f0);border:1.5px solid var(--tusche,#2b2722);border-radius:16px;box-shadow:var(--c6k-schwebt);
+ font:400 17px/1.42 Fraunces,Georgia,serif;font-variation-settings:'opsz' 24;color:var(--tusche,#2b2722);overflow-wrap:break-word}
+.c6rz-zipfel{position:absolute;left:18px;top:calc(100% - 2px);width:22px;height:14px}
+.c6rz-satz.c6rz-still{opacity:0;transition:opacity .25s ease}
+.c6rz-satz{transition:opacity .25s ease}
+.c6rz-satz.c6rz-lang{left:16px}
+.c6rz-satz.c6rz-lang .c6rz-zipfel{left:calc(50% - 54px)}
+.c6rz-computer .c6rz-satz.c6rz-lang{left:calc(50% - 10px)}
+.c6rz-computer .c6rz-satz.c6rz-lang .c6rz-zipfel{left:-15px}
+.c6rz-zipfel svg{display:block;width:22px;height:14px;overflow:visible}
+
+/* Der Boden vor dem Tresen rollt senkrecht; das Feld unten bleibt frei */
+.c6rz-boden{position:absolute;z-index:1;left:0;right:0;top:calc(var(--c6rw-tresen) + var(--c6rz-tresen-hoch) + 10px);bottom:var(--c6-unten,140px);box-sizing:border-box;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+ padding:0 16px 12px;display:grid;gap:14px;align-content:start}
+
+/* Deine Werkzeuge (ohne Space) stehen klein vor dem Tresen; das neueste kommt sichtbar an */
+.c6rz-meins{display:grid;gap:12px}
+.c6rz-meins[hidden]{display:none}
+.c6rz-reihe{display:grid;gap:8px}
+.c6rz-wz{min-width:0}
+.c6rz-wz.c6rz-neu .c6wz-werkzeug{animation:c6rz-an .55s cubic-bezier(.3,1.25,.5,1) both}
+@keyframes c6rz-an{from{opacity:0;transform:translateY(10px) scale(.94)}to{opacity:1;transform:none}}
+
+/* Die Karte: Das hab ich mir gemerkt */
+.c6rz-karte{padding:12px 14px 10px;background:var(--feld,#fffdf9);border:1.5px solid var(--linie,#d8cfc0);border-radius:12px}
+.c6rz-karte-kopf{margin:0 0 8px;font:600 12.5px/1 Figtree,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--leise,#6f6a61)}
+.c6rz-karte-liste{margin:0;display:grid;gap:6px}
+.c6rz-karte-liste>div{display:grid;grid-template-columns:72px minmax(0,1fr);gap:8px;align-items:baseline}
+.c6rz-karte-liste dt{font:500 13px/1.4 Figtree,system-ui,sans-serif;color:var(--leise,#6f6a61)}
+.c6rz-karte-liste dd{margin:0;font:400 16px/1.4 Fraunces,Georgia,serif;color:var(--tusche,#2b2722);overflow-wrap:break-word}
+.c6rz-kosten{margin:10px 0 0;font:500 17px/1.2 Caveat,cursive;color:var(--leise,#6f6a61)}
+.c6rz-korr{display:inline-block;min-height:44px;margin:2px 0 0 -4px;padding:0 4px;border:0;background:none;font:600 14px Figtree,system-ui,sans-serif;color:var(--tusche,#2b2722);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.c6rz-korr[hidden]{display:none}
+.c6rz-korr-form{margin:8px 0 2px;display:grid;gap:8px}
+.c6rz-korr-kopf{margin:0;font:600 15px/1.3 Fraunces,Georgia,serif}
+.c6rz-korr-form label{display:grid;gap:4px;font:500 13px/1.3 Figtree,system-ui,sans-serif;color:var(--leise,#6f6a61)}
+.c6rz-korr-form input{min-height:44px;box-sizing:border-box;padding:0 10px;border:1.5px solid var(--tusche,#2b2722);border-radius:10px;background:#fff;font:500 16px Figtree,system-ui,sans-serif;color:var(--tusche,#2b2722)}
+.c6rz-korr-wahl{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.c6rz-knopf{min-height:44px;padding:0 18px;border:2px solid var(--tusche,#2b2722);border-radius:22px;background:var(--karte,#fbf7f0);color:var(--tusche,#2b2722);font:600 15px Figtree,system-ui,sans-serif;cursor:pointer;box-shadow:2px 2px 0 var(--tusche,#2b2722)}
+.c6rz-knopf.c6rz-haupt{background:var(--tusche,#2b2722);color:var(--karte,#fbf7f0)}
+.c6rz-link{min-height:44px;padding:0 4px;border:0;background:none;font:600 14px Figtree,system-ui,sans-serif;color:var(--tusche,#2b2722);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.c6rz-korr:focus-visible,.c6rz-knopf:focus-visible,.c6rz-link:focus-visible{outline:3px solid var(--fokus,#b4460c);outline-offset:2px}
+
+/* Beispiele: Platz für ein anderes Modul */
+#c6rz-beispiele{min-width:0}
+#c6rz-beispiele:empty{display:none}
+
+/* Computer: Carl größer, die Blase breiter, der Boden eine ruhige Spalte */
+/* Computer: Carl links der Mitte, die Blase rechts neben seinem Kopf (Zipfel zeigt nach links auf ihn) */
+.c6rz-computer .c6rz-carl{left:calc(50% - 210px);width:200px;height:200px}
+.c6rz-computer .c6rz-satz{left:calc(50% - 10px);right:auto;width:min(560px,calc(50% - 6px));top:auto;bottom:calc(100% - var(--c6rw-tresen) + 100px);font-size:19px;padding:13px 18px 14px}
+.c6rz-computer .c6rz-zipfel{left:-15px;top:auto;bottom:18px;transform:rotate(90deg)}
+/* der Boden am Computer ist so breit wie der Tresen (≥ 990 px ab 1040 px Fenster): drei Beispiele nebeneinander, ohne Rollen ganz zu sehen */
+.c6rz-computer .c6rz-boden{padding-left:max(24px,calc(50% - 510px));padding-right:max(24px,calc(50% - 510px));gap:18px}
+.c6rz-computer .c6rz-reihe{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.c6rz-computer .c6rz-karte{padding:14px 18px 12px}
+
+@media (prefers-reduced-motion:reduce){.c6rz-wz.c6rz-neu .c6wz-werkzeug{animation:none}}

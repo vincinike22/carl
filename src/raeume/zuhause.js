@@ -195,12 +195,52 @@ C6.raum({
       '<div class="c6z-carl"></div>' +
       '<button type="button" class="c6z-ding c6z-knaeuel" data-tiefe="nah" aria-label="Knäuel"><i class="c6m-schatten" data-sw=".5" data-sh=".2" data-sx="-.25"></i>' + KNAEUEL + '<i class="c6z-kn-spur" aria-hidden="true"></i></button>' +
       '<div class="c6z-ablage" data-tiefe="nah" data-c6-ablage></div>' +
+      '<div class="c6z-meine" data-tiefe="nah" role="group" aria-label="Deine Werkzeuge, die noch an der Rezeption stehen" hidden></div>' +
       '<div class="c6z-sb-brett" role="group" aria-label="Deine Spaces" lang="de"><i class="c6z-sb-brett-holz" aria-hidden="true"></i><div class="c6z-sb-haken"></div></div>' +
       '<button type="button" class="c6z-verlauf" aria-label="Unser Gespräch zeigen"></button>' +
       '<div class="c6z-flug" aria-hidden="true"></div>';
     function q(s) { return st.querySelector(s); }
     var el = { spur: q('.c6z-kn-spur'), brett: q('.c6z-sb-brett'), haken: q('.c6z-sb-haken'), carl: q('.c6z-carl'), fenster: q('.c6z-fenster'), tuer: q('.c6z-tuer'), bild: q('.c6z-bild'), knaeuel: q('.c6z-knaeuel'), verlauf: q('.c6z-verlauf'), flug: q('.c6z-flug'), sonne: q('.c6z-sonne'),
       kalender: q('.c6m-kalender'), lampe: q('.c6z-lampe'), gruen: q('.c6m-gruen'), regal: q('.c6m-regal'), sofa: q('.c6z-sofa'), sessel: q('.c6z-sessel'), kegel: q('.c6m-kegel'), lampenschatten: q('.c6m-lampenschatten'), vogel: q('.c6m-vogel'), licht: q('.c6z-licht') };
+
+    // Deine Werkzeuge ohne Space stehen leise am Boden (die Reihe kommt aus der Rezeption); leer → nichts
+    var meineEl = q('.c6z-meine'), meineCtl = null;
+    function meineAn() {
+      try {
+        if (!meineCtl && C6.rezeption && typeof C6.rezeption.meine === 'function') meineCtl = C6.rezeption.meine(meineEl);
+        else if (meineCtl && meineCtl.neu) meineCtl.neu();
+        meineSchmuecken();
+      } catch (e) { meineCtl = null; }
+    }
+    // Im Zuhause ist die kleine Karte ein Bild mit einer Bedeutung: antippen öffnet das große Blatt (keine kleinen Knöpfe unter 44 px)
+    function meineListe() { try { return (C6.werkzeug && C6.werkzeug.alle ? C6.werkzeug.alle() : []).filter(function (w) { return !w.sid; }).slice(-3).reverse(); } catch (e) { return []; } }
+    function meineSchmuecken() {
+      var l = meineListe(), k = meineEl.querySelectorAll('.c6rz-wz');
+      for (var i = 0; i < k.length; i++) {
+        var w = l[i]; if (!w) continue;
+        k[i].setAttribute('role', 'button'); k[i].setAttribute('tabindex', '0'); k[i].setAttribute('data-wz', w.id);
+        k[i].setAttribute('aria-label', 'Werkzeug „' + (w.name || 'ohne Namen') + '“ öffnen');
+      }
+    }
+    meineEl.addEventListener('click', function (e) {
+      var k = e.target.closest ? e.target.closest('.c6rz-wz') : null; if (!k) return;
+      var id = k.getAttribute('data-wz'); if (!id) return;
+      try { C6.werkzeug && C6.werkzeug.gross && C6.werkzeug.gross(id); } catch (err) {}
+    });
+    meineEl.addEventListener('keydown', function (e) { if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('c6rz-wz')) { e.preventDefault(); e.target.click(); } });
+    C6.bus.on('werkzeug-eigen', function () { setTimeout(meineSchmuecken, 0); });
+    function meineDa() { try { return (C6.werkzeug && C6.werkzeug.alle ? C6.werkzeug.alle() : []).some(function (w) { return !w.sid; }); } catch (e) { return false; } }
+    // Einmal, beim ersten Besuch nach dem Ankommen an der Rezeption: Carl sagt, wo er wohnt und wo das Werkzeug steht
+    function begruesseAngekommen() {
+      try {
+        var S = C6.S || {};
+        if (!(S.du && S.du.angekommen) || S.zuhause_begruesst || !meineDa() || (C6.rundgang && C6.rundgang.an)) return;
+        var t = C6.stimme && C6.stimme.fest ? C6.stimme.fest('rezeption.zuhause', {}) : '';
+        if (!t || typeof C6.sag !== 'function') return;
+        C6.aendern(function (S2) { S2.zuhause_begruesst = Date.now(); });
+        setTimeout(function () { if (hier) C6.sag(t); }, 700);
+      } catch (e) {}
+    }
 
     // Ablage am Boden rechts vom Teppich (Gegenstück zum Knäuel): dort legt Carl Mitgebrachtes hin, z. B. einen Brief
     var ablage = q('.c6z-ablage');
@@ -912,7 +952,7 @@ C6.raum({
 
     return {
       betreten: function (o) {
-        nimmBrief(); kalenderZeichnen();
+        nimmBrief(); kalenderZeichnen(); meineAn();
         o = o || {};
         hier = true; letzteRegung = Date.now(); st.classList.remove('c6m-still');
         st.classList.toggle('c6z-im-rundgang', !!(o.rundgang || (C6.rundgang && C6.rundgang.an)));
@@ -920,6 +960,7 @@ C6.raum({
         try { zuletztDa = (C6.S && C6.S.zuhause && +C6.S.zuhause.da) || 0; } catch (e) { zuletztDa = 0; }
         setTimeout(function () { if (hier) nachschwingen(); }, 900);
         setTimeout(groesse, 350); setTimeout(groesse, 1200); setTimeout(licht, 420);
+        begruesseAngekommen();
         clearInterval(uhrZeit); uhrZeit = setInterval(zeit, 300000);
         clearInterval(uhrSchlaf); uhrSchlaf = setInterval(schlafPruef, 15000);
         clearInterval(uhrSitz); uhrSitz = setInterval(sitzPruef, 1000);

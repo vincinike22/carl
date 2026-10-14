@@ -82,9 +82,50 @@ var T = {
   'werkzeug.anders': ['Was soll anders sein?'],
   'werkzeug.wohin': ['Wo soll es stehen?'],
   'werkzeug.steht': ['„{werkzeug}“ steht jetzt in „{titel}“, neben mir.'],
-  'werkzeug.ohneSpace': ['Fertig. Sobald du einen Space hast, stell ich es neben mich.'],
+  'werkzeug.ohneSpace': ['Fertig. Es steht neben mir an der Rezeption.'],
   'werkzeug.geteilt': ['Hängt im Teleskop. Andere dürfen es sich nehmen.'],
   'werkzeug.benutzt': ['Gemacht. Ich hab’s gesehen.', 'Steht drin.'],
+
+  // Die Rezeption (s12): der erste Raum für einen Fremden. Jede Zeile ist nur in ihrem Zustand wahr –
+  // wer sie zeigt, prüft den Zustand (von: 'denk' | 'vorlage', Zeit gemessen, Kopf), nicht die Stimme.
+  // {kopf} steht mitten im Satz, klein geschrieben: „dein Rechner (<modell>)“ oder „Claude über claude.ai“.
+  // {sek} sind gemessene Sekunden mit einer Stelle hinter dem Komma („3,8“), nie geschätzt.
+  // {name} ist der Name des Werkzeugs – immer mitgeben, sonst setzt fuell() den Namen des Menschen ein.
+  'rezeption.erst': ['Ich bin {carl}. Sag mir einen Satz, ich bau dir was.'],
+  // Rückkehr, wenn schon Werkzeuge neben Carl stehen (oder S.du.angekommen): keine Vorstellung mehr, nur die Einladung
+  'rezeption.wieder': ['Da bist du wieder. Sag mir einen Satz, ich bau dir noch eins.'],
+  // erster Satz im Zuhause für jemanden ohne Rundgang, der an der Rezeption angekommen ist ({name} = das jüngste Werkzeug)
+  'rezeption.erster': ['Dein Werkzeug „{name}“ steht an der Rezeption. Was soll ich dir als Nächstes bauen?'],
+  'rezeption.feld': ['Was soll ich dir bauen?'],
+  'rezeption.beispiel': ['Ein Beispiel'],
+  'rezeption.nimm': ['So eins für mich'],
+  'rezeption.baut': ['Ich bau es dir. Schau zu.'],
+  'rezeption.denkt': ['Ich denk nach, seit {sek} Sekunden.'],
+  'rezeption.gewartet': ['25 Sekunden sind um, länger warte ich nicht. Probier das hier aus, ändern geht gleich.'],
+  'rezeption.gebaut': ['So hab ich deinen Satz verstanden. Probier es aus.'],
+  'rezeption.gebautVorlage': ['Probier es aus. Ändern geht gleich.'],
+  'rezeption.gemerkt': ['Das hab ich mir gemerkt. Beides gehört dir.'],
+  'rezeption.beispielGebaut': ['Das hab ich mir gemerkt. War mein Beispiel, jetzt ist es deins.'],
+  'rezeption.korrektur': ['So stimmt es'],
+  'rezeption.berichtigt': ['Gut. So merk ich es mir.'],
+  'rezeption.kostenDenk': ['Gedacht hat {kopf}, {sek} Sekunden lang. Was das kostet, weiß ich noch nicht.'],
+  'rezeption.kostenDenkVorlage': ['Gedacht hat {kopf}, {sek} Sekunden lang, brauchbar war es nicht. Darum eine Vorlage.'],
+  'rezeption.kostenDenkOhne': ['Gedacht hab ich {sek} Sekunden lang. Wer genau, weiß ich diesmal nicht.'],
+  'rezeption.kostenLokal': ['Dein Rechner hat gedacht, {sek} Sekunden lang. Geld kostet das keins.'],
+  'rezeption.kostenGewartet': ['Ich hab {sek} Sekunden gewartet, Antwort kam keine. Darum eine Vorlage.'],
+  'rezeption.kostenVorlage': ['Gedacht hab ich hier nicht, das ist eine Vorlage. Gekostet hat sie nichts.'],
+  'rezeption.leer': ['Das Feld ist noch leer. Ein Satz reicht.'],
+  'rezeption.unsinn': ['Da kann ich noch nichts draus bauen. Was willst du zählen, abhaken oder nicht vergessen?'],
+  'rezeption.anders': ['Gut. Sag mir, was anders sein soll, dann bau ich es neu.'],
+  // nach „Anders“ ohne Mitdenken ist dasselbe herausgekommen – das sagt Carl, statt so zu tun (nur wenn Bausteine und Name gleich blieben)
+  'rezeption.gleich': ['Gleich geblieben, mitdenken kann ich hier nicht. Anders wird es mit Wörtern wie „jeden Tag“, „zählen“, „Liste“ oder „Termin“.'],
+  // erster Besuch im Zuhause nach der Rezeption (S.du.angekommen, kein Rundgang): wo das Werkzeug ist und was das Feld hier tut
+  'rezeption.zuhause': ['Hier wohn ich. Dein Werkzeug steht an der Rezeption; aus einem Satz hier wird ein Space.'],
+  'rezeption.stimmtNicht': ['Stimmt so nicht'],
+  // die Tischglocke am Tresen: sie löst nichts aus, Carl ist ohnehin da
+  'rezeption.glocke': ['Eine Tischglocke. Rufen musst du mich nicht, ich bin ja da.'],
+  'rezeption.glocke.geklingelt': ['Ja? Ich bin da. Sag mir einen Satz.'],
+  'rezeption.glocke.nacht': ['Spät. Die Lampe brennt, ich bin wach.'],
 
   // Dein Wochenende: sechs kleine Schritte an zwei Tagen, abgehakt wird nur durchs Tun
   'lernweg.einladung': ['Am Wochenende zeig ich dir, was du brauchst.'],
@@ -92,7 +133,8 @@ var T = {
   'lernweg.auf': ['Zwei Tage, sechs kleine Schritte. Fang an, wo du magst.'],
   'lernweg.tun': ['Jetzt du. Den Haken setzt du, indem du es tust.'],
   'lernweg.haken': ['Ein Haken mehr. Das hast du selbst gemacht.'],
-  'lernweg.samstag': ['Samstag geschafft. Morgen bauen wir dir ein Werkzeug.'],
+  'lernweg.samstag': ['Samstag geschafft. Morgen zeig ich dir den Rest.'],
+  'lernweg.schonGebaut': ['Ein Werkzeug bauen – das hast du an der Rezeption schon geschafft. Der Haken ist deiner.'],
   'lernweg.alles': ['Das war dein Wochenende. Ab jetzt wächst alles aus deinen Ideen.'],
 
   // Der Verwalter der Werkstatt (eigene Figur, eigene Stimme: kurz, genau, mit Zahlen, schläft gern ein)
@@ -281,6 +323,13 @@ C6.stimme = {
   // Nach einem ganzen Rundgang hat er „Jetzt bin ich ganz“ schon gesagt; hier nur noch die Frage.
   erster: function () {
     var du = S().du || {}, rg = S().rundgang || {};
+    // ohne Rundgang, aber an der Rezeption angekommen: Carl kennt das jüngste Werkzeug und führt zum nächsten Satz
+    if (!du.fertig && du.angekommen) {
+      var wz = []; try { wz = C6.werkzeug && C6.werkzeug.alle ? C6.werkzeug.alle() : []; } catch (e) { wz = []; }
+      var j = wz.length ? wz[wz.length - 1] : null;
+      if (j && j.name) return C6.stimme.fest('rezeption.erster', { name: j.name });
+      return C6.stimme.fest('rezeption.wieder');
+    }
     var ganz = du.fertig && !rg.uebersprungen;
     var n = du.name || '';
     var vor = ganz ? (n ? n + ', ' : '') : (n ? 'Da bin ich, ' + n + '. ' : 'Da bin ich. ');

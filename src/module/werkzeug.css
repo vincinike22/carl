@@ -64,6 +64,8 @@
 .c6wz-klein-form .c6wz-gross{font-size:18px}
 .c6wz-name-knopf{display:flex;align-items:center;gap:8px;min-height:44px;padding:0;border:0;background:none;color:inherit;font:inherit;cursor:pointer;text-align:left}
 .c6wz-mini{max-width:280px;margin:0 0 4px}
+.c6wz-vorschau.c6wz-alt{opacity:.5;transition:opacity .3s ease}
+.c6wz-uhr{margin:0 0 6px}
 .c6wz-vorschau{margin:4px 0 0}
 @media (prefers-reduced-motion:reduce){.c6wz-blatt{transition:none}.c6wz-baut{animation:none}}
 /* klein: eine Zeile – Zeichen und Name links, die Haupthandlung rechts */

@@ -3780,6 +3780,32 @@ html:not(.c6k-ruhig) .c6r-a-brief:not([hidden]) .c6r-a-siegel{animation:c6r-a-at
 html.c6d-offen .c6p-knopf{opacity:0;pointer-events:none;transition:opacity .2s}
 .c6d-wahl>.c6d-quelle{pointer-events:none}
 
+/* Beispiele an der Rezeption: eine Spalte am iPhone (senkrecht mit dem Raum), ein Raster am Computer. Zwei Dinge je Karte, ein Knopf. */
+.c6bs-reihe{display:flex;flex-direction:column;gap:10px;padding:6px 16px 14px;margin:0;box-sizing:border-box;width:100%}
+.c6bs-karte{position:relative;display:flex;flex-direction:column;gap:6px;box-sizing:border-box;padding:7px;background:var(--karte);border:1.5px solid var(--linie);border-radius:14px}
+/* das Kennzeichen sitzt als kleine Marke auf der Oberkante des Mini-Werkzeugs – kein eigenes Stockwerk */
+.c6bs-kennz{position:absolute;top:1px;right:16px;z-index:1;padding:2px 6px;border:1px solid var(--linie);border-radius:6px;background:var(--karte);font:600 10px/1.2 Figtree,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--leise);pointer-events:none}
+.c6bs-werkzeug{margin-top:6px}
+.c6bs-werkzeug .c6wz-werkzeug{box-shadow:0 1px 0 var(--tusche)}
+/* wird die Karte zu schmal, geht die Haupthandlung in die zweite Zeile – nichts wird abgeschnitten */
+.c6bs-werkzeug .c6wz-klein-form{flex-wrap:wrap;row-gap:6px;padding:6px 8px}
+.c6bs-werkzeug .c6wz-zahl-zeile{gap:12px}
+/* der eine Knopf: Satz links, Verb rechts, eine Zeile; reicht der Platz nicht, rückt das Verb unter den Satz */
+.c6bs-nimm{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;width:100%;min-height:44px;margin:0;padding:6px 12px;box-sizing:border-box;border:1.5px solid var(--tusche);border-radius:12px;background:var(--feld);color:var(--tusche);text-align:left;cursor:pointer;transition:background .18s ease,box-shadow .18s ease,transform .12s ease}
+.c6bs-satz{flex:1 1 150px;min-width:0;font:600 16px/1.2 Caveat,cursive;color:var(--tusche);display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+.c6bs-verb{flex:none;margin-left:auto;font:600 12px/1.3 Figtree,system-ui,sans-serif;letter-spacing:.02em;color:var(--leise);white-space:nowrap}
+.c6bs-nimm:hover{box-shadow:inset 0 0 0 .5px var(--tusche)}
+.c6bs-nimm:active{background:var(--gedrueckt);transform:translateY(1px)}
+.c6bs-nimm:focus-visible{outline:3px solid var(--fokus);outline-offset:2px}
+.c6bs-nimm:disabled{cursor:default;box-shadow:none;transform:none}
+.c6bs-nur-text{border-color:var(--linie);background:transparent;cursor:default}
+.c6bs-uhr{font-variant-numeric:tabular-nums}
+.c6bs-karte[aria-busy=true]{border-color:var(--tusche)}
+@media (min-width:820px){
+  .c6bs-reihe{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;padding:6px 0 16px}
+}
+@media (prefers-reduced-motion:reduce){.c6bs-nimm{transition:none}}
+
 /* Einrichten: ein Blatt aus Papier, Karten wie im Schrank, Griffe an gestellten Dingen */
 .c6e-blatt{position:absolute;z-index:30;left:12px;right:12px;bottom:calc(var(--c6-unten,140px) + 6px);max-height:min(46vh,380px);overflow-y:auto;overscroll-behavior:contain;padding:8px 14px 12px;border-radius:20px;border:2px solid var(--tusche,#2b2722);background:var(--karte,#fbf7f0);color:var(--tusche,#2b2722);box-shadow:4px 4px 0 var(--tusche,#2b2722)}
 .c6e-kopf{display:flex;align-items:center;gap:10px;position:sticky;top:-8px;background:var(--karte,#fbf7f0);z-index:1;padding:4px 0 6px}
@@ -4246,6 +4272,8 @@ html.c6lw-auf .c6p-knopf,html.c6lw-auf #c6p-knopf{visibility:hidden}
 .c6wz-klein-form .c6wz-gross{font-size:18px}
 .c6wz-name-knopf{display:flex;align-items:center;gap:8px;min-height:44px;padding:0;border:0;background:none;color:inherit;font:inherit;cursor:pointer;text-align:left}
 .c6wz-mini{max-width:280px;margin:0 0 4px}
+.c6wz-vorschau.c6wz-alt{opacity:.5;transition:opacity .3s ease}
+.c6wz-uhr{margin:0 0 6px}
 .c6wz-vorschau{margin:4px 0 0}
 @media (prefers-reduced-motion:reduce){.c6wz-blatt{transition:none}.c6wz-baut{animation:none}}
 /* klein: eine Zeile – Zeichen und Name links, die Haupthandlung rechts */
@@ -4991,6 +5019,182 @@ html.c6-ruhig .c6s-sp-innen{transition:none}
 @keyframes c6w-nicken{0%{transform:none}35%{transform:translateY(3px)}70%{transform:translateY(-1px)}100%{transform:none}}
 @media (prefers-reduced-motion:reduce){.c6w-himmel .c6w-feld.c6w-feld-frage{animation:none}}
 
+/* Rezeption: Carl am Tresen, sein Satz darüber, deine Werkzeuge und die Beispiele auf dem Boden davor.
+   Die Welt (hinter allem) kommt aus einem eigenen Modul und setzt --c6rw-tresen (Tresenkante von oben); hier nur ein Ersatzmaß. */
+.c6rz{position:absolute;inset:0;overflow:hidden;--c6rw-tresen:calc(var(--c6-oben,54px) + 250px);--c6rz-tresen-hoch:92px}
+/* am Computer liegt die Tresenkante höher als in der Welt vorgesehen (50 %), damit der Boden davor Platz für Werkzeug und Beispiele hat */
+.c6k[data-geraet=computer] .c6-buehne .c6rz{--c6rw-tresen:38%;--c6rz-tresen-hoch:118px}
+.c6rz-welt{position:absolute;inset:0;z-index:0}
+
+/* Carl steht links der Mitte auf der Tresenkante; rechts von ihm bleibt Platz für Tasse und Glocke der Welt */
+.c6rz-carl{position:absolute;z-index:2;left:calc(50% - 60px);top:var(--c6rw-tresen);width:120px;height:120px;transform:translateY(-100%);pointer-events:none}
+.c6rz-carl .c6z-figur{width:100%;pointer-events:auto}
+
+/* Carls Satz: eine Blase wie die im Kern, fest über seinem Kopf, nach rechts offen */
+.c6rz-satz{position:absolute;z-index:3;left:calc(50% - 56px);right:16px;top:calc(var(--c6-oben,54px) + 10px);margin:0;padding:11px 14px 12px;box-sizing:border-box;pointer-events:none;
+ background:var(--karte,#fbf7f0);border:1.5px solid var(--tusche,#2b2722);border-radius:16px;box-shadow:var(--c6k-schwebt);
+ font:400 17px/1.42 Fraunces,Georgia,serif;font-variation-settings:'opsz' 24;color:var(--tusche,#2b2722);overflow-wrap:break-word}
+.c6rz-zipfel{position:absolute;left:18px;top:calc(100% - 2px);width:22px;height:14px}
+.c6rz-satz.c6rz-still{opacity:0;transition:opacity .25s ease}
+.c6rz-satz{transition:opacity .25s ease}
+.c6rz-satz.c6rz-lang{left:16px}
+.c6rz-satz.c6rz-lang .c6rz-zipfel{left:calc(50% - 54px)}
+.c6rz-computer .c6rz-satz.c6rz-lang{left:calc(50% - 10px)}
+.c6rz-computer .c6rz-satz.c6rz-lang .c6rz-zipfel{left:-15px}
+.c6rz-zipfel svg{display:block;width:22px;height:14px;overflow:visible}
+
+/* Der Boden vor dem Tresen rollt senkrecht; das Feld unten bleibt frei */
+.c6rz-boden{position:absolute;z-index:1;left:0;right:0;top:calc(var(--c6rw-tresen) + var(--c6rz-tresen-hoch) + 10px);bottom:var(--c6-unten,140px);box-sizing:border-box;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+ padding:0 16px 12px;display:grid;gap:14px;align-content:start}
+
+/* Deine Werkzeuge (ohne Space) stehen klein vor dem Tresen; das neueste kommt sichtbar an */
+.c6rz-meins{display:grid;gap:12px}
+.c6rz-meins[hidden]{display:none}
+.c6rz-reihe{display:grid;gap:8px}
+.c6rz-wz{min-width:0}
+.c6rz-wz.c6rz-neu .c6wz-werkzeug{animation:c6rz-an .55s cubic-bezier(.3,1.25,.5,1) both}
+@keyframes c6rz-an{from{opacity:0;transform:translateY(10px) scale(.94)}to{opacity:1;transform:none}}
+
+/* Die Karte: Das hab ich mir gemerkt */
+.c6rz-karte{padding:12px 14px 10px;background:var(--feld,#fffdf9);border:1.5px solid var(--linie,#d8cfc0);border-radius:12px}
+.c6rz-karte-kopf{margin:0 0 8px;font:600 12.5px/1 Figtree,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--leise,#6f6a61)}
+.c6rz-karte-liste{margin:0;display:grid;gap:6px}
+.c6rz-karte-liste>div{display:grid;grid-template-columns:72px minmax(0,1fr);gap:8px;align-items:baseline}
+.c6rz-karte-liste dt{font:500 13px/1.4 Figtree,system-ui,sans-serif;color:var(--leise,#6f6a61)}
+.c6rz-karte-liste dd{margin:0;font:400 16px/1.4 Fraunces,Georgia,serif;color:var(--tusche,#2b2722);overflow-wrap:break-word}
+.c6rz-kosten{margin:10px 0 0;font:500 17px/1.2 Caveat,cursive;color:var(--leise,#6f6a61)}
+.c6rz-korr{display:inline-block;min-height:44px;margin:2px 0 0 -4px;padding:0 4px;border:0;background:none;font:600 14px Figtree,system-ui,sans-serif;color:var(--tusche,#2b2722);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.c6rz-korr[hidden]{display:none}
+.c6rz-korr-form{margin:8px 0 2px;display:grid;gap:8px}
+.c6rz-korr-kopf{margin:0;font:600 15px/1.3 Fraunces,Georgia,serif}
+.c6rz-korr-form label{display:grid;gap:4px;font:500 13px/1.3 Figtree,system-ui,sans-serif;color:var(--leise,#6f6a61)}
+.c6rz-korr-form input{min-height:44px;box-sizing:border-box;padding:0 10px;border:1.5px solid var(--tusche,#2b2722);border-radius:10px;background:#fff;font:500 16px Figtree,system-ui,sans-serif;color:var(--tusche,#2b2722)}
+.c6rz-korr-wahl{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.c6rz-knopf{min-height:44px;padding:0 18px;border:2px solid var(--tusche,#2b2722);border-radius:22px;background:var(--karte,#fbf7f0);color:var(--tusche,#2b2722);font:600 15px Figtree,system-ui,sans-serif;cursor:pointer;box-shadow:2px 2px 0 var(--tusche,#2b2722)}
+.c6rz-knopf.c6rz-haupt{background:var(--tusche,#2b2722);color:var(--karte,#fbf7f0)}
+.c6rz-link{min-height:44px;padding:0 4px;border:0;background:none;font:600 14px Figtree,system-ui,sans-serif;color:var(--tusche,#2b2722);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.c6rz-korr:focus-visible,.c6rz-knopf:focus-visible,.c6rz-link:focus-visible{outline:3px solid var(--fokus,#b4460c);outline-offset:2px}
+
+/* Beispiele: Platz für ein anderes Modul */
+#c6rz-beispiele{min-width:0}
+#c6rz-beispiele:empty{display:none}
+
+/* Computer: Carl größer, die Blase breiter, der Boden eine ruhige Spalte */
+/* Computer: Carl links der Mitte, die Blase rechts neben seinem Kopf (Zipfel zeigt nach links auf ihn) */
+.c6rz-computer .c6rz-carl{left:calc(50% - 210px);width:200px;height:200px}
+.c6rz-computer .c6rz-satz{left:calc(50% - 10px);right:auto;width:min(560px,calc(50% - 6px));top:auto;bottom:calc(100% - var(--c6rw-tresen) + 100px);font-size:19px;padding:13px 18px 14px}
+.c6rz-computer .c6rz-zipfel{left:-15px;top:auto;bottom:18px;transform:rotate(90deg)}
+/* der Boden am Computer ist so breit wie der Tresen (≥ 990 px ab 1040 px Fenster): drei Beispiele nebeneinander, ohne Rollen ganz zu sehen */
+.c6rz-computer .c6rz-boden{padding-left:max(24px,calc(50% - 510px));padding-right:max(24px,calc(50% - 510px));gap:18px}
+.c6rz-computer .c6rz-reihe{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.c6rz-computer .c6rz-karte{padding:14px 18px 12px}
+
+@media (prefers-reduced-motion:reduce){.c6rz-wz.c6rz-neu .c6wz-werkzeug{animation:none}}
+
+/* Rezeption · die Welt hinter allem: Wand, Fenster, Tresen, Lampe, Tasse, Glocke.
+   Nichts hier ist lauter als der Satz und das Feld. Alles liegt in .c6rz-welt (absolut, z-index 0).
+   Tresenkante: --c6rw-tresen auf .c6rz (Abstand vom oberen Bühnenrand); der Raum darf sie überschreiben. */
+.c6rz{--c6rw-tresen:calc(var(--c6-oben,54px) + 250px)}
+.c6k[data-geraet=computer] .c6rz{--c6rw-tresen:38%}
+.c6rz-welt{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.c6rw{position:absolute;inset:0;overflow:hidden;
+  --c6rw-h1:#bcd8e8;--c6rw-h2:#dcebf0;--c6rw-wand:#f1e8d9;--c6rw-wand2:#e6dac6;--c6rw-schein:rgba(255,246,214,.55);--c6rw-dunkel:0;--c6rw-lampe:0;
+  --c6rw-holz:#cfa776;--c6rw-holz2:#b98d5e;--c6rw-boden:#e8dcc9;--c6rw-boden2:#dfd1bb}
+.c6rw[data-zeit=morgen]{--c6rw-h1:#dfe9ef;--c6rw-h2:#f6d9b4;--c6rw-wand:#f5ead7;--c6rw-schein:rgba(255,232,190,.6)}
+.c6rw[data-zeit=abend]{--c6rw-h1:#c7a0b4;--c6rw-h2:#f0b47e;--c6rw-wand:#eddcc6;--c6rw-wand2:#dfcbb0;--c6rw-schein:rgba(250,190,120,.34);--c6rw-dunkel:.05;--c6rw-lampe:1}
+.c6rw[data-zeit=nacht]{--c6rw-h1:#1f2744;--c6rw-h2:#2f3b5e;--c6rw-wand:#d9d0c0;--c6rw-wand2:#c8bda9;--c6rw-schein:rgba(170,186,240,.12);--c6rw-dunkel:.10;--c6rw-lampe:1;--c6rw-boden:#d3c6b0;--c6rw-boden2:#c7b9a2}
+.c6rw>*{position:absolute}
+
+/* Wand bis zur Tresenkante, darunter Boden */
+.c6rw-wand{left:0;right:0;top:0;height:var(--c6rw-tresen);background:
+  radial-gradient(120% 90% at 22% 28%,rgba(255,252,244,.55),rgba(255,252,244,0) 60%),
+  repeating-linear-gradient(90deg,rgba(201,162,122,0) 0 26px,rgba(201,162,122,.06) 26px 28px),
+  linear-gradient(180deg,var(--c6rw-wand),var(--c6rw-wand2));transition:background 1.2s ease}
+.c6rw-boden{left:0;right:0;top:var(--c6rw-tresen);bottom:0;background:
+  repeating-linear-gradient(180deg,rgba(43,39,34,0) 0 34px,rgba(43,39,34,.06) 34px 35.5px),linear-gradient(180deg,var(--c6rw-boden),var(--c6rw-boden2) 70%);transition:background 1.2s ease}
+/* der Schein des Fensters fällt schräg auf Wand und Tresen */
+.c6rw-schein{left:0;width:56%;top:calc(var(--c6rw-tresen) - 150px);height:220px;background:linear-gradient(180deg,var(--c6rw-schein),rgba(255,255,255,0));
+  clip-path:polygon(8% 0,50% 0,100% 100%,30% 100%);transition:background 1.5s ease}
+.c6k[data-geraet=computer] .c6rw-schein{left:max(0px,calc(50% - 600px));width:560px;top:calc(var(--c6rw-tresen) - 130px);height:200px;clip-path:polygon(6% 0,40% 0,100% 100%,30% 100%)}
+/* abends und nachts dunkelt der Raum ein wenig */
+.c6rw::after{content:"";position:absolute;inset:0;background:#1a2244;opacity:calc(var(--c6rw-dunkel) * 1);transition:opacity 1.2s ease;pointer-events:none}
+
+/* Fenster oben links: Himmel nach der Uhr */
+.c6rw-fenster{left:5%;top:calc(var(--c6-oben,54px) + 14px);width:100px}
+.c6k[data-geraet=computer] .c6rw-fenster{left:max(28px,calc(50% - 530px));top:auto;bottom:calc(100% - var(--c6rw-tresen) + 90px);width:190px}
+.c6rw-fenster svg{display:block;width:100%;height:auto;overflow:visible}
+.c6rw-himmel-1{stop-color:var(--c6rw-h1)}.c6rw-himmel-2{stop-color:var(--c6rw-h2)}
+.c6rw-himmel-1,.c6rw-himmel-2{transition:stop-color 1.2s ease}
+.c6rw-sonne,.c6rw-mond,.c6rw-sterne,.c6rw-abendlicht{opacity:0;transition:opacity 1s ease}
+.c6rw[data-zeit=morgen] .c6rw-sonne,.c6rw[data-zeit=mittag] .c6rw-sonne{opacity:1}
+.c6rw[data-zeit=morgen] .c6rw-sonne{transform:translate(-30px,26px)}
+.c6rw[data-zeit=abend] .c6rw-abendlicht{opacity:1}
+.c6rw[data-zeit=nacht] .c6rw-mond,.c6rw[data-zeit=nacht] .c6rw-sterne{opacity:1}
+.c6rw-sonne{transition:opacity 1s ease,transform 1.2s ease}
+.c6rw-huegel{transition:fill 1.2s ease;fill:#b7c4a3}
+.c6rw[data-zeit=abend] .c6rw-huegel{fill:#9a9c80}
+.c6rw[data-zeit=nacht] .c6rw-huegel{fill:#3a4461}
+
+/* Tresen: eine Holzkante quer über die ganze Breite, vorne Paneele, darunter ein Sockel */
+.c6rw-tresen{left:0;right:0;top:var(--c6rw-tresen);height:92px}
+.c6k[data-geraet=computer] .c6rw-tresen{height:118px;left:max(0px,calc(50% - 560px));right:max(0px,calc(50% - 560px))}
+.c6k[data-geraet=computer] .c6rw-kante{left:-6px;right:-6px;border-radius:3px 3px 0 0}
+.c6k[data-geraet=computer] .c6rw-front,.c6k[data-geraet=computer] .c6rw-sockel{border-left:2.5px solid var(--tusche,#2b2722);border-right:2.5px solid var(--tusche,#2b2722)}
+.c6k[data-geraet=computer] .c6rw-tresen::after{left:-8px;right:-8px}
+.c6rw-kante{position:absolute;left:0;right:0;top:0;height:16px;background:linear-gradient(180deg,#e2c08f,var(--c6rw-holz));border-top:2.5px solid var(--tusche,#2b2722);border-bottom:2px solid rgba(43,39,34,.55);box-shadow:0 4px 0 rgba(43,39,34,.08)}
+.c6rw-front{position:absolute;left:0;right:0;top:18px;bottom:10px;background:
+  repeating-linear-gradient(90deg,rgba(43,39,34,0) 0 118px,rgba(43,39,34,.16) 118px 120px),
+  linear-gradient(180deg,var(--c6rw-holz),var(--c6rw-holz2));box-shadow:inset 0 10px 0 rgba(255,252,244,.18)}
+.c6rw-sockel{position:absolute;left:0;right:0;bottom:0;height:10px;background:#8c6a44;border-top:2px solid var(--tusche,#2b2722);border-bottom:2px solid rgba(43,39,34,.45)}
+.c6rw-tresen::after{content:"";position:absolute;left:0;right:0;top:100%;height:34px;background:linear-gradient(180deg,rgba(43,39,34,.14),rgba(43,39,34,0))}
+.c6rw[data-zeit=nacht] .c6rw-kante,.c6rw[data-zeit=nacht] .c6rw-front{filter:brightness(.86)}
+
+/* Tischlampe links auf dem Tresen; leuchtet abends und nachts */
+.c6rw-lampe{left:calc(50% - 150px);top:var(--c6rw-tresen);width:48px;transform:translateY(-100%);margin-top:3px}
+.c6k[data-geraet=computer] .c6rw-lampe{left:calc(50% - 330px);width:88px}
+.c6rw-lampe svg{display:block;width:100%;height:auto;overflow:visible}
+.c6rw-glut{position:absolute;left:50%;top:30%;width:760%;aspect-ratio:1;transform:translate(-46%,-36%);border-radius:50%;background:radial-gradient(closest-side,rgba(246,200,106,.34),rgba(246,200,106,.1) 45%,rgba(246,200,106,0));opacity:var(--c6rw-lampe);transition:opacity 1.2s ease;pointer-events:none}
+.c6rw-birne{transition:fill .8s ease}
+.c6rw[data-zeit=abend] .c6rw-birne,.c6rw[data-zeit=nacht] .c6rw-birne{fill:#ffe9a8}
+.c6rw-lampenschein{opacity:0;transition:opacity 1s ease}
+.c6rw[data-zeit=abend] .c6rw-lampenschein,.c6rw[data-zeit=nacht] .c6rw-lampenschein{opacity:.35}
+
+/* Tasse rechts von Carl: das eine Lebenszeichen, Dampf steigt leise */
+.c6rw-tasse{left:calc(50% + 70px);top:var(--c6rw-tresen);width:40px;transform:translateY(-100%);margin-top:3px}
+.c6k[data-geraet=computer] .c6rw-tasse{left:calc(50% + 60px);width:64px}
+.c6rw-tasse svg{display:block;width:100%;height:auto;overflow:visible}
+.c6rw-dampf{fill:none;stroke:rgba(255,255,255,.85);stroke-width:2.2;stroke-linecap:round;opacity:0;transform-box:fill-box;transform-origin:50% 100%;animation:c6rw-dampf 5.2s ease-in-out infinite}
+.c6rw-dampf+.c6rw-dampf{animation-duration:6.4s;animation-delay:1.7s}
+@keyframes c6rw-dampf{0%{opacity:0;transform:translateY(4px) scale(.9)}25%{opacity:.75}70%{opacity:.35}100%{opacity:0;transform:translateY(-18px) scale(1.12)}}
+.c6rw[data-zeit=nacht] .c6rw-dampf{stroke:rgba(255,255,255,.6)}
+html.c6k-ruhig .c6rw-dampf{animation:none;opacity:.45;transform:none}
+
+/* Tischglocke rechts: das eine Ding zum Denken. Antippen = sie klingelt sichtbar; mehr tut sie nicht. */
+.c6rw-glocke{pointer-events:auto;left:calc(50% + 122px);top:var(--c6rw-tresen);width:56px;height:56px;margin:-50px 0 0 -8px;padding:0 0 4px;border:0;background:none;cursor:pointer;display:flex;align-items:flex-end;justify-content:center;-webkit-tap-highlight-color:transparent;touch-action:manipulation;border-radius:50%}
+.c6k[data-geraet=computer] .c6rw-glocke{left:calc(50% + 180px);width:76px;height:76px;margin:-70px 0 0 -8px}
+.c6rw-glocke svg{display:block;width:42px;height:auto;overflow:visible}
+.c6k[data-geraet=computer] .c6rw-glocke svg{width:62px}
+.c6rw-glocke:focus-visible{outline:3px solid var(--fokus,#b4460c);outline-offset:2px}
+.c6rw-kuppel{transform-box:fill-box;transform-origin:50% 100%;transition:transform .18s cubic-bezier(.3,1.4,.5,1)}
+.c6rw-knopf{transform-box:fill-box;transform-origin:50% 100%;transition:transform .12s ease}
+.c6rw-klingt .c6rw-knopf{transform:translateY(3px)}
+.c6rw-klingt .c6rw-kuppel{animation:c6rw-kuppel .55s cubic-bezier(.3,1.5,.5,1)}
+@keyframes c6rw-kuppel{0%{transform:scale(1.04,.94)}40%{transform:scale(.98,1.03)}100%{transform:none}}
+.c6rw-ring{fill:none;stroke:var(--tusche,#2b2722);stroke-width:1.6;opacity:0;transform-box:fill-box;transform-origin:50% 50%}
+.c6rw-klingt .c6rw-ring{animation:c6rw-ring .7s ease-out both}
+.c6rw-klingt .c6rw-ring+.c6rw-ring{animation-delay:.14s}
+@keyframes c6rw-ring{0%{opacity:.55;transform:scale(.6)}100%{opacity:0;transform:scale(1.9)}}
+.c6rw-glocke.c6k-haelt svg{filter:drop-shadow(0 0 6px rgba(255,226,160,.85))}
+.c6rw-glocke:active .c6rw-knopf{transform:translateY(3px)}
+html.c6k-ruhig .c6rw-klingt .c6rw-kuppel,html.c6k-ruhig .c6rw-klingt .c6rw-ring{animation:none}
+html.c6k-ruhig .c6rw-klingt .c6rw-ring{opacity:.4;transform:scale(1.4)}
+@media (prefers-reduced-motion:reduce){
+  .c6rw-dampf,.c6rw-klingt .c6rw-kuppel,.c6rw-klingt .c6rw-ring{animation:none}
+  .c6rw-dampf{opacity:.45;transform:none}
+  .c6rw-wand,.c6rw-boden,.c6rw-schein,.c6rw::after,.c6rw-glut,.c6rw-sonne,.c6rw-mond,.c6rw-sterne,.c6rw-abendlicht,.c6rw-huegel,.c6rw-himmel-1,.c6rw-himmel-2{transition:none}
+}
+/* iPhone: der Lesebereich bleibt frei, die Welt hält sich an den Rand */
+
 /* Rundgang: dieselbe Hand wie der Rahmen der Welt – feine Tusche, weicher Papierschatten aus dem Raumlicht */
 #c6r-schicht .c6r-blase{border-width:1.5px;border-radius:16px;box-shadow:var(--c6k-schwebt,0 12px 28px -10px rgba(43,39,34,.32));padding:13px 18px 14px}
 #c6r-schicht .c6r-blase::after{border-right-width:1.5px;border-bottom-width:1.5px;bottom:-8px;width:13px;height:13px;margin-left:-6.5px}
@@ -5562,6 +5766,25 @@ html.c6k-ruhig .c6w-kiste .c6w-deckel{transition:none}
 .c6z-stube:not(.c6z-computer) .c6m-kalender{transform:rotate(-1deg)}
 .c6z-stube:not(.c6z-computer) .c6z-sessel{left:58px;width:86px}
 @media (max-height:740px){.c6z-stube:not(.c6z-computer) .c6z-sessel{left:56px;width:74px}}
+
+/* s12 · deine Werkzeuge ohne Space: eine kleine, stille Reihe am Boden (leiser als Brett und Brief); leer → nichts */
+.c6z-meine{position:absolute;z-index:4;right:10px;bottom:calc(var(--c6z-fuss) - 40px);width:280px;height:0;overflow:visible;display:grid;gap:8px;pointer-events:none}
+.c6z-meine[hidden],.c6z-meine:empty{display:none}
+.c6z-meine>*{pointer-events:auto}
+.c6z-meine .c6rz-wz{cursor:pointer;min-height:44px}
+.c6z-meine .c6rz-wz>*{pointer-events:none}
+.c6z-meine .c6rz-wz:focus-visible{outline:3px solid #b4460c;outline-offset:4px;border-radius:8px}
+.c6z-meine .c6rz-wz{position:absolute;right:0;bottom:0;width:280px;transform:scale(.56);transform-origin:100% 100%}
+.c6z-meine .c6rz-wz .c6wz-werkzeug{box-shadow:0 1px 0 #2b2722,0 4px 10px rgba(43,39,34,.1)}
+/* iPhone: nur das neueste, auf dem Teppich neben dem Sofa */
+.c6z-stube:not(.c6z-computer) .c6z-meine .c6rz-wz:nth-child(n+2){display:none}
+.c6z-stube:not(.c6z-computer) .c6z-meine .c6rz-wz{padding-top:18px;box-sizing:content-box}
+/* Computer: bis zu zwei übereinander, am Boden rechts neben dem Teppich */
+.c6z-stube.c6z-computer .c6z-meine{right:40px;bottom:calc(var(--c6-unten,140px) + 10px)}
+.c6z-stube.c6z-computer .c6z-meine .c6rz-wz{transform:scale(.8)}
+.c6z-stube.c6z-computer .c6z-meine .c6rz-wz:nth-child(2){bottom:78px}
+.c6z-stube.c6z-computer .c6z-meine .c6rz-wz:nth-child(n+3){display:none}
+.c6z-stube[data-zeit=nacht] .c6z-meine{filter:brightness(.9)}
 </style>
 <div id="c6"></div>
 <script>/*kern.js*/
@@ -6261,7 +6484,9 @@ function chrome() {
   hoeheKnopf.setAttribute('data-runter', h === 'boden' ? 'nein' : 'ja');
   hoeheKnopf.setAttribute('aria-label', h === 'boden' ? 'Hoch in den ' + hkWort : 'Hinunter auf den Boden');
   var imRundgang = !!(C6.rundgang && C6.rundgang.an) || (!inReihe(d) && hoeheVon(d) === 'boden' && d.leiste === false);
-  wurzel.toggleAttribute('data-ohne-regler', hoehenDa < 2 || d.regler === false || imRundgang);
+  // def.regler: false = nie; eine Funktion entscheidet je Lage (z. B. die Rezeption: kein Himmel, solange es keinen Space gibt)
+  var ohneRegler = typeof d.regler === 'function' ? d.regler() === false : d.regler === false;
+  wurzel.toggleAttribute('data-ohne-regler', hoehenDa < 2 || ohneRegler || imRundgang);
   wurzel.toggleAttribute('data-rundgang', imRundgang);
   wurzel.setAttribute('data-licht', d.licht === 'nacht' || (h === 'teleskop' && d.licht !== 'tag') ? 'nacht' : 'tag');
   wurzel.toggleAttribute('data-ohne-leiste-raum', d.leiste === false);
@@ -7193,8 +7418,9 @@ function entwurfId() {
   return d && typeof d.entwurf === 'string' && d.entwurf ? 'raum:' + d.entwurf : 'dock';
 }
 function carlName() { var du = C6.S.du || {}; return (du.carlName && String(du.carlName).trim()) || 'Carl'; }
-var eigenerPlatzhalter = null; // {t, raum, modus}: was ein Raum gerade ins Feld fragt (gilt nur in diesem Raum)
-/* Ein Blatt darf das eine Feld kurz leihen: eigener Platzhalter, der Satz geht an nimm(satz) */
+var eigenerPlatzhalter = null; // bleibt nur noch als Merker (Räume überschreiben die Frage im Feld nicht mehr)
+/* Ein Blatt darf das eine Feld kurz leihen: eigener Platzhalter, der Satz geht an nimm(satz).
+   Eine sanfte Leihe (o.sanft, für einen Raum, dessen Feld nach einem Satz fragt) lässt Chips sichtbar und tritt hinter eine offene freie Frage zurück. */
 var leihe = null;
 function gibZurueck(l) {
   if (!l || leihe !== l) return;
@@ -7209,10 +7435,10 @@ C6.feld = {
     o = o || {};
     if (leihe) gibZurueck(leihe);
     if (wzOffen) wzAuf(false);
-    var l = { platzhalter: String(o.platzhalter || 'Woran denkst du gerade?'), nimm: typeof o.nimm === 'function' ? o.nimm : function () {}, vorher: feld.value, raum: C6.jetzt };
+    var l = { platzhalter: String(o.platzhalter || 'Woran denkst du gerade?'), nimm: typeof o.nimm === 'function' ? o.nimm : function () {}, vorher: feld.value, raum: C6.jetzt, sanft: !!o.sanft };
     leihe = l;
-    feld.value = o.text ? String(o.text) : '';
-    wurzel.setAttribute('data-feld-geliehen', '');
+    feld.value = o.text ? String(o.text) : (l.sanft ? feld.value : '');
+    if (!l.sanft) wurzel.setAttribute('data-feld-geliehen', '');
     groesseFeld();
     platzhalter();
     if (o.fokus !== false) { try { feld.focus({ preventScroll: true }); } catch (e) {} }
@@ -7275,18 +7501,18 @@ function abschicken() {
   feld.value = '';
   try { C6.S.entwurf[id] = ''; } catch (e) {}
   groesseFeld();
-  // geliehenes Feld: der Satz gehört dem Blatt, das es geliehen hat
-  if (leihe) {
+  // geliehenes Feld: der Satz gehört dem Blatt, das es geliehen hat (eine sanfte Leihe lässt einer offenen freien Frage den Vortritt)
+  // „/werkzeug …“ wirkt überall gleich, auch im Space, in einer offenen Frage oder bei sanfter Leihe (vor jedem Raum)
+  var sm = t.charAt(0) === '/' && (!leihe || leihe.sanft) ? t.match(/^\/(\S+)(?:\s+([\s\S]*))?$/) : null;
+  if (sm) {
+    var st = slSuche(sm[1]);
+    if (st.length && st[0].r <= 1) { feld.value = (sm[2] || '').trim(); wzNimm(st[0].g); return; }
+  }
+  if (leihe && !(leihe.sanft && frage && frage.frei && frage.raum === C6.jetzt)) {
     var l = leihe, bleibt = false;
     try { bleibt = l.nimm(t) === true; } catch (err) { fehler('feld.leihen', err); }
     if (!bleibt) gibZurueck(l);
     return;
-  }
-  // „/werkzeug …“ wirkt überall gleich, auch im Space oder in einer offenen Frage (vor jedem Raum)
-  var sm = t.charAt(0) === '/' ? t.match(/^\/(\S+)(?:\s+([\s\S]*))?$/) : null;
-  if (sm) {
-    var st = slSuche(sm[1]);
-    if (st.length && st[0].r <= 1) { feld.value = (sm[2] || '').trim(); wzNimm(st[0].g); return; }
   }
   // das Feld behält den Fokus: wer gleich weiterschreibt, verliert kein Zeichen (wie in jedem Gespräch)
   // eine echte Abwäge- oder Planungsfrage ist keine Antwort auf Carls offene Bitte um einen Satz: sie will eine Antwort (Darstellung)
@@ -8183,7 +8409,7 @@ function norm(t) {
   return String(t || '').toLowerCase().replace(/ä/g, 'a').replace(/ö/g, 'o').replace(/ü/g, 'u').replace(/ß/g, 'ss').replace(/[„“"'’]/g, '');
 }
 function slDarf() {
-  return !leihe && entwurfId().indexOf('raum:') !== 0 && !wurzel.hasAttribute('data-rundgang') && !D.documentElement.classList.contains('c6r-an') && !wurzel.hasAttribute('data-ohne-dock');
+  return !(leihe && !leihe.sanft) && entwurfId().indexOf('raum:') !== 0 && !wurzel.hasAttribute('data-rundgang') && !D.documentElement.classList.contains('c6r-an') && !wurzel.hasAttribute('data-ohne-dock');
 }
 function slLies() {
   var v = feld.value;
@@ -9242,6 +9468,8 @@ C6.bus.on('raum', function (id) {
   weiterBald(id, 900);
 });
 C6.bus.on('space', function () { weiterBald(C6.jetzt, 900); });
+// ein neuer Space kann den Himmel-Knopf freigeben (Räume mit regler-Funktion)
+C6.bus.on('strings', function (d) { if (d && d.was === 'neu' && raeume[C6.jetzt] && typeof raeume[C6.jetzt].regler === 'function') chrome(); });
 C6.bus.on('geraet', function () { weiterBald(C6.jetzt, 400); });
 C6.bus.on('geraet', function () { platzhalter(); });
 
@@ -11867,6 +12095,113 @@ C6.bausteine = {
 };
 
 })()}catch(e){console.error("Modul bausteine.js",e)}</script>
+<script>/*beispiele.js*/
+try{(function(){
+// Beispiele an der Rezeption: sechs kleine, echte Werkzeuge, jedes aus einem alltäglichen Satz.
+// Ein Beispiel ist nie gespeichert: es hat keine id, seine Einträge leben nur, solange die Karte da ist.
+// Antippen des Satzes = Carl baut genau dieses für den Menschen (Rückruf `bauen` vom Raum).
+(function () {
+  var C6 = window.C6; if (!C6) return;
+  var D = document;
+  function esc(t) { return String(t == null ? '' : t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function stimme(k, w, ersatz) { try { var t = C6.stimme && C6.stimme.fest ? C6.stimme.fest('rezeption.' + k, w || {}) : ''; if (t && !/\{[a-z]+\}/.test(t)) return t; } catch (e) {} return ersatz; }
+
+  // Die sechs Sätze: eigene, alltägliche Wünsche – keine Namen, keine Zahlen, je eine Baustein-Art.
+  var BEISPIELE = [
+    { id: 'draussen', art: 'haken', satz: 'Ich will jeden Tag sehen, ob ich draußen war.' },
+    { id: 'glaeser', art: 'zaehler', satz: 'Zähl mit, wie viele Gläser Wasser ich heute trinke.' },
+    { id: 'kilometer', art: 'wert', satz: 'Wie viele Kilometer ich heute gelaufen bin.' },
+    { id: 'wandern', art: 'liste', satz: 'Eine Liste, was ich zum Wandern mitnehmen muss.' },
+    { id: 'blumen', art: 'datum', satz: 'Erinnere mich übermorgen an die Blumen auf dem Balkon.' },
+    { id: 'rueckblick', art: 'frage', satz: 'Jeden Abend ein kleiner Rückblick auf den Tag.' }
+  ];
+
+  // Jede Karte zeigt genau das, was der Bau ohne Mitdenken aus dem Satz macht – dieselbe Vorlage, die später baut.
+  function spec(b) {
+    var sp = null;
+    try { if (C6.werkzeug && typeof C6.werkzeug.ausVorlage === 'function') sp = C6.werkzeug.ausVorlage(b.satz); } catch (e) { sp = null; }
+    if (!sp) return null;
+    sp.teile = (sp.teile || []).map(function (t, i) { return Object.assign({ k: 'b' + i }, t); });
+    return sp; // keine id → werkzeug.male hält Einträge nur im Speicher
+  }
+
+  /* ---------- Die Prüfung vor dem Bau: ein Bug, ein Handgriff ---------- */
+  // Ein einzelnes Wort ist ein Samen und wird gebaut; „kurz“ ist nur, was kein Wort mit drei Buchstaben hat.
+  function pruefe(satz) {
+    var s = String(satz == null ? '' : satz).trim();
+    if (!s) return { grund: 'leer', schluessel: 'rezeption.leer', satz: stimme('leer', null, 'Ein Satz reicht. Was fehlt dir?') };
+    if (!/[a-zäöüß]{3,}/i.test(s)) return { grund: 'kurz', schluessel: 'rezeption.unsinn', satz: stimme('unsinn', null, 'Da kann ich noch nichts draus bauen. Was willst du zählen, abhaken oder nicht vergessen?') };
+    return null;
+  }
+
+  /* ---------- Die Uhr: gemessene Sekunden, kein Spinner ---------- */
+  // Zeigt nur, dass gedacht wird, wenn wirklich ein Kopf gefragt ist (Satz `rezeption.denkt`); sonst der neutrale Satz.
+  function uhr(el, o) {
+    o = o || {};
+    var t0 = (window.performance && performance.now) ? performance.now() : Date.now(), takt = null;
+    var k = o.schluessel || 'denkt', ersatz = o.ersatz || 'Ich bau … {sek} s';
+    function sek() { var t = (window.performance && performance.now) ? performance.now() : Date.now(); return Math.max(0, Math.round((t - t0) / 1000)); }
+    function schreib() { if (!el) return; var n = String(sek()); el.textContent = stimme(k, { sek: n }, ersatz.replace('{sek}', n)); }
+    if (el) { el.classList.add('c6bs-uhr'); el.setAttribute('aria-live', 'polite'); schreib(); takt = setInterval(schreib, 1000); }
+    return { sek: sek, weg: function () { if (takt) clearInterval(takt); takt = null; } };
+  }
+
+  /* ---------- Malen ---------- */
+  function male(el, o) {
+    o = o || {};
+    if (!el) return null;
+    var leer = { neu: function () {}, weg: function () {}, frei: function () {} };
+    if (!(C6.werkzeug && typeof C6.werkzeug.male === 'function' && typeof C6.werkzeug.ausVorlage === 'function')) return leer; // kein Werkzeug → kein Bild davon
+    var bauen = typeof o.bauen === 'function' ? o.bauen : null;
+    var kennz = stimme('beispiel', null, 'Beispiel'), verb = stimme('nimm', null, 'So eins für mich');
+    var reihe = null;
+    function zeichne() {
+      weg();
+      reihe = D.createElement('div'); reihe.className = 'c6bs-reihe'; reihe.setAttribute('role', 'list');
+      BEISPIELE.forEach(function (b) {
+        var sp = spec(b); if (!sp) return;
+        var k = D.createElement('article'); k.className = 'c6bs-karte'; k.setAttribute('role', 'listitem'); k.dataset.art = b.art; k.dataset.id = b.id;
+        k.style.setProperty('--wz', sp.farbe || '#2b2722');
+        k.innerHTML = '<div class="c6bs-werkzeug"></div><span class="c6bs-kennz">' + esc(kennz) + '</span>' +
+          (bauen ? '<button type="button" class="c6bs-nimm"><span class="c6bs-satz">„' + esc(b.satz) + '“</span><span class="c6bs-verb">' + esc(verb) + '</span></button>'
+                 : '<p class="c6bs-nimm c6bs-nur-text"><span class="c6bs-satz">„' + esc(b.satz) + '“</span></p>');
+        C6.werkzeug.male(k.querySelector('.c6bs-werkzeug'), sp, { klein: true });
+        var kn = k.querySelector('button.c6bs-nimm');
+        if (kn) {
+          kn.setAttribute('aria-label', verb + ': ' + b.satz);
+          kn.onclick = function () {
+            if (kn.disabled) return;
+            kn.disabled = true; k.setAttribute('aria-busy', 'true');
+            try { bauen(b.satz, b.id); } catch (e) { kn.disabled = false; k.removeAttribute('aria-busy'); }
+          };
+        }
+        reihe.appendChild(k);
+      });
+      el.appendChild(reihe);
+    }
+    // Blatt zu oder gebaut → die Karte ist wieder frei (Bus aus werkzeug.js, s. Kreuzungsblatt)
+    function frei() {
+      if (!reihe) return;
+      [].forEach.call(reihe.querySelectorAll('.c6bs-karte[aria-busy]'), function (k) { k.removeAttribute('aria-busy'); var kn = k.querySelector('button.c6bs-nimm'); if (kn) kn.disabled = false; });
+    }
+    // Gebaut aus einem Beispiel → diese Karte rückt ans Ende; der Mensch sieht zuerst, was er noch nicht hat
+    function gebaut(d) { frei(); if (!reihe || !d || !d.bei) return; var k = reihe.querySelector('.c6bs-karte[data-id="' + String(d.bei).replace(/"/g, '') + '"]'); if (k && k !== reihe.lastElementChild) reihe.appendChild(k); }
+    function weg() { frei(); if (reihe && reihe.parentNode) reihe.parentNode.removeChild(reihe); reihe = null; }
+    var ab = [];
+    if (C6.bus && C6.bus.on) [['rezeption-gebaut', gebaut], ['rezeption-zu', frei], ['raum', frei]].forEach(function (p) { try { var z = C6.bus.on(p[0], p[1]); if (typeof z === 'function') ab.push(z); } catch (e) {} });
+    zeichne();
+    return { neu: zeichne, weg: function () { weg(); ab.forEach(function (z) { try { z(); } catch (e) {} }); ab = []; }, frei: frei };
+  }
+
+  C6.beispiele = {
+    male: male,
+    liste: function () { return BEISPIELE.map(function (b) { return { id: b.id, satz: b.satz, art: b.art }; }); },
+    pruefe: pruefe,
+    uhr: uhr
+  };
+})();
+
+})()}catch(e){console.error("Modul beispiele.js",e)}</script>
 <script>/*darstellung.js*/
 try{(function(){
 // Darstellungen: Carls Antwort als Blatt mit Tinte und Bleistift statt als Textblase.
@@ -17487,7 +17822,7 @@ try{(function(){
     // nur wer den Lernweg kennt, hört es; ein leiser Satz, keine Zahl – und nie über eine offene Frage
     if (l.gesehen && C6.sag) {
       var st = station(id), alle = ST.every(function (s) { return fertig(s.id); }), samstag = st.tag === 'Samstag' && [1, 2, 3].every(fertig);
-      var t = alle ? satz('lernweg.alles', 'Das war dein Wochenende. Alles Weitere wächst aus deinen Ideen.') : samstag ? satz('lernweg.samstag', 'Samstag geschafft. Morgen bauen wir dir ein Werkzeug.') : satz('lernweg.haken', 'Ein Haken im Kalender: „{name}“.').replace('{name}', st.name);
+      var t = alle ? satz('lernweg.alles', 'Das war dein Wochenende. Alles Weitere wächst aus deinen Ideen.') : samstag ? satz('lernweg.samstag', 'Samstag geschafft. Morgen zeig ich dir den Rest.') : satz('lernweg.haken', 'Ein Haken im Kalender: „{name}“.').replace('{name}', st.name);
       wennStill(function () { try { C6.sag(t, { merken: false }); } catch (e) {} }, 900);
     }
     if (offen && ansicht) zeige(ansicht);
@@ -17532,8 +17867,8 @@ try{(function(){
     C6.bus.on('zustand', pruefe1Bald);
     C6.bus.on('baustein', function (ev) { if (ev && (ev.was === 'neu' || ev.was === 'erledigt')) naehren('schritt'); });
     C6.bus.on('atlas', function (ev) { if (ev && ev.offen === false) pruefe6(); });
-    // Station 4 zählt nur ein Werkzeug aus Ottos eigenen Worten (kein reiner Vorlagen-Satz) – der Lernmoment bleibt
-    C6.bus.on('werkzeug-eigen', function (ev) { if (ev && ev.was === 'gehaengt' && ausEigenenWorten(ev.id)) hake(4, 'werkzeug'); });
+    // Station 4 zählt nur ein Werkzeug aus Ottos eigenen Worten; vor dem ersten Öffnen des Lernwegs (Rezeption) nichts still abhaken – der Haken kommt mit dem Satz
+    C6.bus.on('werkzeug-eigen', function (ev) { if (!(ev && ev.was === 'gehaengt' && ausEigenenWorten(ev.id))) return; var l = S(); if (l.gesehen) hake(4, 'werkzeug'); else if (!l.fertig[4]) { l.schonGebaut = true; speichern(); } });
     // Helfer: ein Fund, der in einem Space landet (auftrag.js), oder das eigene Ereignis der Helferecke
     C6.bus.on('auftrag', function (ev) { if (ev && ev.was === 'fund') hake(5, 'fund'); });
     C6.bus.on('helfer', function (ev) { if (ev && (ev.was === 'auftrag' || ev.was === 'fund')) hake(5, 'helfer'); });
@@ -17731,8 +18066,13 @@ try{(function(){
   function naechste() { var n = ST.filter(function (s) { return !fertig(s.id); })[0]; return n ? n.id : null; }
   function oeffne(o) {
     o = o || {}; bauen(); hoeren(); pruefe6(); pruefe1();
-    var l = S(); if (!l.gesehen) { l.gesehen = Date.now(); speichern(); }
+    var l = S(), erstesMal = !l.gesehen; if (!l.gesehen) { l.gesehen = Date.now(); speichern(); }
     offen = true; C6.lernweg.offen = true;
+    if (l.schonGebaut && !l.fertig[4]) {
+      delete l.schonGebaut; l.fertig[4] = Date.now(); speichern();
+      try { C6.bus && C6.bus.emit('lernweg', { was: 'haken', station: 4, grund: 'rezeption' }); } catch (e) {}
+      setTimeout(function () { try { C6.sag(satz('lernweg.schonGebaut', 'Ein Werkzeug bauen – das hast du an der Rezeption schon geschafft. Der Haken ist deiner.'), { merken: false }); } catch (e) {} }, erstesMal ? 900 : 300);
+    }
     wurzel.hidden = false; D.documentElement.classList.add('c6lw-auf');
     zeige(o.station ? +o.station : 'plan');
     requestAnimationFrame(function () { wurzel.classList.add('c6lw-an'); });
@@ -20804,9 +21144,50 @@ var T = {
   'werkzeug.anders': ['Was soll anders sein?'],
   'werkzeug.wohin': ['Wo soll es stehen?'],
   'werkzeug.steht': ['„{werkzeug}“ steht jetzt in „{titel}“, neben mir.'],
-  'werkzeug.ohneSpace': ['Fertig. Sobald du einen Space hast, stell ich es neben mich.'],
+  'werkzeug.ohneSpace': ['Fertig. Es steht neben mir an der Rezeption.'],
   'werkzeug.geteilt': ['Hängt im Teleskop. Andere dürfen es sich nehmen.'],
   'werkzeug.benutzt': ['Gemacht. Ich hab’s gesehen.', 'Steht drin.'],
+
+  // Die Rezeption (s12): der erste Raum für einen Fremden. Jede Zeile ist nur in ihrem Zustand wahr –
+  // wer sie zeigt, prüft den Zustand (von: 'denk' | 'vorlage', Zeit gemessen, Kopf), nicht die Stimme.
+  // {kopf} steht mitten im Satz, klein geschrieben: „dein Rechner (<modell>)“ oder „Claude über claude.ai“.
+  // {sek} sind gemessene Sekunden mit einer Stelle hinter dem Komma („3,8“), nie geschätzt.
+  // {name} ist der Name des Werkzeugs – immer mitgeben, sonst setzt fuell() den Namen des Menschen ein.
+  'rezeption.erst': ['Ich bin {carl}. Sag mir einen Satz, ich bau dir was.'],
+  // Rückkehr, wenn schon Werkzeuge neben Carl stehen (oder S.du.angekommen): keine Vorstellung mehr, nur die Einladung
+  'rezeption.wieder': ['Da bist du wieder. Sag mir einen Satz, ich bau dir noch eins.'],
+  // erster Satz im Zuhause für jemanden ohne Rundgang, der an der Rezeption angekommen ist ({name} = das jüngste Werkzeug)
+  'rezeption.erster': ['Dein Werkzeug „{name}“ steht an der Rezeption. Was soll ich dir als Nächstes bauen?'],
+  'rezeption.feld': ['Was soll ich dir bauen?'],
+  'rezeption.beispiel': ['Ein Beispiel'],
+  'rezeption.nimm': ['So eins für mich'],
+  'rezeption.baut': ['Ich bau es dir. Schau zu.'],
+  'rezeption.denkt': ['Ich denk nach, seit {sek} Sekunden.'],
+  'rezeption.gewartet': ['25 Sekunden sind um, länger warte ich nicht. Probier das hier aus, ändern geht gleich.'],
+  'rezeption.gebaut': ['So hab ich deinen Satz verstanden. Probier es aus.'],
+  'rezeption.gebautVorlage': ['Probier es aus. Ändern geht gleich.'],
+  'rezeption.gemerkt': ['Das hab ich mir gemerkt. Beides gehört dir.'],
+  'rezeption.beispielGebaut': ['Das hab ich mir gemerkt. War mein Beispiel, jetzt ist es deins.'],
+  'rezeption.korrektur': ['So stimmt es'],
+  'rezeption.berichtigt': ['Gut. So merk ich es mir.'],
+  'rezeption.kostenDenk': ['Gedacht hat {kopf}, {sek} Sekunden lang. Was das kostet, weiß ich noch nicht.'],
+  'rezeption.kostenDenkVorlage': ['Gedacht hat {kopf}, {sek} Sekunden lang, brauchbar war es nicht. Darum eine Vorlage.'],
+  'rezeption.kostenDenkOhne': ['Gedacht hab ich {sek} Sekunden lang. Wer genau, weiß ich diesmal nicht.'],
+  'rezeption.kostenLokal': ['Dein Rechner hat gedacht, {sek} Sekunden lang. Geld kostet das keins.'],
+  'rezeption.kostenGewartet': ['Ich hab {sek} Sekunden gewartet, Antwort kam keine. Darum eine Vorlage.'],
+  'rezeption.kostenVorlage': ['Gedacht hab ich hier nicht, das ist eine Vorlage. Gekostet hat sie nichts.'],
+  'rezeption.leer': ['Das Feld ist noch leer. Ein Satz reicht.'],
+  'rezeption.unsinn': ['Da kann ich noch nichts draus bauen. Was willst du zählen, abhaken oder nicht vergessen?'],
+  'rezeption.anders': ['Gut. Sag mir, was anders sein soll, dann bau ich es neu.'],
+  // nach „Anders“ ohne Mitdenken ist dasselbe herausgekommen – das sagt Carl, statt so zu tun (nur wenn Bausteine und Name gleich blieben)
+  'rezeption.gleich': ['Gleich geblieben, mitdenken kann ich hier nicht. Anders wird es mit Wörtern wie „jeden Tag“, „zählen“, „Liste“ oder „Termin“.'],
+  // erster Besuch im Zuhause nach der Rezeption (S.du.angekommen, kein Rundgang): wo das Werkzeug ist und was das Feld hier tut
+  'rezeption.zuhause': ['Hier wohn ich. Dein Werkzeug steht an der Rezeption; aus einem Satz hier wird ein Space.'],
+  'rezeption.stimmtNicht': ['Stimmt so nicht'],
+  // die Tischglocke am Tresen: sie löst nichts aus, Carl ist ohnehin da
+  'rezeption.glocke': ['Eine Tischglocke. Rufen musst du mich nicht, ich bin ja da.'],
+  'rezeption.glocke.geklingelt': ['Ja? Ich bin da. Sag mir einen Satz.'],
+  'rezeption.glocke.nacht': ['Spät. Die Lampe brennt, ich bin wach.'],
 
   // Dein Wochenende: sechs kleine Schritte an zwei Tagen, abgehakt wird nur durchs Tun
   'lernweg.einladung': ['Am Wochenende zeig ich dir, was du brauchst.'],
@@ -20814,7 +21195,8 @@ var T = {
   'lernweg.auf': ['Zwei Tage, sechs kleine Schritte. Fang an, wo du magst.'],
   'lernweg.tun': ['Jetzt du. Den Haken setzt du, indem du es tust.'],
   'lernweg.haken': ['Ein Haken mehr. Das hast du selbst gemacht.'],
-  'lernweg.samstag': ['Samstag geschafft. Morgen bauen wir dir ein Werkzeug.'],
+  'lernweg.samstag': ['Samstag geschafft. Morgen zeig ich dir den Rest.'],
+  'lernweg.schonGebaut': ['Ein Werkzeug bauen – das hast du an der Rezeption schon geschafft. Der Haken ist deiner.'],
   'lernweg.alles': ['Das war dein Wochenende. Ab jetzt wächst alles aus deinen Ideen.'],
 
   // Der Verwalter der Werkstatt (eigene Figur, eigene Stimme: kurz, genau, mit Zahlen, schläft gern ein)
@@ -21003,6 +21385,13 @@ C6.stimme = {
   // Nach einem ganzen Rundgang hat er „Jetzt bin ich ganz“ schon gesagt; hier nur noch die Frage.
   erster: function () {
     var du = S().du || {}, rg = S().rundgang || {};
+    // ohne Rundgang, aber an der Rezeption angekommen: Carl kennt das jüngste Werkzeug und führt zum nächsten Satz
+    if (!du.fertig && du.angekommen) {
+      var wz = []; try { wz = C6.werkzeug && C6.werkzeug.alle ? C6.werkzeug.alle() : []; } catch (e) { wz = []; }
+      var j = wz.length ? wz[wz.length - 1] : null;
+      if (j && j.name) return C6.stimme.fest('rezeption.erster', { name: j.name });
+      return C6.stimme.fest('rezeption.wieder');
+    }
     var ganz = du.fertig && !rg.uebersprungen;
     var n = du.name || '';
     var vor = ganz ? (n ? n + ', ' : '') : (n ? 'Da bin ich, ' + n + '. ' : 'Da bin ich. ');
@@ -22161,6 +22550,7 @@ try{(function(){
   function kurz(t, n) { t = String(t == null ? '' : t).trim(); return t.length > n ? t.slice(0, n - 1).trim() + '…' : t; }
   // Carls Sätze kommen aus stimme.js (werkzeug.*); die Ersatzsätze hier gelten nur, wenn ein Schlüssel fehlt
   function stimme(k, w, ersatz) { try { var t = C6.stimme && C6.stimme.fest ? C6.stimme.fest('werkzeug.' + k, w || {}) : ''; if (t && !/\{[a-z]+\}/.test(t)) return t; } catch (e) {} return ersatz; }
+  function rzStimme(k, w, ersatz) { try { var t = C6.stimme && C6.stimme.fest ? C6.stimme.fest('rezeption.' + k, w || {}) : ''; if (t && !/\{[a-z]+\}/i.test(t)) return t; } catch (e) {} return ersatz; }
   function bus(was, d) { try { C6.bus && C6.bus.emit('werkzeug-eigen', Object.assign({ was: was }, d || {})); } catch (e) {} }
   function S() { var s = C6.S || (C6.S = {}); if (!s.werkzeug || typeof s.werkzeug !== 'object') s.werkzeug = { liste: [], daten: {} }; if (!Array.isArray(s.werkzeug.liste)) s.werkzeug.liste = []; if (!s.werkzeug.daten) s.werkzeug.daten = {}; return s.werkzeug; }
   function merken() { try { C6.speichern && C6.speichern(); } catch (e) {} }
@@ -22169,7 +22559,7 @@ try{(function(){
   var MON = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
   var WT = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
   function datumText(iso) { var m = /^(\d{4})-(\d\d)-(\d\d)$/.exec(iso || ''); if (!m) return ''; return (+m[3]) + '. ' + MON[+m[2] - 1]; }
-  var FARBEN = { wert: '#4f7fa8', tag: '#8a6a3c', haken: '#5f7f3e', zaehler: '#2f5f8a', liste: '#a95f33', kalender: '#b7852a', notiz: '#7d4a74', frage: '#2c7a6e' };
+  var FARBEN = { wert: '#4f7fa8', tag: '#8a6a3c', haken: '#5f7f3e', zaehler: '#2f5f8a', liste: '#a95f33', kalender: '#8a6200', notiz: '#7d4a74', frage: '#2c7a6e' };
 
   /* ---------- Zeichen (48er-Feld, eine Hand mit den Wandzeichen) ---------- */
   var ZEICHEN = {
@@ -22221,6 +22611,8 @@ try{(function(){
   function nameAus(s, ersatz) {
     var t = String(s).replace(/[„“"!.]/g, ' ').replace(/\s+/g, ' ').trim(), m;
     if ((m = /\bob ich (?:heute |schon )?((?:\S+ ){0,2}?\S+?) (?:bin|habe|hab|war|hatte)\b/i.exec(t)) || (m = /\bob ich (?:heute |schon )?([a-zäöüß]+)/i.exec(t))) return gross1(kurz(m[1], 26)) + '?';
+    // „wie lange ich gelesen hab“, „wie oft ich gelaufen bin“ → das Wort des Menschen, nicht „Messen“
+    if ((m = /\bwie (?:lange|oft|viel|weit|schwer) ich (?:heute |schon |am tag |jeden tag )?(?:[\wäöüß]+ ){0,3}?([a-zäöüß]{3,}) (?:bin|habe|hab|war|hatte|bleibe|schlafe)\b/i.exec(t)) && !/^(aufschreiben|notieren|sehen|wissen|haben|sein)$/i.test(m[1])) return gross1(kurz(m[1], 26));
     if ((m = /\ban (?:das|den|die|dem|meine[nmr]?|mein) ([A-ZÄÖÜ][\wäöüß]+(?: (?:für|von|mit) [\wäöüß]+)?)/.exec(t))) return kurz(m[1], 28);
     if ((m = /\bwie viele ([A-ZÄÖÜ][\wäöüß]+)/.exec(t))) return m[1];
     if ((m = /\bfür (?:den|die|das) ([A-ZÄÖÜ][\wäöüß]+)/.exec(t))) return m[1];
@@ -22241,6 +22633,8 @@ try{(function(){
     if (einh || /wiege|gewicht|geschlafen|schlaf|puls|blutdruck|messen|wie lange|wie weit|wie schwer|\d+\s*(kg|km|h|min)\b/i.test(s)) sp = { name: nameAus(s, 'Messen'), teile: [{ t: 'wert', text: 'Heute' + (einh ? ' in ' + einh : ''), einheit: einh || (/schlaf/i.test(s) ? 'h' : /wiege|gewicht/i.test(s) ? 'kg' : '') }] };
     else if (/satz am tag|satz des tages|tagebuch|was heute war|jeden abend einen satz|jeden tag einen satz|foto des tages/i.test(s)) sp = { name: nameAus(s, 'Ein Satz am Tag'), teile: [{ t: 'tag', text: 'Ein Satz für heute' }] };
     else if (/frage|rückblick|rueckblick|reflekt/i.test(s)) sp = { name: nameAus(s, 'Fragen'), teile: [{ t: 'frage', text: '', fragen: ['Was war heute gut?', 'Was hat gehakt?', 'Was nimmst du mit?'] }] };
+    // Zählen schlägt die Gewohnheit: „jeden Abend, wie viele Seiten“ ist ein Zähler, kein Haken
+    else if (/wie oft|zähl|zaehl|anzahl|wie viele/i.test(s)) sp = { name: nameAus(s, 'Zähler'), teile: [{ t: 'zaehler', text: 'Heute' }] };
     else if (/jeden tag|täglich|taeglich|jeden morgen|jeden abend|gewohnheit|immer wenn|gelaufen|getrunken|meditier|geübt|geuebt/i.test(s)) sp = { name: nameAus(s, 'Jeden Tag'), teile: [{ t: 'haken', text: 'Heute geschafft?' }] };
     else if (/termin|erinner|am \d|\d\.\s*\d|geburtstag|bis zum|bis montag|bis dienstag|bis mittwoch|bis donnerstag|bis freitag|morgen|deadline/i.test(s)) sp = { name: nameAus(s, 'Termin'), teile: [{ t: 'datum', text: '', wann: datumAus(s) }] };
     else if (/wie oft|zähl|zaehl|anzahl|wie viele|seiten|kilometer|gläser|glaeser/i.test(s)) sp = { name: nameAus(s, 'Zähler'), teile: [{ t: 'zaehler', text: 'Heute' }] };
@@ -22261,12 +22655,16 @@ try{(function(){
       '{"name":"<höchstens drei Wörter, Deutsch>","zeichen":"haken|zaehler|liste|kalender|notiz|frage","teile":[ … ]}\n' +
       'Bausteine: {"t":"haken","text":"…"} (jeden Tag abhaken) · {"t":"zaehler","text":"…","ziel":Zahl oder weglassen} · {"t":"wert","text":"…","einheit":"kg|km|h|…"} (einen Wert am Tag messen) · {"t":"tag","text":"…"} (ein Satz am Tag) · {"t":"liste","text":"…","punkte":["…"]} · {"t":"datum","text":"…","wann":"JJJJ-MM-TT"} (heute ist ' + tag() + ') · {"t":"notiz","text":"…"} · {"t":"frage","text":"…","fragen":["…"]}.';
     var p = C6.denk ? Promise.resolve(C6.denk(bitte, { kontext: 'Werkstatt, ein Werkzeug bauen', stumm: true })).catch(function () { return ''; }) : Promise.resolve('');
-    var zeit = new Promise(function (r) { setTimeout(function () { r(''); }, 25000); });
+    var zuSpaet = false;
+    var zeit = new Promise(function (r) { setTimeout(function () { zuSpaet = true; r(''); }, 25000); });
     return Promise.race([p, zeit]).then(function (t) {
       var m = /\{[\s\S]*\}/.exec(String(t || '')), sp = null;
       if (m) { try { sp = bereinige(JSON.parse(m[0]), satz); } catch (e) { sp = null; } }
       if (sp) { sp.von = 'denk'; return sp; }
-      return ausVorlage(satz);
+      var v = ausVorlage(satz);
+      // warum eine Vorlage (nicht gespeichert, nur für die ehrliche Kosten-Zeile): zu lange gewartet, kein Mitdenken, oder Antwort unbrauchbar
+      try { Object.defineProperty(v, 'grund', { value: zuSpaet ? 'zeit' : (String(t || '').trim() ? 'unbrauchbar' : 'leer'), enumerable: false }); } catch (e) {}
+      return v;
     });
   }
 
@@ -22322,7 +22720,7 @@ try{(function(){
     if (t.t === 'wert') {
       var lw = dd.log || {}, he = lw[tag()], hw = wertV(he), heE = wertE(he, t);
       var ein = heE ? ' ' + esc(heE) : '';
-      if (klein) return '<div class="c6wz-teil"><p class="c6wz-gross">' + (hw != null ? esc(zahlText(hw)) + ein : '–') + '</p></div>';
+      if (klein) return '<div class="c6wz-teil">' + (hw != null ? '<p class="c6wz-gross">' + esc(zahlText(hw)) + ein + '</p>' : '<p class="c6wz-text">noch nichts</p>') + '</div>';
       return '<div class="c6wz-teil c6wz-wert"><p class="c6wz-text">' + esc(t.text) + '</p><form class="c6wz-wert-form" data-i="' + i + '"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Wert für heute' + (t.einheit ? ' in ' + esc(t.einheit) : '') + '" placeholder="heute" value="' + (hw != null && heE === (t.einheit || '') ? esc(zahlText(hw)) : '') + '">' + (t.einheit ? '<span class="c6wz-einheit">' + esc(t.einheit) + '</span>' : '') + '<button type="submit" class="c6wz-rund c6wz-plus" aria-label="Eintragen">✓</button></form></div>';
     }
     if (t.t === 'tag') {
@@ -22439,14 +22837,22 @@ try{(function(){
   /* ---------- Der Ablauf „Neues Werkzeug“ (ein Blatt über dem Raum) ---------- */
   var blatt = null, sitzung = 0;
   var leihe = null;
-  function feldZurueck() { if (leihe) { var z = leihe; leihe = null; try { z(); } catch (e) {} } }
+  function feldZurueck() { if (leihe) { var z = leihe; leihe = null; try { z(); } catch (e) {} if (rz && !rz.fertig) rzEmit('rezeption-frei', { satz: rz.satz }); } }
   // das eine Feld unten fragt, was das Blatt braucht; ohne Kern-Leihe bleibt das Feld im Blatt (Rückfall)
   function feldLeihen(platz, nimm) {
     feldZurueck();
     if (!(C6.feld && typeof C6.feld.leihen === 'function')) return false;
-    try { leihe = C6.feld.leihen({ platzhalter: platz, nimm: function (t) { leihe = null; nimm(t); return false; } }); return true; } catch (e) { leihe = null; return false; }
+    try { leihe = C6.feld.leihen({ platzhalter: platz, nimm: function (t) { leihe = null; nimm(t); if (rz && !rz.fertig) rzEmit('rezeption-frei', { satz: rz.satz }); return false; } }); return true; } catch (e) { leihe = null; return false; }
   }
-  function zu() { feldZurueck(); if (!blatt) return; var b = blatt; blatt = null; b.classList.remove('c6wz-an'); setTimeout(function () { if (b.parentNode) b.parentNode.removeChild(b); }, C6.ruhig ? 0 : 260); }
+  // An der Rezeption: ein Satz, ein Blatt, nach „Passt“ steht das Werkzeug neben Carl (ohne Space); wer schließt, ohne zu nehmen, verliert nichts
+  var rz = null;
+  function rzEmit(name, d) { try { C6.bus && C6.bus.emit(name, d); } catch (e) {} }
+  function zu() {
+    feldZurueck();
+    var r = rz; rz = null;
+    if (r && !r.fertig) rzEmit('rezeption-zu', { satz: r.satz, bei: r.bei });
+    if (!blatt) return; var b = blatt; blatt = null; b.classList.remove('c6wz-an'); setTimeout(function () { if (b.parentNode) b.parentNode.removeChild(b); }, C6.ruhig ? 0 : 260);
+  }
   function blattAuf(titel) {
     zu();
     try { if (C6.darstellung && C6.darstellung.offen && C6.darstellung.zu) C6.darstellung.zu(); } catch (e) {}
@@ -22474,29 +22880,106 @@ try{(function(){
     [].forEach.call(el.querySelectorAll('.c6wz-vorlage'), function (b) { b.onclick = function () { var v = VORLAGEN.filter(function (x) { return x.id === b.dataset.v; })[0]; if (inp) inp.value = v.satz; bauen(v.satz, o.sid, nr); }; });
     if (o.satz) bauen(o.satz, o.sid, nr); else if (inp) setTimeout(function () { try { if (C6.geraet === 'computer') inp.focus(); } catch (e) {} }, 300);
   }
-  function bauen(satz, sid, nr) {
+  function uhr() { return (window.performance && performance.now) ? performance.now() : Date.now(); }
+  // r (nur an der Rezeption): {satz, bei, gedacht} – dann endet „Passt“ nicht mit „Wo soll es stehen?“, sondern neben Carl
+  function bauen(satz, sid, nr, r) {
     if (!blatt || nr !== sitzung) return;
     feldZurueck();
     var el = blatt.querySelector('.c6wz-inhalt');
-    el.innerHTML = '<h3 class="c6wz-titel">„' + esc(kurz(satz, 90)) + '“</h3><p class="c6wz-baut" aria-live="polite">' + esc(stimme('baut', null, 'Ich bau es dir …')) + '</p>';
-    baue(satz).then(function (sp) {
+    var bautT = r ? rzStimme('baut', null, stimme('baut', null, 'Ich bau es dir …')) : stimme('baut', null, 'Ich bau es dir …');
+    var kopfSatz = r ? r.satz : satz, letztesAnders = r && r.anders && r.anders.length ? r.anders[r.anders.length - 1] : '';
+    var bautH = '<h3 class="c6wz-titel">„' + esc(kurz(kopfSatz, 90)) + '“</h3>' + (letztesAnders ? '<p class="c6wz-leise c6wz-anders-zeile">Anders: ' + esc(kurz(letztesAnders, 90)) + '</p>' : '') +
+      (r ? '' : '<p class="c6wz-baut" aria-live="polite">' + esc(bautT) + '</p>') + (r ? '<p class="c6wz-leise c6wz-uhr"></p>' : '');
+    if (r) rzEmit('rezeption-moment', { was: 'baut' });
+    // an der Rezeption bleibt nach „Anders“ das alte Werkzeug stehen, bis das neue da ist
+    var altV = r ? el.querySelector('.c6wz-vorschau') : null;
+    if (altV) { altV.classList.add('c6wz-alt'); [].forEach.call(el.querySelectorAll('.c6wz-wahl, .c6wz-wunsch, .c6wz-unten, .c6wz-anders-zeile, .c6wz-inhalt > .c6wz-leise:first-child'), function (x) { x.remove(); }); el.insertAdjacentHTML('beforeend', bautH.replace(/^<h3[\s\S]*?<\/h3>/, '')); }
+    else el.innerHTML = bautH;
+    var takt = null, uhrEl = el.querySelector('.c6wz-uhr');
+    if (uhrEl) { try { takt = C6.beispiele && C6.beispiele.uhr ? C6.beispiele.uhr(uhrEl) : null; } catch (e) { takt = null; } if (!takt) uhrEl.remove(); }
+    var t0 = uhr();
+    // an der Rezeption: welcher Kopf gefragt wurde, merkt sich das Blatt beim Start (nicht erst nach Passt)
+    var ab = null;
+    if (r) { try { ab = C6.bus.on('denkt', function (d) { if (d && typeof d === 'object' && d.an && d.kopf) { r.kopfGefragt = d.kopf; r.modellGefragt = d.modell || null; } }); } catch (e) { ab = null; } }
+    // ein Beispiel wird beim ersten Mal sofort aus der Vorlage gebaut: wahr, schnell, ohne Kopf; „Anders“ danach ist der eigene Wunsch und darf denken
+    var bau = r && r.sofort ? Promise.resolve(ausVorlage(satz)) : baue(satz);
+    if (r) r.sofort = false;
+    if (r && r.alt && letztesAnders) bau = bau.then(function (sp) { return sp && sp.von === 'vorlage' ? andersAusVorlage(r.alt, letztesAnders, sp) : sp; });
+    bau.then(function (sp) {
+      if (takt) { try { takt.weg(); } catch (e) {} }
+      if (ab) { try { ab(); } catch (e) {} }
       if (!blatt || nr !== sitzung) return;
-      if (!sp) { oeffne({ sid: sid }); return; }
+      if (r) { r.gedacht = (r.gedacht || 0) + Math.max(0, Math.round(uhr() - t0)); r.grund = sp && sp.von === 'vorlage' ? (sp.grund || 'leer') : null; }
+      if (!sp) { if (r) zu(); else oeffne({ sid: sid }); return; }
       bus('gebaut', {});
-      el.innerHTML = '<p class="c6wz-leise">' + esc(sp.von === 'vorlage' ? stimme('vorlage', null, 'Mitdenken kann ich hier noch nicht, darum aus einer Vorlage. Probier es aus.') : stimme('gebaut', null, 'So hab ich es gebaut. Probier es aus.')) + '</p>' +
+      var gebautT = sp.von === 'vorlage' ? stimme('vorlage', null, 'Mitdenken kann ich hier noch nicht, darum aus einer Vorlage. Probier es aus.') : stimme('gebaut', null, 'So hab ich es gebaut. Probier es aus.');
+      if (r) {
+        // der Satz des Menschen bleibt der Satz; Änderungswünsche stehen getrennt daneben
+        sp.satz = kurz(r.satz, 200);
+        if (r.anders && r.anders.length) sp.anders = r.anders.slice(); else delete sp.anders;
+        // ohne Kopf kann „Anders“ gleich bleiben – dann sagt Carl das, statt „probier es aus“
+        var gleich = !!(r.alt && letztesAnders && sp.von === 'vorlage' && abdruck(sp) === abdruck(r.alt));
+        if (gleich) { r.anders.pop(); if (r.anders.length) sp.anders = r.anders.slice(); else delete sp.anders; } // ein Wunsch, der nichts geändert hat, wird nicht als eingebaut gemerkt
+        r.alt = sp;
+        rzEmit('rezeption-moment', { was: gleich ? 'gleich' : (r.grund === 'zeit' ? 'gewartet' : (sp.von === 'vorlage' ? 'gebautVorlage' : 'gebaut')) });
+      }
+      el.innerHTML = (r ? '<h3 class="c6wz-titel">„' + esc(kurz(r.satz, 90)) + '“</h3>' + (letztesAnders && !gleich ? '<p class="c6wz-leise c6wz-anders-zeile">Anders: ' + esc(kurz(letztesAnders, 90)) + '</p>' : '') : '<p class="c6wz-leise">' + esc(gebautT) + '</p>') +
         '<div class="c6wz-vorschau"></div>' +
         '<div class="c6wz-wahl"><button type="button" class="c6wz-knopf c6wz-haupt" data-w="passt">Passt</button><button type="button" class="c6wz-knopf" data-w="anders">Anders</button></div>';
       male(el.querySelector('.c6wz-vorschau'), sp);
-      el.querySelector('[data-w=passt]').onclick = function () { wohin(sp, sid, nr); };
+      el.querySelector('[data-w=passt]').onclick = function () { if (r) rzFertig(sp, r); else wohin(sp, sid, nr); };
       el.querySelector('[data-w=anders]').onclick = function () {
         var w = el.querySelector('.c6wz-wahl');
         var andersT = stimme('anders', null, 'Was soll anders sein?');
-        if (feldLeihen(andersT, function (a) { bauen(satz + '. Anders: ' + a, sid, nr); })) { w.outerHTML = '<p class="c6wz-leise c6wz-unten">' + esc(andersT) + ' Schreib es unten ins Feld.</p>'; return; }
+        var weiter = function (a) { if (r) { r.anders = (r.anders || []).concat([kurz(a, 120)]); bauen(r.satz + '. Anders: ' + r.anders.join('. Anders: '), sid, nr, r); } else bauen(satz + '. Anders: ' + a, sid, nr, r); };
+        if (feldLeihen(andersT, weiter)) { w.outerHTML = '<p class="c6wz-leise c6wz-unten">' + esc(andersT) + ' Schreib es unten ins Feld.</p>'; return; }
         w.outerHTML = '<form class="c6wz-wunsch c6wz-anders"><input type="text" maxlength="200" placeholder="' + esc(stimme('anders', null, 'Was soll anders sein?')) + '" aria-label="' + esc(stimme('anders', null, 'Was soll anders sein?')) + '"><button type="submit" class="c6wz-knopf c6wz-haupt">Neu bauen</button></form>';
         var af = el.querySelector('.c6wz-anders'), ai = af.querySelector('input'); ai.focus();
-        af.onsubmit = function (e) { e.preventDefault(); var a = ai.value.trim(); if (!a) { ai.focus(); return; } bauen(satz + '. Anders: ' + a, sid, nr); };
+        af.onsubmit = function (e) { e.preventDefault(); var a = ai.value.trim(); if (!a) { ai.focus(); return; } weiter(a); };
       };
     });
+  }
+  // Rezeption: das Werkzeug hängt ohne Space (sid = null); der Raum stellt es neben Carl und sagt, was er sich gemerkt hat
+  function abdruck(sp) { return JSON.stringify({ n: sp.name, t: (sp.teile || []).map(function (t) { var x = Object.assign({}, t); delete x.k; return x; }) }); }
+  // „Anders“ ohne Kopf: wie beim Umbauen – gleiche Art wird ersetzt, sonst kommt der Baustein dazu; der Name bleibt (höchstens „und Minuten“)
+  function andersAusVorlage(alt, a, sp) {
+    var neuT = ausVorlage(a).teile[0], teile = (alt.teile || []).slice(), j = -1;
+    // kein Bauwort im Wunsch (die Vorlage macht nur eine Notiz daraus): dann bleibt es ehrlich gleich, statt eine Notiz anzuhängen
+    if (!neuT || neuT.t === 'notiz') { var same = Object.assign({}, sp, { name: alt.name, zeichen: alt.zeichen, farbe: alt.farbe, teile: (alt.teile || []).map(function (t) { var x = Object.assign({}, t); delete x.k; return x; }) }); try { Object.defineProperty(same, 'grund', { value: sp.grund || 'leer', enumerable: false }); } catch (e) {} return same; }
+    teile.forEach(function (u, i) { if (u.t === neuT.t) j = i; });
+    var dazu = /\b(auch|dazu|zusätzlich|außerdem|noch)\b/i.test(a), nm = alt.name;
+    var WORT = { km: 'Kilometer', kg: 'Kilo', h: 'Stunden', min: 'Minuten', l: 'Liter', m: 'Meter', cm: 'Zentimeter' };
+    if (j >= 0 && !dazu && !(neuT.t === 'wert' && teile[j].einheit && neuT.einheit !== teile[j].einheit)) teile[j] = neuT;
+    else { teile.push(neuT); var zus = neuT.einheit ? WORT[neuT.einheit] || neuT.einheit : ''; if (zus && nm.indexOf(zus) < 0) nm = kurz(nm.replace(/\?$/, '') + ' und ' + zus, 28); }
+    var wt = teile.slice(-3).filter(function (x) { return x.t === 'wert' && x.einheit; });
+    if (wt.length >= 2) nm = kurz(wt.map(function (x) { return WORT[x.einheit] || x.einheit; }).join(' und '), 28);
+    var out = Object.assign({}, sp, { name: nm, zeichen: alt.zeichen, farbe: alt.farbe, teile: teile.slice(-3).map(function (t) { var x = Object.assign({}, t); delete x.k; return x; }) });
+    try { Object.defineProperty(out, 'grund', { value: sp.grund || 'leer', enumerable: false }); } catch (e) {}
+    return out;
+  }
+  function rzFertig(sp, r) {
+    if (!blatt || r !== rz || r.fertig) return;
+    var w = haenge(sp, null);
+    if (!w) return;
+    r.fertig = true;
+    // der Kopf: der beim Bau gefragte (Bus 'denkt'); nur zur Not der zuletzt im Kern vermerkte
+    var md = {}; try { md = C6.mitdenken ? (C6.mitdenken() || {}) : {}; } catch (e) { md = {}; }
+    var gefragt = sp.von !== 'vorlage' || r.grund === 'unbrauchbar' || r.grund === 'zeit';
+    var kopf = gefragt ? (r.kopfGefragt || (sp.von !== 'vorlage' ? md.kopf : null) || null) : null;
+    var modell = kopf ? (r.modellGefragt || (kopf === md.kopf ? md.modell : null) || null) : null;
+    var d = { id: w.id, satz: w.satz, gedacht: r.gedacht || 0, von: sp.von === 'vorlage' ? 'vorlage' : 'denk', grund: r.grund || null, kopf: kopf, modell: modell, bei: r.bei || null };
+    zu();
+    rzEmit('rezeption-gebaut', d);
+  }
+  function rezeption(satz, o) {
+    o = o || {};
+    satz = String(satz || '').trim();
+    if (!satz) return false;
+    var nr = ++sitzung;
+    blattAuf('Neues Werkzeug');
+    rz = { satz: satz, bei: o.bei || null, sofort: !!o.bei, gedacht: 0, fertig: false, anders: [], alt: null };
+    bauen(satz, null, nr, rz);
+    return true;
   }
   function wohin(sp, sid, nr) {
     var el = blatt.querySelector('.c6wz-inhalt');
@@ -22519,11 +23002,11 @@ try{(function(){
         var s = b.getAttribute('data-sid'), f = C6.strings && C6.strings.hol(s);
         var w = haenge(sp, s);
         el.innerHTML = kopf + '<p class="c6wz-satz">' + esc(stimme('steht', { werkzeug: w.name, titel: kurz(f ? f.titel : '', 30) }, '„' + w.name + '“ steht jetzt in „' + kurz(f ? f.titel : '', 30) + '“, neben mir.')) + '</p>' +
-          '<div class="c6wz-wahl"><button type="button" class="c6wz-knopf c6wz-haupt" data-w="hin">Hingehen</button><button type="button" class="c6wz-link" data-w="tele">Ins Teleskop hängen</button></div>';
+          '<div class="c6wz-wahl"><button type="button" class="c6wz-knopf c6wz-haupt" data-w="hin">Hingehen</button>' + (eintraegeZaehlen(w.id) > 0 ? '<button type="button" class="c6wz-link" data-w="tele">Ins Teleskop hängen</button>' : '') + '</div>';
         male(el.querySelector('.c6wz-mini'), w, { klein: true });
         el.querySelector('[data-w=hin]').onclick = function () { zu(); if (C6.space && C6.space.oeffne) C6.space.oeffne(s); };
         var tb = el.querySelector('[data-w=tele]');
-        tb.onclick = function () { teilen(w.id, true); tb.disabled = true; tb.textContent = stimme('geteilt', null, 'Hängt im Teleskop. Andere dürfen es sich nehmen.'); };
+        if (tb) tb.onclick = function () { teilen(w.id, true); tb.disabled = true; tb.textContent = stimme('geteilt', null, 'Hängt im Teleskop. Andere dürfen es sich nehmen.'); };
     }
   }
   /* ---------- Das Werkzeug-Blatt: heute, der Verlauf als Bild, und ein ehrlicher Satz von Carl ---------- */
@@ -22648,7 +23131,7 @@ try{(function(){
         '<button type="button" class="c6d-zettel" style="--r:-1.2deg;--f:' + esc((f && f.farbe) || T) + '" data-hin="1" aria-label="' + esc('Zettel vom ' + datumText(tag(new Date(bz.z.ts))) + ': ' + bz.z.t + '. Antippen öffnet den Space') + '"><i class="c6d-klammer" aria-hidden="true"></i><small>' + esc(datumText(tag(new Date(bz.z.ts)))) + '</small><span>' + esc(kurz(bz.z.t, 80)) + '</span></button>' +
         '<p class="c6wz-bezug-satz">' + esc(bz.satz) + '</p></div></div>' : '') +
       '<div class="c6wz-wahl"><button type="button" class="c6wz-knopf" data-w="anders">Anders</button></div>' +
-      '<div class="c6wz-leiste">' + ((w.fassungen || []).length ? '<button type="button" class="c6wz-link" data-w="alt">Zurück zur alten Fassung</button>' : '') + ((w.spaeter || []).length ? '<button type="button" class="c6wz-link" data-w="neuer">Wieder die neuere</button>' : '') + '<button type="button" class="c6wz-link" data-w="tele">' + (w.teleskop ? 'Aus dem Teleskop nehmen' : 'Ins Teleskop hängen') + '</button><button type="button" class="c6wz-link" data-w="weg">Wegräumen</button></div>';
+      '<div class="c6wz-leiste">' + ((w.fassungen || []).length ? '<button type="button" class="c6wz-link" data-w="alt">Zurück zur alten Fassung</button>' : '') + ((w.spaeter || []).length ? '<button type="button" class="c6wz-link" data-w="neuer">Wieder die neuere</button>' : '') + ((w.teleskop || eintraegeZaehlen(w.id) > 0) ? '<button type="button" class="c6wz-link" data-w="tele">' + (w.teleskop ? 'Aus dem Teleskop nehmen' : 'Ins Teleskop hängen') + '</button>' : '') + '<button type="button" class="c6wz-link" data-w="weg">Wegräumen</button></div>';
     var platz = el.querySelector('.c6wz-gross-platz'), vl = el.querySelector('.c6wz-verlauf'), cs = el.querySelector('.c6wz-carl-satz');
     function frisch() { var dd = daten(w); vl.innerHTML = verlauf(w, dd); cs.textContent = aufgreifen(w, dd); var bs = el.querySelector('.c6wz-bezug-satz'), b2 = bezugSatz(w, dd); if (bs && b2) bs.textContent = b2.satz; }
     var m = male(platz, w, {});
@@ -22661,7 +23144,7 @@ try{(function(){
     el.querySelector('[data-w=anders]').onclick = function () { umbauen(w); };
     var altK = el.querySelector('[data-w=alt]'); if (altK) altK.onclick = function () { if (zurueckZurAlten(id)) gross(id); };
     var neuK2 = el.querySelector('[data-w=neuer]'); if (neuK2) neuK2.onclick = function () { if (wiederNeuer(id)) gross(id); };
-    el.querySelector('[data-w=tele]').onclick = function () { teilen(w.id, !w.teleskop); gross(id); };
+    var teleK = el.querySelector('[data-w=tele]'); if (teleK) teleK.onclick = function () { teilen(w.id, !w.teleskop); gross(id); };
     el.querySelector('[data-w=weg]').onclick = function () {
       entferne(id); zu();
       var rw = { text: 'Weggeräumt. Deine Einträge bleiben.', knopf: 'Zurückholen', tun: function () { zurueckholen(id); } };
@@ -22829,8 +23312,8 @@ try{(function(){
   }
 
   C6.werkzeug = {
-    baue: baue, male: male, alle: alle, hol: hol, haenge: haenge, entferne: entferne, zeichen: zeichen,
-    vorlagen: VORLAGEN, oeffne: oeffne, gross: gross, zu: zu, erinnerungen: erinnerungen,
+    baue: baue, ausVorlage: ausVorlage, male: male, alle: alle, hol: hol, haenge: haenge, entferne: entferne, zeichen: zeichen,
+    vorlagen: VORLAGEN, oeffne: oeffne, rezeption: rezeption, gross: gross, zu: zu, erinnerungen: erinnerungen,
     zurueckholen: zurueckholen, weggeraeumt: weggeraeumt, fuerImmer: fuerImmer,
     fach: function () { fachOeffnen(); },
     fassungen: function (id) { var w = hol(id); return w ? (w.fassungen || []).slice() : []; }, zurueck: zurueckZurAlten,
@@ -30589,6 +31072,442 @@ try{(function(){
 })();
 
 })()}catch(e){console.error("Modul netz.js",e)}</script>
+<script>/*rezeption.js*/
+try{(function(){
+// Rezeption: der erste Raum. Ein Satz von dir, ein Werkzeug von Carl – es steht sofort neben ihm.
+var C6 = window.C6;
+if (!C6 || !C6.raum) return;
+var D = document;
+function mach(tag, cls, vater, text) { var e = D.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; if (vater) vater.appendChild(e); return e; }
+function esc(t) { return String(t == null ? '' : t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+function kurz(t, n) { t = String(t == null ? '' : t).trim(); return t.length > n ? t.slice(0, n - 1).trim() + '…' : t; }
+// Carls Sätze kommen aus stimme.js (rezeption.*); die Ersatzsätze hier gelten nur, wenn ein Schlüssel fehlt
+function stimme(k, w, ersatz) {
+  try { var t = C6.stimme && C6.stimme.fest ? C6.stimme.fest('rezeption.' + k, w || {}) : ''; if (t && !/\{[a-z]+\}/i.test(t)) return t; } catch (e) {}
+  return ersatz.replace(/\{(\w+)\}/g, function (m, s) { return w && w[s] != null ? String(w[s]) : m; });
+}
+function sekText(ms) { var s = Math.max(0, +ms || 0) / 1000; return (s < 10 ? (Math.round(s * 10) / 10) : Math.round(s)).toString().replace('.', ','); }
+function kopfText(d) {
+  if (!d) return '';
+  if (d.kopf === 'lokal') return 'dein Rechner' + (d.modell ? ' (' + d.modell + ')' : '');
+  if (d.kopf === 'claude') return 'Claude über claude.ai';
+  return '';
+}
+
+/* Tresen mit Glocke, 24 px: das Zeichen der Rezeption in der Raumleiste */
+var SYMBOL = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18.5h18M5 18.5v-3h14v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8.5 13.5a3.5 3.5 0 0 1 7 0M12 10v-1.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M7 13.5h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+var ZIPFEL = '<svg viewBox="0 0 22 14" aria-hidden="true"><path d="M2 1 L7 12 L20 1" fill="var(--karte,#fbf7f0)" stroke="var(--tusche,#2b2722)" stroke-width="1.5" stroke-linejoin="round"/><path d="M3.5 1H18.5" stroke="var(--karte,#fbf7f0)" stroke-width="3"/></svg>';
+
+function meine() { try { return (C6.werkzeug && C6.werkzeug.alle ? C6.werkzeug.alle() : []).filter(function (w) { return !w.sid; }); } catch (e) { return []; } }
+C6.rezeption = C6.rezeption || {};
+// die kleine Reihe der Werkzeuge ohne Space, für andere Räume (z. B. Zuhause): {neu(), weg()}
+C6.rezeption.meine = function (ziel) {
+  if (!ziel) return null;
+  var schl = '';
+  function neu() {
+    var l = meine().slice(-3).reverse(), k = l.map(function (w) { return w.id + ':' + w.name; }).join(',');
+    if (k === schl) return; schl = k;
+    ziel.textContent = ''; ziel.hidden = !l.length;
+    l.forEach(function (w) { var h = mach('div', 'c6rz-wz', ziel); try { C6.werkzeug.male(h, w, { klein: true }); } catch (e) { h.remove(); } });
+  }
+  var ab = C6.bus.on('werkzeug-eigen', function (d) { if (d && (d.was === 'gehaengt' || d.was === 'weg' || d.was === 'benutzt')) neu(); });
+  neu();
+  return { neu: function () { schl = ''; neu(); }, weg: function () { try { ab(); } catch (e) {} ziel.textContent = ''; } };
+};
+
+function spacesDa() { try { return !!(C6.strings && C6.strings.alle && C6.strings.alle().length); } catch (e) { return false; } }
+
+C6.raum({
+  id: 'rezeption', name: 'Rezeption', hoehe: 'boden', reihe: 0, symbol: SYMBOL,
+  // der Himmel hat für einen Fremden ohne Space noch nichts zu zeigen: kein Himmel-Knopf, bis es einen gibt
+  regler: function () { return spacesDa(); },
+  bauen: function (buehne) {
+    buehne.classList.add('c6rz-buehne');
+    var wurzel = mach('div', 'c6rz', buehne);
+    // Die Welt (ein anderes Modul füllt sie) liegt hinter allem; Carl und sein Satz stehen fest am Tresen; der Boden darunter rollt
+    wurzel.innerHTML =
+      '<div class="c6rz-welt" aria-hidden="true"></div>' +
+      '<div class="c6rz-carl"></div>' +
+      '<p class="c6rz-satz" aria-live="polite"><span class="c6rz-satz-text"></span><i class="c6rz-zipfel" aria-hidden="true">' + ZIPFEL + '</i></p>' +
+      '<div class="c6rz-boden">' +
+        '<div class="c6rz-meins" hidden></div>' +
+        '<div id="c6rz-beispiele"></div>' +
+      '</div>';
+    function q(s) { return wurzel.querySelector(s); }
+    var el = { tresen: q('.c6rz-boden'), carl: q('.c6rz-carl'), satz: q('.c6rz-satz-text'), meins: q('.c6rz-meins'), beispiele: q('#c6rz-beispiele') };
+    var hier = false, leiheZurueck = null, beispiele = null, ctl = null, karteFuer = null;
+
+    try { ctl = C6.figur.male(el.carl, { groesse: 120 }); } catch (e) { ctl = null; }
+    if (ctl && C6.setzeCarl) C6.setzeCarl(ctl, 'rezeption');
+
+    // ein langer Satz darf am iPhone die ganze Breite nehmen (über dem Fenster), der Zipfel zeigt weiter auf Carl
+    function sag(t) { el.satz.textContent = t; el.satz.parentNode.classList.toggle('c6rz-lang', String(t).length > 64); }
+    // eine Stimme: spricht Carl über die Blase des Kerns (C6.sag, Staunen), tritt die feste Blase so lange zurück
+    (function () {
+      var wurzelEl = D.getElementById('c6');
+      if (!wurzelEl || !('MutationObserver' in window)) return;
+      var pruef = function () { var r = D.querySelector('.c6k-blase-rahmen'); el.satz.parentNode.classList.toggle('c6rz-still', !!(r && r.hasAttribute('data-an') && C6.jetzt === 'rezeption')); };
+      // die Blase des Kerns hängt erst beim ersten Sprechen im Baum, darum am Stamm beobachten (nur das eine Attribut)
+      new MutationObserver(function (m) { for (var i = 0; i < m.length; i++) if (m[i].target.classList && m[i].target.classList.contains('c6k-blase-rahmen')) { pruef(); return; } }).observe(wurzelEl, { attributes: true, subtree: true, attributeFilter: ['data-an'] });
+      C6.bus.on('raum', function () { setTimeout(pruef, 0); });
+    })();
+    // andere Module der Rezeption (z. B. die Glocke) sprechen über dieselbe Blase
+    C6.rezeption = C6.rezeption || {};
+    C6.rezeption.sag = function (t) { if (t) sag(String(t)); };
+    function schonDa() { try { return !!((C6.werkzeug && C6.werkzeug.alle && C6.werkzeug.alle().length) || (C6.S.du && C6.S.du.angekommen)); } catch (e) { return false; } }
+    // der Gruß: ein Fremder bekommt die Vorstellung, wer schon ein Werkzeug hat, nur die Einladung
+    function erster() { sag(schonDa() ? stimme('wieder', null, 'Da bist du wieder. Sag mir einen Satz, ich bau dir noch eins.') : stimme('erst', null, 'Sag mir einen Satz, ich bau dir was.')); }
+
+    // ---------- das eine Feld unten: hier fragt es nach deinem Satz ----------
+    // vor dem Bau eine Prüfung (ein Bug, ein Handgriff): der Satz bleibt im Feld, Carl sagt, was fehlt
+    function pruefe(satz) {
+      try { if (C6.beispiele && typeof C6.beispiele.pruefe === 'function') return C6.beispiele.pruefe(satz); } catch (e) {}
+      return null;
+    }
+    function behalte(t) {
+      try {
+        var f = C6.eingabe && C6.eingabe.feld; if (!f) return;
+        f.value = t; f.dispatchEvent(new Event('input', { bubbles: true }));
+        f.focus({ preventScroll: true }); f.setSelectionRange(f.value.length, f.value.length);
+      } catch (e) {}
+    }
+    function bauen(satz, bei) {
+      satz = String(satz || '').trim();
+      if (!satz) return false;
+      var p = bei ? null : pruefe(satz);
+      if (p && p.satz) { sag(p.satz); return 'behalten'; }
+      if (!(C6.werkzeug && typeof C6.werkzeug.rezeption === 'function')) return false;
+      if (ctl) { try { ctl.stimmung('arbeitet'); } catch (e) {} }
+      var o = {}; if (bei) o.bei = bei;
+      return C6.werkzeug.rezeption(satz, o) === true;
+    }
+    function feldZurueck() { if (leiheZurueck) { var z = leiheZurueck; leiheZurueck = null; try { z(); } catch (e) {} } }
+    function feldLeihen() {
+      feldZurueck();
+      if (!hier || C6.jetzt !== 'rezeption') return;
+      if (!(C6.feld && typeof C6.feld.leihen === 'function')) return;
+      if (C6.feld.geliehen && !leiheZurueck) return; // ein anderes Blatt hat das Feld gerade (z. B. für „Anders“)
+      try {
+        leiheZurueck = C6.feld.leihen({ platzhalter: stimme('feld', null, 'Was fehlt dir? Ein Satz reicht.'), fokus: false, sanft: true, nimm: function (t) {
+          var r = bauen(t);
+          if (r === 'behalten') { behalte(t); return true; } // die Leihe bleibt, der Satz auch
+          if (r === true) return true; // das Feld bleibt bei der Rezeption, solange gebaut wird (das Blatt leiht es sich für „Anders“ selbst)
+          leiheZurueck = null; return false;
+        } });
+      } catch (e) { leiheZurueck = null; }
+    }
+    // Netz unter der Leihe: ein Satz im Feld geht hier immer an den Bau
+    try { C6.eingabe && C6.eingabe.hoert && C6.eingabe.hoert(function (t) { var r = bauen(t); if (r === 'behalten') behalte(t); return !!r; }, { raum: 'rezeption' }); } catch (e) {}
+
+    // ---------- deine Werkzeuge ohne Space stehen neben Carl ----------
+    var meinsSchl = '';
+    function meinsZeichnen(neuId) {
+      var l = meine().slice(-3).reverse();
+      var schl = l.map(function (w) { return w.id + ':' + w.name; }).join(',') + '|' + (karteFuer ? karteFuer.id : '');
+      if (schl === meinsSchl && !neuId) return;
+      meinsSchl = schl;
+      el.meins.textContent = '';
+      el.meins.hidden = !l.length;
+      if (!l.length) return;
+      var reihe = mach('div', 'c6rz-reihe', el.meins);
+      reihe.setAttribute('role', 'group'); reihe.setAttribute('aria-label', 'Deine Werkzeuge');
+      l.forEach(function (w) {
+        var h = mach('div', 'c6rz-wz' + (neuId === w.id ? ' c6rz-neu' : ''), reihe);
+        try { C6.werkzeug.male(h, w, { klein: true }); } catch (e) { h.remove(); }
+      });
+      if (karteFuer) karte(karteFuer);
+    }
+    // „Das hab ich mir gemerkt“: nur dein Satz und der Name – und ein Weg, es zu berichtigen
+    function karte(d) {
+      var w = C6.werkzeug && C6.werkzeug.hol ? C6.werkzeug.hol(d.id) : null;
+      if (!w) { karteFuer = null; return; }
+      var alt = el.meins.querySelector('.c6rz-karte'); if (alt) alt.remove();
+      var k = mach('section', 'c6rz-karte', el.meins);
+      k.setAttribute('aria-label', 'Das hab ich mir gemerkt');
+      var anders = Array.isArray(w.anders) ? w.anders.filter(Boolean) : [];
+      var satzDt = d.bei && !anders.length ? 'Mein Beispiel' : 'Dein Satz'; // nach dem ersten „Anders“ ist es sein Satz
+      k.innerHTML = '<p class="c6rz-karte-kopf">Das hab ich mir gemerkt</p>' +
+        '<dl class="c6rz-karte-liste"><div><dt>' + satzDt + '</dt><dd class="c6rz-karte-satz">„' + esc(kurz(w.satz || d.satz, 200)) + '“</dd></div>' +
+        (anders.length ? '<div><dt>Anders</dt><dd class="c6rz-karte-anders">' + esc(anders.join(' · ')) + '</dd></div>' : '') +
+        '<div><dt>Name</dt><dd class="c6rz-karte-name">' + esc(w.name) + '</dd></div></dl>' +
+        '<p class="c6rz-kosten">' + esc(kosten(d)) + '</p>' +
+        '<button type="button" class="c6rz-korr">Stimmt so nicht</button>';
+      k.querySelector('.c6rz-korr').onclick = function () { berichtigen(k, w, d); };
+    }
+    // Eine Zeile, die in jedem Zustand wahr ist: nur Gemessenes, keine erfundene Zahl
+    function kosten(d) {
+      var kopf = kopfText(d), sek = sekText(d.gedacht);
+      if (d.von !== 'denk') {
+        if (d.grund === 'zeit') return stimme('kostenGewartet', { sek: sek }, 'Ich hab {sek} Sekunden gewartet, dann eine Vorlage genommen.');
+        if (d.grund === 'unbrauchbar' && kopf) return stimme('kostenDenkVorlage', { sek: sek, kopf: kopf }, '{kopf} hat {sek} Sekunden gedacht, brauchbar war es nicht. Darum eine Vorlage.');
+        return stimme('kostenVorlage', null, 'Gedacht hab ich hier nicht, das ist eine Vorlage.');
+      }
+      if (d.kopf === 'lokal' && C6.stimme && C6.stimme.hat && C6.stimme.hat('rezeption.kostenLokal')) return stimme('kostenLokal', { sek: sek, modell: d.modell || '' }, 'Dein Rechner hat gedacht, {sek} Sekunden lang.');
+      if (kopf) return stimme('kostenDenk', { sek: sek, kopf: kopf }, 'Gedacht hat {kopf}, {sek} Sekunden lang.');
+      return stimme('kostenDenkOhne', { sek: sek }, '{sek} Sekunden gedacht.');
+    }
+    function berichtigen(k, w, d) {
+      if (k.querySelector('.c6rz-korr-form')) return;
+      var knopf = k.querySelector('.c6rz-korr'); if (knopf) knopf.hidden = true;
+      var f = mach('form', 'c6rz-korr-form', k);
+      f.innerHTML = '<p class="c6rz-korr-kopf">' + esc(stimme('korrektur', null, 'So stimmt es')) + '</p>' +
+        '<label>' + (d.bei && !(w.anders && w.anders.length) ? 'Der Satz' : 'Dein Satz') + '<input type="text" name="satz" maxlength="200" value="' + esc(w.satz || d.satz || '') + '"></label>' +
+        '<label>Name<input type="text" name="name" maxlength="28" value="' + esc(w.name || '') + '"></label>' +
+        '<div class="c6rz-korr-wahl"><button type="submit" class="c6rz-knopf c6rz-haupt">So stimmt es</button><button type="button" class="c6rz-link" data-w="lassen">Doch so lassen</button></div>';
+      f.querySelector('[data-w=lassen]').onclick = function () { f.remove(); if (knopf) knopf.hidden = false; };
+      f.onsubmit = function (e) {
+        e.preventDefault();
+        var satz = f.elements.satz.value.trim(), name = f.elements.name.value.trim();
+        var x = C6.werkzeug.hol(w.id); if (!x) return;
+        if (satz && satz !== x.satz) { x.satz = kurz(satz, 200); if (karteFuer && karteFuer.id === x.id) karteFuer.bei = null; } // ein berichtigter Satz ist seiner
+        if (name) x.name = kurz(name, 28);
+        try { C6.speichern && C6.speichern(); } catch (e2) {}
+        try { C6.bus.emit('werkzeug-eigen', { was: 'benutzt', id: x.id, sid: null }); } catch (e3) {}
+        meinsSchl = ''; meinsZeichnen();
+        sag(stimme('berichtigt', null, 'Gut, so merk ich es mir.'));
+      };
+      try { f.scrollIntoView({ block: 'nearest', behavior: C6.ruhig ? 'auto' : 'smooth' }); f.elements.satz.focus({ preventScroll: true }); } catch (e4) {}
+    }
+
+    // ---------- Beispiele (ein anderes Modul füllt den Platz; fehlt es, bleibt er still leer) ----------
+    function beispieleMalen() {
+      if (beispiele || !(C6.beispiele && typeof C6.beispiele.male === 'function')) return;
+      try { beispiele = C6.beispiele.male(el.beispiele, { bauen: function (satz, id) { bauen(satz, id); } }) || { neu: function () {}, weg: function () {} }; } catch (e) { beispiele = null; }
+    }
+
+    // ---------- Rückrufe ----------
+    C6.bus.on('rezeption-gebaut', function (d) {
+      if (!d || !d.id) return;
+      var w = C6.werkzeug && C6.werkzeug.hol ? C6.werkzeug.hol(d.id) : null;
+      karteFuer = Object.assign({}, d);
+      meinsSchl = ''; meinsZeichnen(d.id);
+      // nach einem Beispiel war der Satz Carls, nicht „dein Satz“; sonst steht das Gespeicherte (w.satz) in der Blase, gekürzt – die Karte trägt es ganz
+      // kurz: die Karte zeigt, was gemerkt ist; die Blase sagt nur, dass
+      if (w && d.bei) sag(stimme('beispielGebaut', { name: w.name }, 'Das hab ich mir gemerkt. War mein Beispiel, jetzt ist es deins.'));
+      else if (w) sag(stimme('gemerkt', { name: w.name, satz: kurz(w.satz || d.satz || '', 60) }, 'Das hab ich mir gemerkt. Beides gehört dir.'));
+      // angekommen: das erste eigene Werkzeug steht (eigener Schlüssel, nicht der Rundgang)
+      try { if (!(C6.S.du && C6.S.du.angekommen)) C6.aendern(function (st) { st.du = st.du || {}; st.du.angekommen = Date.now(); }); } catch (e) {}
+      if (ctl) { try { ctl.stimmung('froh'); if (!C6.ruhig) ctl.huepf(10); } catch (e) {} }
+      if (hier) {
+        setTimeout(feldLeihen, 0);
+        // die Karte kommt ganz ins Bild (am iPhone lagen Kosten-Zeile und „Stimmt so nicht“ sonst unter dem Feld)
+        setTimeout(function () { var k = el.meins.querySelector('.c6rz-karte'); try { if (k) k.scrollIntoView({ block: 'end', behavior: C6.ruhig ? 'auto' : 'smooth' }); else el.tresen.scrollTop = 0; } catch (e2) { el.tresen.scrollTop = 0; } }, 80);
+      }
+    });
+    C6.bus.on('rezeption-frei', function () { if (hier) setTimeout(feldLeihen, 0); });
+    // die Blase folgt dem Moment: bauen → gebaut (oder gleich, gewartet) → gemerkt; zu → zurück zum Gruß
+    var MOMENT = { baut: 'Ich bau es dir. Schau zu.', gebaut: 'So hab ich deinen Satz verstanden. Probier es aus.', gebautVorlage: 'Probier es aus. Ändern geht gleich.', gleich: 'Gleich geblieben, mitdenken kann ich hier nicht. Anders wird es mit Wörtern wie „jeden Tag“, „zählen“, „Liste“ oder „Termin“.', gewartet: '25 Sekunden sind um, länger warte ich nicht. Probier das hier aus, ändern geht gleich.' };
+    C6.bus.on('rezeption-moment', function (d) {
+      if (!d || !MOMENT[d.was]) return;
+      sag(stimme(d.was, null, MOMENT[d.was]));
+      if (ctl) { try { ctl.stimmung(d.was === 'baut' ? 'arbeitet' : 'ruhig'); } catch (e) {} }
+    });
+    C6.bus.on('rezeption-zu', function () {
+      if (ctl) { try { ctl.stimmung('ruhig'); } catch (e) {} }
+      erster();
+      if (hier) setTimeout(feldLeihen, 0);
+    });
+    C6.bus.on('werkzeug-eigen', function (d) { if (d && (d.was === 'gehaengt' || d.was === 'weg' || d.was === 'benutzt')) meinsZeichnen(); });
+    // der Kern gibt bei jedem Raumwechsel jede Leihe zurück – danach leiht die Rezeption neu
+    C6.bus.on('raum', function (id) { if (id === 'rezeption' && hier) setTimeout(feldLeihen, 0); });
+    C6.bus.on('geraet', groesse);
+
+    function groesse() {
+      var comp = C6.geraet === 'computer';
+      wurzel.classList.toggle('c6rz-computer', comp);
+      if (ctl) { try { ctl.groesse(comp ? 200 : 120); } catch (e) {} }
+    }
+
+    erster(); groesse(); meinsZeichnen();
+    return {
+      betreten: function () {
+        hier = true;
+        // der Gruß steht wieder; nach einem Bau rollt der Boden nach oben (die Karte darf nicht mitten im Bild hängen), sonst bleibt die Lage wie verlassen
+        erster(); if (karteFuer) { try { el.tresen.scrollTop = 0; } catch (e0) {} }
+        groesse(); meinsZeichnen(); beispieleMalen();
+        if (ctl) { try { if (ctl.stimmungJetzt === 'schlaeft') ctl.stimmung('ruhig'); ctl.blick(0.2, 0.1); setTimeout(function () { ctl && ctl.blick(); }, 1400); } catch (e) {} }
+        setTimeout(feldLeihen, 0);
+      },
+      verlassen: function () { hier = false; feldZurueck(); },
+      groesse: groesse
+    };
+  }
+});
+
+})()}catch(e){console.error("Modul rezeption.js",e)}</script>
+<script>/*rezeption.welt.js*/
+try{(function(){
+/* Rezeption · die Welt hinter allem.
+   Füllt den Slot .c6rz-welt der Rezeption beim ersten Betreten: Wand, Fenster nach der Uhr, Tresen, Lampe,
+   eine Tasse Tee (das eine Lebenszeichen) und die Tischglocke (das eine Ding zum Denken).
+   Fasst weder Carl noch das Feld an; Licht meldet sie dem Kern, damit Schatten im Raum stimmen. */
+(function () {
+  if (typeof C6 === 'undefined' || !C6.bus) return;
+  var T = '#2b2722', RAUM = 'rezeption';
+  var root = null, glocke = null, geklingelt = 0, warteUhr = null, warteBis = 0;
+
+  function zeit() {
+    try { if (typeof C6.tageszeit === 'function') { var t = C6.tageszeit(); if (/^(morgen|mittag|abend|nacht)$/.test(t)) return t; } } catch (e) {}
+    var h = new Date().getHours();
+    return h >= 6 && h < 11 ? 'morgen' : h >= 11 && h < 17 ? 'mittag' : h >= 17 && h < 21 ? 'abend' : 'nacht';
+  }
+  function satz(k, ersatz) {
+    try { if (C6.stimme && C6.stimme.fest) { var s = C6.stimme.fest(k, {}); if (s) return s; } } catch (e) {}
+    return ersatz;
+  }
+
+  // Bilder: einfache Formen, eine Tuschelinie, warme Flächen
+  function fensterBild() {
+    return '<svg viewBox="0 0 160 150" aria-hidden="true" focusable="false">' +
+      '<defs><linearGradient id="c6rw-himmel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="c6rw-himmel-1"/><stop offset="1" class="c6rw-himmel-2"/></linearGradient></defs>' +
+      '<rect x="0" y="0" width="160" height="140" rx="6" fill="url(#c6rw-himmel)" stroke="' + T + '" stroke-width="3"/>' +
+      '<g style="clip-path:inset(2px round 5px)">' +
+      '<circle class="c6rw-sonne" cx="118" cy="40" r="15" fill="#fff6cf" opacity="0"/>' +
+      '<g class="c6rw-abendlicht"><circle cx="126" cy="88" r="14" fill="#ffd48a"/><path d="M0 96 H160" stroke="#f7c58e" stroke-width="2" opacity=".6"/></g>' +
+      '<g class="c6rw-mond"><circle cx="116" cy="38" r="13" fill="#f3e6b8"/><circle cx="122" cy="33" r="11" fill="#243052"/></g>' +
+      '<g class="c6rw-sterne" fill="#f3e6b8"><circle cx="34" cy="28" r="1.8"/><circle cx="60" cy="54" r="1.4"/><circle cx="20" cy="60" r="1.2"/><circle cx="92" cy="20" r="1.3"/><circle cx="72" cy="30" r="1"/></g>' +
+      '<path class="c6rw-huegel" d="M0 112 q40 -26 85 -8 t75 -6 V140 H0 Z" opacity=".95"/>' +
+      '</g>' +
+      '<path d="M80 0 V140 M0 70 H160" stroke="' + T + '" stroke-width="3"/>' +
+      '<rect x="-8" y="137" width="176" height="11" rx="2" fill="#c99e66" stroke="' + T + '" stroke-width="2"/>' +
+      '</svg>';
+  }
+  function lampeBild() {
+    return '<div class="c6rw-glut"></div><svg viewBox="0 0 60 92" aria-hidden="true" focusable="false">' +
+      '<ellipse class="c6rw-lampenschein" cx="30" cy="40" rx="20" ry="14" fill="#ffe3a0" opacity="0"/>' +
+      '<path d="M22 88 h16 l-3 -6 h-10 z" fill="#2f5f8a" stroke="' + T + '" stroke-width="2"/>' +
+      '<path d="M30 82 V30" stroke="' + T + '" stroke-width="3" stroke-linecap="round"/>' +
+      '<path d="M8 36 Q30 -6 52 36 Z" fill="#2f5f8a" stroke="' + T + '" stroke-width="2.5" stroke-linejoin="round"/>' +
+      '<path d="M30 36 Q30 -6 52 36 Z" fill="#2b2722" opacity=".14"/>' +
+      '<circle class="c6rw-birne" cx="30" cy="38" r="6" fill="#f0d9a0" stroke="' + T + '" stroke-width="2"/>' +
+      '</svg>';
+  }
+  function tasseBild() {
+    return '<svg viewBox="0 0 48 60" aria-hidden="true" focusable="false">' +
+      '<path class="c6rw-dampf" d="M18 30 c-4 -6 4 -8 0 -14 c-3 -5 2 -8 2 -11"/>' +
+      '<path class="c6rw-dampf" d="M28 31 c-4 -6 4 -8 0 -14 c-3 -5 2 -8 2 -11"/>' +
+      '<ellipse cx="22" cy="56" rx="18" ry="3" fill="#2b2722" opacity=".12"/>' +
+      '<path d="M8 34 h28 v10 a14 14 0 0 1 -28 0 z" fill="#fbf7f0" stroke="' + T + '" stroke-width="2.2" stroke-linejoin="round"/>' +
+      '<path d="M36 37 q10 1 8 9 q-2 6 -9 6" fill="none" stroke="' + T + '" stroke-width="2.2" stroke-linecap="round"/>' +
+      '<ellipse cx="22" cy="34" rx="14" ry="3" fill="#c9884a" stroke="' + T + '" stroke-width="2"/>' +
+      '</svg>';
+  }
+  function glockeBild() {
+    return '<svg viewBox="0 0 52 44" aria-hidden="true" focusable="false">' +
+      '<circle class="c6rw-ring" cx="26" cy="24" r="18"/><circle class="c6rw-ring" cx="26" cy="24" r="18"/>' +
+      '<ellipse cx="26" cy="41" rx="22" ry="3" fill="#2b2722" opacity=".14"/>' +
+      '<path d="M6 40 h40 a2 2 0 0 0 0 -4 h-40 a2 2 0 0 0 0 4 z" fill="#2b2722" stroke="' + T + '" stroke-width="2"/>' +
+      '<g class="c6rw-kuppel"><path d="M8 36 Q8 14 26 12 Q44 14 44 36 Z" fill="#e0b964" stroke="' + T + '" stroke-width="2.4" stroke-linejoin="round"/>' +
+      '<path d="M26 36 Q26 14 44 36 Z" fill="#2b2722" opacity=".12"/><path d="M13 30 Q15 18 24 15" fill="none" stroke="#fff3c4" stroke-width="2" stroke-linecap="round" opacity=".8"/></g>' +
+      '<g class="c6rw-knopf"><rect x="23" y="6" width="6" height="8" rx="1.5" fill="#2b2722"/><circle cx="26" cy="6" r="4" fill="#e0b964" stroke="' + T + '" stroke-width="2"/></g>' +
+      '</svg>';
+  }
+
+  // Die Glocke antwortet: wahr je Zustand (vor dem ersten Klingeln, danach, nachts)
+  function glockeSatz() {
+    var n = zeit() === 'nacht';
+    if (!geklingelt) return n
+      ? satz('rezeption.glocke.nacht', 'Nachts klingelt die Glocke leiser. Wach bin ich trotzdem. Sag mir deinen Satz, mehr braucht es nicht.')
+      : satz('rezeption.glocke', 'Die Glocke klingelt nur hier auf dem Tresen. Ich bin schon da. Sag mir deinen Satz, mehr braucht es nicht.');
+    return satz('rezeption.glocke.geklingelt', 'Die Glocke hat geklingelt, mehr tut sie nicht. Gesehen hab ich dich vorher schon.');
+  }
+  // Beim Klingeln spricht Carl über die eine Blase am Tresen und freut sich kurz (höchstens 1,5 s), dann steht er wieder ruhig
+  var frohUhr = null;
+  function carlFreut() {
+    try {
+      if (C6.jetzt !== RAUM || !C6.carl || typeof C6.carl.stimmung !== 'function') return;
+      C6.carl.stimmung('froh');
+      if (frohUhr) clearTimeout(frohUhr);
+      frohUhr = setTimeout(function () { frohUhr = null; try { if (C6.jetzt === RAUM && C6.carl && C6.carl.stimmung) C6.carl.stimmung('ruhig'); } catch (e) {} }, 1400);
+    } catch (e) {}
+  }
+  function klingeln() {
+    if (!glocke) return;
+    geklingelt++;
+    glocke.classList.remove('c6rw-klingt');
+    void glocke.offsetWidth;
+    glocke.classList.add('c6rw-klingt');
+    glocke.setAttribute('aria-label', 'Tischglocke, hat geklingelt');
+    setTimeout(function () { if (glocke) glocke.classList.remove('c6rw-klingt'); }, 800);
+    var t = glockeSatz();
+    try { if (C6.staunen) { if (C6.staunen.zu) C6.staunen.zu('rz-glocke'); C6.staunen.text('rz-glocke', t); } } catch (e) {}
+    try {
+      if (C6.rezeption && typeof C6.rezeption.sag === 'function') C6.rezeption.sag(t);
+      else if (C6.sag) C6.sag(t, { merken: false });
+    } catch (e) {}
+    carlFreut();
+    try { C6.bus.emit('rezeption-welt', { was: 'glocke', n: geklingelt }); } catch (e) {}
+  }
+
+  // Licht: am Tag kommt es vom Fenster links oben, abends und nachts von der Lampe links auf dem Tresen
+  function licht(tz) {
+    var comp = C6.geraet === 'computer';
+    var q = tz === 'nacht' ? { x: comp ? 0.26 : 0.14, y: 0.3, art: 'lampe', warm: 0.9, staerke: 0.7, hoehe: 0.5 }
+      : tz === 'abend' ? { x: comp ? 0.26 : 0.14, y: 0.3, art: 'lampe', warm: 0.85, staerke: 0.65, hoehe: 0.55 }
+      : tz === 'morgen' ? { x: 0.12, y: 0.14, art: 'fenster', warm: 0.7, staerke: 0.85, hoehe: 0.7 }
+      : { x: 0.14, y: 0.12, art: 'fenster', warm: 0.5, staerke: 0.8, hoehe: 0.75 };
+    try { if (C6.lichtquelle && C6.lichtquelle.setze) C6.lichtquelle.setze(RAUM, q); } catch (e) {}
+  }
+  function setzeZeit() {
+    if (!root) return;
+    var tz = zeit();
+    if (root.getAttribute('data-zeit') === tz) return;
+    root.setAttribute('data-zeit', tz);
+    licht(tz);
+    try { if (C6.staunen && C6.staunen.text) C6.staunen.text('rz-glocke', glockeSatz()); } catch (e) {}
+  }
+
+  function baue(slot) {
+    if (root || !slot) return;
+    root = document.createElement('div');
+    root.className = 'c6rw';
+    root.setAttribute('data-zeit', zeit());
+    root.innerHTML =
+      '<div class="c6rw-wand" aria-hidden="true"></div>' +
+      '<div class="c6rw-boden" aria-hidden="true"></div>' +
+      '<div class="c6rw-schein" aria-hidden="true"></div>' +
+      '<div class="c6rw-fenster" aria-hidden="true">' + fensterBild() + '</div>' +
+      '<div class="c6rw-tresen" aria-hidden="true"><div class="c6rw-kante"></div><div class="c6rw-front"></div><div class="c6rw-sockel"></div></div>' +
+      '<div class="c6rw-lampe" aria-hidden="true">' + lampeBild() + '</div>' +
+      '<div class="c6rw-tasse" aria-hidden="true">' + tasseBild() + '</div>' +
+      '<button type="button" class="c6rw-glocke" data-c6rw-ding="glocke" aria-label="Tischglocke">' + glockeBild() + '</button>';
+    slot.appendChild(root);
+    glocke = root.querySelector('.c6rw-glocke');
+    glocke.addEventListener('click', klingeln);
+    try { if (C6.staunen && C6.staunen.an) C6.staunen.an(glocke, 'rz-glocke', glockeSatz()); } catch (e) {}
+    licht(zeit());
+    C6.bus.on('tageszeit', setzeZeit);
+  }
+
+  function slotVon() {
+    var b = document.querySelector('.c6-buehne[data-raum="' + RAUM + '"]');
+    return b ? b.querySelector('.c6rz-welt') : null;
+  }
+  function versuche() {
+    if (root) return true;
+    var s = slotVon();
+    if (s) { baue(s); return true; }
+    return false;
+  }
+  // Der Slot entsteht, wenn die Rezeption gebaut wird; kommt er einen Takt später, warten wir kurz (höchstens 2 s)
+  function wenn(id) {
+    var r = id && typeof id === 'object' ? id.id : id;
+    if (r !== RAUM || root) return;
+    if (versuche()) return;
+    warteBis = Date.now() + 2000;
+    if (warteUhr) return;
+    (function tick() {
+      warteUhr = null;
+      if (versuche() || Date.now() > warteBis) return;
+      warteUhr = setTimeout(tick, 80);
+    })();
+  }
+  C6.bus.on('gebaut', wenn);
+  C6.bus.on('raum', wenn);
+  if (C6.jetzt === RAUM) wenn(RAUM);
+})();
+
+})()}catch(e){console.error("Modul rezeption.welt.js",e)}</script>
 <script>/*rundgang.js*/
 try{(function(){
 // Rundgang: das erste Öffnen ist die erste Schleife. Ein Kiesel liegt da, du weckst ihn,
@@ -36860,12 +37779,52 @@ C6.raum({
       '<div class="c6z-carl"></div>' +
       '<button type="button" class="c6z-ding c6z-knaeuel" data-tiefe="nah" aria-label="Knäuel"><i class="c6m-schatten" data-sw=".5" data-sh=".2" data-sx="-.25"></i>' + KNAEUEL + '<i class="c6z-kn-spur" aria-hidden="true"></i></button>' +
       '<div class="c6z-ablage" data-tiefe="nah" data-c6-ablage></div>' +
+      '<div class="c6z-meine" data-tiefe="nah" role="group" aria-label="Deine Werkzeuge, die noch an der Rezeption stehen" hidden></div>' +
       '<div class="c6z-sb-brett" role="group" aria-label="Deine Spaces" lang="de"><i class="c6z-sb-brett-holz" aria-hidden="true"></i><div class="c6z-sb-haken"></div></div>' +
       '<button type="button" class="c6z-verlauf" aria-label="Unser Gespräch zeigen"></button>' +
       '<div class="c6z-flug" aria-hidden="true"></div>';
     function q(s) { return st.querySelector(s); }
     var el = { spur: q('.c6z-kn-spur'), brett: q('.c6z-sb-brett'), haken: q('.c6z-sb-haken'), carl: q('.c6z-carl'), fenster: q('.c6z-fenster'), tuer: q('.c6z-tuer'), bild: q('.c6z-bild'), knaeuel: q('.c6z-knaeuel'), verlauf: q('.c6z-verlauf'), flug: q('.c6z-flug'), sonne: q('.c6z-sonne'),
       kalender: q('.c6m-kalender'), lampe: q('.c6z-lampe'), gruen: q('.c6m-gruen'), regal: q('.c6m-regal'), sofa: q('.c6z-sofa'), sessel: q('.c6z-sessel'), kegel: q('.c6m-kegel'), lampenschatten: q('.c6m-lampenschatten'), vogel: q('.c6m-vogel'), licht: q('.c6z-licht') };
+
+    // Deine Werkzeuge ohne Space stehen leise am Boden (die Reihe kommt aus der Rezeption); leer → nichts
+    var meineEl = q('.c6z-meine'), meineCtl = null;
+    function meineAn() {
+      try {
+        if (!meineCtl && C6.rezeption && typeof C6.rezeption.meine === 'function') meineCtl = C6.rezeption.meine(meineEl);
+        else if (meineCtl && meineCtl.neu) meineCtl.neu();
+        meineSchmuecken();
+      } catch (e) { meineCtl = null; }
+    }
+    // Im Zuhause ist die kleine Karte ein Bild mit einer Bedeutung: antippen öffnet das große Blatt (keine kleinen Knöpfe unter 44 px)
+    function meineListe() { try { return (C6.werkzeug && C6.werkzeug.alle ? C6.werkzeug.alle() : []).filter(function (w) { return !w.sid; }).slice(-3).reverse(); } catch (e) { return []; } }
+    function meineSchmuecken() {
+      var l = meineListe(), k = meineEl.querySelectorAll('.c6rz-wz');
+      for (var i = 0; i < k.length; i++) {
+        var w = l[i]; if (!w) continue;
+        k[i].setAttribute('role', 'button'); k[i].setAttribute('tabindex', '0'); k[i].setAttribute('data-wz', w.id);
+        k[i].setAttribute('aria-label', 'Werkzeug „' + (w.name || 'ohne Namen') + '“ öffnen');
+      }
+    }
+    meineEl.addEventListener('click', function (e) {
+      var k = e.target.closest ? e.target.closest('.c6rz-wz') : null; if (!k) return;
+      var id = k.getAttribute('data-wz'); if (!id) return;
+      try { C6.werkzeug && C6.werkzeug.gross && C6.werkzeug.gross(id); } catch (err) {}
+    });
+    meineEl.addEventListener('keydown', function (e) { if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('c6rz-wz')) { e.preventDefault(); e.target.click(); } });
+    C6.bus.on('werkzeug-eigen', function () { setTimeout(meineSchmuecken, 0); });
+    function meineDa() { try { return (C6.werkzeug && C6.werkzeug.alle ? C6.werkzeug.alle() : []).some(function (w) { return !w.sid; }); } catch (e) { return false; } }
+    // Einmal, beim ersten Besuch nach dem Ankommen an der Rezeption: Carl sagt, wo er wohnt und wo das Werkzeug steht
+    function begruesseAngekommen() {
+      try {
+        var S = C6.S || {};
+        if (!(S.du && S.du.angekommen) || S.zuhause_begruesst || !meineDa() || (C6.rundgang && C6.rundgang.an)) return;
+        var t = C6.stimme && C6.stimme.fest ? C6.stimme.fest('rezeption.zuhause', {}) : '';
+        if (!t || typeof C6.sag !== 'function') return;
+        C6.aendern(function (S2) { S2.zuhause_begruesst = Date.now(); });
+        setTimeout(function () { if (hier) C6.sag(t); }, 700);
+      } catch (e) {}
+    }
 
     // Ablage am Boden rechts vom Teppich (Gegenstück zum Knäuel): dort legt Carl Mitgebrachtes hin, z. B. einen Brief
     var ablage = q('.c6z-ablage');
@@ -37577,7 +38536,7 @@ C6.raum({
 
     return {
       betreten: function (o) {
-        nimmBrief(); kalenderZeichnen();
+        nimmBrief(); kalenderZeichnen(); meineAn();
         o = o || {};
         hier = true; letzteRegung = Date.now(); st.classList.remove('c6m-still');
         st.classList.toggle('c6z-im-rundgang', !!(o.rundgang || (C6.rundgang && C6.rundgang.an)));
@@ -37585,6 +38544,7 @@ C6.raum({
         try { zuletztDa = (C6.S && C6.S.zuhause && +C6.S.zuhause.da) || 0; } catch (e) { zuletztDa = 0; }
         setTimeout(function () { if (hier) nachschwingen(); }, 900);
         setTimeout(groesse, 350); setTimeout(groesse, 1200); setTimeout(licht, 420);
+        begruesseAngekommen();
         clearInterval(uhrZeit); uhrZeit = setInterval(zeit, 300000);
         clearInterval(uhrSchlaf); uhrSchlaf = setInterval(schlafPruef, 15000);
         clearInterval(uhrSitz); uhrSitz = setInterval(sitzPruef, 1000);
@@ -37642,8 +38602,10 @@ setTimeout(function () {
   var R = C6.raeume, ziel = null;
   var m = location.hash.match(/raum=([\w-]+)/);
   var fertig = !!(C6.S.du && C6.S.du.fertig);
+  var eigene = 0; try { eigene = C6.werkzeug && C6.werkzeug.alle ? C6.werkzeug.alle().length : 0; } catch (e) { eigene = 0; }
+  // Ein Fremder (kein Rundgang gemacht, kein eigenes Werkzeug) kommt an die Rezeption; der Rundgang startet nur über #raum=rundgang
   if (m && R[m[1]]) ziel = m[1];
-  else if (!fertig && R.rundgang) ziel = 'rundgang';
+  else if (!fertig && !eigene && R.rezeption) ziel = 'rezeption';
   else if (C6.S.ort && R[C6.S.ort.raum] && C6.S.ort.raum !== 'rundgang') ziel = C6.S.ort.raum;
   else if (R.zuhause) ziel = 'zuhause';
   else { var k = Object.keys(R); ziel = k[0] || null; }
