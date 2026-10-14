@@ -42,7 +42,7 @@ C6.rezeption.meine = function (ziel) {
 function spacesDa() { try { return !!(C6.strings && C6.strings.alle && C6.strings.alle().length); } catch (e) { return false; } }
 
 C6.raum({
-  id: 'rezeption', name: 'Rezeption', hoehe: 'boden', reihe: 0, symbol: SYMBOL,
+  id: 'rezeption', name: 'Rezeption', hoehe: 'boden', reihe: 0, symbol: SYMBOL, tageszeit: true, // die Welt zeichnet ihre Nacht selbst (kein Nachtschleier des Kerns)
   // der Himmel hat für einen Fremden ohne Space noch nichts zu zeigen: kein Himmel-Knopf, bis es einen gibt
   regler: function () { return spacesDa(); },
   bauen: function (buehne) {
