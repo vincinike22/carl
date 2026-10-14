@@ -370,6 +370,8 @@ function male(el, opt) {
     // Gefährt
     gefaehrt: null, imGf: false, gfP: feder(0, 40, 9), gfY: feder(0, 14, 4.4), gfNeig: feder(0, 40, 7), gfBeine: 'baumeln', gfSchwebt: true,
     // Licht: Richtung zur Quelle (Figur-Einheiten, Länge 1), Deckkraft, Höhe – gedrosselt gelesen, weich nachgeführt
+    // leises Schweben als Grundzustand (landet beim Sitzen, Gehen, Schlafen, im Gefährt) · Sitz-Szenen · Schielen
+    schweb: feder(0, 22, 8), schwebAn: opt.schweben === true ? true : opt.schweben === false || opt.rundgang ? false : null, sz: null, szT: 5, szLetzt: '', plumps: 0, schiel: feder(0, 150, 18),
     licht: { lx: -0.6, ly: -0.8, a: 0.14, hoehe: 0.7, st: 0.8 }, lz: { lx: -0.6, ly: -0.8, a: 0.14, hoehe: 0.7, st: 0.8 }, lichtT: 0, buehne: null, buehneR: null
   };
 
@@ -386,6 +388,7 @@ function male(el, opt) {
     tick: tick
   };
   wrap.__c6z = f;
+  f.ohneKleid = !!opt.rundgang;
   alle.push(f);
   if (io) io.observe(wrap);
 
@@ -679,12 +682,82 @@ function male(el, opt) {
           } else if (eh.art === 'schritt') {
             // ein Beinchen hebt sich, der Körper folgt, das andere zieht nach
             var sp1 = Math.sin(Math.PI * klemm(ep / 0.55, 0, 1)), sp2 = Math.sin(Math.PI * klemm((ep - 0.4) / 0.55, 0, 1));
-            if (eh.r > 0) { schrittR += 7 * sp1; schrittL += 6 * sp2; } else { schrittL += 7 * sp1; schrittR += 6 * sp2; }
+            var schwK = 1 - 0.8 * klemm(z.schweb.x, 0, 1);   // schwebt er, gleitet er seitwärts, statt zu steigen
+            if (eh.r > 0) { schrittR += 7 * sp1 * schwK; schrittL += 6 * sp2 * schwK; } else { schrittL += 7 * sp1 * schwK; schrittR += 6 * sp2 * schwK; }
             bob -= 2 * (sp1 + sp2) * 0.5; neigZ += eh.r * 3 * sp1; gxG = eh.r * 0.55; gyG = 0.2;
           }
         }
       }
     }
+    // Schweben: ein leiser Grundzustand, nie lauter als Carl selbst (≈ 7 Einheiten, ein Atemzug von 4,6 s)
+    // Schweben nur, wo es Sinn hat: oben im Himmel und Teleskop, oder einen Augenblick vor Freude.
+    // In den Haupträumen steht und sitzt Carl auf dem Boden (Kontaktschatten), er atmet nur.
+    if (z.schwebAn === null) { var rv = raumVon(f); z.schwebOben = rv === 'netz' || rv === 'teleskop'; }
+    var schwebDarf = z.schwebAn === true || (z.schwebAn === null && z.schwebOben) || (z.schwebAn !== false && z.name === 'froh' && z.glueh > jetzt);
+    z.schweb.z = (schwebDarf && !klein && !z.sitzen && !z.imGf && !z.fliegt && !(z.gang && !z.gang.flug) && z.name !== 'schlaeft' && !z.nickt) ? 1 : 0;
+    var sw = klemm(z.schweb.x, 0, 1.15), swPh = t * Math.PI * 2 / 4.6;
+    var schwebLift = sw * (7 + (ruhig ? 0 : Math.sin(swPh) * 2.2));
+    if (!ruhig && sw > 0.01) neigZ += Math.sin(swPh + 0.8) * 0.6 * sw;
+    // Sitzen: erst plumpst er aufs Polster, dann kleine Szenen (seufzen, Blatt wegpusten, Fuß tippen, wippen)
+    var szHop = 0, szBL = 0, szBR = 0, szSchiel = 0, szStiel = 0, spJetzt = klemm(z.sitzP.x, 0, 1);
+    if (z.plumps) {
+      var pe = (jetzt - z.plumps) / 1000;
+      if (ruhig || klein || pe > 1) z.plumps = 0;
+      else {
+        aktiv = true;
+        if (pe < 0.42) szHop = -15 * Math.sin(Math.PI * pe / 0.42);
+        else if (!z.plLand) { z.plLand = true; z.sy.v -= 3.4; z.sx.v += 2.6; z.bR.v -= 280; z.bL.v += 280; z.fdMy.v += 60; z.fdS.v += 40; z.pL.v += 70; z.pR.v -= 70; z.blinzel = 0.04; }
+        if (pe < 0.2) { bRz -= 18; bLz += 18; gyG = 0.5; gxG = 0; }
+      }
+    }
+    var szFrei = z.sitzen && !ruhig && !klein && spJetzt > 0.85 && !z.plumps && !gew && !z.nickt && !z.sprich && !z.druck && !z.huepf &&
+      (z.name === 'ruhig' || z.name === 'froh' || z.name === 'hoert') && jetzt - zeiger.t > 1800;
+    if (z.sz && !szFrei) z.sz = null;
+    if (!z.sz && szFrei) {
+      z.szT -= dt;
+      if (z.szT <= 0) {
+        var szL = ['seufzen', 'pusten', 'tippen', 'wippen'].filter(function (x) { return x !== z.szLetzt; });
+        var szA = szL[Math.floor(Math.random() * szL.length)];
+        z.sz = { art: szA, t0: jetzt, dauer: { seufzen: 3400, pusten: 3600, tippen: 3200, wippen: 2300 }[szA], ok: false }; z.szLetzt = szA;
+        z.szT = 4.5 + Math.random() * 4;
+      }
+    }
+    if (z.sz) {
+      var sz = z.sz, q2 = (jetzt - sz.t0) / sz.dauer;
+      if (q2 >= 1) z.sz = null;
+      else {
+        aktiv = true;
+        var hb = function (a, b) { return klemm((q2 - a) / (b - a), 0, 1); }, glatt2 = function (v) { return v * v * (3 - 2 * v); };
+        if (sz.art === 'seufzen') {
+          // tief einatmen, Blick nach oben … und ganz lange aus: die Blätter sinken mit
+          var ein = glatt2(hb(0, 0.32)) * (1 - glatt2(hb(0.42, 0.62))), aus = glatt2(hb(0.42, 0.6)) * (1 - glatt2(hb(0.82, 1)));
+          syG += 0.065 * ein - 0.045 * aus; gyG = -0.35 * ein + 0.25 * aus; gxG = 0.05;
+          bRz -= 12 * ein - 46 * aus; bLz += 12 * ein - 48 * aus; lidG = Math.max(lidG, 0.5 * aus); neigZ += -3 * aus;
+          mG = ein > 0.2 ? [4, 0.35 * ein, 0, 1, 0] : aus > 0.15 ? [5, 0.55 * aus, 0, 1, 0] : [8, 0.05, 0.9, 0, 0];
+        } else if (sz.art === 'pusten') {
+          // das rechte Blatt kippt ihm in die Stirn, er schielt hoch, bläst die Backen auf – pff! – und es schnellt zurück
+          var kipp = glatt2(hb(0.04, 0.34)) * (q2 < 0.56 ? 1 : 0), backe = glatt2(hb(0.36, 0.52)) * (q2 < 0.58 ? 1 : 0), stolz = glatt2(hb(0.62, 0.72)) * (1 - glatt2(hb(0.9, 1)));
+          if (q2 < 0.56) { bRz = st.bR - 118 * kipp + wind * 0.4; bLz += 14 * kipp; szStiel = -30 * kipp; }
+          szSchiel = q2 < 0.6 ? glatt2(hb(0.1, 0.3)) : 0;
+          if (q2 < 0.6) { gxG = 0.12; gyG = -0.95 * glatt2(hb(0.06, 0.26)); }
+          if (backe > 0) { mG = [3, 0.06, 0, 1, 0]; wangeG += 0.45 * backe; syG += 0.03 * backe; }
+          if (q2 >= 0.56 && !sz.ok) { sz.ok = true; z.bR.v += 620; z.tipR.v += 120; z.bL.v -= 140; z.sy.v -= 1.1; z.neig.v += 18; z.blinzel = 0.03; }
+          if (q2 >= 0.56 && q2 < 0.64) mG = [4.5, 0.7, 0, 1, 0];
+          if (stolz > 0) { mG = [10.5, 0.5 * stolz, 1, 0, 0]; gxG = 0; gyG = 0.12; wangeG += 0.2 * stolz; }
+        } else if (sz.art === 'tippen') {
+          // ein Fuß tippt einen Takt, der Kopf nickt mit, er summt mit halb geschlossenen Augen
+          var takt = Math.sin(q2 * Math.PI * 2 * 4.5), an = glatt2(hb(0, 0.12)) * (1 - glatt2(hb(0.88, 1)));
+          szBL = Math.max(0, takt) * 9 * an; neigZ += Math.max(0, -takt) * 2.2 * an;
+          mG = [4.5, (0.18 + 0.1 * Math.max(0, takt)) * an, 0.6, 0.7, 0]; lidG = Math.max(lidG, 0.42 * an); gxG = 0.25; gyG = -0.15;
+        } else if (sz.art === 'wippen') {
+          // er prüft das Polster: boing, boing
+          var w2 = Math.sin(Math.PI * klemm(q2 / 0.8, 0, 1) * 2), w3 = Math.abs(w2);
+          szHop = -9 * w3; syG += q2 < 0.8 ? (w3 < 0.2 ? -0.05 : 0.02) : 0; bRz += 22 * w3; bLz -= 22 * w3;
+          szBL = szBR = 5 * w3; mG = [11, 0.85, 1, 0, 0]; wangeG += 0.25; gyG = -0.1; gxG = 0;
+        }
+      }
+    }
+    z.schiel.z = szSchiel;
     // Einnicken: Blätter hängen, Lider halb, der Kopf sinkt
     var lwG = 0, nickDrop = 0;
     if (nk > 0.001) {
@@ -718,7 +791,7 @@ function male(el, opt) {
     if (!ruhig) z.rphi += dt * Math.PI * 2 * 3.1 * rot;
     var ax = (z.vx - (z.vxAlt || 0)) / dt; z.vxAlt = z.vx;
     if (Math.abs(ax) < 20000) { z.bR.v -= ax * 0.004; z.bL.v -= ax * 0.004; z.stiel.v -= ax * 0.003; z.fdM.v -= ax * 0.0025; z.fdS.v -= ax * 0.003; }
-    z.stiel.z = wind * 0.6;
+    z.stiel.z = wind * 0.6 + szStiel;
     // Gewicht verlagern: beim Stehen alle 8–14 s leise von einem Bein aufs andere
     if (!ruhig && !z.gang && !z.fliegt && !z.sitzen && !imGf && !z.huepf && z.name !== 'schlaeft' && nk < 0.5) {
       z.standT -= dt;
@@ -782,8 +855,9 @@ function male(el, opt) {
     var gfLift = gfSchweb * 10 + z.gfY.x * gfSchweb;
     var baum = imGf && z.gfBeine !== 'weg' ? gfP : 0, bauGf = ruhig ? 0 : Math.sin(t * Math.PI * 2 / 3.4 - 1.2);
     var vxK = Math.max(-12, Math.min(12, z.vx * 0.02));
-    z.pL.z = fh * (6 + bau * 4) - vxK * fh + baum * (8 + bauGf * 3) - vxK * baum;
-    z.pR.z = fh * (-6 + bau * 3.4) - vxK * fh + baum * (-7 + bauGf * 2.6) - vxK * baum;
+    var bauS = ruhig ? 0 : Math.sin(swPh - 1.1);
+    z.pL.z = fh * (6 + bau * 4) - vxK * fh + baum * (8 + bauGf * 3) - vxK * baum + sw * (2.6 + bauS * 1.6);
+    z.pR.z = fh * (-6 + bau * 3.4) - vxK * fh + baum * (-7 + bauGf * 2.6) - vxK * baum + sw * (-2.4 + bauS * 1.3);
     z.gfP.z = imGf ? 1 : 0;
     z.gfNeig.z = imGf ? klemm(z.vx * 0.02, -7, 7) + (ruhig ? 0 : Math.sin(t * Math.PI * 2 / 5.1) * 0.8 * gfSchweb) : 0;
     z.unter.z = st.unter; z.lw.z = st.lw + lwG; z.dl.z = st.dl;
@@ -803,7 +877,7 @@ function male(el, opt) {
       z.tipR.v -= z.bR.v * dt * 1.1; z.tipL.v -= z.bL.v * dt * 1.1;
     }
     z.tipR.z = 0; z.tipL.z = 0; z.fdM.z = 0; z.fdMy.z = 0; z.fdS.z = 0; z.lese.z = gn === 'lesen' ? 1 : 0; z.leseW.z = 0;
-    var fl = [z.sitz, z.gross, z.sx, z.sy, z.neig, z.bR, z.bL, z.stiel, z.tipR, z.tipL, z.gx, z.gy, z.lid, z.unter, z.lw, z.dl, z.wange, z.kringel, z.werk, z.mw, z.ma, z.ml, z.mr, z.mx, z.flug, z.rotor, z.pL, z.pR, z.sitzP, z.stand, z.fdM, z.fdMy, z.fdS, z.nick, z.gfP, z.gfY, z.gfNeig, z.lese, z.leseW, z.seit];
+    var fl = [z.sitz, z.gross, z.sx, z.sy, z.neig, z.bR, z.bL, z.stiel, z.tipR, z.tipL, z.gx, z.gy, z.lid, z.unter, z.lw, z.dl, z.wange, z.kringel, z.werk, z.mw, z.ma, z.ml, z.mr, z.mx, z.flug, z.rotor, z.pL, z.pR, z.sitzP, z.stand, z.fdM, z.fdMy, z.fdS, z.nick, z.gfP, z.gfY, z.gfNeig, z.lese, z.leseW, z.seit, z.schweb, z.schiel];
     var unruhig = false;
     for (var i = 0; i < fl.length; i++) {
       if (ruhig) { fl[i].x = fl[i].z; fl[i].v = 0; continue; }
@@ -819,7 +893,7 @@ function male(el, opt) {
     if (z.lichtNeu || z.lichtB === undefined || Math.abs(z.lichtB - z.bR.x) > 1.5) { z.lichtNeu = false; z.lichtB = z.bR.x; schreibLicht(L); }
     // Schreiben
     var sx = z.sx.x * (1 - 0.015 * a * atemTief), sy = z.sy.x * (1 + 0.026 * a * atemTief + st.auf + syG);
-    setT(n.wurzel, 'translate(' + f1(z.seit.x) + ',' + f1(hopY + bob - lift - gfLift) + ')');
+    setT(n.wurzel, 'translate(' + f1(z.seit.x) + ',' + f1(hopY + szHop + bob - lift - gfLift - schwebLift) + ')');
     if (z.flugOk.length && Math.abs(z.flug.x - z.flug.z) < 0.03 && Math.abs(z.flug.v) < 0.2 && (z.fliegt && !imGf ? z.rotor.x > 0.9 : z.rotor.x < 0.2)) { var ok = z.flugOk; z.flugOk = []; ok.forEach(function (c) { c(); }); }
     var rs = 1 - rot + rot * Math.cos(z.rphi), RX = KOPF.x + 1, RY = KOPF.y - G.stiel;
     setT(n.rotor, rot > 0.01 ? 'translate(' + RX + ',' + RY + ') scale(' + r3(rs * (1 + rot * 0.15)) + ',' + r3(1 - rot * 0.15) + ') translate(' + (-RX) + ',' + (-RY) + ')' : '');
@@ -831,19 +905,20 @@ function male(el, opt) {
     var sp = Math.max(0, Math.min(1.1, z.sitzP.x)), wip = ruhig ? 0 : Math.sin(t * Math.PI * 2 * 0.55);
     var gfDy = imGf && z.gefaehrt && z.gefaehrt.sitz ? (+z.gefaehrt.sitz.dy || 0) * M * gfP : 0;
     setT(n.oben, 'translate(' + f1(stand * 2.6) + ',' + f1(z.sitz.x + sp * 14 + gfDy + nickDrop) + ')');
-    var sitzL = sp * (16 + wip * 2.4), sitzR = sp * (16 - wip * 2.4);
+    var wipA = ruhig ? 1 : 1 + 0.45 * Math.sin(t * 0.37);   // das Baumeln wird mal größer, mal kleiner
+    var sitzL = sp * (16 + wip * 2.4 * wipA) + szBL, sitzR = sp * (16 - wip * 2.4 * wipA) + szBR;
     setT(n.koerper, 'translate(' + CX + ',' + G.unten + ') rotate(' + f1(z.neig.x) + ') scale(' + r3(sx) + ',' + r3(sy) + ') translate(' + (-CX) + ',' + (-G.unten) + ')');
     // Kontaktschatten: vom Licht weg versetzt und gestreckt, beim Flug kleiner und blasser, beim Sitzen flacher, im schwebenden Gefährt aus
-    var hs = Math.max(0.45, 1 + (hopY - lift) / 90), tief = 1 - L.hoehe;
+    var hs = Math.max(0.45, 1 + (hopY + szHop - lift - schwebLift * 1.8) / 90), tief = 1 - L.hoehe;
     var sdx = -L.lx * (8 + 34 * tief) * (1 - fh * 0.5), sks = 1 + 0.5 * tief * Math.abs(L.lx), skv = (1 + 0.3 * tief) * (1 - sp * 0.3) * (1 - fh * 0.3);
-    setO(n.schatten, L.a * (1 - fh * 0.45) * (1 - gfSchweb) * (klein ? 1.1 : 1));
+    setO(n.schatten, L.a * (1 - fh * 0.45) * (1 - gfSchweb) * (1 - sw * 0.22) * (klein ? 1.1 : 1));
     setT(n.schatten, 'translate(' + f1(CX + sdx + stand * 1.2 + z.seit.x) + ',' + BODEN + ') scale(' + r2(hs * sks) + ',' + r2(skv) + ') translate(' + (-CX) + ',' + (-BODEN) + ')');
     var hebL = stand > 0 ? stand * 1.6 : 0, hebR = stand < 0 ? -stand * 1.6 : 0;   // das entlastete Bein hebt die Ferse
     setT(n.beinL, 'translate(0,' + f1(-schrittL - sitzL - hebL + gfDy * 0.35) + ') rotate(' + f1(z.pL.x + sp * wip * 4 + hebL * 1.5) + ' ' + (CX - G.huefte) + ' ' + (G.unten - 10) + ')');
     setT(n.beinR, 'translate(0,' + f1(-schrittR - sitzR - hebR + gfDy * 0.35) + ') rotate(' + f1(z.pR.x - sp * wip * 4 - hebR * 1.5) + ' ' + (CX + G.huefte) + ' ' + (G.unten - 10) + ')');
     setO(n.beine, imGf && z.gfBeine === 'weg' ? 1 - gfP : 1);
     setT(n.gesicht, 'translate(' + f1(z.gx.x * 5) + ',' + f1(z.gy.x * 3) + ')');
-    n.pupillen.forEach(function (p, k) { var A = k ? AUG.R : AUG.L; setT(p, 'translate(' + f1(z.gx.x * A.rx * 0.32 * ES) + ',' + f1(z.gy.x * A.ry * 0.3 * ES) + ')'); });
+    n.pupillen.forEach(function (p, k) { var A = k ? AUG.R : AUG.L; setT(p, 'translate(' + f1(z.gx.x * A.rx * 0.32 * ES + (k ? -1 : 1) * z.schiel.x * A.rx * 0.38) + ',' + f1(z.gy.x * A.ry * 0.3 * ES) + ')'); });
     n.glanz.forEach(function (p) { setT(p, 'translate(' + f1(z.gx.x * 1.2 + (L.lx + 0.6) * 3.2) + ',' + f1(z.gy.x * 1 + (L.ly + 0.8) * 2.2) + ')'); });
     var gs = z.gross.x, bl = z.blink || 0;
     n.augen.forEach(function (o, k) {
@@ -1028,11 +1103,17 @@ function male(el, opt) {
     },
     sprich: function (an) { z.sprich = !!an; if (!an) z.spT2 = 0; if (an && z.gew) gewEnde(false); if (an && z.nickt) aufwachen(true); wecke(); return ctl; },
     get fliegtJetzt() { return z.fliegt; },
+    // leises Schweben als Grundzustand an/aus (z. B. wo Carl fest auf etwas stehen soll)
+    schweben: function (an) { z.schwebAn = an == null ? null : an !== false; wecke(); return ctl; },
+    get schwebtJetzt() { return z.schweb.x > 0.5; },
+    get szeneJetzt() { return z.sz ? z.sz.art : null; },
     get sitztJetzt() { return z.sitzen; },
     sitz: function (an) {
       an = an == null ? true : (an === 'aus' || an === 'false' || an === 'nein') ? false : !!an;
       if (an && z.fliegt) ctl.flieg(false);
       if (an && z.imGf) return ctl;
+      if (an && !z.sitzen && !RUHIG() && !klein) { z.plumps = performance.now(); z.plLand = false; z.szT = 4 + Math.random() * 2; }
+      if (!an) { z.sz = null; z.plumps = 0; }
       if (an !== z.sitzen && !RUHIG()) { z.sy.v -= an ? 1.4 : -1.2; z.pL.v += an ? 30 : -20; z.pR.v -= an ? 24 : -20; z.fdMy.v += an ? 30 : -20; }
       z.sitzen = an;
       if (RUHIG()) { z.sitzP.x = z.sitzP.z = an ? 1 : 0; z.sitzP.v = 0; }
@@ -1151,6 +1232,16 @@ function male(el, opt) {
       else c.blickZu({ dx: (q.x - 0.5) * 2, dy: (q.y - 0.5) * 2 }, 1200);
     });
   });
+  // Kleidung: was Carl im Laden anzieht, trägt er in jedem Raum (Mütze, Schal, Brille, Jacke, Socken); das Gefährt bleibt Sache des Raums
+  function kleidAlle(k) {
+    if (!k || typeof k !== 'object') { try { k = C6.laden && typeof C6.laden.an === 'function' ? C6.laden.an() : null; } catch (e) { k = null; } }
+    if (!k || typeof k !== 'object') return;
+    var o = {}, s = '';
+    ['socken', 'muetze', 'schal', 'brille', 'jacke', 'wimpern', 'fell'].forEach(function (x) { if (x in k) o[x] = k[x]; });
+    try { s = JSON.stringify(o); } catch (e) { return; }
+    alle.forEach(function (f) { if (!f.ctl || f.ohneKleid || f.kleidS === s) return; f.kleidS = s; try { f.ctl.kleid(o); } catch (e) { } });
+  }
+  C6.bus.on('kleid', function (k) { kleidAlle(k); });
   // Tipp auf die Bühne (nicht auf Carl): er schaut dorthin
   window.addEventListener('pointerdown', function (e) {
     var t = e.target; if (!t || !t.closest) return;

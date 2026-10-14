@@ -84,12 +84,13 @@ html.c6z-proj-auf .c6k[data-geraet=iphone] .c6k-punkt-name{visibility:hidden;ani
 .c6k-unten>*{pointer-events:auto}
 .c6k-chips{position:absolute;left:0;right:0;bottom:100%;display:flex;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:10px 16px 12px;box-sizing:border-box;
  opacity:0;transform:translateY(10px);visibility:hidden;pointer-events:none;touch-action:pan-x;
- transition:opacity .26s ease,transform .32s var(--c6k-ease),visibility 0s linear .32s}
+ transition:opacity .26s ease,transform .32s var(--c6k-ease),visibility 0s linear .32s;pointer-events:none}
 .c6k-chips::-webkit-scrollbar,.c6k-leiste::-webkit-scrollbar{display:none}
-.c6k[data-chips] .c6k-chips[data-an]{opacity:1;transform:none;visibility:visible;pointer-events:auto;transition:opacity .26s ease,transform .32s var(--c6k-ease),visibility 0s}
+.c6k[data-chips] .c6k-chips[data-an]{opacity:1;transform:none;visibility:visible;pointer-events:none;transition:opacity .26s ease,transform .32s var(--c6k-ease),visibility 0s}
 .c6k-chips-spur{display:flex;gap:10px;margin:0 auto;padding-right:4px;flex:none}
 /* iPhone: passen die Chips nicht in eine Zeile, brechen sie um (nichts läuft aus dem Bild) */
 .c6k[data-geraet=iphone] .c6k-chips{overflow-x:hidden;touch-action:pan-y}
+.c6k-chips .c6k-chip,.c6k-chips[data-art] .c6k-chips-spur,.c6k-chips .c6k-wahl-kopf{pointer-events:auto}
 .c6k[data-geraet=iphone] .c6k-chips-spur{flex-wrap:wrap;justify-content:center;row-gap:8px;width:100%;padding-right:0}
 .c6k-chip{display:inline-flex;align-items:center;gap:9px;min-height:44px;padding:8px 18px 8px 11px;background:var(--karte);color:var(--tusche);border:2px solid var(--tusche);border-radius:22px;box-shadow:3px 3px 0 var(--tusche);
  font:600 15px/1.2 Figtree,system-ui,sans-serif;white-space:nowrap;flex:none;transition:transform .14s ease,box-shadow .14s ease,background .2s,opacity .3s ease}
@@ -123,6 +124,7 @@ html.c6z-proj-auf .c6k[data-geraet=iphone] .c6k-punkt-name{visibility:hidden;ani
 .c6k-raumknopf{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;flex:1 0 auto;min-width:56px;min-height:54px;padding:5px 6px 8px;background:none;border:0;color:var(--leise);
  font:600 12px/1.1 Figtree,system-ui,sans-serif;transition:color .25s}
 .c6k-raumknopf[aria-current]{color:var(--tusche)}
+.c6k-raumknopf[data-heimat]{color:var(--tusche)}
 .c6k-symbol{display:block;width:24px;height:24px}
 .c6k-symbol svg{width:24px;height:24px;display:block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .c6k-raumknopf[aria-current] .c6k-symbol{transform:translateY(-1px)}
@@ -149,12 +151,14 @@ html.c6z-proj-auf .c6k[data-geraet=iphone] .c6k-punkt-name{visibility:hidden;ani
 /* Höhen-Knopf und ‹ als kleine Papier-Pillen: lesbar auf hellem Blatt wie auf dunklem Himmel */
 .c6k-hk,.c6k-fd-hoch{min-height:38px;margin:3px 0;background:rgba(251,247,240,.94);border:1.5px solid var(--tusche);box-shadow:var(--c6k-schwebt);text-shadow:none;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 .c6k-hk{padding:0 8px 0 13px}
+/* gleiches Bild, Trefferfläche 44 px und mehr */
+.c6k-hk,.c6k-fd-hoch{position:relative}.c6k-hk::after,.c6k-fd-hoch::after{content:'';position:absolute;inset:-5px -2px}
 .c6k-fd-hoch{padding:0 13px 0 4px}
 .c6k[data-licht=nacht] .c6k-hk,.c6k[data-licht=nacht] .c6k-fd-hoch{background:rgba(29,36,69,.94);border-color:var(--c6k-n-text);color:var(--c6k-n-text);text-shadow:none;box-shadow:0 8px 22px -10px rgba(0,0,0,.6)}
 .c6k[data-ohne-kopf] .c6k-kopf{display:none}
 html.c6r-an .c6k-kopf,html.c6r-an .c6k-hoehe,.c6k[data-rundgang] .c6k-kopf{display:none}
 .c6k[data-tippt] .c6k-dock{margin-bottom:8px}
-.c6k[data-ohne-dock] .c6k-leiste{padding-top:10px}
+.c6k[data-ohne-dock] .c6k-leiste{padding-top:4px}
 
 /* Computer: alles schwebt über der vollen Bühne */
 .c6k[data-geraet=computer] .c6k-unten{align-items:center}
@@ -288,6 +292,8 @@ html.c6k-vl-auf #c6p-knopf{opacity:0!important;pointer-events:none!important;tra
 /* das Band unten (Leiste am iPhone) nimmt den Boden des Raums auf statt Papier */
 .c6k-leiste{background:linear-gradient(to top,var(--c6k-grund-unten,var(--papier)) 72%,rgba(244,238,228,0))}
 .c6k[data-geraet=computer] .c6k-leiste{background:none}
+/* das Dock ist Rahmen, nicht Bühne: eine Papierplatte hält es lesbar, auch wenn die Lampe den Boden dunkel macht */
+.c6k[data-geraet=computer]:not([data-licht=nacht]) .c6k-leiste-spur{background:rgba(251,247,240,.86);border-radius:16px;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 /* Verlauf: ein Blatt, durch das die Szene weich hindurchscheint */
 @supports ((-webkit-backdrop-filter:blur(2px)) or (backdrop-filter:blur(2px))){
  .c6k-vl{background:rgba(251,247,240,.84);-webkit-backdrop-filter:blur(14px) saturate(1.15);backdrop-filter:blur(14px) saturate(1.15)}
@@ -295,7 +301,10 @@ html.c6k-vl-auf #c6p-knopf{opacity:0!important;pointer-events:none!important;tra
 }
 /* dunkler Boden (z. B. Bibliothek am Abend): die Leiste spricht hell, wie im Nachtlicht */
 .c6k[data-unten-dunkel]:not([data-licht=nacht]) .c6k-raumknopf{color:#d9cfbf}
-.c6k[data-unten-dunkel]:not([data-licht=nacht]) .c6k-raumknopf[aria-current]{color:#fbf7f0}
+.c6k[data-unten-dunkel]:not([data-licht=nacht]) .c6k-raumknopf[aria-current],.c6k[data-unten-dunkel]:not([data-licht=nacht]) .c6k-raumknopf[data-heimat]{color:#fbf7f0}
+/* Computer: auf dunklem Boden wird die Papier-Pille dunkel, sonst steht helle Schrift auf hellem Grund */
+.c6k[data-geraet=computer][data-unten-dunkel]:not([data-licht=nacht]) .c6k-leiste-spur{background:rgba(36,30,26,.78)}
+.c6k[data-licht=nacht] .c6k-raumknopf[data-heimat]{color:var(--c6k-n-text)}
 .c6k[data-unten-mittel]:not([data-licht=nacht]) .c6k-raumknopf{color:#3d3831}
 
 /* ---------- Kamerafahrten mit Tiefe (m1) ----------
@@ -771,6 +780,9 @@ html.c6k-ruhig .c6w-bm-staub circle{animation:none}
 .c6z-figur .c6z-teil{transform-box:fill-box;transform-origin:50% 60%}
 .c6z-figur .c6z-sockschatt{pointer-events:none;mix-blend-mode:multiply}
 .c6z-figur .c6z-gf-hinten,.c6z-figur .c6z-gf-vorn{pointer-events:none}
+/* Carl ist nur, wo er gezeichnet ist: sein leerer Rahmen deckt keine Dinge zu (Fenster, Bild) */
+.c6z-stube .c6z-carl,.c6z-carl .c6z-figur,.c6z-carl .c6z-figur>svg.c6z-svg,.c6k-sp-carl .c6z-figur,.c6k-sp-carl .c6z-figur>svg.c6z-svg,.c6w-carl-platz .c6z-figur,.c6w-carl-platz .c6z-figur>svg.c6z-svg{pointer-events:none}
+.c6z-carl .c6z-figur>svg.c6z-svg>g,.c6z-carl .c6z-figur>svg.c6z-svg>ellipse,.c6k-sp-carl .c6z-figur>svg.c6z-svg>g,.c6k-sp-carl .c6z-figur>svg.c6z-svg>ellipse,.c6w-carl-platz .c6z-figur>svg.c6z-svg>g,.c6w-carl-platz .c6z-figur>svg.c6z-svg>ellipse{pointer-events:visiblePainted}
 .c6z-zzz{font-family:Caveat,cursive;font-size:22px;fill:#6f6a61}
 .c6z-bild{overflow:visible}
 
@@ -2985,7 +2997,7 @@ button.c6z-ding:active{transform:scale(.97)}
 .c6z-stube:not(.c6z-computer) .c6z-bild{display:none}
 .c6z-stube:not(.c6z-computer) .c6z-verlauf{right:22%;top:calc(env(safe-area-inset-top,0px) + 196px);width:124px;height:76px}
 /* Computer: ein langes Brett hoch an der Wand, über Carls Blase */
-.c6z-computer .c6z-sb-brett{left:calc(50% - 170px);right:calc(5% + 150px);top:calc(var(--c6z-boden) - 470px);height:128px}
+.c6z-computer .c6z-sb-brett{left:calc(50% - 170px);right:calc(5% + 150px);top:max(calc(env(safe-area-inset-top,0px) + 14px),calc(var(--c6z-boden) - 470px));height:128px}
 .c6z-computer .c6z-sb-anh{max-width:104px;font-size:18px}
 .c6z-computer .c6z-sb-schl-neu .c6z-sb-anh{max-width:none;white-space:nowrap;align-items:center}
 
@@ -3108,3 +3120,29 @@ html.c6r-at-auf .c6k-hoehe,html.c6lw-auf .c6k-hoehe{visibility:hidden}
 .c6k-ruhig .c6k-haltbar{transition:none}
 /* Staub: ein kleines Canvas, nie im Weg */
 .c6k-staub{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;display:block}
+/* Carl im Space: nur sein gezeichneter Körper nimmt Tipps an, nicht sein Rahmen (die Pflanze steht neben ihm) */
+div.c6k-sp-carl{pointer-events:none}
+/* Das Feld zeigt, wofür es gerade da ist: im Zettel-Modus ein Stück Papier mit roter Nadel (der Raum setzt den Modus) */
+.c6k[data-feld-modus] .c6k-dock{background:#fbf3e2;transition:background .25s ease}
+.c6k[data-feld-modus=zettel] .c6k-dock{position:relative}
+.c6k[data-feld-modus=zettel] .c6k-dock::before{content:"";position:absolute;left:8px;top:50%;width:8px;height:8px;margin-top:-4px;border-radius:50%;background:var(--faden);box-shadow:0 1px 0 rgba(43,39,34,.35);pointer-events:none}
+
+/* Ottos Nacht in Räumen, die sie nicht selbst zeichnen: ein Schleier als Kind der Bühne. Er folgt --c6k-raum-nacht (weich, 0,3–1,2 s),
+   lässt die Lampe des Raums warm leuchten (Loch + warmer Hof an --c6-licht-x/y) und fängt keine Tipps. */
+.c6k-nachtschleier,.c6k-nachtlicht{position:absolute;inset:0;z-index:40;pointer-events:none;opacity:var(--c6k-raum-nacht,0)}
+/* das Dunkel färbt (multiply: Farben bleiben, werden blau und tief), rund um die Lampe bleibt es offen */
+.c6k-nachtschleier{mix-blend-mode:multiply;background:radial-gradient(circle at calc(var(--c6-licht-x,.5) * 100%) calc(var(--c6-licht-y,.2) * 100%),#fff 0,#e9e6f2 10%,#7f88b8 32%,#4a5288 62%,#3a4174 100%)}
+/* die Lampe leuchtet warm darüber (screen hellt nur auf) */
+.c6k-nachtlicht{mix-blend-mode:screen;background:radial-gradient(circle at calc(var(--c6-licht-x,.5) * 100%) calc(var(--c6-licht-y,.2) * 100%),rgba(255,190,110,.42) 0,rgba(255,170,90,.16) 12%,rgba(255,160,80,0) 30%)}
+.c6k-nachtschleier[hidden],.c6k-nachtlicht[hidden]{display:none}
+/* Wechsel: Farben gleiten statt zu springen (nur Farben, nur solange der Wechsel dauert) */
+.c6k-tz-wechsel .c6-buehne,.c6k-tz-wechsel .c6-buehne *{transition-property:fill,stroke,stop-color,background-color,color,opacity;transition-duration:.9s;transition-timing-function:ease-in-out}
+.c6k-ruhig.c6k-tz-wechsel .c6-buehne *,.c6k-ruhig .c6k-tz-wechsel .c6-buehne *{transition:none}
+
+/* Ein Helfer arbeitet: leise im Kopf, unter dem Ortsnamen (kein Knopf; anhalten mit Esc oder im Freundschaftsbuch) */
+.c6k-lauf{display:flex;align-items:center;gap:6px;margin:2px 0 0;font:500 12px/1.2 Figtree,system-ui,sans-serif;color:var(--leise);pointer-events:none;max-width:60vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.c6k-lauf[hidden]{display:none}
+.c6k-lauf-punkt{width:7px;height:7px;border-radius:50%;background:var(--faden,#d62a26);opacity:.7;animation:c6k-lauf-atmen 2.4s ease-in-out infinite;flex:none}
+@keyframes c6k-lauf-atmen{0%,100%{opacity:.35;transform:scale(.8)}50%{opacity:.85;transform:scale(1)}}
+.c6k-ruhig .c6k-lauf-punkt{animation:none}
+.c6k[data-licht=nacht] .c6k-lauf{color:var(--c6k-n-leise)}

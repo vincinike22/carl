@@ -136,7 +136,10 @@ function bmx() {
   if (!Array.isArray(b.neu)) b.neu = [];
   return b;
 }
-function besitzt(art, id) { var t = teil(art, id); return !!t.frei || bmx().besitz.indexOf(art + ':' + id) >= 0; }
+function besitzt(art, id) {
+  var t = teil(art, id); if (t.frei || bmx().besitz.indexOf(art + ':' + id) >= 0) return true;
+  try { return !!(C6.muenzen && typeof C6.muenzen.hat === 'function' && C6.muenzen.hat('rad:' + art + ':' + id)); } catch (e) { return false; }
+}
 function rahmenFarbe() {
   var b = bmx().teile;
   if (b.rahmenfarbe) return teil('rahmenfarbe', b.rahmenfarbe).farbe;
@@ -171,15 +174,21 @@ function waehle(art, id) {
 function kaufe(art, id) {
   var t = teil(art, id);
   if (!t.preis || besitzt(art, id)) return waehle(art, id);
-  if (!C6.muenzen || !C6.muenzen.ausgeben(t.preis)) return false;
+  var ok = false;
+  try {
+    if (C6.muenzen && typeof C6.muenzen.kaufe === 'function') ok = C6.muenzen.kaufe('rad:' + art + ':' + id, t.preis, { art: 'rad', name: TEILE[art].titel + ' ' + t.name });
+    else if (C6.muenzen) ok = C6.muenzen.ausgeben(t.preis);
+  } catch (e) { ok = false; }
+  if (!ok) return false;
   aendern(function (s) { var b = bmx(); if (b.besitz.indexOf(art + ':' + id) < 0) b.besitz.push(art + ':' + id); });
   return waehle(art, id);
 }
 
 // ---------- Parks ----------
 var STEP = 4;
+function gel0(g, x) { return g.p[Math.min(g.p.length - 1, Math.round(x / STEP))]; }
 function Bau(y0) {
-  var g = { p: [y0], zonen: [], rails: [], deko: [], holz: [], kisten: [], loecher: [], y: y0, ziel: null };
+  var g = { p: [y0], zonen: [], rails: [], deko: [], holz: [], kisten: [], loecher: [], muenzen: [], y: y0, ziel: null };
   g.x = function () { return (this.p.length - 1) * STEP; };
   g.kurve = function (len, f) { var y0 = this.y, n = Math.max(1, Math.round(len / STEP)); for (var i = 1; i <= n; i++) this.p.push(y0 + f(i / n)); this.y = this.p[this.p.length - 1]; return this; };
   g.flach = function (len) { return this.kurve(len, function () { return 0; }); };
@@ -199,6 +208,9 @@ function Bau(y0) {
   g.deko_ = function (art, extra) { var d = { art: art, x: this.x(), y: this.y }; for (var k in extra) d[k] = extra[k]; this.deko.push(d); return this; };
   g.holz_ = function (von, bis, extra) { var h = { von: von, bis: bis }; for (var k in extra) h[k] = extra[k]; this.holz.push(h); return this; };
   g.ziel_ = function () { this.ziel = this.x(); return this.deko_('ziel'); };
+  // Münze im Park: dx vor der aktuellen Stelle, h über dem jetzigen Boden (oder absolut mit muenzeBei)
+  g.muenze_ = function (dx, h, geheim) { this.muenzen.push({ x: this.x() + dx, y: this.y + h, geheim: !!geheim }); return this; };
+  g.muenzeBei = function (x, y, geheim) { this.muenzen.push({ x: x, y: y, geheim: !!geheim }); return this; };
   return g;
 }
 
@@ -207,19 +219,21 @@ var PARKS = {
     name: 'Hof', unter: 'Treppen und Geländer', nacht: false, kappe: 300, lauf: 75,
     bau: function () {
       var g = Bau(64);
-      g.flach(230).deko_('baum').flach(60);
+      g.flach(230).muenze_(-50, 34).deko_('baum').flach(60);
       var t = g.treppe(5, 18, -12);
       g.railVon(t.x1 - 6, t.y1 + 26, t.x2 + 6, t.y2 + 26);
+      g.muenzeBei((t.x1 + t.x2) / 2, (t.y1 + t.y2) / 2 + 62);
       g.flach(150).deko_('laterne').flach(60);
-      var a = g.x(); g.kicker(70, 34, 22); g.holz_(a, g.x());
+      var a = g.x(); g.kicker(70, 34, 22); g.holz_(a, g.x()); g.muenze_(34, 104);
       g.flach(170);
       var kv = g.x(); g.kicker(84, 42); var ktop = g.x(); g.flach(150); var kend = g.x(); g.s(96, -42);
+      g.muenzeBei(ktop + 75, gel0(g, ktop) + 36);
       g.holz_(kv, g.x(), { kiesel: true });
       g.zone({ id: 'kiste', von: kv - 20, bis: ktop + 4, ueber: kend - 24 });
       g.flach(150).deko_('leine').flach(60);
-      g.rail(170, 22, 'kante').flach(170);
+      g.rail(170, 22, 'kante').muenze_(85, 60).flach(170);
       g.flach(110).kiste(36, 24).flach(36).flach(130).deko_('baum', { gross: true });
-      var h = g.x(); g.s(70, 30).flach(40).s(70, -30); g.holz_(h, g.x(), { erde: true });
+      var h = g.x(); g.s(70, 30).flach(40).muenze_(-20, 92).s(70, -30); g.holz_(h, g.x(), { erde: true });
       g.flach(150);
       var t2 = g.treppe(4, 20, -12);
       g.railVon(t2.x1 - 6, t2.y1 + 26, t2.x2 + 6, t2.y2 + 26);
@@ -238,22 +252,25 @@ var PARKS = {
     name: 'Dachpark', unter: 'Lücken zwischen den Dächern', nacht: false, abend: true, kappe: 330, lauf: 75,
     bau: function () {
       var g = Bau(0);
-      g.flach(260).deko_('kamin').flach(240);
+      g.flach(260).deko_('kamin').flach(160).muenze_(0, 34).flach(80);
       var kv = g.x(); g.kicker(80, 36); var lip = g.x(); g.holz_(kv, lip, { offen: true });
+      g.muenze_(48, 58);
       g.loch(90, 300); var lend = g.x();
       g.zone({ id: 'luecke', von: kv - 40, bis: lip + 4, ueber: lend + 2 });
       var ld = g.x(); g.s(48, -36); g.holz_(ld, g.x(), { offen: true });
       g.flach(150).deko_('antenne').flach(60);
-      g.rail(240, 30, 'rail').flach(240);
+      g.rail(240, 30, 'rail').muenze_(150, 72).flach(240);
       g.flach(90);
       var l2 = g.x(); g.loch(84, 300); var l2e = g.x();
+      g.muenzeBei((l2 + l2e) / 2, g.y + 52);
       g.zone({ id: 'luecke', von: l2 - 160, bis: l2 + 2, ueber: l2e + 2 });
       g.p[g.p.length - 1] -= 40; g.y -= 40;
       g.flach(120).deko_('tank').flach(40);
-      var st = g.x(); g.s(90, 46); g.holz_(st, g.x(), { stufe: true });
+      var st = g.x(); g.s(90, 46); g.holz_(st, g.x(), { stufe: true }); g.muenze_(30, 36);
       g.flach(110).kiste(30, 30).flach(30).flach(120).deko_('antenne').flach(40);
       var l3 = g.x(); g.loch(110, 300); var l3e = g.x();
       g.railVon(l3 - 30, g.y + 4, l3e + 30, g.y + 4);
+      g.muenzeBei((l3 + l3e) / 2, g.y + 50);
       g.zone({ id: 'luecke', von: l3 - 160, bis: l3 + 2, ueber: l3e + 2 });
       g.flach(150);
       var k2 = g.x(); g.kicker(64, 28, 16); g.holz_(k2, g.x());
@@ -273,10 +290,13 @@ var PARKS = {
       g.flach(120);
       g.viertelRunter(220);
       g.flach(150);
-      var sp = g.x(); g.s(70, 46).s(70, -46); g.holz_(sp, g.x(), { spine: true });
-      g.flach(150);
+      g.muenze_(-75, 34);
+      var sp = g.x(); g.s(70, 46).muenze_(0, 64).s(70, -46); g.holz_(sp, g.x(), { spine: true });
+      g.flach(150).muenze_(-75, 34);
       g.viertelHoch(220);
       g.flach(120);
+      // ganz oben, wo der Mond steht: nur mit viel Schwung erreichbar
+      g.muenzeBei(g.x() - 120 - 18, 200 + 86, true);
       return g;
     },
     start: 120 + 218 + 60,
@@ -466,7 +486,7 @@ function zeichneRad(c, o) {
   function V(x, y) { return pl.Vec2(x / SC, y / SC); }
   function neuesRad(x) {
     b = { x: x, y: gy(x), v: 0, vx: 0, vy: 0, st: 'boden', f: 1, th: ga(x), spinSum: 0, dreh: 0, drehAn: false, dreher: 0, wende: 0,
-      rad: 0, kurbel: 0.6, druck: 0, luft: null, sturz: 0, rail: null, nachSturz: 0, wackel: 0, jubel: 0, feder: { l: 0, r: 0 }, lehne: 0, zx: x, zy: gy(x) };
+      rad: 0, kurbel: 0.6, druck: 0, luft: null, sturz: 0, rail: null, nachSturz: 0, wackel: 0, jubel: 0, feder: { l: 0, r: 0 }, lehne: 0, zx: x, zy: gy(x), frei: 0, freiN: 0 };
   }
   function baueWelt() {
     pl = window.planck;
@@ -530,7 +550,7 @@ function zeichneRad(c, o) {
     kr = { ch: ch, rl: rl, rr: rr, jl: jl, jr: jr, to: to, hj: null, f: f, kon: { l: 0, r: 0 }, railT: { l: -9, r: -9 }, railObj: null, kopfStoss: false };
     huefte();
     if (vx0) [ch, rl, rr, to].forEach(function (q) { q.setLinearVelocity(pl.Vec2(vx0 * cs / SC, vx0 * sn / SC)); });
-    b.f = f; b.st = 'boden'; b.wende = 0; b.luft = null; b.rail = null; luftT = -0.3;
+    b.f = f; b.st = 'boden'; b.wende = 0; b.luft = null; b.rail = null; b.frei = 0; b.freiN = 0; luftT = -0.3;
     sync();
   }
   function huefte() {
@@ -618,7 +638,7 @@ function zeichneRad(c, o) {
       '<canvas class="c6s-park-cv" aria-hidden="true"></canvas>' +
       '<button class="c6s-rund c6s-park-pause" type="button" aria-label="Pause"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5v14M16 5v14" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button>' +
       '<button class="c6s-rund c6s-park-zu" type="button" aria-label="Kieselpark schließen"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button>' +
-      '<div class="c6s-park-kopf" aria-live="off"><span class="c6s-park-punkte"></span><span class="c6s-park-zeit"><i></i><b></b></span></div>' +
+      '<div class="c6s-park-kopf" aria-live="off"><span class="c6s-park-punkte"></span><span class="c6s-park-kiesel" role="img"></span></div>' +
       '<div class="c6s-park-combo" aria-hidden="true"></div>' +
       '<div class="c6s-park-trick" aria-live="polite"></div>' +
       '<div class="c6s-park-geschafft" aria-live="polite" hidden></div>' +
@@ -626,15 +646,16 @@ function zeichneRad(c, o) {
       '<div class="c6s-park-ende" role="group" aria-label="Lauf vorbei" hidden></div>' +
       '<div class="c6s-park-karte" hidden>' +
       '  <div class="c6s-park-karte-kopf"><canvas class="c6s-park-vorschau" aria-hidden="true"></canvas><div><p class="c6s-park-titel">Kieselpark</p><p class="c6s-park-satz"></p><button type="button" class="c6s-park-garage">Rad umbauen in der Garage</button></div></div>' +
-      '  <button type="button" class="c6s-knopf c6s-park-weiter" hidden>Weiter fahren</button>' +
+      '  <div class="c6s-park-pausetun"><button type="button" class="c6s-knopf c6s-park-weiter" hidden>Weiter fahren</button><button type="button" class="c6s-knopf c6s-leise c6s-park-fertig" hidden>Punkte zählen</button></div>' +
       '  <div class="c6s-park-reihe" role="list"></div>' +
       '</div>';
     document.body.appendChild(ebene);
     cv = ebene.querySelector('.c6s-park-cv'); cx = cv.getContext('2d');
-    ['kopf', 'punkte', 'zeit', 'combo', 'trick', 'geschafft', 'hilfe', 'ende', 'karte', 'weiter', 'reihe', 'vorschau', 'satz', 'garage'].forEach(function (n) { ui[n] = ebene.querySelector('.c6s-park-' + n); });
+    ['kopf', 'punkte', 'kiesel', 'combo', 'trick', 'geschafft', 'hilfe', 'ende', 'karte', 'weiter', 'fertig', 'reihe', 'vorschau', 'satz', 'garage'].forEach(function (n) { ui[n] = ebene.querySelector('.c6s-park-' + n); });
     ebene.querySelector('.c6s-park-zu').onclick = function () { C6.kieselpark.zu(); };
     ebene.querySelector('.c6s-park-pause').onclick = function () { pause ? (P && ui.ende.hidden ? weiter() : zeigeKarte(false)) : zeigeKarte(true); };
     ui.weiter.onclick = function () { weiter(); };
+    ui.fertig.onclick = function () { ui.karte.hidden = true; ebene.classList.remove('c6s-karte-auf'); laufEnde(false); };
     ui.garage.onclick = function () { zurGarage(); };
     REIHE.forEach(function (id) {
       var p = PARKS[id];
@@ -676,6 +697,7 @@ function zeichneRad(c, o) {
     pause = true; loslassen();
     ui.ende.hidden = true;
     ui.weiter.hidden = !(alsPause && P);
+    ui.fertig.hidden = !(alsPause && P && laufAn && !zielDa);
     ui.satz.textContent = alsPause && P ? (P.name + ' · ' + Math.round(punkte) + ' Punkte') : '';
     ui.satz.hidden = !(alsPause && P);
     aktualisiereKarte();
@@ -758,7 +780,7 @@ function zeichneRad(c, o) {
     ladePark(id);
     punkte = 0; fahrt = { lufte: 0, tricks: 0 }; combo = { n: 0, p: 0, namen: [] }; rest = P.lauf || LAUF; laufAn = false; laufNeu = []; landeText = null;
     ui.punkte.textContent = '0';
-    zeigeZeit(); zeigeCombo();
+    zeigeKiesel(); zeigeCombo();
     var bm0 = bmx(); hilfe((bm0.laeufe || 0) < 3);
     aendern(function () { var x = bmx(); x.laeufe = (x.laeufe || 0) + 1; });
     laufMuenzen = 0;
@@ -769,8 +791,8 @@ function zeichneRad(c, o) {
     hinweisAn = an;
     if (an) {
       ui.hilfe.innerHTML = istTouch()
-        ? '<span><i class="c6s-g c6s-g-wisch"></i>nach vorn wischen: Schwung</span><span><i class="c6s-g c6s-g-zieh"></i>runterziehen, hochschnellen: Sprung</span><span><i class="c6s-g c6s-g-dreh"></i>halten, zur Seite: Gewicht · in der Luft drehen</span>'
-        : '<span><kbd>↑</kbd> treten · <kbd>↓</kbd> bremsen</span><span><kbd>←</kbd><kbd>→</kbd> Gewicht verlagern, in der Luft drehen</span><span><kbd>Leertaste</kbd> halten, loslassen: Sprung</span>';
+        ? '<span><i class="c6s-g c6s-g-wisch"></i>nach vorn wischen: Schwung</span><span><i class="c6s-g c6s-g-tipp"></i>tippen: Sprung · in der Luft: freihändig</span><span><i class="c6s-g c6s-g-dreh"></i>halten, zur Seite: Salto · runterwischen: Dreher</span>'
+        : '<span><kbd>↑</kbd> treten · <kbd>↓</kbd> bremsen</span><span><kbd>Leertaste</kbd> Sprung (halten: höher)</span><span>in der Luft: <kbd>←</kbd><kbd>→</kbd> Salto · <kbd>↓</kbd> Dreher · <kbd>↑</kbd> freihändig</span>';
       ui.hilfe.classList.remove('c6s-weg');
     } else ui.hilfe.classList.add('c6s-weg');
   }
@@ -784,7 +806,7 @@ function zeichneRad(c, o) {
     e.preventDefault();
     try { cv.setPointerCapture(e.pointerId); } catch (x) {}
     var t = performance.now();
-    eingabe.zeiger[e.pointerId] = { x0: e.clientX, y0: e.clientY, lx: e.clientX, ly: e.clientY, lt: t, tief: e.clientY, t: t, sx: e.clientX, sy: e.clientY, st: t, sprung: false, wisch: false };
+    eingabe.zeiger[e.pointerId] = { x0: e.clientX, y0: e.clientY, ox: e.clientX, oy: e.clientY, weit: 0, lx: e.clientX, ly: e.clientY, lt: t, tief: e.clientY, t: t, sx: e.clientX, sy: e.clientY, st: t, sprung: false, wisch: false };
     eingabe.finger = true;
     eingabe.zwei = zahlZeiger() >= 2;
     if (eingabe.zwei) { los(); eingabe.lehneT = 0; }
@@ -793,6 +815,7 @@ function zeichneRad(c, o) {
     var z = eingabe.zeiger[e.pointerId]; if (!z || pause) return;
     var t = performance.now(), vor = { x: z.lx, y: z.ly, t: z.lt };
     z.lx = e.clientX; z.ly = e.clientY; z.lt = t;
+    z.weit = Math.max(z.weit, Math.hypot(e.clientX - z.ox, e.clientY - z.oy));
     if (eingabe.zwei) return;
     // Halten und zur Seite ziehen = Gewicht verlagern (in der Luft: drehen)
     var dxh = e.clientX - z.x0;
@@ -827,9 +850,20 @@ function zeichneRad(c, o) {
     eingabe.zwei = zahlZeiger() >= 2;
     eingabe.finger = zahlZeiger() > 0;
     if (!eingabe.finger) eingabe.lehneT = 0;
+    var tipp = z && !z.sprung && !z.wisch && z.weit < 14 && performance.now() - z.t < 280;
     if (z && !z.sprung && eingabe.zug > 0.2 && (b.st === 'boden' || b.st === 'rail') && !pause) { los(); hopp(0.42 + 0.58 * eingabe.zug); }
+    else if (tipp && !pause) tippen();
     eingabe.zug = 0;
   }
+  // Tippen: am Boden ein Sprung, in der Luft freihändig, nach einem Sturz sofort weiter
+  function tippen() {
+    if (!b) return;
+    if (b.st === 'sturz') { if (b.sturz > 0.2) neuStart(); return; }
+    los();
+    if (b.st === 'luft') freihaendig();
+    else hopp(0.62);
+  }
+  function freihaendig() { if (b.st !== 'luft' || b.frei > 0) return; b.frei = 0.001; }
   function schwung(tempo) {
     if (!kr || b.st === 'luft' || b.st === 'sturz') return;
     los();
@@ -854,7 +888,9 @@ function zeichneRad(c, o) {
       return;
     }
     var nimm = true;
-    if (kk === 'ArrowUp' || kk === 'w' || kk === 'W') { eingabe.vor = ab; if (ab) los(); }
+    if (ab && !e.repeat && b && b.st === 'sturz' && b.sturz > 0.2 && /^(Arrow|w|a|s|d|W|A|S|D| |f|F)/.test(kk)) { neuStart(); e.preventDefault(); e.stopImmediatePropagation(); return; }
+    if ((kk === 'f' || kk === 'F') && ab && !e.repeat) { freihaendig(); }
+    else if (kk === 'ArrowUp' || kk === 'w' || kk === 'W') { eingabe.vor = ab; if (ab) los(); if (ab && !e.repeat && b.st === 'luft') freihaendig(); }
     else if (kk === 'ArrowDown' || kk === 's' || kk === 'S') { eingabe.bremse = ab && b.st !== 'luft'; if (ab && !e.repeat && b.st === 'luft') drehe(); if (ab && !e.repeat && b.st === 'boden' && Math.abs(b.vx) < 30) wende(); }
     else if (kk === 'ArrowRight' || kk === 'd' || kk === 'D') { eingabe.r = ab; if (ab) los(); }
     else if (kk === 'ArrowLeft' || kk === 'a' || kk === 'A') { eingabe.l = ab; }
@@ -914,9 +950,10 @@ function zeichneRad(c, o) {
     sync();
     if (b.st === 'sturz') {
       b.sturz += dt;
-      if (b.sturz > 2.0) neuStart();
+      if (b.sturz > 1.25) neuStart();
       return;
     }
+    sammle();
     var rlA = schrittN - kr.railT.l <= 2, rrA = schrittN - kr.railT.r <= 2;
     var aufRail = rlA || rrA;
     amBoden = kr.kon.l > 0 || kr.kon.r > 0 || aufRail;
@@ -937,6 +974,7 @@ function zeichneRad(c, o) {
       var Lf = b.luft; Lf.t += dt; if (b.y > Lf.maxY) Lf.maxY = b.y;
       b.spinSum += kr.ch.getAngularVelocity() * dt;
       if (b.drehAn) { b.dreh += dt / 0.4; if (b.dreh >= 1) { b.dreh = 0; b.drehAn = false; b.dreher++; } }
+      if (b.frei > 0) { b.frei += dt / 0.55; if (b.frei >= 1) { b.frei = 0; b.freiN++; } }
       if (Math.sign(b.vx) !== kr.f && Math.abs(b.vx) > 40 && P.pipe) wende();
     } else if (b.st === 'rail') {
       b.rail.weg += Math.abs(b.vx) * dt;
@@ -962,15 +1000,42 @@ function zeichneRad(c, o) {
     // Ziel
     if (!P.pipe && gel.ziel && !zielDa && b.x >= gel.ziel) {
       zielDa = true; bank();
-      var bonus = Math.round(Math.max(0, rest) * 8);
+      var bonus = 100;
       punkte += bonus; ui.punkte.textContent = Math.round(punkte);
-      trick('Ziel!', '+' + bonus + ' für die Zeit', 'bank');
+      trick('Ziel!', '+' + bonus, 'bank');
       for (var i = 0; i < 26; i++) teilchen.push({ x: gel.ziel + (Math.random() - .5) * 60, y: gy(gel.ziel) + 90 + Math.random() * 40, vx: (Math.random() - .5) * 160, vy: Math.random() * 120, r: 2, t: 0, max: 1.2, art: 'konfetti', farbe: ['#b8333a', '#2f5f8a', '#c9a03a', '#5f7f3e'][i % 4] });
       setTimeout(function () { if (C6.kieselpark.offen && zielDa && !pause) laufEnde(true); }, 1500);
     }
   }
+  // ----- Münzen im Park -----
+  function sammle() {
+    if (!gel || !gel.muenzen.length || !kr) return;
+    var a = b.th, cs = Math.cos(a), sn = Math.sin(a), mx = b.x - 20 * sn, my = b.y + 20 * cs, tp = kr.to.getPosition(), hx = tp.x * SC, hy = tp.y * SC;
+    for (var i = 0; i < gel.muenzen.length; i++) {
+      var m = gel.muenzen[i]; if (m.weg) continue;
+      if (Math.abs(m.x - b.x) > 80) continue;
+      var r = m.geheim ? 26 : 22;
+      if (Math.hypot(m.x - mx, m.y - my) < r || Math.hypot(m.x - hx, m.y - hy) < r) nimm(i);
+    }
+  }
+  function schirm(x, y) { return { x: W / 2 + (x - cam.x) * k, y: oy + (cam.y - y) * k }; }
+  function nimm(i) {
+    var m = gel.muenzen[i], schon = !!gefunden(parkId)[i];
+    m.weg = true; m.wegT = zeit;
+    for (var j = 0; j < 10; j++) teilchen.push({ x: m.x, y: m.y, vx: Math.cos(j / 10 * ZWEIPI) * 90, vy: Math.sin(j / 10 * ZWEIPI) * 90 + 30, r: 1, t: 0, max: 0.4, art: 'funke' });
+    if (schon) { punkte += 25; ui.punkte.textContent = Math.round(punkte); return; }
+    aendern(function () { var x = bmx(); x.muenzen = x.muenzen || {}; x.muenzen[parkId] = x.muenzen[parkId] || {}; x.muenzen[parkId][i] = Date.now(); });
+    zeigeKiesel();
+    var slot = ui.kiesel && ui.kiesel.querySelector('[data-i="' + i + '"]'), wo = schirm(m.x, m.y);
+    if (slot) { var rr = slot.getBoundingClientRect(); wo.ziel = { x: rr.left + rr.width / 2, y: rr.top + rr.height / 2 }; }
+    laufMuenzen += m.geheim ? 2 : 1;
+    try {
+      if (m.geheim && C6.muenzen && C6.muenzen.geheimnis) { C6.muenzen.geheimnis('kp-' + parkId + '-oben', 2, wo); trick('Ganz oben!', 'Eine versteckte Münze', 'bank'); }
+      else if (C6.muenzen) C6.muenzen.plus(1, 'kieselpark:muenze:' + parkId + ':' + i, wo);
+    } catch (e) {}
+  }
   function abheben() {
-    b.st = 'luft'; b.spinSum = 0; b.dreh = 0; b.drehAn = false; b.dreher = 0;
+    b.st = 'luft'; b.spinSum = 0; b.dreh = 0; b.drehAn = false; b.dreher = 0; b.frei = 0; b.freiN = 0;
     wheelie = { art: null, t: 0 };
     b.luft = { t: 0, x0: b.x, xm0: b.x, maxY: b.y, y0: b.y, quart: P.pipe && Math.abs(ga(b.x)) > 0.9 };
     if (b.rail) { grindEnde(); }
@@ -978,6 +1043,7 @@ function zeichneRad(c, o) {
   function landung(aufRail) {
     var a = ga(b.x), d = Math.abs(wd(b.th - a));
     if (b.drehAn) d += (b.dreh > 0.18 && b.dreh < 0.82) ? 1.1 : 0.25;
+    if (b.frei > 0) { d += b.frei > 0.15 && b.frei < 0.85 ? 0.5 : 0.15; if (b.frei > 0.6) b.freiN++; b.frei = 0; }
     staub(b.x, gy(b.x), Math.min(1, Math.abs(b.vy) / 420), 0);
     if (!ruhig()) cam.y += Math.min(12, Math.abs(b.vy) / 40);
     if (d > 1.15) { sturz('landung'); return; }
@@ -994,20 +1060,22 @@ function zeichneRad(c, o) {
     if (salti && Math.abs(b.spinSum) < ZWEIPI * salti - 1.2) salti--;
     var rueck = salti && (turns * kr.f > 0);
     var dreher = b.dreher; b.dreher = 0;
+    var frei = b.freiN; b.freiN = 0;
     var hoehe = Lf.maxY - Lf.y0;
-    if (Lf.t < 0.32 && !salti && !dreher) return;
-    var pk = 10 + Math.round(Lf.t * 40) + salti * 100 + (salti >= 2 ? 150 : 0) + dreher * 70 + (Lf.quart ? Math.round(Math.max(0, hoehe) * 0.5) : 0);
+    if (Lf.t < 0.32 && !salti && !dreher && !frei) return;
+    var pk = 10 + Math.round(Lf.t * 40) + salti * 100 + (salti >= 2 ? 150 : 0) + dreher * 70 + frei * 60 + (Lf.quart ? Math.round(Math.max(0, hoehe) * 0.5) : 0);
     var name = [];
     if (salti === 1) name.push(rueck ? 'Rückwärtssalto' : 'Salto');
     if (salti === 2) name.push('Doppelsalto');
     if (salti > 2) name.push(salti + '-fach Salto');
     if (dreher === 1) name.push('Dreher'); else if (dreher > 1) name.push(dreher + '× Dreher');
+    if (frei === 1) name.push('Freihändig'); else if (frei > 1) name.push(frei + '× Freihändig');
     if (!name.length) name.push(Lf.quart ? (Lf.maxY > P.kante + 45 ? 'Hoher Air' : 'Air') : (Lf.t > 0.75 ? 'Weiter Sprung' : 'Sprung'));
     if (stufe === 'wackelig') pk = Math.round(pk / 2);
     fahrt.lufte++;
-    if (salti || dreher) fahrt.tricks++;
+    if (salti || dreher || frei) fahrt.tricks++;
     comboDazu(name.join(' + '), pk, stufe);
-    ereignis({ art: 'landung', salti: salti, dreher: dreher, t: Lf.t, x0: Lf.x0, xm0: Lf.xm0, x1: b.x, maxY: Lf.maxY, wackel: stufe === 'wackelig', rail: aufRail });
+    ereignis({ art: 'landung', salti: salti, dreher: dreher, frei: frei, t: Lf.t, x0: Lf.x0, xm0: Lf.xm0, x1: b.x, maxY: Lf.maxY, wackel: stufe === 'wackelig', rail: aufRail });
     if (stufe === 'wackelig' && !aufRail) bank();
   }
   function grindStart() {
@@ -1037,9 +1105,10 @@ function zeichneRad(c, o) {
     fahrt = { lufte: 0, tricks: 0 };
     var weg = combo.n;
     combo = { n: 0, p: 0, namen: [] }; zeigeCombo();
-    zeigeLandung('sturz', grund === 'tief' ? 'Fast. Nochmal.' : (weg ? 'Combo weg' : ''));
+    zeigeLandung('sturz', grund === 'tief' ? 'Fast. Nochmal.' : (weg ? 'Combo weg' : 'Hoppla'));
   }
   function neuStart() {
+    if (!b || b.st !== 'sturz') return;
     var cp = null;
     for (var i = hist.length - 1; i >= 0; i--) { if (hist[i].t < zeit - 2.6) { cp = hist[i]; break; } }
     if (!cp) cp = hist[0] || { x: P.start || 120, f: 1, v: 0 };
@@ -1072,13 +1141,20 @@ function zeichneRad(c, o) {
     ui.combo.innerHTML = '<b>×' + combo.n + '</b><span>' + combo.p + '</span>';
     ui.combo.classList.remove('c6s-weg');
   }
-  function zeigeZeit() {
-    var s = Math.max(0, Math.ceil(rest));
-    ui.zeit.querySelector('b').textContent = Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2);
-    ui.zeit.querySelector('i').style.setProperty('--teil', (rest / (P.lauf || LAUF)).toFixed(3));
-    ui.zeit.classList.toggle('c6s-knapp', rest < 10 && laufAn);
-    ui.zeit.classList.toggle('c6s-wartet', !laufAn);
+  // Die Münzen dieses Parks als Reihe: gefüllt = schon gefunden, Umriss = liegt noch irgendwo. Keine Uhr, kein Druck.
+  function gefunden(pid) { var m = bmx().muenzen; return (m && m[pid]) || {}; }
+  function zeigeKiesel() {
+    if (!ui.kiesel || !gel) return;
+    var g = gefunden(parkId), html = '', n = 0, da = 0;
+    gel.muenzen.forEach(function (m, i) {
+      if (m.geheim && !g[i]) return;
+      n++; if (g[i]) da++;
+      html += '<i class="c6s-pk' + (g[i] ? ' c6s-pk-da' : '') + (m.geheim ? ' c6s-pk-geheim' : '') + '" data-i="' + i + '">' + (g[i] && C6.muenzen && C6.muenzen.muenze ? C6.muenzen.muenze(18) : '') + '</i>';
+    });
+    ui.kiesel.innerHTML = html;
+    ui.kiesel.setAttribute('aria-label', da + ' von ' + n + ' Münzen in diesem Park gefunden');
   }
+  function zeigeZeit() {}
 
   // ----- Herausforderungen -----
   function ereignis(e) {
@@ -1205,8 +1281,7 @@ function zeichneRad(c, o) {
       if (teilchen.length > 220) teilchen.splice(0, teilchen.length - 220);
       kamera(dt);
       if (zeit > trickZeit && trickZeit) { ui.trick.classList.add('c6s-weg'); trickZeit = 0; }
-      if (laufAn) { rest -= dt; zeigeZeit(); }
-      if (laufAn && rest <= 0 && (b.st === 'boden' || b.st === 'sturz')) { zeichne(); laufEnde(); return; }
+      if (laufAn) rest -= dt;
     }
     zeichne();
     if (!pause) raf = requestAnimationFrame(schleife);
@@ -1246,6 +1321,7 @@ function zeichneRad(c, o) {
     var A = o.aus || {}, lw = o.lw, dr = o.druck || 0, kb = o.kurbel;
     var tret = [-2, 13 - dr * 2.5], hueft = [-6.5, 36 - dr * 5.5], schulter = [7.5, 41.5 - dr * 5], gr = griffPunkt(A);
     gr = [gr[0], gr[1] - dr * 2.5];
+    var fr = o.frei || 0;
     var sock = sockenFarbe();
     function bein(s, farbe) {
       var a = kb + s * Math.PI, p = [tret[0] + Math.cos(a) * 6, tret[1] + Math.sin(a) * 6 + 1.6];
@@ -1254,14 +1330,21 @@ function zeichneRad(c, o) {
       c.fillStyle = farbe; c.strokeStyle = '#2b2722'; c.lineWidth = 0.9 * lw;
       c.beginPath(); c.ellipse(p[0] + 1.4, p[1] + 0.4, 3.3, 1.9, 0, 0, 7); c.fill(); c.stroke();
     }
-    function arm(farbe) {
-      var el = knie(schulter, gr, 3.6, 3.6, -1);
-      c.lineCap = 'round'; c.beginPath(); c.moveTo(schulter[0], schulter[1]); c.lineTo(el[0], el[1]); c.lineTo(gr[0], gr[1]);
+    function arm(farbe, sch, hoch) {
+      sch = sch || schulter;
+      var el = knie(sch, gr, 3.6, 3.6, -1), hd = gr;
+      // freihändig: der Arm geht nach oben und ein wenig nach außen (Hand weit über dem Kopf)
+      if (fr && hoch) {
+        var ez = [sch[0] + hoch[0] * 0.45, sch[1] + hoch[1] * 0.55], hz = [sch[0] + hoch[0], sch[1] + hoch[1]];
+        el = [el[0] + (ez[0] - el[0]) * fr, el[1] + (ez[1] - el[1]) * fr];
+        hd = [gr[0] + (hz[0] - gr[0]) * fr, gr[1] + (hz[1] - gr[1]) * fr];
+      }
+      c.lineCap = 'round'; c.beginPath(); c.moveTo(sch[0], sch[1]); c.lineTo(el[0], el[1]); c.lineTo(hd[0], hd[1]);
       c.strokeStyle = farbe; c.lineWidth = 1.7 * lw + 0.6; c.stroke();
       c.fillStyle = '#ece4d6'; c.strokeStyle = '#2b2722'; c.lineWidth = 0.8 * lw;
-      c.beginPath(); c.arc(gr[0], gr[1] + 0.3, 1.7, 0, 7); c.fill(); c.stroke();
+      c.beginPath(); c.arc(hd[0], hd[1] + 0.3, fr && hoch ? 1.7 + 0.4 * fr : 1.7, 0, 7); c.fill(); c.stroke();
     }
-    if (teil === 'hinten') { bein(1, mische(sock, '#2b2722', 0.35)); arm('#5b544c'); return; }
+    if (teil === 'hinten') { bein(1, mische(sock, '#2b2722', 0.35)); if (!fr) arm('#5b544c'); return; }
     bein(0, sock);
     // Körper: der Kiesel aus Filz
     var ln = o.lehne || 0, cl = Math.cos(ln), sl = Math.sin(ln);
@@ -1271,7 +1354,8 @@ function zeichneRad(c, o) {
     koerper(c, o);
     c.restore();
     schulter = dreh(schulter);
-    arm('#2b2722');
+    if (fr) arm('#2b2722', dreh([-7.5, 44 - dr * 5]), [-5, 16]);
+    arm('#2b2722', schulter, [5, 15]);
   }
   function koerper(c, o) {
     var lw = o.lw, rx = 12.5, ry = 10.6, i;
@@ -1345,6 +1429,7 @@ function zeichneRad(c, o) {
     var g = grenzen(1, k, 1);
     bodenMalen(c, g);
     deko(c, g);
+    muenzenMalen(c, g);
     schienen(c, g);
     teilchenMalen(c, 'staub');
     schatten(c);
@@ -1716,6 +1801,50 @@ function zeichneRad(c, o) {
       }
     });
   }
+  // Die Münze im Park: dasselbe Motiv wie im Glas (Kiesel mit Keimling), dreht sich langsam
+  var MP = null;
+  function muenzPfade() {
+    if (MP || typeof Path2D === 'undefined') return MP;
+    MP = {
+      kiesel: new Path2D('M6 21c-1-8 5-15 14-15.5 9-.4 15 5 14.5 13.5C34 28 27 34.5 19 34.3 11 34 6.8 29 6 21z'),
+      glanz: new Path2D('M10.5 21.5c-.4-5.6 3.8-10.6 10-10.9'),
+      stiel: new Path2D('M20 28v-7'),
+      bl1: new Path2D('M20 21.5c-4.6.3-7.4-2-7.6-5.6 3.9-.4 6.8 1.6 7.6 5.6z'),
+      bl2: new Path2D('M20 21c3.6-.8 6.7-3.6 6.4-7.3-3.8.2-6.6 3-6.4 7.3z')
+    };
+    return MP;
+  }
+  function muenzenMalen(c, g) {
+    if (!gel || !gel.muenzen.length || !muenzPfade()) return;
+    var schon = gefunden(parkId), lw = 1 / k;
+    gel.muenzen.forEach(function (m, i) {
+      if (m.x < g.l - 30 || m.x > g.r + 30) return;
+      var pop = 0;
+      if (m.weg) { pop = (zeit - (m.wegT || 0)) / 0.3; if (pop >= 1) return; }
+      var alt = !!schon[i] && !m.weg, sx = ruhig() ? 1 : Math.cos(zeit * 2.4 + i * 1.7), sk = 0.62 * (1 + pop * 0.8);
+      var hub = ruhig() ? 0 : Math.sin(zeit * 2 + i) * 2;
+      c.save();
+      c.translate(m.x, m.y + hub + pop * 14);
+      c.globalAlpha = (alt ? 0.42 : 1) * (1 - pop);
+      if (m.geheim && !m.weg) {
+        var gl = c.createRadialGradient(0, 0, 2, 0, 0, 34);
+        gl.addColorStop(0, P.nacht ? 'rgba(246,231,182,.55)' : 'rgba(255,240,190,.6)'); gl.addColorStop(1, 'rgba(246,231,182,0)');
+        c.fillStyle = gl; c.beginPath(); c.arc(0, 0, 34, 0, 7); c.fill();
+      }
+      c.scale(sk * (Math.abs(sx) < 0.08 ? 0.08 * (sx < 0 ? -1 : 1) : sx), -sk);
+      c.translate(-20, -20);
+      c.lineJoin = 'round'; c.lineCap = 'round';
+      c.fillStyle = alt ? 'rgba(0,0,0,0)' : '#e4d6bd'; c.fill(MP.kiesel);
+      c.strokeStyle = P.nacht && alt ? '#eef0ff' : '#2b2722'; c.lineWidth = 2.2; c.stroke(MP.kiesel);
+      if (!alt) {
+        c.strokeStyle = '#fbf7f0'; c.lineWidth = 2; c.stroke(MP.glanz);
+        c.strokeStyle = '#2b2722'; c.lineWidth = 2; c.stroke(MP.stiel);
+        c.fillStyle = '#8ea37a'; c.lineWidth = 1.6; c.fill(MP.bl1); c.stroke(MP.bl1); c.fill(MP.bl2); c.stroke(MP.bl2);
+      }
+      c.restore();
+    });
+    c.globalAlpha = 1;
+  }
   function teilchenMalen(c, art) {
     var lw = 1 / k;
     if (art === 'funke') c.globalCompositeOperation = 'lighter';
@@ -1774,7 +1903,8 @@ function zeichneRad(c, o) {
     if (Math.abs(sx) < 0.06) sx = 0.06 * (sx < 0 ? -1 : 1);
     if (b.nachSturz > 0 && !ruhig()) c.globalAlpha = 0.55 + 0.45 * (Math.sin(zeit * 30) > 0 ? 1 : 0.3);
     c.scale(sx, 1);
-    var o = { aus: aus, lw: lw, kurbel: b.kurbel, druck: b.druck, v: tempo, zeit: zeit, jubel: b.jubel > 0 || (b.st === 'luft' && b.luft && b.luft.t > 0.25), augen: b.st === 'sturz' ? 0 : 1, lehne: b.lehne * (sx > 0 ? 1 : -1) };
+    var o = { aus: aus, lw: lw, kurbel: b.kurbel, druck: b.druck, v: tempo, zeit: zeit, jubel: b.jubel > 0 || (b.st === 'luft' && b.luft && b.luft.t > 0.25), augen: b.st === 'sturz' ? 0 : 1, lehne: b.lehne * (sx > 0 ? 1 : -1), frei: b.frei > 0 ? Math.sin(Math.PI * Math.min(1, b.frei * 1.25)) : 0 };
+    if (o.frei) o.jubel = true;
     var carlWeg = b.st === 'sturz';
     if (!carlWeg) fahrerTeil(c, 'hinten', o);
     zeichneRad(c, { tinte: tinte, papier: papier, aus: aus, rad: b.rad * (sx > 0 ? 1 : -1), kurbel: b.kurbel, lw: lw, druck: b.druck * 0.5, federH: sx > 0 ? b.feder.l : b.feder.r, federV: sx > 0 ? b.feder.r : b.feder.l });

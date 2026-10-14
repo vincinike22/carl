@@ -110,7 +110,7 @@
         '<div class="c6w-h-tauch" aria-hidden="true"></div>' +
         '<p class="c6w-stimme" aria-live="polite"></p>' +
         '<p class="c6w-wink"></p>' +
-        '<button class="c6w-h-teleskop" type="button" aria-label="Teleskop: Gerüste anderer ansehen"><svg viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="#2b2722" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M9 25l26-12 4 9-26 12z" fill="#c9a46a"/><path d="M33 14l6-3 4 9-6 3z" fill="#e6c48c"/><path d="M6 27l4-2 3 7-4 2z" fill="#8f6f45"/><path d="M22 28l-6 15M24 27l8 16M23 28v15"/></g><circle cx="41" cy="15.5" r="1.4" fill="#fff"/></svg><span>Teleskop</span></button>' +
+        '<button class="c6w-h-teleskop" type="button" aria-label="Teleskop: Werkzeuge ansehen, die ich als Beispiel gebaut habe"><svg viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="#2b2722" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M9 25l26-12 4 9-26 12z" fill="#c9a46a"/><path d="M33 14l6-3 4 9-6 3z" fill="#e6c48c"/><path d="M6 27l4-2 3 7-4 2z" fill="#8f6f45"/><path d="M22 28l-6 15M24 27l8 16M23 28v15"/></g><circle cx="41" cy="15.5" r="1.4" fill="#fff"/></svg><span>Teleskop</span></button>' +
         '<ul class="c6w-h-liste" aria-label="Deine Planeten"></ul>' +
         '<div class="c6w-netz-unten">' +
         '<button class="c6w-knopf c6w-h-mitte" data-tu="mitte" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2" fill="currentColor"/><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/></svg>Zu dir</button>' +
@@ -312,6 +312,7 @@
           var g = neuWachsen[p.id], al = 1, sk = 1;
           if (g != null) { var k = Math.min(1, (performance.now() - g) / 1400); if (k >= 1) delete neuWachsen[p.id]; k = Math.max(0, k); sk = 1 - Math.pow(1 - k, 3); al = Math.min(1, k * 2); }
           var o = kugel({ kind: p.kind, p: p.pos, r: p.r * sk, farbe: p.farbe, spin: p.spin, seed: p.seed, sel: p.id === sel, al: al, id: p.id, pl: p });
+          if (o) o.pf = pflanzeVon(p.id);
           if (o && p.kind === 3) {
             o.ring = true;
             kugeln.push({ kind: 5, p: p.pos, r: p.r * sk, v: o.v, s: o.s, R: o.R * 1.95, farbe: mische(p.farbe, [0.93, 0.94, 1], 0.25), half: 1, al: al, ringFuer: p.id });
@@ -341,8 +342,10 @@
         var du = proj([0, 0, 0]);
         var rs = Math.max(W, H) * 0.55;
         c.drawImage(schein(), du[0] - rs, du[1] - rs, rs * 2, rs * 2);
+        nebelMalen(c);
         // Sterne: nur Richtung, kein Ort (sie liegen unendlich weit)
         c.fillStyle = '#fffbe8';
+        var hell = [], obn = oben() * 0.5, unt = H - unten();
         for (var i = 0; i < sterne.length; i++) {
           var s = sterne[i], d = s.d;
           var z = d[0] * E.f[0] + d[1] * E.f[1] + d[2] * E.f[2];
@@ -354,8 +357,10 @@
           c.globalAlpha = 0.25 + 0.5 * fl * s.w;
           var gg = s.g * (s.w > 0.92 ? 1.6 : 1);
           c.fillRect(x - gg / 2, y - gg / 2, gg, gg);
+          if (s.w > 0.8 && y > obn && y < unt) hell.push({ i: i, x: x, y: y });
         }
         c.globalAlpha = 1;
+        glitzerMalen(c, performance.now(), hell);
         schnuppeMalen(c, performance.now());
         // Hof um dich: er atmet sehr langsam (eine Periode in sieben Sekunden)
         var atem = C6.ruhig ? 0.5 : 0.5 + 0.5 * Math.sin(zeit * 6.2832 / 7);
@@ -373,7 +378,7 @@
           var bis = neu ? Math.min(1, (performance.now() - feier.t0 - 500) / 1500) : 1;
           var ok = true, sp = [];
           pts.forEach(function (q) { var s = proj(q); if (s[2] < 0.2) ok = false; sp.push(s); });
-          kk.s = ok ? sp[12] : null; kk.mitte = pts[12];
+          kk.s = ok ? sp[12] : null; kk.sp = ok ? sp : null; kk.mitte = pts[12];
           if (!ok || bis <= 0) return;
           var e = bis < 1 ? 1 - Math.pow(1 - bis, 2) : 1, n = e * (sp.length - 1), ganz = Math.floor(n);
           var weg = function () {
@@ -385,7 +390,11 @@
           c.lineWidth = neu ? 12 : 7; c.strokeStyle = 'rgba(255,90,70,' + (neu ? 0.2 : 0.12) + ')'; weg(); c.stroke();
           c.lineWidth = neu ? 3.2 : 2.2; c.strokeStyle = neu ? 'rgba(255,122,110,0.98)' : 'rgba(232,74,62,0.85)'; weg(); c.stroke();
           if (neu && bis < 1) { var kopf = sp[Math.min(sp.length - 1, ganz + 1)]; stern4(c, kopf[0], kopf[1], 7, 'rgba(255,214,200,0.95)', '#ffffff'); }
+          // die Sonne wurde angetippt: deine Sternbilder leuchten nacheinander auf
+          var hl = leuchtKraft(kk.k.ts);
+          if (hl > 0) { c.lineWidth = 14; c.strokeStyle = 'rgba(255,150,130,' + (0.32 * hl).toFixed(3) + ')'; weg(); c.stroke(); c.lineWidth = 3.4; c.strokeStyle = 'rgba(255,214,200,' + (0.95 * hl).toFixed(3) + ')'; weg(); c.stroke(); }
         });
+        wanderer(c);
         // Halos: ausgewählter Planet, rote Sterne
         if (feier) welt.planeten.forEach(function (p) {
           if (p.id !== feier.a && p.id !== feier.b) return;
@@ -412,6 +421,33 @@
           hg.addColorStop(0, 'rgba(214,42,38,0.55)'); hg.addColorStop(1, 'rgba(214,42,38,0)');
           c.fillStyle = hg; c.beginPath(); c.arc(s[0], s[1], R, 0, 6.29); c.fill();
         });
+      }
+
+      // Leuchten nach dem Tipp auf die Sonne: jedes Sternbild in der Reihenfolge, in der du es gezogen hast
+      var leuchten = null;
+      function leuchtKraft(ts) {
+        if (!leuchten) return 0;
+        var i = leuchten.reihe.indexOf(ts); if (i < 0) return 0;
+        if (C6.ruhig) return performance.now() < leuchten.t0 + 2600 ? 1 : 0;
+        var t = (performance.now() - leuchten.t0 - i * 750) / 1150;
+        return t <= 0 || t >= 1 ? 0 : Math.sin(t * Math.PI);
+      }
+      function leuchtenLaeuft() {
+        if (!leuchten) return false;
+        var ende = leuchten.t0 + (C6.ruhig ? 2600 : (leuchten.reihe.length - 1) * 750 + 1150);
+        if (performance.now() > ende) { leuchten = null; return false; }
+        return true;
+      }
+      // Lebenszeichen: ein einziger kleiner Stern wandert sehr langsam an einem deiner Sternbilder entlang (nur, wenn es eins gibt)
+      function wanderer(c) {
+        if (C6.ruhig || feier || leuchten || !welt.knoten.length) return;
+        var per = 24, n = welt.knoten.length, kk = welt.knoten[Math.floor(zeit / per) % n], u = (zeit % per) / per;
+        if (!kk || !kk.sp) return;
+        var f = u * (kk.sp.length - 1), i = Math.floor(f), q0 = kk.sp[i], q1 = kk.sp[Math.min(kk.sp.length - 1, i + 1)], g = f - i;
+        var x = q0[0] + (q1[0] - q0[0]) * g, y = q0[1] + (q1[1] - q0[1]) * g;
+        c.globalAlpha = 0.55 * Math.sin(u * Math.PI);
+        c.fillStyle = '#fff3ec'; c.beginPath(); c.arc(x, y, 1.7, 0, 6.29); c.fill();
+        c.globalAlpha = 1;
       }
 
       // warmer Schein um dich: einmal gemalt, dann nur gesetzt
@@ -607,15 +643,22 @@
         });
         // Beschriftungen
         c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round';
-        var belegt = [];
-        function frei(r) { for (var i = 0; i < belegt.length; i++) { var b = belegt[i]; if (r[0] < b[2] && r[2] > b[0] && r[1] < b[3] && r[3] > b[1]) return false; } return true; }
+        var belegt = [], hart = [], hartMit = false;
+        function freiIn(r, liste) { for (var i = 0; i < liste.length; i++) { var b = liste[i]; if (r[0] < b[2] && r[2] > b[0] && r[1] < b[3] && r[3] > b[1]) return false; } return true; }
+        function frei(r) { return freiIn(r, belegt); }
+        function kasten(t, x, y, font) {
+          c.font = font;
+          var w = c.measureText(t).width, h = parseFloat(font.match(/(\d+)px/)[1]) + 4;
+          x = Math.max(w / 2 + 10, Math.min(W - w / 2 - 10, x));
+          return [x - w / 2 - 3, y - h / 2, x + w / 2 + 3, y + h / 2];
+        }
         function schrift(t, x, y, font, farbe, pflicht) {
           c.font = font;
           var w = c.measureText(t).width, h = parseFloat(font.match(/(\d+)px/)[1]) + 4;
           x = Math.max(w / 2 + 10, Math.min(W - w / 2 - 10, x));
           var r = [x - w / 2 - 3, y - h / 2, x + w / 2 + 3, y + h / 2];
           if (!pflicht && !frei(r)) return false;
-          belegt.push(r);
+          belegt.push(r); if (hartMit) hart.push(r);
           c.lineWidth = 4; c.strokeStyle = 'rgba(20,26,51,0.85)'; c.strokeText(t, x, y);
           c.fillStyle = farbe; c.fillText(t, x, y);
           return true;
@@ -623,7 +666,16 @@
         // Carl schwebt irgendwo: dort keine Schrift
         if (carlCtl && !carlEl.hidden) { var cg = carlPx() * carl.s, gw = carl.gef ? 0.45 : 0; belegt.push([carl.x - cg * gw, carl.y - cg * 0.1, carl.x + cg * (0.8 + gw), carl.y + cg * (1 + gw * 0.5)]); }
         // erst die Kugeln selbst als belegt zählen (Schrift soll nicht auf Planeten liegen)
-        kugeln.forEach(function (k) { if (k.kind !== 5 && k.R > 6) belegt.push([k.s[0] - k.R * 0.8, k.s[1] - k.R * 0.8, k.s[0] + k.R * 0.8, k.s[1] + k.R * 0.8]); });
+        kugeln.forEach(function (k) {
+          if (k.kind === 5 || k.R <= 6) return;
+          var r = [k.s[0] - k.R * 0.8, k.s[1] - k.R * 0.8, k.s[0] + k.R * 0.8, k.s[1] + k.R * 0.8];
+          belegt.push(r); if (k.kind <= 3) hart.push(r);
+        });
+        // die Pflanze am Planeten: dieselbe Stufe wie unten im Space
+        kugeln.forEach(function (k) {
+          if (k.kind < 1 || k.kind > 3 || k.al < 0.4 || k.R < 7 || verdeckt([k.s[0] + k.R * 0.74, k.s[1] - k.R * 0.74, k.v[2] - k.R])) return;
+          var r = pflanzeMalen(c, k); if (r) { belegt.push(r); hart.push(r); }
+        });
         var gross = C6.geraet === 'computer' ? 16 : 15;
         // du
         var du = kugeln.filter(function (k) { return k.kind === 0; })[0];
@@ -634,11 +686,12 @@
         var nahe = [];
         kugeln.forEach(function (k) {
           if (k.kind >= 1 && k.kind <= 3) nahe.push(k);
-          if (k.kind === 4) dinge.push({ art: 'mond', id: k.id, mond: k.mond, x: k.s[0], y: k.s[1], R: Math.max(16, k.R + 6), z: k.v[2] });
-          if (k.kind >= 1 && k.kind <= 3) dinge.push({ art: 'planet', id: k.id, x: k.s[0], y: k.s[1], R: Math.max(24, k.R + 4), z: k.v[2] });
+          if (k.kind === 4) dinge.push({ art: 'mond', id: k.id, mond: k.mond, x: k.s[0], y: k.s[1], R: Math.max(22, k.R + 6), z: k.v[2] });
+          if (k.kind >= 1 && k.kind <= 3) dinge.push({ art: 'planet', id: k.id, x: k.s[0], y: k.s[1], R: Math.max(26, k.R + 4), Rv: k.R, z: k.v[2] });
           if (k.kind === 6) dinge.push({ art: 'neu', x: k.s[0], y: k.s[1], R: Math.max(26, k.R + 6), z: k.v[2] });
         });
         nahe.sort(function (a, b) { return a.v[2] - b.v[2]; });
+        hartMit = true;
         nahe.forEach(function (k) {
           var p = k.pl; if (!p || k.al < 0.4) return;
           if (k.s[0] < 0 || k.s[0] > W || k.s[1] < 0 || k.s[1] > H - unten() + 30) return;
@@ -665,26 +718,66 @@
             if (zw.length) schrift(zw.join(' · '), y2 === k.s[1] + 18 ? sx2 : k.s[0], y2, '500 13px Figtree, system-ui, sans-serif', NACHT.leise, false);
           }
         });
-        // Sternbild-Namen: dein Satz steht am Himmel (beim Entstehen groß, sonst klein und leise)
+        if (du && duY > oben() - 30) hart.push([du.s[0] - 16, duY - 11, du.s[0] + 16, duY + 11]);
+        hartMit = false;
+        // Sternbild-Namen: dein Satz steht am Bogen (beim Entstehen groß, sonst klein und leise) – nie über einem Planeten oder seinem Namen
         welt.knoten.forEach(function (kk) {
-          if (!kk.s || verdeckt(kk.s)) return;
+          if (!kk.s || !kk.sp || verdeckt(kk.s)) return;
           var neu = feier && feier.ts === kk.k.ts;
           if (neu) {
             var fa = Math.max(0, Math.min(1, (performance.now() - feier.t0 - 1700) / 900));
             if (fa <= 0) return;
+            var fg = C6.geraet === 'computer' ? 26 : 21, ff = 'italic 400 ' + fg + 'px Fraunces, Georgia, serif';
+            var zl = umbruch(kk.k.satz, C6.geraet === 'computer' ? 34 : 24);
+            var lage = grossPlatz(zl, kk, ff, fg);
+            if (!lage) { kleinAmBogen(kk, 'italic 400 ' + (gross + 1) + 'px Fraunces, Georgia, serif', '#ffe6dc'); return; }
             c.save(); c.globalAlpha = fa;
-            var fg = C6.geraet === 'computer' ? 26 : 21, zl = umbruch(kk.k.satz, C6.geraet === 'computer' ? 34 : 24);
-            // über beiden Planeten (und ihren Namen), damit nichts sich überdeckt
-            var top = kk.s[1];
-            [feier.a, feier.b].forEach(function (id) { var pp = hol(id); if (!pp) return; var q = proj(pp.pos), R = F * pp.r / Math.max(0.1, q[2]); top = Math.min(top, q[1] - R - 26); });
-            var unterste = Math.max(oben() + (zl.length - 1) * (fg + 6) + fg, top - 8);
-            zl.forEach(function (z, i) { schrift(z, kk.s[0], unterste - (zl.length - 1 - i) * (fg + 6), 'italic 400 ' + fg + 'px Fraunces, Georgia, serif', '#ffe6dc', true); });
+            zl.forEach(function (z, i) { schrift(z, lage.x, lage.y + i * (fg + 6), ff, '#ffe6dc', true); });
             c.restore(); return;
           }
-          var st = '„' + kuerze(kk.k.satz, C6.geraet === 'computer' ? 34 : 24) + '“', sf = 'italic 400 ' + (gross - 1) + 'px Fraunces, Georgia, serif';
-          // klein an der Linie: erst darüber, dann darunter, dann seitlich; zur Not über allem
-          if (!schrift(st, kk.s[0], kk.s[1] - 16, sf, '#ffd9cf', false) && !schrift(st, kk.s[0], kk.s[1] + 18, sf, '#ffd9cf', false) && !schrift(st, kk.s[0], kk.s[1] - 36, sf, '#ffd9cf', false)) schrift(st, kk.s[0], kk.s[1] - 16, sf, '#ffd9cf', true);
+          kleinAmBogen(kk, 'italic 400 ' + (gross - 1) + 'px Fraunces, Georgia, serif', '#ffd9cf', leuchtKraft(kk.k.ts));
         });
+        // klein am Bogen: Stellen entlang der Linie, darüber oder darunter; erst ganz frei, dann nur frei von Planeten und Namen; sonst kürzer; sonst gar nicht
+        function kleinAmBogen(kk, sf, farbe, hell) {
+          var lang = C6.geraet === 'computer' ? 34 : 24, satzT = String(kk.k.satz || '');
+          // erst ganz in einer Zeile, dann ganz in zwei Zeilen am Bogen – gekürzt nur, wenn sonst nirgends Platz ist
+          var zwei = umbruch(satzT, lang);
+          if (zwei.length > 2) zwei = [zwei[0], kuerze(zwei.slice(1).join(' '), lang)];
+          var fassungen = [['„' + satzT + '“'], zwei.map(function (z, i) { return (i ? '' : '„') + z + (i === zwei.length - 1 ? '“' : ''); }), ['„' + kuerze(satzT, lang) + '“'], ['„' + kuerze(satzT, 14) + '“']];
+          if (satzT.length > lang + 8) fassungen.shift();
+          var fh = parseFloat(sf.match(/(\d+)px/)[1]) + 5;
+          var stellen = [12, 9, 15, 6, 18], abst = [-16, 18, -34, -52, 36];
+          for (var f = 0; f < fassungen.length; f++) for (var pass = 0; pass < 2; pass++) {
+            var zl = fassungen[f], streng = !pass, hoch = (zl.length - 1) * fh;
+            for (var i = 0; i < stellen.length; i++) {
+              var q = kk.sp[stellen[i]]; if (!q || q[2] < 0.2) continue;
+              for (var j = 0; j < abst.length; j++) {
+                var y0 = q[1] + abst[j] - (abst[j] < 0 ? hoch : 0), ok = true;
+                for (var z = 0; z < zl.length && ok; z++) {
+                  var r = kasten(zl[z], q[0], y0 + z * fh, sf);
+                  if (r[1] < oben() - 20 || r[3] > H - unten() + 20 || !freiIn(r, hart) || (streng && !frei(r))) ok = false;
+                }
+                if (!ok) continue;
+                if (hell > 0) { c.save(); c.shadowColor = 'rgba(255,170,150,' + (0.9 * hell).toFixed(3) + ')'; c.shadowBlur = 14 * hell; }
+                for (var z2 = 0; z2 < zl.length; z2++) schrift(zl[z2], q[0], y0 + z2 * fh, sf, hell > 0 ? '#ffece6' : farbe, true);
+                if (hell > 0) c.restore();
+                return true;
+              }
+            }
+          }
+          return false;
+        }
+        // groß beim Entstehen: über dem Scheitel des Bogens, sonst darunter; jede Zeile frei von Planeten und Namen
+        function grossPlatz(zl, kk, ff, fg) {
+          var hoch = (zl.length - 1) * (fg + 6), x = kk.s[0];
+          function passt(y0) {
+            for (var i = 0; i < zl.length; i++) { var r = kasten(zl[i], x, y0 + i * (fg + 6), ff); if (r[1] < oben() - 24 || r[3] > H - unten() || !freiIn(r, hart)) return false; }
+            return true;
+          }
+          for (var d = 0; d <= 160; d += 10) { var y = kk.s[1] - 22 - hoch - d; if (passt(y)) return { x: x, y: y }; }
+          for (var d2 = 0; d2 <= 120; d2 += 10) { var y2 = kk.s[1] + 26 + d2; if (passt(y2)) return { x: x, y: y2 }; }
+          return null;
+        }
         if (du && duY > oben() - 30) {
           belegt = belegt.filter(function (r) { return !(r[1] === duY - 11 && Math.abs((r[0] + r[2]) / 2 - du.s[0]) < 1); });
           schrift('Du', du.s[0], duY, '700 ' + (gross + 1) + 'px Figtree, system-ui, sans-serif', '#ffe2ad', true);
@@ -713,6 +806,16 @@
             c.beginPath(); c.moveTo(s0[0], s0[1]);
             c.quadraticCurveTo((s0[0] + zieh.x) / 2, Math.min(s0[1], zieh.y) - 50, zieh.x, zieh.y); c.stroke();
             stern4(c, zieh.x, zieh.y, zieh.ziel ? 13 : 9, zieh.ziel ? '#ffffff' : 'rgba(238,240,255,0.7)', '#ffffff');
+          }
+        }
+        if (schnurr) {
+          var sk = (performance.now() - schnurr.t0) / 300, a1 = hol(schnurr.von), s1 = a1 && proj(a1.pos);
+          if (sk >= 1 || !s1) schnurr = null;
+          else {
+            var e1 = 1 - Math.pow(1 - sk, 3), ex = schnurr.x + (s1[0] - schnurr.x) * e1, ey = schnurr.y + (s1[1] - schnurr.y) * e1;
+            c.globalAlpha = 1 - sk * 0.6; c.strokeStyle = 'rgba(238,240,255,0.9)'; c.lineWidth = 2;
+            c.beginPath(); c.moveTo(s1[0], s1[1]); c.quadraticCurveTo((s1[0] + ex) / 2, Math.min(s1[1], ey) - 50 * (1 - e1), ex, ey); c.stroke();
+            stern4(c, ex, ey, 9 * (1 - e1 * 0.6), 'rgba(238,240,255,0.7)', '#ffffff'); c.globalAlpha = 1;
           }
         }
         spurMalen(c);
@@ -1139,29 +1242,90 @@
         if (ps !== schattenPos) { schattenEl.style.transform = ts; schattenEl.style.opacity = os; schattenPos = ps; }
         if (pl !== lichtPos) { lichtEl.style.transform = tl; lichtEl.style.opacity = ol; lichtPos = pl; }
       }
-      // Sternschnuppe: alle 40 bis 90 Sekunden eine Linie, 600 ms; Carl schaut hin
-      var schnuppe = null, schnuppeNaechste = 0;
-      function schnuppePlanen(now) { schnuppeNaechste = now + 40000 + Math.random() * 50000; }
+      // Der Himmel lebt leise: Sternschnuppen in drei Entfernungen, Nebel, der kaum merklich driftet, ab und zu ein Glitzern.
+      // Alles liegt hinter den Planeten, bleibt blasser als Carl und die Sternbilder und ruht ganz bei reduzierter Bewegung.
+      // Entfernung: fern = klein, langsam, blass (häufig) · mittel · nah = groß, schnell, hell (selten; nur dann schaut Carl hin)
+      var FERNEN = [
+        { art: 'fern', p: 0.58, lang: [45, 75], ms: [1300, 1700], al: 0.42, br: 0.8, kopf: 0.9 },
+        { art: 'mittel', p: 0.30, lang: [100, 150], ms: [850, 1100], al: 0.68, br: 1.2, kopf: 1.3 },
+        { art: 'nah', p: 0.12, lang: [210, 290], ms: [480, 620], al: 0.85, br: 2.0, kopf: 2.1 }
+      ];
+      var schnuppen = [], schnuppeNaechste = 0, gezaehlt = { fern: 0, mittel: 0, nah: 0 };
+      function zw(a) { return a[0] + Math.random() * (a[1] - a[0]); }
+      // im Mittel alle 11 s eine, nie zwei nahe kurz hintereinander
+      function schnuppePlanen(now) { schnuppeNaechste = now + 6000 + Math.random() * 10000; }
       function schnuppeSchritt(now) {
-        if (C6.ruhig || imRundgang || !aktiv) { schnuppe = null; return; }
-        if (!schnuppe && schnuppeNaechste && now >= schnuppeNaechste) {
+        if (C6.ruhig || imRundgang || !aktiv) { schnuppen.length = 0; return; }
+        if (schnuppeNaechste && now >= schnuppeNaechste && schnuppen.length < 2) {
+          var r = Math.random(), f = FERNEN[0];
+          for (var i = 0, acc = 0; i < FERNEN.length; i++) { acc += FERNEN[i].p; if (r <= acc) { f = FERNEN[i]; break; } }
+          if (f.art === 'nah' && now - (schnuppeSchritt.nahT || 0) < 45000) f = FERNEN[1];
           var ob = oben(), hav = Math.max(100, H - ob - unten());
-          var x0 = W * (0.2 + Math.random() * 0.6), y0 = ob + hav * (0.05 + Math.random() * 0.35);
-          var a = 0.35 + Math.random() * 0.4, ri = Math.random() < 0.5 ? -1 : 1;
-          schnuppe = { t0: now, x0: x0, y0: y0, dx: Math.cos(a) * 150 * ri, dy: Math.sin(a) * 90 };
+          var x0 = W * (0.1 + Math.random() * 0.8), y0 = ob * 0.4 + hav * (0.02 + Math.random() * (f.art === 'fern' ? 0.7 : 0.4));
+          var a = 0.25 + Math.random() * 0.5, ri = Math.random() < 0.5 ? -1 : 1, L = zw(f.lang) * (C6.geraet === 'computer' ? 1 : 0.8);
+          var sn = { t0: now, ms: zw(f.ms), x0: x0, y0: y0, dx: Math.cos(a) * L * ri, dy: Math.sin(a) * L, f: f };
+          schnuppen.push(sn); gezaehlt[f.art]++;
+          try { buehne.setAttribute('data-schnuppen', gezaehlt.fern + ',' + gezaehlt.mittel + ',' + gezaehlt.nah); } catch (e) {}
           schnuppePlanen(now);
-          if (!carl.flug && !carl.unterwegs) carlSchau(x0 + schnuppe.dx * 0.6, y0 + schnuppe.dy * 0.6, 1800);
+          if (f.art === 'nah') { schnuppeSchritt.nahT = now; if (!carl.flug && !carl.unterwegs) carlSchau(x0 + sn.dx * 0.6, y0 + sn.dy * 0.6, 1800); }
         }
-        if (schnuppe && now - schnuppe.t0 > 600) schnuppe = null;
+        for (var j = schnuppen.length - 1; j >= 0; j--) if (now - schnuppen[j].t0 > schnuppen[j].ms) schnuppen.splice(j, 1);
       }
       function schnuppeMalen(c, now) {
-        if (!schnuppe) return;
-        var k = Math.min(1, (now - schnuppe.t0) / 600), kopf = Math.min(1, k * 1.3), schwanz = Math.max(0, k * 1.3 - 0.3);
-        var x1 = schnuppe.x0 + schnuppe.dx * kopf, y1 = schnuppe.y0 + schnuppe.dy * kopf, x0 = schnuppe.x0 + schnuppe.dx * schwanz, y0 = schnuppe.y0 + schnuppe.dy * schwanz;
-        var g = c.createLinearGradient(x0, y0, x1, y1);
-        g.addColorStop(0, 'rgba(255,251,232,0)'); g.addColorStop(1, 'rgba(255,251,232,' + (0.9 * (1 - k * 0.4)).toFixed(3) + ')');
-        c.strokeStyle = g; c.lineWidth = 1.5; c.lineCap = 'round';
-        c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1, y1); c.stroke();
+        schnuppen.forEach(function (sn) {
+          var f = sn.f, k = Math.min(1, (now - sn.t0) / sn.ms), kopf = Math.min(1, k * 1.3), schwanz = Math.max(0, k * 1.3 - 0.35);
+          var aus = k < 0.15 ? k / 0.15 : 1 - Math.max(0, (k - 0.7) / 0.3);   // weich an, weich aus
+          var x1 = sn.x0 + sn.dx * kopf, y1 = sn.y0 + sn.dy * kopf, x0 = sn.x0 + sn.dx * schwanz, y0 = sn.y0 + sn.dy * schwanz;
+          var g = c.createLinearGradient(x0, y0, x1, y1);
+          g.addColorStop(0, 'rgba(255,251,232,0)'); g.addColorStop(1, 'rgba(255,251,232,' + (f.al * aus).toFixed(3) + ')');
+          c.strokeStyle = g; c.lineWidth = f.br; c.lineCap = 'round';
+          c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1, y1); c.stroke();
+          if (f.art !== 'fern') { c.globalAlpha = 0.5 * f.al * aus; c.fillStyle = '#fffbe8'; c.beginPath(); c.arc(x1, y1, f.kopf, 0, 6.29); c.fill(); c.globalAlpha = 1; }
+        });
+      }
+      // Nebel: drei weiche Wolken, einmal gemalt; sie treiben in Minuten, nicht in Sekunden, und folgen dem Drehen nur ein wenig
+      var NEBEL = [
+        { x: 0.22, y: 0.28, r: 0.55, f: [96, 112, 190], al: 0.17, per: 140, amp: 0.05, ph: 0.3, tiefe: 0.18 },
+        { x: 0.80, y: 0.62, r: 0.62, f: [150, 104, 170], al: 0.14, per: 180, amp: 0.06, ph: 2.1, tiefe: 0.12 },
+        { x: 0.55, y: 0.12, r: 0.42, f: [90, 140, 170], al: 0.11, per: 120, amp: 0.04, ph: 4.0, tiefe: 0.25 }
+      ];
+      var nebelBild = {};
+      function nebelWolke(n) {
+        var key = n.f.join(',');
+        if (nebelBild[key]) return nebelBild[key];
+        var cv = document.createElement('canvas'); cv.width = cv.height = 256;
+        var c = cv.getContext('2d'), g = c.createRadialGradient(128, 128, 0, 128, 128, 128);
+        var rgb = n.f.join(',');
+        g.addColorStop(0, 'rgba(' + rgb + ',1)'); g.addColorStop(0.45, 'rgba(' + rgb + ',0.45)'); g.addColorStop(1, 'rgba(' + rgb + ',0)');
+        c.fillStyle = g; c.fillRect(0, 0, 256, 256);
+        return (nebelBild[key] = cv);
+      }
+      function nebelMalen(c) {
+        var m = Math.max(W, H), t = C6.ruhig ? 0 : zeit;
+        NEBEL.forEach(function (n) {
+          var w = t * 6.2832 / n.per + n.ph;
+          var x = (n.x + Math.sin(w) * n.amp) * W - cam.yaw * W * n.tiefe * 0.15, y = (n.y + Math.cos(w * 0.7) * n.amp * 0.6) * H;
+          var r = n.r * m * (1 + 0.04 * Math.sin(w * 1.3));
+          c.globalAlpha = n.al; c.drawImage(nebelWolke(n), x - r, y - r * 0.7, r * 2, r * 1.4);
+        });
+        c.globalAlpha = 1;
+      }
+      // Glitzern: alle paar Sekunden blitzt ein einzelner Stern kurz als kleines Kreuz auf
+      var glitzer = null, glitzerNaechste = 0;
+      function glitzerMalen(c, now, sichtbar) {
+        if (C6.ruhig || !aktiv) { glitzer = null; return; }
+        if (!glitzer && now >= glitzerNaechste && sichtbar.length) {
+          var s = sichtbar[Math.floor(Math.random() * sichtbar.length)];
+          glitzer = { t0: now, i: s.i }; glitzerNaechste = now + 5000 + Math.random() * 7000;
+        }
+        if (!glitzer) return;
+        var k = (now - glitzer.t0) / 900; if (k >= 1) { glitzer = null; return; }
+        var q = null; for (var i = 0; i < sichtbar.length; i++) if (sichtbar[i].i === glitzer.i) { q = sichtbar[i]; break; }
+        if (!q) { glitzer = null; return; }
+        var a = Math.sin(k * Math.PI), R = 2 + 3.5 * a;
+        c.globalAlpha = 0.55 * a; c.strokeStyle = '#fffbe8'; c.lineWidth = 0.8;
+        c.beginPath(); c.moveTo(q.x - R, q.y); c.lineTo(q.x + R, q.y); c.moveTo(q.x, q.y - R); c.lineTo(q.x, q.y + R); c.stroke();
+        c.globalAlpha = 1;
       }
       // Licht: „Du“ ist die Quelle des Raums; wird nur neu gesetzt, wenn die Mitte sich merklich verschiebt
       var lichtLetzt = null, lichtT = 0;
@@ -1188,6 +1352,49 @@
       var pulse = {};   // stringId → Startzeit des Lichtpulses
       var wartet = {};  // stringId → Zeitpunkt; was danach entstand, zeigt sich erst, wenn Carl es gebracht hat
       var boten = [];
+      // Die Pflanze eines Space, oben wie unten: gibt es C6.space.pflanze, gilt nur sie.
+      // Sonst dieselbe Regel wie space.js pflanzeVon(), auf denselben Daten gelesen (ohne etwas anzulegen).
+      function pflanzeVon(sid) {
+        try { if (C6.space && typeof C6.space.pflanze === 'function') { var r = C6.space.pflanze(sid); if (r && typeof r.st === 'number') return r; } } catch (e) {}
+        var x = null; try { x = C6.S && C6.S.spaces ? C6.S.spaces[sid] : null; } catch (e) { x = null; }
+        x = x || {};
+        var nz = (x.notizen || []).filter(function (n) { return n && n.von !== 'fund' && !/^Fund\s*·\s*/.test(String(n.t || '')); }).length;
+        if (x.bluete) return { st: 4, art: 'bluete', name: 'Eine Blüte' };
+        if (x.kern) return { st: 3, art: 'knospe', name: 'Eine Knospe' };
+        if (nz >= 3) return { st: 1, art: 'keim', name: 'Ein Keim' };
+        if (nz >= 1) return { st: 0, art: 'samen', name: 'Ein Samen' };
+        return { st: -1, art: 'leer', name: 'Ein Topf mit Erde' };
+      }
+      // Das Zeichen am Planeten: aus Kreisen gebaut, so klein, dass der Planet bleibt, was er ist
+      function pflanzeMalen(c, k) {
+        var pf = k.pf; if (!pf || pf.st < 0) return null;
+        var R = k.R, s = Math.max(5, Math.min(9, R * 0.3));
+        var x = k.s[0] + R * 0.74, y = k.s[1] - R * 0.74, rb = s + 3.5;
+        var hell = css(mische(k.farbe, [1, 0.97, 0.92], 0.45));
+        c.save();
+        c.fillStyle = 'rgba(11,15,34,0.86)'; c.strokeStyle = css(mische(k.farbe, [1, 1, 1], 0.3), 0.9); c.lineWidth = 1.2;
+        c.beginPath(); c.arc(x, y, rb, 0, 6.29); c.fill(); c.stroke();
+        c.lineCap = 'round';
+        if (pf.st === 0) {
+          c.fillStyle = '#f3e3bd'; c.beginPath(); c.arc(x, y + s * 0.15, s * 0.36, 0, 6.29); c.fill();
+        } else if (pf.st < 3) {
+          c.strokeStyle = '#a7c48a'; c.lineWidth = 1.6;
+          c.beginPath(); c.moveTo(x, y + s * 0.62); c.lineTo(x, y - s * 0.05); c.stroke();
+          c.fillStyle = '#a7c48a';
+          c.beginPath(); c.ellipse(x - s * 0.34, y - s * 0.12, s * 0.36, s * 0.18, -0.6, 0, 6.29); c.fill();
+          c.beginPath(); c.ellipse(x + s * 0.34, y - s * 0.12, s * 0.36, s * 0.18, 0.6, 0, 6.29); c.fill();
+        } else if (pf.st === 3) {
+          c.strokeStyle = '#a7c48a'; c.lineWidth = 1.6;
+          c.beginPath(); c.moveTo(x, y + s * 0.66); c.lineTo(x, y); c.stroke();
+          c.fillStyle = hell; c.beginPath(); c.ellipse(x, y - s * 0.22, s * 0.3, s * 0.46, 0, 0, 6.29); c.fill();
+        } else {
+          c.fillStyle = hell;
+          for (var i = 0; i < 5; i++) { var a = i * 1.2566 - 1.5708; c.beginPath(); c.arc(x + Math.cos(a) * s * 0.5, y + Math.sin(a) * s * 0.5, s * 0.3, 0, 6.29); c.fill(); }
+          c.fillStyle = '#f0a830'; c.beginPath(); c.arc(x, y, s * 0.26, 0, 6.29); c.fill();
+        }
+        c.restore();
+        return [x - rb, y - rb, x + rb, y + rb];
+      }
       function zeigbar(sid, ts) { var w = wartet[sid]; return w == null || !(ts > w); }
       function marken(sid, s) {
         var dn = [], fu = [];
@@ -1214,7 +1421,7 @@
         C6.strings.nadelnAlle().forEach(function (n) { if (n.stringId) dazu(n.stringId, 'nadel', n.ts); });
         return a.sort(function (x, y) { return y.ts - x.ts; }).slice(0, 3);
       }
-      var DING = { ergebnis: 'ein Ergebnis aus der Werkstatt', geruest: 'ein Gerüst', zettel: 'ein Zettel', karte: 'eine Karte' };
+      var DING = { ergebnis: 'ein Ergebnis aus der Werkstatt', geruest: 'ein Werkzeug', zettel: 'ein Zettel', karte: 'eine Karte' };
       function boteSatz(b, p) {
         var t = '„' + kuerze(p.d.titel, 28) + '“';
         if (b.n > 1) return satz('himmel.bote.viel', 'Bei ' + t + ' ist einiges dazugekommen.').replace('{titel}', t);
@@ -1311,8 +1518,8 @@
         if (spielDarf(now)) spielStart(now);
         schnuppeSchritt(now);
         var dtc = Math.min(0.05, (now - (tCarl || now)) / 1000); tCarl = now;
-        var lebt = carlLebt(now) || !!spiel || spur.length > 0 || !!feier || rauch.length > 0 || !!carl.traegt || Object.keys(pulse).length > 0 || !!schnuppe;
-        var ruht = !geste && !zieh && !tauchen && !Object.keys(neuWachsen).length && Math.abs(schwung) < 0.0005 && Math.abs(soll.dist - cam.dist) < 0.01 && Math.abs(soll.tx - cam.tx) < 0.01 && Math.abs(soll.tz - cam.tz) < 0.01;
+        var lebt = carlLebt(now) || leuchtenLaeuft() || !!schnurr || !!spiel || spur.length > 0 || !!feier || rauch.length > 0 || !!carl.traegt || Object.keys(pulse).length > 0 || schnuppen.length > 0 || !!glitzer;
+        var ruht = !geste && !zieh && !tauchen && !schnuppen.length && !Object.keys(neuWachsen).length && Math.abs(schwung) < 0.0005 && Math.abs(soll.dist - cam.dist) < 0.01 && Math.abs(soll.tx - cam.tx) < 0.01 && Math.abs(soll.tz - cam.tz) < 0.01;
         if (tRaf) takt = takt * 0.9 + Math.min(300, now - tRaf) * 0.1; tRaf = now;
         // schwaches Gerät: in Ruhe seltener malen, damit alles andere flüssig bleibt
         var pause = takt > 40 ? 160 : 34;
@@ -1402,7 +1609,43 @@
       }
 
       // ——— Finger ———
-      var zeiger = {}, geste = null, zieh = null;
+      var zeiger = {}, geste = null, zieh = null, schnurr = null;
+      // „Wie geht das?“: ein ehrlicher Satz je Ding, einmal je Sitzung (der Kern merkt es sich)
+      var WIE = {
+        planet: ['himmel.planet', 'Ein Planet ist ein Space von oben. Was unten wächst, wächst hier mit.'],
+        du: ['himmel.sonne', 'Die Mitte bist du. Um dich kreist, woran du denkst. Tippst du hier, leuchten deine Sternbilder auf.'],
+        knoten: ['himmel.sternbild', 'Zwei deiner Spaces, ein Satz von dir. Daraus ist das Sternbild gemacht, aus nichts sonst.'],
+        nadel: ['himmel.kernsatz', 'Das ist ein Kernsatz: der eine Satz, der einen Space trägt.'],
+        neu: ['himmel.neu', 'Hier geht dein nächster Planet auf. Erst wenn du ihm einen Namen gibst.']
+      };
+      function halte(g) {
+        g.gehalten = true; zieh = null; schwung = 0;
+        var d = g.ding; if (!d) return;
+        var w = WIE[d.art], id, t;
+        if (d.art === 'mond') { var m = d.mond || {}; id = 'himmel.mond'; t = 'Ein Mond ist ein Ort dieses Space' + (m.name ? ', hier „' + kuerze(m.name, 24) + '“' : '') + '. Tipp ihn an, dann denkst du dort weiter.'; }
+        else if (w) { id = w[0]; t = w[1]; }
+        if (!id) return;
+        carlSchau(d.x, d.y, 3000);
+        try {
+          if (C6.staunen && typeof C6.staunen.sag === 'function') { if (typeof C6.staunen.text === 'function') C6.staunen.text(id, t); C6.staunen.sag(id, t); }
+          else stimme(t, 6500);
+        } catch (e) {}
+        weiter();
+      }
+      // Die Sonne „Du“: deine Sternbilder leuchten nacheinander auf; gibt es keins, sagt Carl es einmal
+      var duLeerGesagt = false;
+      function duLeuchten() {
+        var kk = C6.strings.knotenAlle().filter(function (k) { return hol(k.a) && hol(k.b); }).sort(function (a, b) { return a.ts - b.ts; });
+        if (!kk.length) {
+          if (duLeerGesagt) return;
+          duLeerGesagt = true;
+          stimme(welt.planeten.length >= 2 ? satz('himmel.duLeer', 'Noch keins. Zieh zwei Planeten zusammen.') : 'Noch keins. Dafür brauchst du zwei Planeten.', 5000);
+          return;
+        }
+        leuchten = { t0: performance.now() + (C6.ruhig ? 0 : 800), reihe: kk.map(function (k) { return k.ts; }) };
+        if (C6.ruhig) setTimeout(function () { if (aktiv) zeichne(); }, 2700);
+        weiter();
+      }
       function pos(e) { var r = vorn.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; }
       function treffer(x, y) {
         var best = null, bz = 1e9;
@@ -1413,6 +1656,8 @@
           var z = d.z + prio + a * 0.001;
           if (z < bz) { bz = z; best = d; }
         });
+        // ein Mond stiehlt seinem Planeten nie den Finger: liegt der Punkt auf der sichtbaren Kugel, gilt der Planet
+        if (best && best.art === 'mond') dinge.forEach(function (d) { if (d.art === 'planet' && Math.hypot(x - d.x, y - d.y) <= d.Rv && d.z <= best.z + 2) best = d; });
         return best;
       }
       vorn.addEventListener('pointerdown', function (e) {
@@ -1422,13 +1667,16 @@
         schwung = 0;
         if (ids.length === 1) {
           var d = treffer(p[0], p[1]);
-          geste = { art: 'dreh', start: p, last: p, ding: d, weg: 0, t: performance.now() };
+          geste = { art: 'dreh', start: p, last: p, ding: d, weg: 0, t: performance.now(), ts: e.timeStamp };
+          // langes Halten fragt „Wie geht das?“: es fliegt nicht, öffnet nichts, zieht nichts.
+          // Erst im nächsten Bild entscheiden: ein schon losgelassener Finger (im Takt noch nicht verarbeitet) kommt vorher an.
+          if (d) { var gh = geste; gh.uhr = setTimeout(function () { requestAnimationFrame(function () { if (geste === gh && !gh.gehalten && gh.weg <= 8 && Object.keys(zeiger).length === 1) halte(gh); }); }, 600); }
           // Carl schaut zum Finger
           carlWach();
           if (!carl.flug && !carl.unterwegs) carlSchau(p[0], p[1], 2400);
           if (d && d.art === 'planet' && welt.planeten.length > 1) zieh = { von: d.id, x: p[0], y: p[1], weit: false, ziel: null };
         } else if (ids.length === 2) {
-          zieh = null;
+          zieh = null; if (geste && geste.uhr) clearTimeout(geste.uhr);
           var a = zeiger[ids[0]], b = zeiger[ids[1]];
           geste = { art: 'zoom', d: Math.hypot(a[0] - b[0], a[1] - b[1]), dist: soll.dist, weg: 99 };
         }
@@ -1445,6 +1693,8 @@
           ueberblick = false; mitteZeigen();
         } else {
           geste.weg = Math.max(geste.weg, Math.hypot(p[0] - geste.start[0], p[1] - geste.start[1]));
+          if (geste.gehalten) { geste.last = p; return; }
+          if (geste.uhr && geste.weg > 8) { clearTimeout(geste.uhr); geste.uhr = 0; }
           if (zieh && geste.weg > 12) {
             zieh.weit = true; zieh.x = p[0]; zieh.y = p[1];
             var t = treffer(p[0], p[1]); zieh.ziel = t && t.art === 'planet' && t.id !== zieh.von ? t.id : null;
@@ -1466,7 +1716,11 @@
         var g = geste;
         if (Object.keys(zeiger).length) { if (g.art === 'zoom') { var r = zeiger[Object.keys(zeiger)[0]]; geste = { art: 'dreh', start: r, last: r, weg: 99 }; } return; }
         geste = null;
+        if (g.uhr) clearTimeout(g.uhr);
+        // ein ausgebremster Takt darf das Halten nicht in einen Tipp verwandeln: die Zeit des Fingers zählt
+        if (!g.gehalten && g.ding && g.art === 'dreh' && g.weg <= 8 && e.type !== 'pointercancel' && g.ts != null && e.timeStamp - g.ts >= 600) halte(g);
         var z = zieh; zieh = null;
+        if (g.gehalten) { schwung = 0; weiter(); return; }
         if (g.weg < 10 && e.type !== 'pointercancel') {
           schwung = 0;
           var d = g.ding;
@@ -1476,9 +1730,12 @@
           else if (d.art === 'nadel') zeigNadel(d.n);
           else if (d.art === 'knoten') zeigKnoten(d.k);
           else if (d.art === 'neu') neuerPlanet();
-          else if (d.art === 'du') zuDir();
+          else if (d.art === 'du') { zuDir(); duLeuchten(); }
         } else if (z && z.weit && z.ziel) {
           frageKnoten(z.von, z.ziel);
+        } else if (z && z.weit) {
+          // ins Leere (oder auf sich selbst): der Faden schnurrt zum Planeten zurück, kein Satz
+          if (!C6.ruhig) schnurr = { von: z.von, x: z.x, y: z.y, t0: performance.now() };
         }
         if (C6.ruhig) schwung = 0;
         weiter();
@@ -1526,7 +1783,7 @@
         for (var i = 0; i < lis.length; i++) {
           var li = lis[i], id = li.getAttribute('data-id'), k = null;
           for (var j = 0; j < kugeln.length; j++) if (kugeln[j].id === id && kugeln[j].kind >= 1 && kugeln[j].kind <= 3) { k = kugeln[j]; break; }
-          var x = k ? Math.round(k.s[0]) : -200, y = k ? Math.round(k.s[1]) : -200, d = k ? Math.max(44, Math.round(k.R * 1.6)) : 44;
+          var x = k ? Math.round(k.s[0]) : -200, y = k ? Math.round(k.s[1]) : -200, d = k ? Math.max(48, Math.round(k.R * 1.6)) : 48;
           var alt = listeOrte[id];
           if (alt && Math.abs(alt[0] - x) < 3 && Math.abs(alt[1] - y) < 3 && alt[2] === d) continue;
           listeOrte[id] = [x, y, d];
@@ -1539,6 +1796,7 @@
           var li = document.createElement('li'), b = document.createElement('button');
           li.setAttribute('data-id', p.id);
           b.type = 'button'; b.textContent = p.d.titel + ' öffnen';
+          var pf = pflanzeVon(p.id); if (pf.st >= 0) b.setAttribute('aria-label', p.d.titel + ' öffnen. ' + pf.name + '.');
           b.onclick = function () { fliegZu(p.id, true); };
           b.onfocus = function () { fliegZu(p.id, false); };
           li.appendChild(b); listeEl.appendChild(li);
@@ -1597,7 +1855,7 @@
         var s = n.stringId && C6.strings.hol(n.stringId);
         oeffne('<p class="c6w-kicker"><i class="c6w-nadel-z"></i>Kernsatz · ' + C6.strings.datum(n.ts) + '</p>' +
           '<h2 class="c6w-titel c6w-carl c6w-rot">' + esc(n.satz) + '</h2>' +
-          (s ? '<p class="c6w-leise">leuchtet über „' + esc(s.titel) + '“</p>' : '<p class="c6w-leise">Das blieb übrig, als der Heuhaufen abgebrannt war.</p>'));
+          (s ? '<p class="c6w-leise">leuchtet über „' + esc(s.titel) + '“</p>' : ''));
       }
       function frageKnoten(a, b) {
         var A = C6.strings.hol(a), B = C6.strings.hol(b); if (!A || !B) return;
@@ -1609,7 +1867,12 @@
         blatt.querySelector('form').onsubmit = function (ev) {
           ev.preventDefault();
           var v = blatt.querySelector('#c6w-knoten-in').value.trim();
-          if (!v) { blatt.querySelector('#c6w-knoten-in').focus(); return; }
+          if (!v) {
+            var fi = blatt.querySelector('#c6w-knoten-in');
+            fi.placeholder = 'Was haben die beiden gemeinsam? Ein Satz reicht.';
+            fi.classList.remove('c6w-feld-frage'); void fi.offsetWidth; fi.classList.add('c6w-feld-frage');
+            fi.focus(); return;
+          }
           C6.strings.knoten(a, b, v);
           try { C6.gespraech && C6.gespraech('du', v); } catch (e2) {}
           schliessen(true);
@@ -1640,11 +1903,11 @@
           mitteZeigen(); wink();
         }, 6200);
       }
-      function neuerPlanet() {
+      function neuerPlanet(vorschlag) {
         oeffne('<p class="c6w-kicker">Neuer Planet</p>' +
           '<h2 class="c6w-titel c6w-carl">Woran denkst du gerade?</h2>' +
           '<form><label class="c6w-nur-lesbar" for="c6w-neu-in">Name des Planeten</label>' +
-          '<input id="c6w-neu-in" class="c6w-feld" autocomplete="off" maxlength="48" placeholder="Ein paar Wörter">' +
+          '<input id="c6w-neu-in" class="c6w-feld" autocomplete="off" maxlength="48" placeholder="Ein paar Wörter" value="' + esc(typeof vorschlag === 'string' ? vorschlag.slice(0, 48) : '') + '">' +
           '<button class="c6w-knopf c6w-haupt" type="submit">Aufgehen lassen</button></form>', '#c6w-neu-in');
         var art = 'projekt';
         blatt.querySelector('form').onsubmit = function (ev) {
@@ -1653,14 +1916,41 @@
           if (!v) { blatt.querySelector('#c6w-neu-in').focus(); return; }
           var id = C6.strings.neu({ titel: v, art: art }).id;
           schliessen(true);
-          lesen();
-          if (!C6.ruhig) neuWachsen[id] = performance.now();
-          var n = welt.planeten.length;
-          stimme(n === 1 ? '„' + v + '“ ist dein erster Planet. Unten ist er ein Space. Tipp ihn an, dann gehen wir hinein.' : '„' + v + '“ ist aufgegangen. Tipp ihn an, dann gehen wir hinein.', 6000);
-          setTimeout(function () { fliegZu(id, false); }, C6.ruhig ? 0 : 700);
-          wink();
-          weiter();
+          aufgegangen(id, v);
         };
+      }
+      function aufgegangen(id, v) {
+        lesen();
+        if (!C6.ruhig) neuWachsen[id] = performance.now();
+        var n = welt.planeten.length;
+        stimme(n === 1 ? '„' + v + '“ ist dein erster Planet. Unten ist er ein Space. Tipp ihn an, dann gehen wir hinein.' : '„' + v + '“ ist aufgegangen. Tipp ihn an, dann gehen wir hinein.', 6000);
+        setTimeout(function () { fliegZu(id, false); }, C6.ruhig ? 0 : 700);
+        wink();
+        weiter();
+      }
+      // Kein Planet ohne dein Ja: was du mir früher gesagt hast, schlage ich nur vor
+      var ersterGefragt = false;
+      function ersterFragen() {
+        if (ersterGefragt || C6.strings.alle().length) return false;
+        var du = (C6.S && C6.S.du) || {}, t = du.baut && String(du.baut).trim();
+        if (!t || t.length < 2) return false;
+        ersterGefragt = true;
+        var frage = satz('himmel.ersterFrage', 'Du hast mir gesagt, du baust an „{t}“. Soll das dein erster Planet werden?').replace('{t}', kuerze(t, 40));
+        if (typeof C6.frag !== 'function') { neuerPlanet(t); return true; }
+        setTimeout(function () {
+          if (!aktiv || C6.jetzt !== 'netz' || C6.strings.alle().length) return;
+          var p = null;
+          try { p = C6.frag(frage, [{ text: 'Passt', wert: 'ja' }, { text: 'Anders', wert: 'anders' }]); } catch (e) { p = null; }
+          if (!p || !p.then) return;
+          p.then(function (w) {
+            if (!aktiv || C6.jetzt !== 'netz') return;
+            if (w === 'ja' && !C6.strings.alle().length) {
+              var s = C6.strings.erster ? C6.strings.erster() : C6.strings.neu({ titel: t, art: 'projekt' });
+              if (s && s.id) aufgegangen(s.id, s.titel || t);
+            } else if (w === 'anders') neuerPlanet();
+          });
+        }, C6.ruhig ? 0 : 900);
+        return true;
       }
 
       buehne.querySelector('[data-tu="neu"]').onclick = neuerPlanet;
@@ -1793,7 +2083,7 @@
           taktAn();
           // die Kamerafahrt der Höhe skaliert die Bühne; danach einmal nachmessen, damit der Canvas scharf bleibt
           setTimeout(function () { if (aktiv && (buehne.clientWidth !== W || buehne.clientHeight !== H)) groesse(); }, 480);
-          if (!C6.strings.alle().length && C6.strings.erster) C6.strings.erster();
+          var fragtErst = !imRundgang && ersterFragen();
           lesen();
           var war = ausSpace; ausSpace = false;
           W = Math.max(1, buehne.clientWidth); H = Math.max(1, buehne.clientHeight);
@@ -1819,7 +2109,8 @@
           var erstBesuch = !(C6.S.himmel && C6.S.himmel.begruesst);
           if (!imRundgang && !ziel && (erstBesuch || !n)) {
             try { C6.S.himmel = C6.S.himmel && typeof C6.S.himmel === 'object' ? C6.S.himmel : {}; if (n) C6.S.himmel.begruesst = Date.now(); } catch (e) {}
-            if (!n) stimme(satz('himmel.leer', 'Dein Himmel ist noch still. Woran denkst du gerade? Daraus wird dein erster Planet.'), 9000);
+            if (fragtErst) { /* Carl fragt gerade nach dem ersten Planeten: ein Satz zur Zeit */ }
+            else if (!n) stimme(satz('himmel.leer', 'Dein Himmel ist noch still. Woran denkst du gerade? Daraus wird dein erster Planet.'), 9000);
             else stimme(satz('himmel.raum', 'Das bist du, in der Mitte. Alles, woran du denkst, kreist um dich. Tipp einen Planeten an, dann fliegen wir hin.'), 7000);
           }
           if (o.zeig === 'neu') setTimeout(neuerPlanet, 400);
@@ -1830,7 +2121,7 @@
         },
         verlassen: function () {
           aktiv = false; taktAb(); zieh = null; geste = null; zeiger = {}; schwung = 0;
-          tauchen = null; tauchFeder = null; schnuppe = null;
+          tauchen = null; tauchFeder = null; schnuppen.length = 0; glitzer = null;
           boten = []; wartet = {}; pulse = {}; carl.flug = null; carl.unterwegs = false; carl.traegt = null; carlFlieg(false); rauch.length = 0; fahrt.x = null;
           spiel = null; spur = []; couchAn = false; couchEl.hidden = true; carl.ort = { art: 'du' }; carl.w = null;
           // beim Abstieg steht er auf; das Gefährt bleibt hier oben

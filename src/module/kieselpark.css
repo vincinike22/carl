@@ -69,3 +69,17 @@
 .c6s-park-karte>:last-child{margin-bottom:auto}
 .c6s-park-karte-kopf>div{text-align:left}
 @media (max-width:600px){.c6s-park-karte-kopf .c6s-park-titel{font-size:28px}.c6s-park-garage{font-size:14px}}
+
+/* s13: keine Uhr – stattdessen die Münzen dieses Parks als Reihe (gefüllt = gefunden) */
+.c6s-park-zeit{display:none}
+.c6s-park-kiesel{display:flex;gap:5px;margin-top:6px;min-height:20px;pointer-events:none}
+.c6s-pk{width:18px;height:18px;border-radius:50%;box-sizing:border-box;border:2px dashed currentColor;opacity:.55;display:block}
+.c6s-pk.c6s-pk-da{border:0;opacity:1}
+.c6s-pk svg{display:block}
+.c6s-pk.c6s-pk-geheim{filter:drop-shadow(0 0 4px rgba(246,214,120,.9))}
+.c6s-park.c6s-nacht .c6s-park-kiesel{color:#eef0ff}
+.c6s-park-pausetun{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.c6s-park-pausetun:not(:has(button:not([hidden]))){display:none}
+.c6s-park-pausetun .c6s-knopf[hidden]{display:none}
+.c6s-g-tipp{border-style:solid}
+.c6s-g-tipp::after{width:6px;height:6px;border:0;border-radius:50%;background:currentColor;transform:translate(-50%,-50%)}

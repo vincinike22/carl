@@ -1,4 +1,4 @@
-// Teleskop: geteilte Gerüste als Sterne. Carl sitzt am Rohr und schaut mit hinein.
+// Teleskop: Werkzeuge als Sterne (Beispiele von Carl und, was du selbst hineinhängst). Carl sitzt am Rohr und schaut mit hinein.
 (function () {
   var C6 = window.C6;
   if (!C6 || !C6.raum) return;
@@ -15,7 +15,7 @@
         '<div class="c6w-t-halter" aria-hidden="false">' +
         '<i class="c6w-t-schraube" style="--w:45deg" aria-hidden="true"></i><i class="c6w-t-schraube" style="--w:135deg" aria-hidden="true"></i>' +
         '<i class="c6w-t-schraube" style="--w:225deg" aria-hidden="true"></i><i class="c6w-t-schraube" style="--w:315deg" aria-hidden="true"></i>' +
-        '<div class="c6w-rohr"><canvas class="c6w-himmel" aria-hidden="true"></canvas><div class="c6w-sterne" role="list" aria-label="Geteilte Gerüste"></div></div>' +
+        '<div class="c6w-rohr"><canvas class="c6w-himmel" aria-hidden="true"></canvas><div class="c6w-sterne" role="list" aria-label="Werkzeuge im Teleskop"></div></div>' +
         '<i class="c6w-t-fuss" aria-hidden="true"></i>' +
         '</div>' +
         '<div class="c6w-t-carl" aria-hidden="true"></div>' +
@@ -42,6 +42,16 @@
         var wz = [];
         try { wz = (C6.werkzeug && C6.werkzeug.geteilt ? C6.werkzeug.geteilt() : []).map(function (w) { return { g: { id: 'wz:' + w.id, name: w.name, farbe: w.farbe || '#4f7fa8', schritte: [] }, eigen: true, wz: w }; }); } catch (e) { wz = []; }
         return eigene.concat(wz, vor);
+      }
+      // Woher die Sterne kommen, sagt Carl so, wie es in den Daten steht: Beispiele von ihm, dazu deine eigenen
+      function herkunft() {
+        var l = liste0.length ? liste0 : liste(), eigen = l.some(function (e) { return e.eigen; }), vor = l.some(function (e) { return !e.eigen; });
+        var t = '';
+        try { t = (C6.stimme && C6.stimme.sag && C6.stimme.sag('teleskop')) || ''; } catch (e) { t = ''; }
+        // ein Satz, der fremde Menschen behauptet, gilt nicht, solange niemand anderes hier etwas hineinhängt
+        if (!t || t === 'teleskop' || /von anderen|anderer/i.test(t)) t = vor ? 'Hier liegen Werkzeuge, die ich als Beispiel gebaut habe. Nimm mit, was dich anstößt.' : '';
+        if (eigen) t = (t ? t + ' ' : '') + 'Die mit „von dir“ hast du selbst hineingehängt.';
+        return t || 'Noch liegt hier nichts.';
       }
       // Sterne verteilen: jedes Schild steht frei (Rechtecke stoßen sich ab, bleiben im Rohr)
       var liste0 = [];
@@ -300,7 +310,7 @@
         if (g.einleitung) return g.einleitung;
         if (EINF[g.id]) return EINF[g.id];
         var st = g.schritte || [];
-        return (eigen ? 'Dein eigenes Gerüst' : 'Ein Gerüst') + (st.length ? ' in ' + st.length + ' Schritten. Es beginnt mit: „' + st[0] + '“' : '.');
+        return (eigen ? 'Dein eigenes Werkzeug' : 'Ein Werkzeug') + (st.length ? ' in ' + st.length + ' Schritten. Es beginnt mit: „' + st[0] + '“' : '.');
       }
       var vor = { id: null, uhr: 0, mausZeit: 0 };
       var kannHover = !!(window.matchMedia && matchMedia('(hover: hover) and (pointer: fine)').matches);
@@ -490,7 +500,7 @@
           // Carl erklärt das Teleskop einmal; danach spricht der Himmel für sich
           if (!imRundgang && C6.sag && !(C6.S.himmel && C6.S.himmel.teleskopErklaert)) setTimeout(function () {
             if (!aktiv) return;
-            C6.sag((C6.stimme && C6.stimme.sag('teleskop')) || 'Das sind Gerüste zum Anschauen. Nimm mit, was dich anstößt.');
+            C6.sag(herkunft());
             try { C6.S.himmel = C6.S.himmel && typeof C6.S.himmel === 'object' ? C6.S.himmel : {}; C6.S.himmel.teleskopErklaert = Date.now(); if (C6.speichern) C6.speichern(); } catch (e) {}
           }, 500);
         },

@@ -248,7 +248,7 @@
         teile.map(function (t, i) { return teilHtml(t, i, d, klein); }).join('') + (o.rueckblick && !klein ? rueckblick(spec, d) : '') + '</div>';
       binde(d);
     }
-    function benutzt() { if (spec.id && hol(spec.id)) merken(); bus('benutzt', { id: spec.id || null, sid: spec.sid || null }); }
+    function benutzt() { try { var dd = daten(spec); dd._tage = dd._tage || {}; dd._tage[tag()] = 1; } catch (e) {} if (spec.id && hol(spec.id)) merken(); bus('benutzt', { id: spec.id || null, sid: spec.sid || null }); }
     function binde(d) {
       [].forEach.call(el.querySelectorAll('.c6wz-tag'), function (b) {
         b.onclick = function () { var k = schl(spec.teile[+b.dataset.i], +b.dataset.i); d[k] = d[k] || {}; d[k].tage = d[k].tage || {}; var id = b.dataset.tag; if (d[k].tage[id]) delete d[k].tage[id]; else d[k].tage[id] = 1; benutzt(); zeichne(); var nb = el.querySelector('.c6wz-tag[data-tag="' + id + '"]'); if (nb && d[k].tage[id] && !C6.ruhig && nb.animate) nb.animate([{ transform: 'scale(.8)' }, { transform: 'scale(1.12)' }, { transform: 'none' }], { duration: 320, easing: 'cubic-bezier(.2,.8,.2,1)' }); };
@@ -296,6 +296,7 @@
   function zu() { feldZurueck(); if (!blatt) return; var b = blatt; blatt = null; b.classList.remove('c6wz-an'); setTimeout(function () { if (b.parentNode) b.parentNode.removeChild(b); }, C6.ruhig ? 0 : 260); }
   function blattAuf(titel) {
     zu();
+    try { if (C6.darstellung && C6.darstellung.offen && C6.darstellung.zu) C6.darstellung.zu(); } catch (e) {}
     var b = D.createElement('div'); b.className = 'c6wz-blatt'; b.setAttribute('role', 'dialog'); b.setAttribute('aria-label', titel);
     b.innerHTML = '<button type="button" class="c6wz-zu" aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button><p class="c6wz-kicker">' + esc(titel) + '</p><div class="c6wz-inhalt"></div>';
     (D.getElementById('c6') || D.body).appendChild(b);
@@ -304,7 +305,7 @@
     return b.querySelector('.c6wz-inhalt');
   }
   D.addEventListener('keydown', function (e) { if (e.key === 'Escape' && blatt) { e.preventDefault(); e.stopPropagation(); zu(); } }, true);
-  if (C6.bus) C6.bus.on('raum', function () { zu(); });
+  if (C6.bus) { C6.bus.on('raum', function () { zu(); }); C6.bus.on('leer', function () { zu(); }); }
 
   function oeffne(o) {
     o = o || {};
@@ -314,7 +315,7 @@
     var geliehen = feldLeihen(frageT, function (t) { bauen(t, o.sid, nr); });
     el.innerHTML = '<h3 class="c6wz-titel">' + esc(frageT) + '</h3>' +
       (geliehen ? '<p class="c6wz-leise c6wz-unten">Schreib es unten ins Feld. Ein Satz reicht.</p>' : '<form class="c6wz-wunsch"><input type="text" maxlength="200" placeholder="Ein Satz reicht." aria-label="' + esc(stimme('wunsch', null, 'Was soll dein Werkzeug können?')) + '" value="' + esc(o.satz || '') + '"><button type="submit" class="c6wz-knopf c6wz-haupt">Bauen</button></form>') +
-      '<p class="c6wz-leise">Oder nimm eins zum Anfang:</p><div class="c6wz-vorlagen">' + VORLAGEN.slice(0, 2).map(function (v) { return '<button type="button" class="c6wz-vorlage" data-v="' + v.id + '">' + zeichen(v.id === 'gewohnheit' ? 'haken' : 'kalender') + '<span><b>' + esc(v.name) + '</b><small>„' + esc(v.satz) + '“</small></span></button>'; }).join('') + '</div>';
+      (o.eigen ? '' : '<p class="c6wz-leise">Oder nimm eins zum Anfang:</p><div class="c6wz-vorlagen">' + VORLAGEN.slice(0, 2).map(function (v) { return '<button type="button" class="c6wz-vorlage" data-v="' + v.id + '">' + zeichen(v.id === 'gewohnheit' ? 'haken' : 'kalender') + '<span><b>' + esc(v.name) + '</b><small>„' + esc(v.satz) + '“</small></span></button>'; }).join('') + '</div>');
     var f = el.querySelector('form'), inp = f ? f.querySelector('input') : null;
     if (f) f.onsubmit = function (e) { e.preventDefault(); var s = inp.value.trim(); if (!s) { inp.focus(); return; } bauen(s, o.sid, nr); };
     [].forEach.call(el.querySelectorAll('.c6wz-vorlage'), function (b) { b.onclick = function () { var v = VORLAGEN.filter(function (x) { return x.id === b.dataset.v; })[0]; if (inp) inp.value = v.satz; bauen(v.satz, o.sid, nr); }; });
@@ -372,11 +373,138 @@
         tb.onclick = function () { teilen(w.id, true); tb.disabled = true; tb.textContent = stimme('geteilt', null, 'Hängt im Teleskop. Andere dürfen es sich nehmen.'); };
     }
   }
+  /* ---------- Das Werkzeug-Blatt: heute, der Verlauf als Bild, und ein ehrlicher Satz von Carl ---------- */
+  function wocheStart(d) { var x = new Date(d || Date.now()); x.setHours(0, 0, 0, 0); x.setDate(x.getDate() - (x.getDay() + 6) % 7); return x; }
+  function tagPlus(d, n) { var x = new Date(d); x.setDate(x.getDate() + n); return x; }
+  function benutztTage(spec, d) {
+    var t = {};
+    (spec.teile || []).forEach(function (tt, i) { var x = d[schl(tt, i)] || {}; Object.keys(x.tage || {}).forEach(function (k) { t[k] = 1; }); Object.keys(x.log || {}).forEach(function (k) { if (x.log[k] != null && x.log[k] !== 0) t[k] = 1; }); });
+    Object.keys(d._tage || {}).forEach(function (k) { t[k] = 1; });
+    return t;
+  }
+  function wann(k) { var h = tag(), g = tag(new Date(Date.now() - 864e5)); return k === h ? 'heute' : k === g ? 'gestern' : 'am ' + datumText(k); }
+  function zahlWort(n, eins, viele) { return n === 0 ? 'kein' + (eins === 'Kreuz' ? '' : 'e') + ' ' + eins : n === 1 ? (eins === 'Kreuz' ? 'ein Kreuz' : 'einen ' + eins) : n + ' ' + viele; }
+  // ein Satz, nur aus den echten Einträgen (kein Druck, keine Serie, nichts erfunden)
+  function aufgreifen(spec, d) {
+    d = d || daten(spec);
+    var t0 = tag(wocheStart()), tv = tag(tagPlus(wocheStart(), -7)), s = '';
+    var hi = -1; (spec.teile || []).forEach(function (t, i) { if (hi < 0 && t.t === 'haken') hi = i; });
+    var teil = (spec.teile || [])[hi >= 0 ? hi : 0] || {}, dd = d[schl(teil, hi >= 0 ? hi : 0)] || {};
+    if (teil.t === 'haken') {
+      var ks = Object.keys(dd.tage || {}).sort(), diese = ks.filter(function (k) { return k >= t0; }).length, letzte = ks.filter(function (k) { return k >= tv && k < t0; }).length;
+      if (!ks.length) return 'Noch kein Kreuz. Das erste machst du oben, bei heute.';
+      s = 'Diese Woche ' + zahlWort(diese, 'Kreuz', 'Kreuze') + (letzte || diese ? ', letzte Woche ' + (letzte === 1 ? 'eins' : letzte || 'keins') : '') + '. Zuletzt ' + wann(ks[ks.length - 1]) + '.';
+    } else if (teil.t === 'zaehler') {
+      var lg = dd.log || {}, sum = function (a, b) { var n = 0; Object.keys(lg).forEach(function (k) { if (k >= a && (!b || k < b)) n += +lg[k] || 0; }); return n; };
+      var dw = sum(t0), lw = sum(tv, t0);
+      s = (dd.n ? 'Bisher ' + dd.n + (teil.ziel ? ' von ' + teil.ziel : '') + '. ' : 'Noch bei null. ') + (dw || lw ? 'Diese Woche ' + dw + ', letzte Woche ' + lw + '.' : '');
+    } else if (teil.t === 'wert') {
+      var lw2 = dd.log || {}, kk = Object.keys(lw2).sort();
+      if (!kk.length) return 'Noch kein Wert. Trag oben den von heute ein, dann zeichne ich ab dem zweiten den Verlauf.';
+      var l = kk[kk.length - 1], e = wertE(lw2[l], teil);
+      var w7 = kk.filter(function (k) { return k >= tag(new Date(Date.now() - 6 * 864e5)) && wertE(lw2[k], teil) === (teil.einheit || ''); });
+      if (w7.length >= 2 && /^(min|h|km|m|Schritte|€|Seiten|l)$/.test(teil.einheit || '')) {
+        var su = 0; w7.forEach(function (k) { su += +wertV(lw2[k]) || 0; });
+        return 'In den letzten sieben Tagen an ' + w7.length + ' Tagen, zusammen ' + zahlText(Math.round(su * 100) / 100) + ' ' + teil.einheit + '. Zuletzt ' + zahlText(wertV(lw2[l])) + ' ' + teil.einheit + ' ' + wann(l) + '.';
+      }
+      s = 'Zuletzt ' + zahlText(wertV(lw2[l])) + (e ? ' ' + e : '') + ' ' + wann(l) + '.';
+      if (kk.length > 1) { var f = kk[0]; s += ' Am ' + datumText(f) + ' waren es ' + zahlText(wertV(lw2[f])) + (wertE(lw2[f], teil) ? ' ' + wertE(lw2[f], teil) : '') + '.'; }
+    } else if (teil.t === 'tag') {
+      var kt = Object.keys(dd.log || {}).sort(), n7 = kt.filter(function (k) { return k >= tag(new Date(Date.now() - 6 * 864e5)); }).length;
+      if (!kt.length) return 'Noch kein Satz. Einer für heute reicht.';
+      s = (n7 === 1 ? 'Ein Satz' : n7 + ' Sätze') + ' in den letzten sieben Tagen. Der letzte: „' + kurz(dd.log[kt[kt.length - 1]], 60) + '“';
+    } else if (teil.t === 'liste') {
+      var pk = dd.punkte || teil.punkte || [], erl = Object.keys(dd.erl || {}).length;
+      s = pk.length ? erl + ' von ' + pk.length + ' erledigt.' + (erl === pk.length ? ' Alles weg.' : '') : 'Die Liste ist noch leer. Schreib unten dazu, was drauf soll.';
+    } else if (teil.t === 'frage') {
+      var fr = teil.fragen && teil.fragen.length ? teil.fragen : [teil.text], a = (dd.a || []).filter(Boolean).length;
+      s = a ? a + ' von ' + fr.length + ' Fragen beantwortet.' : 'Noch keine Antwort. Ein Satz reicht.';
+    } else if (teil.t === 'datum') {
+      var w = dd.wann || teil.wann, n = Math.round((new Date(w + 'T00:00:00') - new Date(tag() + 'T00:00:00')) / 864e5);
+      s = n > 1 ? 'Noch ' + n + ' Tage bis zum ' + datumText(w) + '.' : n === 1 ? 'Morgen ist es so weit.' : n === 0 ? 'Heute ist der Tag.' : 'Der ' + datumText(w) + ' ist vorbei.';
+    } else {
+      var bt = Object.keys(benutztTage(spec, d)).sort();
+      s = dd.t ? 'Zuletzt geschrieben ' + (bt.length ? wann(bt[bt.length - 1]) : 'früher') + '.' : 'Noch leer. Ein Satz reicht für den Anfang.';
+    }
+    return s.trim();
+  }
+  // Bezug zu Ottos jüngstem Zettel im Space des Werkzeugs (nur wenn es ihn gibt)
+  function bezugSatz(spec, d) {
+    var j = null; try { j = spec.sid && C6.darstellung && C6.darstellung.juengster ? C6.darstellung.juengster(spec.sid) : null; } catch (e) { j = null; }
+    if (!j) return null;
+    var hk = -1; (spec.teile || []).forEach(function (t, i) { if (hk < 0 && t.t === 'haken') hk = i; });
+    var satz = '';
+    if (hk >= 0) {
+      var tg = (d[schl(spec.teile[hk], hk)] || {}).tage || {}, ab = tag(new Date(j.ts)), n = Object.keys(tg).filter(function (k) { return k >= ab; }).length;
+      satz = 'Seitdem ' + zahlWort(n, 'Kreuz', 'Kreuze') + '.';
+    } else {
+      var bt = Object.keys(benutztTage(spec, d)).filter(function (k) { return k >= tag(new Date(j.ts)); }).length;
+      satz = bt ? 'Seitdem ' + (bt === 1 ? 'an einem Tag' : 'an ' + bt + ' Tagen') + ' benutzt.' : 'Seitdem nicht benutzt.';
+    }
+    return { z: j, satz: satz };
+  }
+  // der Verlauf als Bild: ein Kalenderblatt mit Kreuzen, eine Balken- oder Linienskizze, Sätze mit Datum
+  function verlauf(spec, d) {
+    var h = '', farbe = esc(spec.farbe || T);
+    (spec.teile || []).forEach(function (t, i) {
+      var dd = d[schl(t, i)] || {};
+      if (t.t === 'haken') {
+        var start = tagPlus(wocheStart(), -21), heute = tag(), zeilen = '';
+        for (var w = 0; w < 4; w++) {
+          var mo = tagPlus(start, w * 7), n = 0, zellen = '';
+          for (var k = 0; k < 7; k++) {
+            var x = tagPlus(mo, k), id = tag(x), an = !!(dd.tage && dd.tage[id]), zuk = id > heute;
+            if (an) n++;
+            var sd = (x.getDate() * 7 + k) % 5;
+            zellen += '<span class="c6wz-k' + (id === heute ? ' c6wz-k-heute' : '') + (zuk ? ' c6wz-k-spaeter' : '') + '" title="' + x.getDate() + '.' + (x.getMonth() + 1) + '."><small>' + x.getDate() + '</small>' +
+              (an ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M' + (5 + sd * .3) + ' ' + (5.5 - sd * .2) + ' Q12 ' + (11 + sd * .4) + ' ' + (19 - sd * .2) + ' 19 M' + (18.5 - sd * .3) + ' 5 Q' + (11 + sd * .3) + ' 12 5 ' + (18.5 + sd * .2) + '" style="stroke:' + farbe + '"/></svg>' : '') + '</span>';
+          }
+          zeilen += '<div class="c6wz-kw"><span class="c6wz-kw-d">' + mo.getDate() + '. ' + MON[mo.getMonth()].slice(0, 3) + '</span>' + zellen + '<span class="c6wz-kw-n">' + (n ? n + '×' : '') + '</span></div>';
+        }
+        h += '<div class="c6wz-rb c6wz-kal" aria-label="Die letzten vier Wochen"><p class="c6wz-rb-kopf">Die letzten vier Wochen</p><div class="c6wz-kw c6wz-kw-kopf"><span></span>' + ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].map(function (x) { return '<b>' + x + '</b>'; }).join('') + '<span></span></div>' + zeilen + '</div>';
+      } else if (t.t === 'zaehler') {
+        var lg = dd.log || {}, werte = [], max = 0, tageL = [];
+        for (var j = 13; j >= 0; j--) { var y = new Date(Date.now() - j * 864e5), v = +lg[tag(y)] || 0; werte.push(v); tageL.push(y); max = Math.max(max, v); }
+        if (!max) { h += '<div class="c6wz-rb"><p class="c6wz-rb-kopf">Verlauf</p><p class="c6wz-leise">Ab dem ersten Plus steht hier jeder Tag als Balken.</p></div>'; return; }
+        h += '<div class="c6wz-rb"><p class="c6wz-rb-kopf">Die letzten zwei Wochen</p><div class="c6wz-rb-balken">' + werte.map(function (v, q) { return '<i style="height:' + (v ? Math.max(10, Math.round(v / max * 100)) : 3) + '%;--wz:' + farbe + '"' + (v ? '' : ' class="leer"') + '>' + (v ? '<em>' + v + '</em>' : '') + '</i>'; }).join('') + '</div><p class="c6wz-achse"><span>' + tageL[0].getDate() + '.' + (tageL[0].getMonth() + 1) + '.</span><span>heute</span></p></div>';
+      } else {
+        var rb = rueckblick({ teile: [t], farbe: spec.farbe }, (function () { var o = {}; o[schl(t, 0)] = dd; return o; })());
+        if (rb) h += rb;
+      }
+    });
+    if (!h) {
+      var bt = Object.keys(benutztTage(spec, d)).sort();
+      h = '<div class="c6wz-rb"><p class="c6wz-rb-kopf">Benutzt</p>' + (bt.length ? '<p class="c6wz-leise">' + esc(bt.slice(-6).map(datumText).join(' · ')) + '</p>' : '<p class="c6wz-leise">Noch nicht. Das Blatt merkt sich jeden Tag, an dem du etwas einträgst.</p>') + '</div>';
+    }
+    return h;
+  }
   function gross(id) {
     var w = hol(id); if (!w) return;
     var el = blattAuf('Werkzeug');
-    el.innerHTML = '<div class="c6wz-gross-platz"></div><div class="c6wz-wahl"><button type="button" class="c6wz-knopf" data-w="anders">Anders</button>' + ((w.fassungen || []).length ? '<button type="button" class="c6wz-link" data-w="alt">Zurück zur alten Fassung</button>' : '') + ((w.spaeter || []).length ? '<button type="button" class="c6wz-link" data-w="neuer">Wieder die neuere</button>' : '') + '<button type="button" class="c6wz-link" data-w="tele">' + (w.teleskop ? 'Aus dem Teleskop nehmen' : 'Ins Teleskop hängen') + '</button><button type="button" class="c6wz-link" data-w="weg">Wegräumen</button></div>';
-    male(el.querySelector('.c6wz-gross-platz'), w, { rueckblick: true });
+    var f = w.sid && C6.strings && C6.strings.hol ? C6.strings.hol(w.sid) : null;
+    var d = daten(w);
+    el.parentNode.classList.add('c6wz-blatt-gross');
+    var kick = el.parentNode.querySelector('.c6wz-kicker');
+    if (kick) kick.innerHTML = 'Werkzeug' + (f ? ' <span class="c6wz-wo"><i style="background:' + esc(f.farbe || T) + '"></i>steht in „' + esc(kurz(f.titel, 26)) + '“</span>' : '') + (w.ts ? ' <span class="c6wz-seit">seit ' + esc(datumText(tag(new Date(w.ts)))) + '</span>' : '');
+    var bz = bezugSatz(w, d);
+    el.innerHTML = '<div class="c6wz-gross-platz"></div>' +
+      (w.satz ? '<p class="c6wz-wunschsatz">Dein Satz: „' + esc(kurz(w.satz, 140)) + '“</p>' : '') +
+      '<div class="c6wz-verlauf"></div>' +
+      '<div class="c6wz-carl"><span class="c6wz-carl-kopf" aria-hidden="true"></span><p class="c6wz-carl-satz" aria-live="polite"></p></div>' +
+      (bz ? '<div class="c6d-bezug c6wz-bezug"><p class="c6d-bezug-kopf">Dein letzter Zettel dort</p><div class="c6d-leine"><svg class="c6d-leine-faden" viewBox="0 0 300 30" preserveAspectRatio="none" aria-hidden="true"><path d="M0 6 Q150 26 300 6"/></svg>' +
+        '<button type="button" class="c6d-zettel" style="--r:-1.2deg;--f:' + esc((f && f.farbe) || T) + '" data-hin="1" aria-label="' + esc('Zettel vom ' + datumText(tag(new Date(bz.z.ts))) + ': ' + bz.z.t + '. Antippen öffnet den Space') + '"><i class="c6d-klammer" aria-hidden="true"></i><small>' + esc(datumText(tag(new Date(bz.z.ts)))) + '</small><span>' + esc(kurz(bz.z.t, 80)) + '</span></button>' +
+        '<p class="c6wz-bezug-satz">' + esc(bz.satz) + '</p></div></div>' : '') +
+      '<div class="c6wz-wahl"><button type="button" class="c6wz-knopf" data-w="anders">Anders</button></div>' +
+      '<div class="c6wz-leiste">' + ((w.fassungen || []).length ? '<button type="button" class="c6wz-link" data-w="alt">Zurück zur alten Fassung</button>' : '') + ((w.spaeter || []).length ? '<button type="button" class="c6wz-link" data-w="neuer">Wieder die neuere</button>' : '') + '<button type="button" class="c6wz-link" data-w="tele">' + (w.teleskop ? 'Aus dem Teleskop nehmen' : 'Ins Teleskop hängen') + '</button><button type="button" class="c6wz-link" data-w="weg">Wegräumen</button></div>';
+    var platz = el.querySelector('.c6wz-gross-platz'), vl = el.querySelector('.c6wz-verlauf'), cs = el.querySelector('.c6wz-carl-satz');
+    function frisch() { var dd = daten(w); vl.innerHTML = verlauf(w, dd); cs.textContent = aufgreifen(w, dd); var bs = el.querySelector('.c6wz-bezug-satz'), b2 = bezugSatz(w, dd); if (bs && b2) bs.textContent = b2.satz; }
+    var m = male(platz, w, {});
+    // jede Eintragung zeichnet den Verlauf und Carls Satz sofort neu
+    platz.addEventListener('click', function () { setTimeout(frisch, 0); });
+    platz.addEventListener('submit', function () { setTimeout(frisch, 0); }, true);
+    platz.addEventListener('change', function () { setTimeout(frisch, 0); });
+    frisch();
+    var hin = el.querySelector('[data-hin]'); if (hin) hin.onclick = function () { zu(); if (C6.space && C6.space.oeffne) C6.space.oeffne(w.sid); };
     el.querySelector('[data-w=anders]').onclick = function () { umbauen(w); };
     var altK = el.querySelector('[data-w=alt]'); if (altK) altK.onclick = function () { if (zurueckZurAlten(id)) gross(id); };
     var neuK2 = el.querySelector('[data-w=neuer]'); if (neuK2) neuK2.onclick = function () { if (wiederNeuer(id)) gross(id); };
@@ -387,6 +515,64 @@
       if (C6.freigabe) { try { C6.freigabe({ was: 'Wegräumen', umkehrbar: true, rueckweg: rw }); return; } catch (e) {} }
       Promise.resolve(C6.frag ? C6.frag(rw.text, [{ text: rw.knopf, wert: 'z' }], { frei: false, leise: true, id: 'c6wz-weg' }) : null).then(function (a) { if (a === 'z') zurueckholen(id); });
     };
+  }
+  // Was Otto eingetragen hat, als Zeilen für Carls Auftrag – im Code gerechnet, ohne Modell, nichts erfunden
+  var SUMMIERBAR = /^(min|h|km|m|Schritte|€|Seiten|l|Gläser|Tassen)$/;
+  function kd(k) { var m = /^(\d{4})-(\d\d)-(\d\d)$/.exec(k || ''); return m ? (+m[3]) + '.' + (+m[2]) + '.' : k; }
+  function zeileVon(w) {
+    var d = daten(w), teile = [], t0 = tag(wocheStart()), tv = tag(tagPlus(wocheStart(), -7)), heute = tag();
+    (w.teile || []).forEach(function (t, i) {
+      var dd = d[schl(t, i)] || {}, txt = t.text ? ' „' + kurz(t.text, 40) + '“' : '';
+      if (t.t === 'haken') {
+        var ks = Object.keys(dd.tage || {}).sort();
+        if (!ks.length) { teile.push('Haken' + txt + ': noch nie abgehakt'); return; }
+        teile.push('Haken' + txt + ': abgehakt an ' + ks.length + (ks.length === 1 ? ' Tag' : ' Tagen') + ' (' + ks.slice(-10).map(kd).join(', ') + '), diese Woche ' + ks.filter(function (k) { return k >= t0; }).length + '×, letzte Woche ' + ks.filter(function (k) { return k >= tv && k < t0; }).length + '×' + (ks[ks.length - 1] === heute ? ', heute schon' : ', heute noch nicht'));
+      } else if (t.t === 'zaehler') {
+        var lz = dd.log || {}, kz = Object.keys(lz).filter(function (k) { return +lz[k]; }).sort();
+        teile.push('Zähler' + txt + ': Stand ' + (dd.n || 0) + (t.ziel ? ' von ' + t.ziel : '') + (kz.length ? ' (' + kz.slice(-8).map(function (k) { return kd(k) + ' +' + lz[k]; }).join(', ') + ')' : ''));
+      } else if (t.t === 'wert') {
+        var lw = dd.log || {}, kw = Object.keys(lw).sort(), e = t.einheit || '';
+        if (!kw.length) { teile.push('Wert' + txt + ': noch kein Eintrag'); return; }
+        var gleich = kw.filter(function (k) { return wertE(lw[k], t) === e; });
+        var summe = function (a) { var n = 0; a.forEach(function (k) { n += +wertV(lw[k]) || 0; }); return Math.round(n * 100) / 100; };
+        var z = 'Wert' + txt + ': ' + kw.slice(-10).map(function (k) { var ee = wertE(lw[k], t); return kd(k) + ' ' + zahlText(wertV(lw[k])) + (ee ? ' ' + ee : ''); }).join(' · ') + ' (' + kw.length + (kw.length === 1 ? ' Eintrag' : ' Einträge');
+        if (SUMMIERBAR.test(e) && gleich.length > 1) z += ', zusammen ' + zahlText(summe(gleich)) + ' ' + e + ', letzte 7 Tage ' + zahlText(summe(gleich.filter(function (k) { return k >= tag(new Date(Date.now() - 6 * 864e5)); }))) + ' ' + e;
+        teile.push(z + ')');
+      } else if (t.t === 'tag') {
+        var kt = Object.keys(dd.log || {}).sort();
+        teile.push('Satz am Tag' + txt + ': ' + (kt.length ? kt.slice(-5).map(function (k) { return kd(k) + ' „' + kurz(dd.log[k], 80) + '“'; }).join('; ') : 'noch keiner'));
+      } else if (t.t === 'liste') {
+        var pk = dd.punkte || t.punkte || [], erl = dd.erl || {};
+        var of = pk.filter(function (p, j) { return !erl[j]; }), er = pk.filter(function (p, j) { return erl[j]; });
+        teile.push('Liste' + txt + ': ' + (pk.length ? of.length + ' offen' + (of.length ? ' (' + of.slice(0, 12).join(', ') + ')' : '') + ', ' + er.length + ' erledigt' + (er.length ? ' (' + er.slice(0, 8).join(', ') + ')' : '') : 'noch leer'));
+      } else if (t.t === 'frage') {
+        var fr = t.fragen && t.fragen.length ? t.fragen : [t.text], a = dd.a || [];
+        teile.push('Fragen: ' + fr.map(function (q, j) { return '„' + kurz(q, 50) + '“ → ' + (a[j] ? '„' + kurz(a[j], 80) + '“' : 'offen'); }).join('; '));
+      } else if (t.t === 'datum') {
+        var wn = dd.wann || t.wann, n = Math.round((new Date(wn + 'T00:00:00') - new Date(heute + 'T00:00:00')) / 864e5);
+        teile.push('Termin' + txt + ': ' + kd(wn) + (n >= 0 ? ' (in ' + n + (n === 1 ? ' Tag' : ' Tagen') + ')' : ' (vorbei)'));
+      } else if (t.t === 'notiz') {
+        teile.push('Notiz' + txt + ': ' + (dd.t ? '„' + kurz(dd.t, 200) + '“' : 'leer'));
+      }
+    });
+    return teile.length ? '„' + w.name + '“ – ' + teile.join(' | ') : '';
+  }
+  function stand(sid) {
+    var l = sid ? alle(sid) : [];
+    var fremd = !l.length;
+    if (fremd) l = alle().slice(-6);
+    return l.map(function (w) {
+      var z = zeileVon(w); if (!z) return '';
+      if (fremd && w.sid && C6.strings && C6.strings.hol) { var f = C6.strings.hol(w.sid); if (f) z += ' (steht in „' + f.titel + '“)'; }
+      return z;
+    }).filter(Boolean);
+  }
+  // für Carl außerhalb des Blatts: welches Werkzeug zuletzt benutzt wurde und was er dazu ehrlich sagen kann
+  function aufgreifenJetzt() {
+    var best = null, bt = '';
+    alle().forEach(function (w) { var t = Object.keys(benutztTage(w, daten(w))).sort().pop() || ''; if (t > bt) { bt = t; best = w; } });
+    if (!best) return null;
+    return { id: best.id, name: best.name, sid: best.sid, satz: aufgreifen(best, daten(best)) };
   }
 
   /* ---------- Fassungen: jede Änderung erst nach „Passt“, die Vorfassung bleibt ---------- */
@@ -416,7 +602,7 @@
   function pruefeEintraege(w) {
     var d = S().daten[w.id] || {}, bekannt = {};
     [w].concat(w.fassungen || [], w.spaeter || []).forEach(function (f) { (f.teile || []).forEach(function (t, i) { bekannt[schl(t, i)] = 1; }); });
-    var waisen = Object.keys(d).filter(function (k) { return !bekannt[k] && d[k] && Object.keys(d[k]).length; });
+    var waisen = Object.keys(d).filter(function (k) { return k.charAt(0) !== '_' && !bekannt[k] && d[k] && Object.keys(d[k]).length; });
     if (waisen.length) {
       // nicht löschen, sondern als eigene Fassung aufheben, damit sie zurückgeholt werden können
       w.fassungen = (w.fassungen || []).concat([{ name: w.name + ' (aufbewahrt)', zeichen: w.zeichen, farbe: w.farbe, satz: w.satz, teile: waisen.map(function (k) { return { t: 'notiz', text: 'Aufbewahrte Einträge', k: k }; }), ts: Date.now() }]);
@@ -425,7 +611,7 @@
   }
   function eintraegeZaehlen(w) {
     var d = S().daten[(w && w.id) || w] || {}, n = 0;
-    Object.keys(d).forEach(function (k) { var x = d[k] || {}; n += Object.keys(x.tage || {}).length + Object.keys(x.log || {}).length + Object.keys(x.erl || {}).length + (x.a || []).length + (x.t ? 1 : 0) + (x.punkte || []).length; });
+    Object.keys(d).forEach(function (k) { if (k.charAt(0) === '_') return; var x = d[k] || {}; n += Object.keys(x.tage || {}).length + Object.keys(x.log || {}).length + Object.keys(x.erl || {}).length + (x.a || []).length + (x.t ? 1 : 0) + (x.punkte || []).length; });
     return n;
   }
 
@@ -497,6 +683,8 @@
     fassungen: function (id) { var w = hol(id); return w ? (w.fassungen || []).slice() : []; }, zurueck: zurueckZurAlten,
     pruefe: function (id) { var w = hol(id); return w ? pruefeEintraege(w) : true; }, eintraege: eintraegeZaehlen,
     teilen: teilen, geteilt: function () { return alle().filter(function (w) { return w.teleskop; }); },
+    aufgreifen: function (id) { var w = hol(id); return w ? aufgreifen(w, daten(w)) : ''; }, aufgreifenJetzt: aufgreifenJetzt,
+    stand: stand, zeile: function (id) { var w = hol(id); return w ? zeileVon(w) : ''; }, benutztTage: function (id) { var w = hol(id); return w ? Object.keys(benutztTage(w, daten(w))).sort() : []; },
     get offen() { return !!blatt; }
   };
 })();

@@ -43,6 +43,8 @@ function bau() {
   r.querySelector('.c6r-at-buch').tabIndex = -1;
   E = { r: r, grund: q('.c6r-at-grund'), buch: q('.c6r-at-buch'), seiten: q('.c6r-at-seiten'), blatt: q('.c6r-at-blatt'), zu: q('.c6r-at-zu'), zur: q('.c6r-at-zur'), vor: q('.c6r-at-vor'), nr: q('.c6r-at-nr'), liste: q('.c6r-at-liste') };
   E.zu.onclick = zu; E.grund.onclick = function () { if (!E.liste.hidden) listeZu(); else zu(); };
+  // Tipp neben das Buch (auf die Hülle selbst, nicht nur auf den Grund) schließt es auch
+  r.addEventListener('click', function (e) { if (e.target === r) { if (!E.liste.hidden) listeZu(); else zu(); } });
   E.zur.onclick = function () { blaettere(-1); };
   E.vor.onclick = function () { blaettere(1); };
   REITER.forEach(function (x) {
@@ -710,11 +712,49 @@ BAU.wissen = function (p) {
   };
 };
 
+// Wer bei uns was darf: die Schlüssel hat Otto. Je Helfer ein Satz, einzeln zurücknehmbar; was gerade läuft, mit Anhalten;
+// was Carl sendet; Lehren aus „Stimmt so nicht“ (gelten erst nach Ottos Ja).
+BAU.schluessel = function (p) {
+  kopf(p, 'Wer bei uns was darf', 'Ich bin das Haus, die Helfer sind die Zimmer. Die Schlüssel hast du.');
+  var box = mk('div', 'c6r-at-sl', p);
+  function knopf(el, txt, fn, leise) { var b = mk('button', 'c6r-at-knopf c6r-at-sl-knopf' + (leise ? ' c6r-at-leise' : ''), el, txt); b.type = 'button'; b.onclick = fn; return b; }
+  function male() {
+    box.textContent = '';
+    var os = C6.os; if (!os) { mk('p', 'c6r-at-carlschrift', box, 'Hier ist gerade nichts zu sehen.'); return; }
+    var laeufe = os.laeufe();
+    if (laeufe.length) {
+      mk('h3', 'c6r-at-w-gruppe', box, 'Gerade bei der Arbeit');
+      var ul0 = mk('ul', 'c6r-at-w-liste', box);
+      laeufe.forEach(function (l) { var li = mk('li', null, ul0); mk('span', 'c6r-at-sl-satz', li, (os.schluessel().filter(function (x) { return x.id === l.wer; })[0] || { name: l.wer }).name + (l.was ? ': ' + l.was : '')); knopf(li, 'Anhalten', function () { os.stopp(l.id); male(); }, true); });
+    }
+    mk('h3', 'c6r-at-w-gruppe', box, 'Die Schlüssel');
+    var ul = mk('ul', 'c6r-at-w-liste c6r-at-sl-liste', box);
+    os.schluessel().forEach(function (k) {
+      var li = mk('li', 'c6r-at-sl-' + (k.an ? 'an' : 'aus'), ul);
+      var t = mk('div', 'c6r-at-sl-text', li); mk('b', null, t, k.name); mk('span', 'c6r-at-sl-satz', t, k.an ? k.satz : 'Schlüssel liegt bei dir. ' + k.name + ' tut nichts, bis du ihn zurückgibst.');
+      knopf(li, k.an ? 'Zurücknehmen' : 'Zurückgeben', function () { if (k.an) os.nimm(k.id); else os.gib(k.id); male(); }, k.an);
+    });
+    mk('h3', 'c6r-at-w-gruppe', box, 'Was ich sende');
+    os.sendet().forEach(function (z) { mk('p', 'c6r-at-sl-satz', box, z); });
+    mk('h3', 'c6r-at-w-gruppe', box, 'Was ich nie tue');
+    var ul2 = mk('ul', 'c6r-at-w-liste', box); os.nie.forEach(function (z) { mk('li', 'c6r-at-sl-satz', ul2, z); });
+    var vs = os.lehren.vorschlaege(), gl = os.lehren.gelten();
+    if (vs.length || gl.length) {
+      mk('h3', 'c6r-at-w-gruppe', box, 'Was ich aus „Stimmt so nicht“ gelernt habe');
+      var ul3 = mk('ul', 'c6r-at-w-liste', box);
+      vs.forEach(function (v) { var li = mk('li', 'c6r-at-sl-vorschlag', ul3); var t = mk('div', 'c6r-at-sl-text', li); mk('b', null, t, v.k); mk('span', 'c6r-at-sl-satz', t, v.wert + ' – gilt erst mit deinem Ja.'); knopf(li, 'Ja, merk dir das', function () { os.lehren.ja(v); male(); }); });
+      gl.forEach(function (g) { var li = mk('li', null, ul3); var t = mk('div', 'c6r-at-sl-text', li); mk('b', null, t, g.k || g.schluessel || ''); mk('span', 'c6r-at-sl-satz', t, String(g.wert || '')); if (C6.fest && C6.fest.weg && (g.k || g.schluessel)) knopf(li, 'Vergessen', function () { C6.fest.weg(g.k || g.schluessel); male(); }, true); });
+    }
+  }
+  male();
+  try { C6.bus && ['lauf', 'schluessel'].forEach(function (n) { C6.bus.on(n, function () { if (p.isConnected) male(); }); }); } catch (e) {}
+};
+
 // Reihenfolge des Buchs: am Computer zwei Doppelseiten
-var REIHE = ['du', 'carl', 'damals', 'wissen'];
-var NAMEN = { du: 'Du', carl: 'Carl', damals: 'Damals', wissen: 'Was ich von dir weiß' };
+var REIHE = ['du', 'carl', 'damals', 'wissen', 'schluessel'];
+var NAMEN = { du: 'Du', carl: 'Carl', damals: 'Damals', wissen: 'Was ich von dir weiß', schluessel: 'Wer bei uns was darf' };
 // Seitennamen von außen: Kapitel der Bibliothek und alte Namen
-var UMWEG = { titel: 'du', baut: 'du', text: 'du', ueber: 'du', inhalt: 'du', freund: 'du', lieb: 'du', lieblings: 'du', mag: 'carl', ton: 'carl', tun: 'carl', nie: 'carl', fuerdich: 'carl', jahr: 'damals', plaene: 'damals', brief: 'damals', geraet: 'wissen', code: 'wissen', anhang: 'wissen', staerker: 'wissen', modelle: 'wissen', modell: 'wissen', ende: 'wissen' };
+var UMWEG = { schluessel: 'schluessel', rechte: 'schluessel', darf: 'schluessel', titel: 'du', baut: 'du', text: 'du', ueber: 'du', inhalt: 'du', freund: 'du', lieb: 'du', lieblings: 'du', mag: 'carl', ton: 'carl', tun: 'carl', nie: 'carl', fuerdich: 'carl', jahr: 'damals', plaene: 'damals', brief: 'damals', geraet: 'wissen', code: 'wissen', anhang: 'wissen', staerker: 'wissen', modelle: 'wissen', modell: 'wissen', ende: 'wissen' };
 var KAPITEL = [['du', 'Wer du bist'], ['baut', 'Woran du baust'], ['ton', 'Dein Ton'], ['damals', 'Damals']];
 function seiteId(x) {
   if (!x) return null;
@@ -922,12 +962,13 @@ function reiterStand() {
 // Inhalt: ein Tipp auf die Seitenangabe zeigt alle Kapitel
 function listeZu() { if (E && E.liste && !E.liste.hidden) { E.liste.hidden = true; E.nr.setAttribute('aria-expanded', 'false'); } }
 
-var vorherFokus = null, zuAnim = [];
+var vorherFokus = null, zuAnim = [], zuNr = 0, zuUhr = null;
 function oeffne(o) {
   o = o || {};
   bau();
   if (offen) { if (o.seite) geheZu(o.seite); return; }
   zuAnim.forEach(function (x) { try { x.onfinish = null; x.cancel(); } catch (e) {} }); zuAnim = [];
+  zuNr++; clearTimeout(zuUhr); E.r.style.pointerEvents = '';
   offen = true; C6.atlas.offen = true;
   vorherFokus = D.activeElement;
   D.documentElement.classList.add('c6r-at-auf');
@@ -945,16 +986,28 @@ function oeffne(o) {
 function zu() {
   if (!offen) return;
   offen = false; C6.atlas.offen = false;
-  var fertig = function () { E.r.hidden = true; D.documentElement.classList.remove('c6r-at-auf'); try { vorherFokus && vorherFokus.focus && vorherFokus.focus({ preventScroll: true }); } catch (e) {} };
+  // Zu heißt zu: das Buch geht sicher aus dem Weg, auch wenn die Bewegung nie zu Ende läuft (Tab im Hintergrund, abgebrochene Animation)
+  var nr = ++zuNr;
+  E.r.style.pointerEvents = 'none';
+  var fertig = function () {
+    if (nr !== zuNr || offen) return;
+    zuNr++;
+    clearTimeout(zuUhr);
+    zuAnim.forEach(function (x) { try { x.onfinish = null; x.cancel(); } catch (e) {} }); zuAnim = [];
+    E.r.hidden = true; E.r.style.pointerEvents = '';
+    D.documentElement.classList.remove('c6r-at-auf');
+    try { vorherFokus && vorherFokus.focus && vorherFokus.focus({ preventScroll: true }); } catch (e) {}
+  };
   if (!ruhig() && E.buch.animate) {
     var ag = E.grund.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: 'forwards' });
     var an = E.buch.animate([{ transform: 'none', opacity: 1 }, { transform: 'translateY(30px) scale(.9)', opacity: 0 }], { duration: 300, easing: 'ease-in', fill: 'forwards' });
     zuAnim = [an, ag];
-    an.onfinish = function () { fertig(); zuAnim = []; try { an.cancel(); ag.cancel(); } catch (e) {} };
+    an.onfinish = fertig;
+    clearTimeout(zuUhr); zuUhr = setTimeout(fertig, 420);
   } else fertig();
   try { C6.bus && C6.bus.emit('atlas', { offen: false }); } catch (e) {}
 }
 
 C6.atlas = { modell: modellInfo, oeffne: oeffne, zu: zu, offen: false, ueber: true, kapitel: KAPITEL.map(function (k) { return { id: k[0], seite: 'ueber:' + k[0], titel: k[1] }; }), seiten: function () { return REIHE.slice(); } };
 // Raumwechsel schließt das Buch
-try { C6.bus && C6.bus.on('raum', function () { if (offen) zu(); }); } catch (e) {}
+try { C6.bus && C6.bus.on('raum', function () { if (offen) zu(); }); C6.bus && C6.bus.on('leer', function () { if (offen) zu(); }); } catch (e) {}

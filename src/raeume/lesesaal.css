@@ -1,5 +1,5 @@
-/* Lesesaal: zwei Möbel im Licht – deine Funde, deine Meister */
-.c6w-ls-moebel{position:absolute;z-index:3;display:flex;justify-content:center;align-items:flex-end;gap:30px}
+/* Lesesaal: in der Mitte der Tisch der Funde im Licht, daneben das Regal deiner Meister */
+.c6w-ls-moebel{position:absolute;z-index:3;display:flex;justify-content:center;align-items:flex-end}
 .c6w-ls-regal{position:relative;flex:0 0 auto;width:var(--bw,200px);height:100%;padding:0;border:0;background:none;cursor:pointer;transition:transform .35s cubic-bezier(.3,.7,.3,1),filter .35s ease,opacity .35s ease}
 .c6w-ls-bild,.c6w-ls-bild svg{position:absolute;inset:0;display:block;width:100%;height:100%;overflow:visible}
 .c6w-ls-regal::after{content:"";position:absolute;left:-4%;right:-4%;bottom:-6px;height:8px;border-radius:2px;background:linear-gradient(#7a5638,#4a3122);box-shadow:0 5px 10px rgba(0,0,0,.45)}
@@ -7,8 +7,7 @@
 .c6w-ls-regal:hover,.c6w-ls-regal:focus-visible{transform:translateY(-5px);filter:drop-shadow(0 0 14px rgba(255,222,150,.5))}
 .c6w-ls-regal:hover .c6w-ls-licht{opacity:1}
 .c6w-ls-regal:focus-visible{outline:3px solid #e6c987;outline-offset:4px}
-.c6w-ls-plakette{position:absolute;left:14%;right:14%;top:12%;padding:4px 4px;border-radius:3px;background:linear-gradient(#d7b45f,#b98f3c);border:1.5px solid #5a3d17;box-shadow:0 2px 3px rgba(0,0,0,.35);font:700 clamp(12px,1vw + 6px,17px)/1.15 Fraunces,Georgia,serif;color:#2b1a0c;text-align:center;white-space:nowrap}
-.c6w-ls-ini{font:700 11px Fraunces,Georgia,serif;fill:#e6c987;letter-spacing:.04em}
+.c6w-ls-plakette{position:absolute;left:6%;right:6%;top:12%;padding:4px 4px;border-radius:3px;background:linear-gradient(#d7b45f,#b98f3c);border:1.5px solid #5a3d17;box-shadow:0 2px 3px rgba(0,0,0,.35);font:700 clamp(11px,.8vw + 5px,15px)/1.15 Fraunces,Georgia,serif;color:#2b1a0c;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* Porträts: Schatten, bis ein Name da ist – dann Licht. Dein Platz bleibt leer */
 .c6w-ls-ovale,.c6w-ls-platz{cursor:pointer;outline:none}
 .c6w-ls-portraet>*,.c6w-ls-platz>*{transition:filter .35s ease,opacity .35s ease}
@@ -16,8 +15,13 @@
 .c6w-ls-ovale:hover .c6w-ls-portraet,.c6w-ls-ovale:focus-visible .c6w-ls-portraet{filter:drop-shadow(0 0 9px rgba(255,226,160,.9))}
 .c6w-ls-platz:hover,.c6w-ls-platz:focus-visible{filter:drop-shadow(0 0 9px rgba(255,226,160,.8))}
 .c6w-ls-platztext{font:700 15px Fraunces,Georgia,serif;fill:#2b1a0c;letter-spacing:.02em}
-/* Funde: leuchtende Karten mit Rand – Material, kein Befehl */
-.c6w-ls-fkarte{filter:drop-shadow(0 0 3px rgba(255,226,160,.6))}
+/* Der Tisch der Funde (in der Szene) */
+.c6w-ls-tisch:hover .c6w-ding-innen,.c6w-ls-tisch:focus-visible .c6w-ding-innen{filter:drop-shadow(0 0 10px rgba(255,214,140,.55))}
+.c6w-ls-tk{transition:opacity .4s ease}
+.c6w-ls-tischschild{position:absolute;z-index:2;transform:translate(-50%,-50%);padding:calc(var(--sk,1) * 2px) calc(var(--sk,1) * 10px);border-radius:2px;background:linear-gradient(#d9b862,#b48a38);border:1px solid #5a3d17;box-shadow:0 1px 2px rgba(0,0,0,.5);font:700 clamp(9px,calc(var(--sk,1) * 13px),14px)/1.1 Fraunces,Georgia,serif;color:#2b1a0c;letter-spacing:.03em;white-space:nowrap;pointer-events:none;filter:saturate(.75) brightness(.8);transition:filter 1.2s ease}
+.c6w-ls-kerze-an .c6w-ls-tischschild{filter:none}
+.c6w-ls-filzschein{opacity:.15;transition:opacity 1.2s ease}
+.c6w-ls-kerze-an .c6w-ls-filzschein{opacity:1}
 /* Die Kerze */
 .c6w-ls-kerze .c6w-ding-innen{transition:filter .32s ease}
 .c6w-ls-kerze:hover .c6w-ding-innen,.c6w-ls-kerze:focus-visible .c6w-ding-innen{filter:drop-shadow(0 0 8px rgba(255,222,150,.8))}
@@ -44,43 +48,121 @@
 .c6w-ls-kerze-an .c6w-ls-regal{filter:saturate(1.05) brightness(1.04) drop-shadow(0 0 12px rgba(255,190,110,.34))}
 .c6w-ls-kerze-an .c6w-ls-regal:hover,.c6w-ls-kerze-an .c6w-ls-regal:focus-visible{filter:drop-shadow(0 0 16px rgba(255,210,140,.6))}
 .c6w-ls-himmel{transition:opacity 1.2s ease}
-/* Der Weg hinab: Staub, Treppe, Lichtstreif, dann der Saal */
-.c6w-ls-hinab{position:fixed;inset:0;z-index:2100;background:#140e0b;opacity:0;transition:opacity .22s ease;overflow:hidden;cursor:pointer;touch-action:none}
-.c6w-ls-hinab.c6w-ls-han{opacity:1}
-.c6w-ls-hinab.c6w-ls-hweg{opacity:0;transition:opacity .42s ease}
-.c6w-ls-hinab svg{position:absolute;inset:0;width:100%;height:100%;display:block}
-.c6w-ls-hgang{transform-box:view-box;transform-origin:500px 740px;transform:scale(1)}
-.c6w-ls-han .c6w-ls-hgang{animation:c6w-ls-hinab 1.6s cubic-bezier(.35,.05,.3,1) .1s both}
-@keyframes c6w-ls-hinab{0%{transform:scale(1)}100%{transform:scale(1.65)}}
-.c6w-ls-hkurz .c6w-ls-hgang{animation-duration:.6s;animation-delay:0s}
-.c6w-ls-hkurz .c6w-ls-htor{animation-duration:.6s}
-.c6w-ls-htor{transform-box:fill-box;transform-origin:center;animation:c6w-ls-htor 1.7s ease-in both}
-@keyframes c6w-ls-htor{0%{opacity:.45;transform:scale(.7)}100%{opacity:1;transform:scale(1.5)}}
-.c6w-ls-hstaub{opacity:0;animation:c6w-ls-hstaub 3s ease-in-out infinite}
-@keyframes c6w-ls-hstaub{0%{opacity:0;transform:translate(0,14px)}30%{opacity:.75}70%{opacity:.5}100%{opacity:0;transform:translate(9px,-26px)}}
-.c6w-ls-hstreif{position:absolute;top:0;bottom:0;left:50%;width:100%;transform:translateX(-50%) scaleX(.004);transform-origin:center;background:linear-gradient(90deg,rgba(255,243,207,0),#fff3cf 18%,#fffaf0 50%,#fff3cf 82%,rgba(255,243,207,0));opacity:0;transition:transform .34s cubic-bezier(.2,.7,.2,1),opacity .2s ease}
-.c6w-ls-hlicht .c6w-ls-hstreif{opacity:1;transform:translateX(-50%) scaleX(1.2)}
-.c6w-ls-hweg .c6w-ls-hstreif{opacity:0;transition:opacity .42s ease}
-.c6k-ruhig .c6w-ls-hinab{transition:opacity .3s ease}
 .c6w-ls-leerplatz{animation:c6w-atmet 3.6s ease-in-out infinite}
 .c6w-ls-offen{z-index:40;filter:drop-shadow(0 0 22px rgba(255,222,150,.8))}
 .c6w-ls-offen .c6w-ls-plakette{opacity:0;transition:opacity .2s}
-.c6w-ls-waehlt .c6w-ls-regal:not(.c6w-ls-offen){opacity:.2}
-/* Blatt */
+
+/* Der Weg hinab: Treppe vor dir nach unten, am Ende das warme Licht; keine Blitze, kein Zucken */
+.c6w-ls-hinab{position:fixed;inset:0;z-index:2100;background:#120c08;opacity:0;overflow:hidden;cursor:pointer;touch-action:none;contain:strict}
+.c6w-ls-hinab svg,.c6w-ls-hbild{position:absolute;inset:0;width:100%;height:100%;display:block;will-change:transform;backface-visibility:hidden}
+.c6w-ls-hbild{object-fit:cover;object-position:50% 50%;user-select:none;-webkit-user-drag:none}
+.c6w-ls-hinab svg,.c6w-ls-hbild{-webkit-mask-image:radial-gradient(ellipse 78% 74% at 50% 56%,#000 62%,transparent 100%);mask-image:radial-gradient(ellipse 78% 74% at 50% 56%,#000 62%,transparent 100%)}
+.c6w-ls-hgrund{position:absolute;inset:0;background:#120c08}
+.c6w-ls-htor{background:transparent}
+.c6w-ls-htor .c6w-ls-hgrund{opacity:0}
+.c6w-ls-hblende{position:absolute;inset:0;opacity:0;pointer-events:none;background:radial-gradient(ellipse 70% 60% at 50% 58%,#a8784a 0%,#5e4029 45%,#2a1c13 100%)}
+.c6w-ls-hruhig{background:#2a1d15}
+.c6w-ls-hruhig .c6w-ls-hblende{display:none}
+
+/* ——— Tisch der Funde, von oben ——— */
+.c6w-ls-karte[data-ansicht="tisch"]{background:#1b130e}
+.c6w-ls-karte[data-ansicht="tisch"] .c6w-ls-kbild{padding:58px 10px 10px;display:flex}
+.c6w-ls-platte{position:relative;flex:1 1 auto;min-height:0;overflow:auto;overscroll-behavior:contain;border-radius:14px;padding:10px;box-sizing:border-box;
+  background:radial-gradient(120% 90% at 22% 8%,rgba(255,210,140,.10),rgba(255,210,140,0) 60%),linear-gradient(170deg,#2b4637 0%,#24392e 55%,#1e3027 100%);
+  box-shadow:inset 0 0 0 1.5px rgba(201,162,79,.55),inset 0 0 0 7px #3c2617,inset 0 0 0 8.5px rgba(201,162,79,.35),0 10px 30px rgba(0,0,0,.45);transition:background 1.2s ease}
+.c6w-ls-platte.c6w-ls-kerzenlicht{background:radial-gradient(110% 85% at 18% 6%,rgba(255,202,120,.34),rgba(255,202,120,0) 62%),linear-gradient(170deg,#2f4c3b 0%,#27402f 55%,#20352a 100%)}
+.c6w-ls-platte[hidden]{display:none}
+.c6w-ls-pinnen{position:relative;min-height:100%;padding:8px 8px 14px}
+.c6w-ls-pfaeden{position:absolute;left:0;top:0;pointer-events:none;overflow:visible;z-index:1}
+.c6w-ls-pf{fill:none;stroke-linecap:round}
+.c6w-ls-pf-fest{stroke:#d9483b;stroke-width:1.6;opacity:.75}
+.c6w-ls-pf-vor{stroke:#e6c987;stroke-width:1.3;stroke-dasharray:3 5;opacity:.6}
+.c6w-ls-pf-fund{stroke:#e6c987;stroke-width:1;opacity:.45}
+.c6w-ls-pf-an{opacity:1;stroke-width:2}
+.c6w-ls-stags{position:relative;z-index:2;display:flex;flex-wrap:wrap;gap:6px 10px;justify-content:center;margin:0 0 26px}
+.c6w-ls-stags[hidden]{display:none}
+.c6w-ls-stag{display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 12px 0 10px;border-radius:3px 3px 10px 10px;background:linear-gradient(#fbf3df,#efe0bd);color:#2b2722;font:600 13.5px Figtree,system-ui,sans-serif;box-shadow:0 2px 4px rgba(0,0,0,.35);position:relative;pointer-events:none}
+.c6w-ls-stag::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--f,#c9a24f);box-shadow:0 0 0 1.5px rgba(43,39,34,.35)}
+.c6w-ls-fks{position:relative;z-index:2;display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:18px 14px;align-items:start}
+@media (min-width:820px){.c6w-ls-fks{grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:26px 22px}.c6w-ls-pinnen{padding:18px 22px 22px}}
+.c6w-ls-fk{position:relative;display:flex;flex-direction:column;gap:5px;min-height:96px;padding:9px 10px 8px;border:0;border-radius:3px;text-align:left;cursor:pointer;color:#2b2722;
+  background:linear-gradient(175deg,#fffaea 0%,#f6ebcf 70%,#efdfba 100%);box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 3px 0 -1px #e6d4ab,0 6px 14px rgba(0,0,0,.38);
+  transform:rotate(var(--r,0deg));transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s ease,opacity .3s ease;-webkit-tap-highlight-color:transparent}
+.c6w-ls-fk:hover{transform:rotate(0) translateY(-3px)}
+.c6w-ls-fk[aria-pressed="true"]{transform:rotate(0) translateY(-4px) scale(1.03);box-shadow:0 0 0 2px #e6c987,0 0 22px rgba(255,214,140,.55),0 10px 22px rgba(0,0,0,.45)}
+.c6w-ls-fk:focus-visible{outline:3px solid #e6c987;outline-offset:3px}
+.c6w-ls-fk-kopf{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.c6w-ls-fk-art{display:grid;place-items:center;width:22px;height:22px;color:#5a2e17}
+.c6w-ls-fk-art svg,.c6w-ls-wege i svg{width:100%;height:100%;display:block}
+.c6w-ls-fk-kopf small{font:600 11.5px Figtree,system-ui,sans-serif;color:#7a6a52;letter-spacing:.02em}
+.c6w-ls-fk b{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;font:600 14.5px/1.22 Fraunces,Georgia,serif;overflow-wrap:anywhere}
+@media (min-width:820px){.c6w-ls-fk{min-height:118px;padding:11px 13px 10px}.c6w-ls-fk b{font-size:16px}}
+.c6w-ls-fk-verlauf{display:block;height:30px}
+.c6w-ls-fk-verlauf svg{display:block;width:100%;height:100%}
+.c6w-ls-fk-fuss{display:flex;flex-wrap:wrap;gap:4px 8px;margin-top:auto;font:italic 500 12px Figtree,system-ui,sans-serif;color:#7a6a52}
+.c6w-ls-fk-fuss em{font-style:italic}
+.c6w-ls-fk-fuss .c6w-ls-ok{color:#2c6a4f;font-style:normal;font-weight:700}
+.c6w-ls-fk-fuss .c6w-ls-nein{color:#9a3a1b;font-style:normal;font-weight:700}
+.c6w-ls-fk-fuss .c6w-ls-ws{font-style:normal;font-weight:700;color:#6b4a14;background:linear-gradient(#e6c987,#c9a24f);padding:0 6px;border-radius:2px}
+.c6w-ls-fk-nicht{opacity:.78}
+.c6w-ls-fk-nicht b{text-decoration:line-through;text-decoration-color:rgba(154,58,27,.6);text-decoration-thickness:1.5px}
+.c6w-ls-fk-neu{align-items:center;justify-content:center;text-align:center;background:transparent;color:#e6c987;box-shadow:inset 0 0 0 2px rgba(230,201,135,.65);border-radius:6px;transform:none}
+.c6w-ls-fk-neu span{font:300 34px/1 Figtree,system-ui,sans-serif}
+.c6w-ls-fk-neu b{font:600 14px Figtree,system-ui,sans-serif;-webkit-line-clamp:2}
+.c6w-ls-fk-neu:hover{background:rgba(230,201,135,.08)}
+/* Das Blatt zum Fund */
+.c6w-ls-karte[data-ansicht="tisch"] .c6w-ls-blatt{background:linear-gradient(#fbf5e8,#f7efdc)}
+@media (min-width:820px){.c6w-ls-karte[data-ansicht="tisch"] .c6w-ls-blatt{padding-top:74px}}
+.c6w-ls-blatt .c6w-ls-schritt{letter-spacing:.06em;text-transform:none;font-weight:600;font-size:12.5px}
+.c6w-ls-verlauf{margin:8px 0 12px;padding:10px 10px 8px;background:#fffaf0;border-radius:8px;box-shadow:inset 0 0 0 1px #e3d4b4}
+.c6w-ls-vbild{height:120px}
+.c6w-ls-vbild svg{display:block;width:100%;height:100%}
+.c6w-ls-verlauf figcaption{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px;font:500 13.5px Figtree,system-ui,sans-serif;color:#5f5345}
+.c6w-ls-verlauf figcaption b{color:#2b2722}
+.c6w-ls-verlauf i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:1px}
+.c6w-ls-p-hoch{background:#2c6a4f}.c6w-ls-p-tief{background:#9a3a1b}
+.c6w-ls-zus{position:relative;margin:10px 0 12px;padding:12px 14px 12px 16px;border-radius:4px 10px 10px 4px;background:#fffaf0;box-shadow:inset 3px 0 0 #c9a24f,0 1px 2px rgba(43,39,34,.12)}
+.c6w-ls-wer{display:block;margin:0 0 4px;font:700 11.5px Figtree,system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#7a6a52}
+.c6w-ls-zus p{margin:0;font:italic 400 18px/1.42 Fraunces,Georgia,serif;color:#2b2722}
+.c6w-ls-zus small{display:block;margin-top:6px;font:500 13px/1.35 Figtree,system-ui,sans-serif;color:#5f5345}
+.c6w-ls-zus-bleistift{box-shadow:inset 3px 0 0 #9b958a,0 1px 2px rgba(43,39,34,.1)}
+.c6w-ls-zus-bleistift p{font:500 22px/1.25 Caveat,cursive;color:#5b5750}
+.c6w-ls-zus-nicht p:not(.c6w-ls-korr){text-decoration:line-through;text-decoration-color:rgba(154,58,27,.55);color:#7a6a52}
+.c6w-ls-korr{margin-top:8px!important;font:600 23px/1.2 Caveat,cursive!important;color:#1f4f8a!important;text-decoration:none!important}
+.c6w-ls-seltsam{margin:8px 0;padding:9px 12px;border-radius:8px;background:#f6e3d6;color:#6b2a14;font:500 14px/1.4 Figtree,system-ui,sans-serif}
+.c6w-ls-urteil{display:flex;gap:8px;margin:0 0 12px}
+.c6w-ls-u{flex:1 1 0;min-height:46px;border:2px solid #2b2722;border-radius:23px;background:#fbf7f0;color:#2b2722;font:600 15px Figtree,system-ui,sans-serif;cursor:pointer;transition:background .2s,color .2s}
+.c6w-ls-u[data-u="stimmt"][aria-pressed="true"]{background:#2c6a4f;border-color:#2c6a4f;color:#fff}
+.c6w-ls-u[data-u="stimmtNicht"][aria-pressed="true"]{background:#9a3a1b;border-color:#9a3a1b;color:#fff}
+.c6w-ls-flinks{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:4px 0 10px}
+.c6w-ls-flinks .c6w-knopf{min-height:44px}
+.c6w-ls-ort{margin:0;font:600 15px Figtree,sans-serif;color:#2c6a4f}
+.c6w-ls-ort::before{content:"✓ "}
+.c6w-ls-rel{list-style:none;margin:0 0 12px;padding:0}
+.c6w-ls-rel button{display:block;width:100%;min-height:48px;padding:8px 4px 8px 22px;border:0;border-bottom:1px solid #e3d4b4;background:none;text-align:left;cursor:pointer;color:#2b2722;position:relative}
+.c6w-ls-rel button::before{content:"";position:absolute;left:4px;top:50%;width:12px;border-top:1.5px solid #c9a24f}
+.c6w-ls-rel b{display:block;font:600 15.5px Fraunces,Georgia,serif}
+.c6w-ls-rel small{display:block;font:500 12.5px Figtree,sans-serif;color:#7a6a52}
+.c6w-ls-gib{width:100%;margin-top:4px}
+.c6w-ls-gibwarum{margin:6px 0 12px;text-align:center}
+.c6w-ls-ws-da{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:4px 0 12px;padding:8px 12px;border-radius:8px;background:linear-gradient(#f3e4bf,#ead6a5);font:600 14px Figtree,sans-serif;color:#4a3410}
+.c6w-ls-ws-da p{margin:0}
+.c6w-ls-roh{margin:6px 0 12px;padding:8px 0;border-top:1px solid #e3d4b4}
+.c6w-ls-roh summary{min-height:40px;display:flex;align-items:center;cursor:pointer;font:600 14.5px Figtree,sans-serif;color:#5f5345}
+.c6w-ls-roh p{margin:6px 0 10px;white-space:pre-wrap;overflow-wrap:anywhere;font:400 15.5px/1.5 Fraunces,Georgia,serif;max-height:220px;overflow:auto}
+.c6w-ls-roh .c6w-knopf{min-height:44px;display:inline-flex;align-items:center;text-decoration:none}
+.c6w-ls-fmeta{display:block;margin:4px 0 0;font:500 13.5px Figtree,sans-serif;color:#5f5345}
+.c6w-ls-fweg{min-height:44px}
+.c6w-ls-wege{list-style:none;margin:6px 0 14px;padding:0}
+.c6w-ls-wege li{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-bottom:1px solid #e3d4b4}
+.c6w-ls-wege i{flex:none;width:30px;height:30px;padding:5px;box-sizing:border-box;border-radius:6px;background:#2b2722;color:#f3e4bf}
+.c6w-ls-wege b{display:block;font:600 16px Fraunces,Georgia,serif}
+.c6w-ls-wege small{display:block;font:500 13.5px/1.35 Figtree,sans-serif;color:#5f5345}
+#c6w-ls-text{font:500 16px/1.45 Figtree,system-ui,sans-serif}
+/* Blatt (gemeinsam) */
 .c6w-ls-bkopf{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 4px}
 .c6w-ls-intro{margin:0 0 12px}
 .c6w-ls-carlk{margin:4px 0 0;font:italic 400 17px/1.4 Fraunces,Georgia,serif;color:#3d3832}
-.c6w-ls-funde{list-style:none;margin:14px 0 0;padding:0}
-.c6w-ls-fund{display:grid;grid-template-columns:44px 1fr;gap:10px;margin:0 0 12px;padding:12px 14px 12px 12px;border:1.5px solid #c9a24f;border-radius:10px;background:linear-gradient(#fffaf0,#fbf2dc);box-shadow:0 0 0 3px rgba(230,201,135,.28),0 1px 2px rgba(43,39,34,.12)}
-.c6w-ls-fund b{display:block;font:600 18px/1.25 Fraunces,Georgia,serif;overflow-wrap:anywhere}
-.c6w-ls-fart{display:grid;place-items:center;width:40px;height:40px;border-radius:8px;background:#2b2722;color:#fbf5e8;font:700 12px Figtree,sans-serif}
-.c6w-ls-fnotiz{margin:4px 0 0;font:600 20px/1.25 Caveat,cursive}
-.c6w-ls-fbild{display:block;max-width:100%;max-height:180px;margin:6px 0;border-radius:4px}
-.c6w-ls-fmeta{display:block;margin:4px 0 0;font:500 13.5px Figtree,sans-serif;color:#5f5345}
-.c6w-ls-ftun{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
-.c6w-ls-ftun .c6w-knopf{min-height:44px;display:inline-flex;align-items:center;text-decoration:none}
-.c6w-ls-ort{font:600 14px Figtree,sans-serif;color:#2c6a4f}
-.c6w-ls-ort::before{content:"✓ "}
 .c6w-ls-eform .c6w-haupt{margin-top:8px;width:100%}
 .c6w-mliste{list-style:none;margin:0 0 14px;padding:0}
 .c6w-ls-blatt .c6w-mliste button{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;padding:8px 4px;border:0;border-bottom:1px solid #d9ccb2;background:none;text-align:left;cursor:pointer;color:#2b2722}
@@ -92,4 +174,43 @@
 .c6w-ls-mfrage-satz{margin:0 0 4px;font:400 21px/1.3 Fraunces,Georgia,serif;color:#2b2722}
 .c6w-ls-blink{animation:c6w-ls-blink 1.6s ease}
 @keyframes c6w-ls-blink{0%,100%{background:transparent}25%{background:rgba(230,201,135,.45)}}
-@media (prefers-reduced-motion:reduce){.c6w-ls-regal,.c6w-ls-blink,.c6w-ls-leerplatz,.c6w-ls-hgang,.c6w-ls-htor,.c6w-ls-hstaub,.c6w-ls-brennt .c6w-ls-flamme,.c6w-ls-brennt .c6w-ls-flammenlicht,.c6w-ls-blaest .c6w-ls-rauch{transition:none;animation:none}.c6w-ls-hstreif{transition:none}}
+@media (prefers-reduced-motion:reduce){.c6w-ls-regal,.c6w-ls-blink,.c6w-ls-leerplatz,.c6w-ls-brennt .c6w-ls-flamme,.c6w-ls-brennt .c6w-ls-flammenlicht,.c6w-ls-blaest .c6w-ls-rauch,.c6w-ls-fk,.c6w-ls-platte{transition:none;animation:none}}
+.c6w-ls-karte[data-ansicht="tisch"] .c6w-ls-name{font-size:22px;line-height:1.2;margin:4px 0 6px}
+.c6w-ls-ohne{margin:-4px 0 12px}
+.c6w-ls-frage2{margin:6px 0 6px;font:italic 400 18px/1.3 Fraunces,Georgia,serif;color:#2b2722}
+.c6w-ls-w{display:inline-flex;align-items:center;gap:7px;min-height:44px;padding:0 14px;border:1.5px solid #2b2722;border-radius:22px;background:#fffaf0;color:#2b2722;font:600 14.5px Figtree,system-ui,sans-serif;cursor:pointer}
+.c6w-ls-w i{width:10px;height:10px;border-radius:50%;flex:none}
+.c6w-ls-w.c6w-ls-vor{border-style:dashed;border-color:#8a6a2a;background:#fbf0d4}
+.c6w-ls-wneu{border-color:#a8946c;color:#5f5345}
+.c6w-ls-wwarum{margin:-2px 0 12px;font-size:13px}
+/* Der Knopf des Formulars bleibt immer sichtbar im Blatt (nie unter dem Dock) */
+.c6w-ls-efuss{position:sticky;bottom:-16px;z-index:2;margin:8px -18px -16px;padding:8px 18px 12px;background:linear-gradient(rgba(247,239,220,0),#f7efdc 34%)}
+@media (min-width:820px){.c6w-ls-efuss{margin:10px -30px -20px -28px;padding:12px 30px 18px 28px;bottom:-20px}}
+.c6w-ls-efuss .c6w-haupt{margin-top:0!important;width:100%}
+.c6w-ls-wsfuss .c6w-ls-gibwarum{margin:6px 0 0}
+.c6w-ls-wsfuss .c6w-ls-ws-da{margin:0}
+/* Die Meister wohnen jetzt in der Bücherwand: das alte Regal-Möbel bleibt unsichtbar */
+.c6w-lesesaal .c6w-ls-moebel{display:none}
+.c6w-ls-skname{font-family:Caveat,cursive;font-weight:700;fill:#3b342b}
+.c6w-ls-nischentitel{font:700 11px Fraunces,Georgia,serif;fill:#e6c987;letter-spacing:.04em}
+.c6w-ls-nische:hover .c6w-ding-innen,.c6w-ls-nische:focus-visible .c6w-ding-innen{filter:drop-shadow(0 0 10px rgba(255,214,140,.6))}
+.c6w-ls-nischenlicht{opacity:.18;transition:opacity 1.2s ease}
+.c6w-ls-kerze-an .c6w-ls-nischenlicht{opacity:.6}
+.c6w-ls-treppeszene{pointer-events:none}
+/* Der Spaziergang über den Schreibtisch */
+.c6w-ls-pweg{position:absolute;left:0;top:0;pointer-events:none;overflow:visible;z-index:1}
+.c6w-ls-blei{fill:none;stroke:#e6c987;stroke-width:1.4;stroke-dasharray:2 6;stroke-linecap:round;opacity:.55}
+.c6w-ls-tinte{fill:none;stroke:#c23a2c;stroke-width:3;stroke-linecap:round;filter:drop-shadow(0 0 2px rgba(255,190,120,.45))}
+.c6w-ls-tinte-alt{transition:opacity 1.4s ease;opacity:0}
+.c6w-ls-feder{transition:opacity .5s ease}
+.c6w-ls-feder-weg{opacity:0}
+.c6w-ls-tritt{fill:#1a2a20;opacity:.5;animation:c6w-ls-tritt 3.2s ease forwards}
+@keyframes c6w-ls-tritt{0%{opacity:.55}70%{opacity:.35}100%{opacity:0}}
+.c6w-ls-wanderer{position:absolute;left:0;top:0;width:0;height:0;z-index:4;pointer-events:none;will-change:transform}
+.c6w-ls-wanderer>*{position:absolute;left:0;bottom:0;transform:translateX(-50%)}
+.c6w-ls-fk-wach{animation:c6w-ls-wach .9s cubic-bezier(.3,.7,.3,1)}
+@keyframes c6w-ls-wach{0%{transform:rotate(var(--r,0deg))}35%{transform:rotate(0) translateY(-10px) scale(1.05);box-shadow:0 0 0 2px #e6c987,0 0 34px rgba(255,214,140,.9),0 14px 26px rgba(0,0,0,.45)}100%{transform:rotate(0) translateY(-4px) scale(1.03)}}
+@media (prefers-reduced-motion:reduce){.c6w-ls-fk-wach,.c6w-ls-tritt{animation:none}}
+.c6w-ls-tdeko{position:absolute;left:4px;top:2px;width:46px;height:46px;pointer-events:none;z-index:1}
+.c6w-ls-tdeko .c6w-ls-tflamme{opacity:0;transition:opacity .8s ease}
+.c6w-ls-kerzenlicht .c6w-ls-tdeko .c6w-ls-tflamme{opacity:1}

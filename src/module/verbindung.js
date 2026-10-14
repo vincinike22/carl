@@ -93,6 +93,39 @@ function stuecke(wer, wo) {
   ];
 }
 
+/* ---------- Quests: Münzen gibt es nur für Geprüftes – nie fürs bloße Ja zu einem Recht ---------- */
+function questInfo(id) {
+  try { if (C6.quest && typeof C6.quest.alle === 'function') { var l = C6.quest.alle() || []; for (var i = 0; i < l.length; i++) if (l[i] && l[i].id === id) return l[i]; } } catch (e) {}
+  return null;
+}
+function questOffen(id) { var q = questInfo(id); return q && !q.erfuellt && !q.kommt ? q : null; }
+function questLohn(id, wann) {
+  var q = questOffen(id); if (!q || !+q.muenzen) return '';
+  return '<span class="c6v-lohn">' + (C6.muenzen && C6.muenzen.muenze ? C6.muenzen.muenze(16) : '') + q.muenzen + ' Münzen, ' + esc(wann) + '</span>';
+}
+// nach einer echten Prüfung: der Kern prüft selbst am Zustand und zahlt einmal. Rückgabe: Münzen, wenn es eben neu war.
+function questMelde(id) {
+  var vor = questOffen(id), n = 0;
+  try { if (C6.quest && typeof C6.quest.erfuellt === 'function' && C6.quest.erfuellt(id) && vor) n = +vor.muenzen || 0; } catch (e) {}
+  return n;
+}
+// „In deinen Worten“: ein ganzer Satz, keine Abschrift, und er nennt eine Grenze. Eine Bleistift-Prüfung im Code, ohne Mitdenken.
+var GRENZE = { nicht: 1, nichts: 1, nix: 1, kein: 1, keine: 1, keinen: 1, keiner: 1, keines: 1, nie: 1, niemals: 1, nur: 1, 'bloß': 1, bloss: 1, lediglich: 1, 'ausschließlich': 1, ohne: 1 };
+function woerter(t) { return String(t || '').toLowerCase().replace(/[^a-zäöüß0-9\s]/g, ' ').split(/\s+/).filter(Boolean); }
+function carlsWorte(w) { return 'Ich weiß dann, dass ' + w.name + ' bei dir läuft. Steuern kann ich es nicht, und ich sehe nichts von deinem Computer. Was dort passiert, bleibt dort.'; }
+function rechtePruefe(t, vorlage) {
+  var w = woerter(t), i;
+  if (w.length < 5) return st('verbinden.rechte.kurz', 'Ein ganzer Satz, bitte. Ich will hören, wie du es sagst.');
+  var c = woerter(vorlage), cg = {}, gleich = 0, n = 0;
+  for (i = 0; i + 3 < c.length; i++) cg[c.slice(i, i + 4).join(' ')] = 1;
+  for (i = 0; i + 3 < w.length; i++) { n++; if (cg[w.slice(i, i + 4).join(' ')]) gleich++; }
+  if (n && gleich / n > 0.5) return st('verbinden.rechte.abschrift', 'Das sind meine Worte. Ich will deine hören.');
+  if (!w.some(function (x) { return GRENZE[x]; })) return st('verbinden.rechte.grenze', 'Fast. Ich darf nur eins: wissen, dass es bei dir läuft. Steuern und hineinschauen kann ich nicht. Sag es noch einmal mit deinen Worten?');
+  return '';
+}
+function rechteSatz() { var r = V().rechteSatz; return r && r.t && r.ts ? r : null; }
+var rechteFrisch = 0; // Münzen, die eben fürs Verstehen kamen (nur für die Zeile im Blatt)
+
 /* ---------- Zustand ---------- */
 function V() { var s = S(); if (!s.verbindung || typeof s.verbindung !== 'object') s.verbindung = {}; return s.verbindung; }
 function verbunden() { var v = V(); return v.status === 'verbunden' && !!v.wer; }
@@ -137,13 +170,18 @@ function mal() {
   var h = '<div class="c6v-kopf"><h2 class="c6v-titel">Mit deinem Rechner verbinden</h2><button type="button" class="c6v-zu" aria-label="Schließen"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button></div>';
   if (v) {
     h += '<p class="c6v-satz">Verbunden: <b>' + esc(v.name) + '</b> auf deinem ' + esc(v.woName) + '.</p>' +
-      '<p class="c6v-ehrlich">Das heißt heute: Ich weiß, dass es bei dir läuft. Steuern kann ich es noch nicht, und ich sehe nichts von deinem Rechner.</p>' +
+      '<p class="c6v-ehrlich">Das heißt: Ich weiß, dass es bei dir läuft. Steuern kann ich es nicht, und ich sehe nichts von deinem Computer.</p>' +
+      (rechteSatz() ? rechteOk() : rechteFrage(w, true)) +
       '<div class="c6v-tun"><button type="button" class="c6v-knopf c6v-haupt" data-tun="ufo">Zum UFO</button><button type="button" class="c6v-knopf c6v-leise" data-tun="trennen">Trennen</button></div>';
     b.innerHTML = h; binde(); return;
   }
   var eigen = {}; ['mac', 'windows', 'linux'].forEach(function (k) { eigen[k] = WO[k]; });
   var anders = wahl.wer !== 'claude' || wahl.wo === 'server';
-  h += '<p class="c6v-satz">Du hast ' + esc(w.name) + ' auf deinem Computer? Dann zeig ich dir, wie ich das nachprüfen kann. Zum Dank wacht das UFO in der Garage auf.</p>' +
+  h += '<p class="c6v-satz">Du hast ' + esc(w.name) + ' auf deinem Computer? Dann prüfen wir zusammen, ob es dort läuft. Zum Dank wacht das UFO in der Garage auf.</p>' +
+    '<p class="c6v-ehrlich c6v-oben"><b>Was das heißt, und was nicht:</b> ' + esc(carlsWorte(w)) + '</p>';
+  // Erst verstehen, dann verbinden: die Schritte kommen, wenn Otto es in seinen Worten gesagt hat
+  if (!rechteSatz()) { h += rechteFrage(w, false); b.innerHTML = h; binde(); return; }
+  h += rechteOk() +
     '<span class="c6v-klein">Dein Computer</span>' + chips('Dein Computer', eigen, wahl.wo === 'server' ? '' : wahl.wo) +
     '<details class="c6v-andere"' + (anders ? ' open' : '') + '><summary>Andere Wege</summary>' +
     '<div class="c6v-wahl c6v-wahl-andere">' +
@@ -159,13 +197,47 @@ function mal() {
     '<button type="button" class="c6v-knopf c6v-haupt c6v-kopier" data-tun="kopier">Zeile kopieren</button></details></li>' +
     '<li><span>Dort steht dann „Carl-Code:“ und sechs Ziffern. Tipp sie hier ein.</span>' +
     '<form class="c6v-form"><input class="c6v-feld" inputmode="numeric" autocomplete="one-time-code" maxlength="7" placeholder="123456" aria-label="Carl-Code, sechs Ziffern"><button type="submit" class="c6v-knopf c6v-haupt">Prüfen</button></form>' +
-    '<p class="c6v-meldung" aria-live="polite"></p></li></ol>' +
-    '<p class="c6v-ehrlich">Steht dort „' + esc(w.name) + ' fehlt noch.“? Dann ist es noch nicht installiert: ' + (wahl.wer === 'codex' ? 'siehe „Was bei Codex anders ist“ oben' : esc(w.hilfe)) + '.</p>' +
-    '<p class="c6v-ehrlich"><b>Was das heute heißt:</b> Ich weiß dann, dass ' + esc(w.name) + ' bei dir läuft. Steuern kann ich es noch nicht, und ich sehe nichts von deinem Computer.</p>';
+    questLohn('rechner', 'wenn der Code passt') +
+    '<p class="c6v-meldung c6v-cmeldung" aria-live="polite"></p></li></ol>' +
+    '<p class="c6v-ehrlich">Steht dort „' + esc(w.name) + ' fehlt noch.“? Dann ist es noch nicht installiert: ' + (wahl.wer === 'codex' ? 'siehe „Was bei Codex anders ist“ oben' : esc(w.hilfe)) + '.</p>';
   b.innerHTML = h; binde();
+}
+function rechteFrage(w, schon) {
+  return '<div class="c6v-rechte"><p class="c6v-rechte-frage"><b>' + (schon ? 'Noch eins:' : 'Bevor wir verbinden:') + '</b> ' + esc(st('verbinden.rechte.frage', 'Sag es mit deinen Worten. Was darf ich auf deinem Rechner?')) + '</p>' +
+    '<form class="c6v-rform"><textarea class="c6v-rfeld" rows="2" maxlength="240" placeholder="Carl darf …" aria-label="In deinen Worten: Was darf Carl auf deinem Rechner?"></textarea>' +
+    '<button type="submit" class="c6v-knopf c6v-haupt">So sehe ich das</button></form>' + questLohn('rechte', 'fürs Verstehen') +
+    '<p class="c6v-meldung c6v-rmeldung" aria-live="polite"></p></div>';
+}
+function rechteOk() {
+  var r = rechteSatz();
+  return '<div class="c6v-rechte c6v-rechte-ok"><span class="c6v-klein">Deine Worte</span><p class="c6v-worte">„' + esc(r.t) + '“</p>' +
+    (rechteFrisch ? '<p class="c6v-meldung c6v-gut">' + esc(st('verbinden.rechte.gut', 'Genau. Jetzt weißt du es, nicht nur ich.')) + ' ' + rechteFrisch + ' Münzen fürs Verstehen.</p>' : '') + '</div>';
+}
+function rechteSagen(f) {
+  var t = String(f.value || '').replace(/\s+/g, ' ').trim(), w = WER[wahl.wer];
+  var m = hulle.querySelector('.c6v-rmeldung');
+  var fehlt = rechtePruefe(t, carlsWorte(w));
+  if (fehlt) {
+    if (m) { m.textContent = fehlt; m.classList.remove('c6v-gut'); }
+    if (!C6.ruhig) { try { f.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-5px)' }, { transform: 'translateX(5px)' }, { transform: 'none' }], { duration: 300 }); } catch (e) {} }
+    return;
+  }
+  aendern(function () { V().rechteSatz = { t: t.slice(0, 240), ts: Date.now() }; });
+  rechteFrisch = questMelde('rechte');
+  // wer schon verbunden war, hat mit dem Satz jetzt auch die Verbindung verstanden
+  if (verbunden()) questMelde('rechner');
+  emit('verbindung', { status: C6.verbindung.status(), info: C6.verbindung.info(), rechte: true });
+  mal();
+  var ok = hulle.querySelector('.c6v-rechte-ok'); try { ok && ok.scrollIntoView({ block: 'nearest', behavior: C6.ruhig ? 'auto' : 'smooth' }); } catch (e) {}
 }
 function binde() {
   var b = hulle.querySelector('.c6v-blatt');
+  var rf = b.querySelector('.c6v-rform');
+  if (rf) {
+    var ta = rf.querySelector('.c6v-rfeld');
+    rf.onsubmit = function (e) { e.preventDefault(); rechteSagen(ta); };
+    ta.onkeydown = function (e) { if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); rechteSagen(ta); } };
+  }
   b.querySelector('.c6v-zu').onclick = zu;
   Array.prototype.forEach.call(b.querySelectorAll('.c6v-chip[data-k]'), function (c) { c.onclick = function () { wahl.wo = c.dataset.k; mal(); }; });
   Array.prototype.forEach.call(b.querySelectorAll('.c6v-chip[data-anders]'), function (c) {
@@ -207,7 +279,7 @@ function kopier(k) {
     if (gut) ok(); else k.textContent = 'Markiert: jetzt kopieren';
   }
 }
-function meldung(t, gut) { var m = hulle.querySelector('.c6v-meldung'); if (m) { m.textContent = t; m.classList.toggle('c6v-gut', !!gut); try { m.scrollIntoView({ block: 'nearest', behavior: C6.ruhig ? 'auto' : 'smooth' }); } catch (e) {} } }
+function meldung(t, gut) { var m = hulle.querySelector('.c6v-cmeldung'); if (m) { m.textContent = t; m.classList.toggle('c6v-gut', !!gut); try { m.scrollIntoView({ block: 'nearest', behavior: C6.ruhig ? 'auto' : 'smooth' }); } catch (e) {} } }
 function pruefe(roh) {
   var z = String(roh || '').replace(/\D/g, '');
   if (z.length !== 6) { meldung('Es sind sechs Ziffern.'); return; }
@@ -225,13 +297,15 @@ function pruefe(roh) {
   }).catch(function () { meldung('Hier kann ich nicht rechnen (der Browser lässt es nicht zu). Öffne Carl über seine Adresse in Safari oder Chrome.'); });
 }
 function erfolg() {
+  aendern(function () { V().codeGeprueft = Date.now(); });
   C6.verbindung.setze('verbunden', { wer: wahl.wer, wo: wahl.wo });
-  meldung('Passt. ' + WER[wahl.wer].name + ' läuft bei dir.', true);
+  var n = questMelde('rechner');
+  meldung('Passt. ' + WER[wahl.wer].name + ' läuft bei dir.' + (n ? ' ' + n + ' Münzen: geprüft, nicht nur geglaubt.' : ''), true);
   setTimeout(function () {
     zu();
     if (C6.jetzt !== 'fahrrad') C6.geh('fahrrad', { ufoWach: true });
     else emit('verbindung', { status: 'verbunden', info: C6.verbindung.info(), wach: true });
-  }, C6.ruhig ? 300 : 900);
+  }, C6.ruhig ? 300 : (n ? 1700 : 900));
 }
 function oeffne(o) {
   if (!hulle) {
@@ -239,6 +313,8 @@ function oeffne(o) {
     hulle.innerHTML = '<div class="c6v-blatt" role="dialog" aria-modal="true" aria-label="Mit deinem Rechner verbinden"></div>';
     hulle.addEventListener('click', function (e) { if (e.target === hulle) zu(); });
   }
+  leerHoeren();
+  rechteFrisch = 0;
   wahl.wer = o.wer && WER[o.wer] ? o.wer : 'claude';
   wahl.wo = o.wo && WO[o.wo] ? o.wo : rate();
   // dieselbe Zeile gilt 30 Minuten, auch wenn Carl zwischendurch neu lädt (z. B. am iPhone, während du am Rechner bist)
@@ -251,12 +327,18 @@ function oeffne(o) {
   setTimeout(function () { var k = hulle.querySelector('.c6v-zu'); try { k && k.focus({ preventScroll: true }); } catch (e) {} }, 40);
 }
 function zu() { if (hulle && hulle.parentNode) hulle.parentNode.removeChild(hulle); }
+// Tipp auf eine leere Stelle (Bus 'leer'): beide Verbinden-Blätter gehen zu; ein Tipp im Blatt zählt nie
+var leerDa = false;
+function leerHoeren() {
+  if (leerDa || !C6.bus || typeof C6.bus.on !== 'function') return; leerDa = true;
+  C6.bus.on('leer', function (d) { var z = d && d.ziel; if (z && z.closest && z.closest('.c6v-blatt')) return; zu(); lZu(); });
+}
 document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && hulle && hulle.parentNode) { e.stopPropagation(); zu(); } }, true);
 
 
 /* ====================================================================================
    Blatt 2 · Dein eigenes Modell (erweiternder Bereich): Ollama oder LM Studio auf dem eigenen Rechner,
-   über raffaels C6.lokal. Ohne C6.lokal sagt das Blatt ehrlich, dass es noch nicht geht.
+   über C6.lokal. Ohne C6.lokal sagt das Blatt ehrlich, dass es noch nicht geht.
    ==================================================================================== */
 var LURL = { ollama: 'http://127.0.0.1:11434/v1', lmstudio: 'http://localhost:1234/v1' };
 var lh = null, L = { weg: 'ollama', wo: 'mac', gb: 16, ergebnis: null, modell: '', probe: null, laeuft: false };
@@ -338,8 +420,8 @@ function lErgebnis(emp, st) {
   });
   h += '</div>';
   if (L.modell) {
-    h += '<div class="c6v-tun"><button type="button" class="c6v-knopf c6v-haupt" data-ltun="probe"' + (L.laeuft ? ' disabled' : '') + '>' + (L.laeuft ? 'Ich frage …' : 'Probe: „Sag mir in einem Satz Hallo“') + '</button></div>';
-    if (L.probe) h += '<div class="c6v-probe"><span class="c6v-klein">Antwort von ' + esc(L.modell) + ' (dein Rechner)</span><p>' + esc(L.probe.text || L.probe.fehler) + '</p>' + (L.probe.text ? '<p class="c6v-gut">Passt. Ab jetzt denkt dein Rechner mit, wenn er erreichbar ist.</p>' : '') + '</div>';
+    h += '<div class="c6v-tun"><button type="button" class="c6v-knopf c6v-haupt" data-ltun="probe"' + (L.laeuft ? ' disabled' : '') + '>' + (L.laeuft ? 'Ich frage …' : 'Probe: „Sag mir in einem Satz Hallo“') + '</button></div>' + questLohn('modell', 'wenn dein Rechner antwortet');
+    if (L.probe) h += '<div class="c6v-probe"><span class="c6v-klein">Antwort von ' + esc(L.modell) + ' (dein Rechner)</span><p>' + esc(L.probe.text || L.probe.fehler) + '</p>' + (L.probe.text && L.probe.text !== '(keine Antwort)' ? '<p class="c6v-gut">Passt. Ab jetzt denkt dein Rechner mit, wenn er erreichbar ist.' + (L.probe.muenzen ? ' ' + L.probe.muenzen + ' Münzen: Dein Rechner hat wirklich geantwortet.' : '') + '</p>' : '') + '</div>';
   }
   return h;
 }
@@ -382,12 +464,18 @@ function lPruefen() {
 function lProbe() {
   L.laeuft = true; L.probe = null; lMal();
   Promise.resolve().then(function () { return C6.lokal.probe('Sag mir in einem Satz Hallo.'); }).then(function (t) {
-    L.probe = { text: String(t || '').trim() || '(keine Antwort)' };
+    var echt = String(t || '').trim();
+    L.probe = { text: echt || '(keine Antwort)' };
+    if (echt) {
+      aendern(function () { V().probe = { ts: Date.now(), modell: L.modell }; });
+      L.probe.muenzen = questMelde('modell');
+    }
   }).catch(function (e) {
     L.probe = { fehler: e && e.code === 'kein-modell' ? 'Erst ein Modell wählen.' : 'Dein Rechner hat nicht geantwortet. Läuft das Modell noch?' };
   }).then(function () { L.laeuft = false; if (lh && lh.parentNode) lMal(); });
 }
 function oeffneLokal(o) {
+  leerHoeren();
   if (!lh) {
     lh = document.createElement('div'); lh.className = 'c6v-hulle'; lh.setAttribute('data-c6-kein-wisch', '');
     lh.innerHTML = '<div class="c6v-blatt c6v-blatt-lokal" role="dialog" aria-modal="true" aria-label="Dein eigenes Modell"></div>';

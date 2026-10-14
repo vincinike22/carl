@@ -206,7 +206,7 @@ function radSvg() {
     '<g class="c6s-r-boden"><path d="M-400 362H1000" stroke="' + TU + '" stroke-width="2.4"/>' +
     '<g class="c6s-r-schatten" filter="url(#c6s-r-weich)" opacity=".13"><ellipse class="c6s-r-sch-h" cx="140" cy="364" rx="84" ry="6" fill="' + TU + '"/><ellipse class="c6s-r-sch-v" cx="462" cy="364" rx="84" ry="6" fill="' + TU + '"/><g class="c6s-r-sch-rahmen"></g></g>' +
     '<g class="c6s-r-spur"><path d="M-380 372h26M-300 370h14M-220 373h30M-130 371h18M-40 372h24M50 370h16M130 373h28M220 371h14M300 372h22M390 370h18M470 373h26M560 371h14M640 372h20M720 370h18" stroke="' + TU + '" stroke-width="2" stroke-linecap="round" opacity=".45"/></g></g>' +
-    staenderSvg() + '<g class="c6s-r-ganz">' + g + '<g class="c6s-r-glanz"><path class="c6s-r-glanz-h" d="M96 212A88 88 0 0 1 128 186" style="transform-origin:140px 272px"/><path class="c6s-r-glanz-v" d="M418 212A88 88 0 0 1 450 186" style="transform-origin:462px 272px"/><path d="M262 154L404 150" stroke-width="2.2"/></g><g class="c6s-r-leit"></g></g></svg>';
+    staenderSvg() + '<g class="c6s-r-ganz"><g class="c6s-r-treffer" fill="none" stroke="none"><circle cx="140" cy="272" r="96"/><circle cx="462" cy="272" r="96"/><path d="M184 84H292V138H350V56H580V190H500L470 300H190L184 160Z"/></g>' + g + '<g class="c6s-r-glanz"><path class="c6s-r-glanz-h" d="M96 212A88 88 0 0 1 128 186" style="transform-origin:140px 272px"/><path class="c6s-r-glanz-v" d="M418 212A88 88 0 0 1 450 186" style="transform-origin:462px 272px"/><path d="M262 154L404 150" stroke-width="2.2"/></g><g class="c6s-r-leit"></g></g></svg>';
 }
 // Montageständer: Dreibein, Stange, Klemme am Sitzrohr. Steht hinter dem Rad und hält es.
 function staenderSvg() {
@@ -293,6 +293,87 @@ function bildchen(teilId, A) {
   return '<svg viewBox="' + box + '" aria-hidden="true" focusable="false" preserveAspectRatio="xMidYMid meet">' + pre + teilSvg(id, A) + '</svg>';
 }
 
+// ---------- Die Quest-Tafel: eine Kreidetafel an der Wand. Was dort steht, macht uns beide klüger. ----------
+// Reihenfolge, Münzen und „kommt“ nur als Rückfall; gilt ist, was C6.quest.alle() sagt. Texte: erst stimme.js (quest.<id>.titel/.satz), dann diese.
+var QUESTS = [
+  { id: 'samen', muenzen: 3, titel: 'Deinen ersten Samen pflanzen', satz: 'Dann weiß ich, woran du gerade denkst.' },
+  { id: 'freund3', muenzen: 5, titel: 'Mir drei Dinge über dich erzählen', satz: 'Was du bestätigst, steht in unserem Freundschaftsbuch, und ich muss nicht mehr raten.' },
+  { id: 'sternbild', muenzen: 5, titel: 'Zwei Planeten zu einem Sternbild verbinden', satz: 'Dann sehe ich, was bei dir zusammengehört.' },
+  { id: 'werkzeug', muenzen: 5, titel: 'Ein Werkzeug in deinen Worten bauen', satz: 'Dann weiß ich, wie du arbeiten willst, nicht nur was.' },
+  { id: 'fund', muenzen: 5, titel: 'Einen Fund prüfen: stimmt oder stimmt so nicht', satz: 'Dein Urteil wiegt mehr als meine Zusammenfassung.' },
+  { id: 'ferdl', muenzen: 5, titel: 'Ferdl einen Auftrag geben', satz: 'Was er für dich nachliest, macht mich in deinem Thema klüger.' },
+  { id: 'rechte', muenzen: 5, titel: 'Sagen, was ich auf deinem Rechner darf', satz: 'Dann verbindest du, weil du es verstehst, nicht weil ich frage.' },
+  { id: 'rechner', muenzen: 8, titel: 'Mich mit deinem Rechner verbinden', satz: 'Dann weiß ich, dass dort ein Helfer läuft, und das UFO wacht auf.' },
+  { id: 'modell', muenzen: 8, titel: 'Carl auf deinem Rechner mitdenken lassen', satz: 'Dann denke ich direkt bei dir mit, gratis und privat.' },
+  { id: 'github', muenzen: 0, kommt: true, titel: 'GitHub verbinden', satz: 'Kommt, sobald ich dort wirklich etwas für dich tun und es prüfen kann.' }
+];
+var QNACH = {}; QUESTS.forEach(function (q) { QNACH[q.id] = q; });
+// Die Tafel setzt ihre Wörter auch für den Kern (C6.quest.texte), damit überall gleich gesprochen wird – „Modell“ heißt sichtbar nur die eine Wahl-Stelle
+var TAFEL_TEXTE = { modell: { titel: QNACH.modell.titel, satz: QNACH.modell.satz } };
+function tafelTexteSetzen() { try { if (C6.quest && typeof C6.quest === 'object') { C6.quest.texte = C6.quest.texte || {}; Object.keys(TAFEL_TEXTE).forEach(function (id) { if (!C6.quest.texte[id]) C6.quest.texte[id] = TAFEL_TEXTE[id]; }); } } catch (e) {} }
+function questText(id, feld, rueck) {
+  try { var o = C6.quest && C6.quest.texte && C6.quest.texte[id]; if (o && o[feld]) return String(o[feld]); } catch (e) {}
+  try { var t = C6.stimme && C6.stimme.fest && C6.stimme.fest('quest.' + id + '.' + feld); if (t) return t; } catch (e) {}
+  return rueck;
+}
+// Was der Rückfall ohne C6.quest selbst sicher weiß: nur die Verbinden-Quests (am Zustand geprüft, nie am Ja)
+function questRueckfall(id) {
+  var v = S().verbindung || {};
+  if (id === 'rechte' && v.rechteSatz && v.rechteSatz.ts) return v.rechteSatz.ts;
+  if (id === 'rechner' && v.codeGeprueft) return v.codeGeprueft;
+  if (id === 'modell' && v.probe && v.probe.ts) return v.probe.ts;
+  return null;
+}
+function questListe() {
+  tafelTexteSetzen();
+  var roh = null;
+  try { if (C6.quest && typeof C6.quest.alle === 'function') roh = C6.quest.alle(); } catch (e) { roh = null; }
+  var nach = {}, liste = [];
+  if (roh && roh.length) roh.forEach(function (q) { if (q && q.id) nach[q.id] = q; });
+  var ids = QUESTS.map(function (q) { return q.id; });
+  if (roh && roh.length) roh.forEach(function (q) { if (q && q.id && ids.indexOf(q.id) < 0) ids.splice(ids.length - 1, 0, q.id); });
+  ids.forEach(function (id) {
+    var e = QNACH[id] || {}, r = nach[id];
+    if (roh && roh.length && !r) return; // der Kern kennt sie nicht: nicht zeigen
+    var kommt = r ? !!r.kommt : !!e.kommt;
+    var am = r ? (r.erfuellt ? (r.am || Date.now()) : null) : questRueckfall(id);
+    liste.push({
+      id: id, kommt: kommt, am: kommt ? null : am,
+      muenzen: kommt ? 0 : (r && r.muenzen != null ? +r.muenzen || 0 : e.muenzen || 0),
+      titel: questText(id, 'titel', e.titel || (r && r.titel) || id),
+      satz: questText(id, 'satz', e.satz || (r && r.satz) || '')
+    });
+  });
+  // die Kommenden immer zuletzt
+  return liste.filter(function (q) { return !q.kommt; }).concat(liste.filter(function (q) { return q.kommt; }));
+}
+function datum(ts) { var d = new Date(ts); return d.getDate() + '.' + (d.getMonth() + 1) + '.'; }
+var KREIDE = '#f1ede4';
+function haekchen(x, y, s) { return 'M' + (x + s * .18) + ' ' + (y + s * .52) + 'L' + (x + s * .42) + ' ' + (y + s * .78) + 'L' + (x + s * .9) + ' ' + (y + s * .12); }
+function tafelSvg(liste, neuId) {
+  var zaehl = liste.filter(function (q) { return !q.kommt; });
+  var n = zaehl.length, reihe1 = Math.ceil(n / 2), s = 15, gap = 6, k = '';
+  zaehl.forEach(function (q, i) {
+    var r = i < reihe1 ? 0 : 1, j = r ? i - reihe1 : i, inR = r ? n - reihe1 : reihe1;
+    var x = 80 - (inR * s + (inR - 1) * gap) / 2 + j * (s + gap), y = r ? 80 : 59;
+    k += '<rect x="' + x.toFixed(1) + '" y="' + y + '" width="' + s + '" height="' + s + '" rx="2.5" fill="none" stroke="' + KREIDE + '" stroke-width="1.8" opacity="' + (q.am ? '.95' : '.6') + '"/>';
+    if (q.am) k += '<path class="c6s-g-haken' + (q.id === neuId ? ' c6s-g-haken-neu' : '') + '" d="' + haekchen(x - 1, y - 3, s + 3) + '" fill="none" stroke="#f3df9e" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" pathLength="1"/>';
+  });
+  return '<svg viewBox="0 0 160 124" aria-hidden="true" focusable="false">' +
+    // Nagel und Schnur
+    '<path d="M80 6L26 30M80 6L134 30" fill="none" stroke="' + TU + '" stroke-width="1.6" stroke-linecap="round"/><circle cx="80" cy="6" r="3.4" fill="#8c867c" stroke="' + TU + '" stroke-width="1.6"/>' +
+    // Rahmen, Schiefer, Kreidestaub
+    '<rect x="8" y="26" width="144" height="88" rx="5" fill="#9a6a40" stroke="' + TU + '" stroke-width="2.6"/>' +
+    '<rect x="16" y="33" width="128" height="72" rx="2" fill="#2f3e38" stroke="' + TU + '" stroke-width="1.6"/>' +
+    '<path d="M22 98Q60 92 96 99T138 95" fill="none" stroke="' + KREIDE + '" stroke-width="5" stroke-linecap="round" opacity=".08"/>' +
+    '<text x="80" y="53" text-anchor="middle" font-family="Caveat, cursive" font-weight="700" font-size="19" fill="' + KREIDE + '">Quests</text>' + k +
+    // Ablage mit Kreide und Schwamm
+    '<path d="M12 114H148" stroke="' + TU + '" stroke-width="2.6" stroke-linecap="round"/><rect x="18" y="108" width="124" height="7" rx="2" fill="#b98a5c" stroke="' + TU + '" stroke-width="2"/>' +
+    '<rect x="104" y="104" width="16" height="5" rx="2.4" fill="' + KREIDE + '" stroke="' + TU + '" stroke-width="1.4"/>' +
+    '<rect x="32" y="101" width="22" height="8" rx="2" fill="#d9b04a" stroke="' + TU + '" stroke-width="1.6"/><path d="M32 105h22" stroke="#6b5a3a" stroke-width="1.2"/>' +
+    '</svg>';
+}
+
 var SYMBOL = '<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="16" r="4"/><circle cx="18" cy="16" r="4"/><path d="M6 16l4-7h6l2 7M10 9l2 7h-6M15 6h3"/></g></svg>';
 var FAEHNCHEN = '<svg viewBox="0 0 14 14" width="14" height="14" aria-hidden="true"><path d="M3 13V2M3 2.5h8l-2 3 2 3H3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
@@ -340,6 +421,7 @@ function vogelSvg() {
     '</svg>';
 }
 function tageszeit(h) {
+  if (h == null) { try { h = C6.tageszeit && typeof C6.tageszeit.stunde === 'function' ? C6.tageszeit.stunde() : null; } catch (e) { h = null; } }
   h = h == null ? new Date().getHours() : h;
   if (h >= 5 && h < 11) return 'morgen';
   if (h >= 11 && h < 16) return 'mittag';
@@ -354,7 +436,7 @@ C6.raum({
     buehne.innerHTML =
       '<div class="c6s-g-raum" aria-hidden="true"><i class="c6s-g-wand"></i>' + bodenSvg() + '<i class="c6s-g-kegel"></i><i class="c6s-g-licht"></i><div class="c6s-g-lampe">' + lampeSvg() + '</div></div>' +
       '<div class="c6s-f-innen">' +
-      '  <div class="c6s-f-szene">' +
+      '  <div class="c6s-f-szene" data-c6-leer>' +
       '    <div class="c6s-g-moebel">' +
       '      <button type="button" class="c6s-g-tor" aria-label="Tor zum Kieselpark: fahren und Münzen sammeln">' +
       '        <span class="c6s-g-aussen c6s-f-hof" aria-hidden="true"><i class="c6s-f-himmel"></i>' + huegelSvg() + wolkeSvg(1) + wolkeSvg(2) +
@@ -366,12 +448,14 @@ C6.raum({
       '      <div class="c6s-g-schrankplatz"></div>' +
       '      <button type="button" class="c6s-g-glas" aria-label="Münzglas"></button>' +
       '      <button type="button" class="c6s-g-ufo" aria-label="UFO"></button>' +
+      '      <button type="button" class="c6s-g-tafel" aria-label="Quest-Tafel" data-c6-schild></button>' +
       '    </div>' +
       '    <div class="c6s-f-rad" data-tiefe="mitte">' + radSvg() + '<div class="c6s-f-punkte" role="group" aria-label="Die Teile deines Rads"></div></div>' +
       '    <div class="c6s-f-carl"></div>' +
       '  </div>' +
       '  <div class="c6s-f-blatt" role="dialog" aria-modal="false" hidden data-c6-kein-wisch></div>' +
       '  <div class="c6s-f-blatt c6s-g-kleid" role="dialog" aria-modal="false" aria-label="Carls Schrank" hidden data-c6-kein-wisch data-c6-bild></div>' +
+      '  <div class="c6s-f-blatt c6s-g-tafelblatt" role="dialog" aria-modal="false" aria-label="Quests" hidden data-c6-kein-wisch data-c6-ding></div>' +
       '</div>';
     var innen = buehne.querySelector('.c6s-f-innen');
     // Unten liegen Dock, Leiste und, wenn Carl fragt, die Antwort-Chips. Knopf und Blatt bleiben immer darüber.
@@ -397,6 +481,7 @@ C6.raum({
     var blatt = buehne.querySelector('.c6s-f-blatt'), bmxKnopf = buehne.querySelector('.c6s-g-tor');
     var kleidBlatt = buehne.querySelector('.c6s-g-kleid'), raum = buehne.querySelector('.c6s-g-raum'), lampeEl = buehne.querySelector('.c6s-g-lampe');
     var ufoEl = buehne.querySelector('.c6s-g-ufo');
+    var tafelEl = buehne.querySelector('.c6s-g-tafel'), tafelBlatt = buehne.querySelector('.c6s-g-tafelblatt');
     var torEl = bmxKnopf, bankEl = buehne.querySelector('.c6s-g-bank'), glasEl = buehne.querySelector('.c6s-g-glas'), schrankPlatz = buehne.querySelector('.c6s-g-schrankplatz');
     var leitG = svg.querySelector('.c6s-r-leit');
     var ctl = null, aktiv = null;
@@ -588,8 +673,14 @@ C6.raum({
     function knopfTun(e) {
       var b = e.currentTarget, art = b.dataset.art, id = b.dataset.id;
       if (b.dataset.tun === 'kaufen') {
-        if (C6.kieselpark.kaufe(art, id)) { probe = null; nachWahl(art); malBlattStill(); hinweis(esc(satz('fahrrad.gekauft', 'Gehört jetzt dir.'))); }
-        else hinweis('Dafür reichen die Münzen noch nicht. Im Kieselpark liegen welche.');
+        var preis = 0; try { preis = +(C6.kieselpark.herkunft(art, id) || {}).preis || 0; } catch (x) {}
+        var von = glasMitte(), teilJetzt = aktiv;
+        if (C6.kieselpark.kaufe(art, id)) { probe = null; muenzenFliegen(preis, von, teilJetzt); nachWahl(art); malBlattStill(); hinweis(esc(satz('fahrrad.gekauft', 'Gehört jetzt dir.'))); }
+        else {
+          var fehlt = Math.max(1, preis - stand());
+          hinweis(fehlt === 1 ? 'Dafür fehlt dir noch eine Münze.' : 'Dafür fehlen dir noch ' + fehlt + ' Münzen.');
+          torZeigen();
+        }
       }
       if (b.dataset.tun === 'park') { var park = b.dataset.park; schliesse(); if (C6.kieselpark) C6.kieselpark.auf(park ? { park: park } : {}); }
     }
@@ -614,7 +705,8 @@ C6.raum({
       }
     }
     function nachWahl(art) {
-      zeichneAlles(); huepf(); markiereWahl();
+      zeichneAlles(); huepf(); markiereWahl(); nachdrehen();
+      try { var w = C6.kieselpark.wahl(art); if (w && !C6.kieselpark.herkunft(art, w).frei) neuAmRad = { art: art, id: w, teil: aktiv }; } catch (e) {}
       // die Bildchen der anderen Reihen zeigen jetzt die neue Wahl mit
       Array.prototype.forEach.call(blatt.querySelectorAll('.c6s-f-reihe'), function (r) {
         if (r.dataset.art === art) return;
@@ -641,9 +733,11 @@ C6.raum({
     function oeffne(teilId) {
       if (C6.rundgang && C6.rundgang.an) return;
       if (schrankOffen()) schrankZu(true);
+      if (tafelOffen) tafelZu(true);
       var war = aktiv;
       if (probe) { probe = null; zeichneAlles(); }
       aktiv = teilId; markiere(teilId);
+      staunenZu('garage.rad');
       if (!war) { try { C6.schweig && C6.schweig(); } catch (e) {} }
       malBlatt();
       buehne.classList.add('c6s-blatt-auf');
@@ -665,16 +759,21 @@ C6.raum({
       buehne.classList.remove('c6s-blatt-auf');
       groesse();
       if (!still && taste) { try { punkte[id] && punkte[id].focus({ preventScroll: true }); } catch (e) {} }
+      if (!still) setTimeout(spiegelSchaut, C6.ruhig ? 0 : 420);
     }
     document.addEventListener('keydown', function (e) {
       if (e.key !== 'Escape' || C6.jetzt !== 'fahrrad') return;
       if (C6.kieselpark && C6.kieselpark.offen) return;
+      if (!aktiv && tafelOffen) { e.preventDefault(); e.stopPropagation(); tafelZu(false, true); return; }
       if (!aktiv && schrankOffen()) { e.preventDefault(); e.stopPropagation(); schrankZu(); return; }
       if (!aktiv) return;
       e.preventDefault(); e.stopPropagation(); schliesse(false, true);
     }, true);
     // Tipp daneben schließt das Blatt (nicht auf Rad, Punkte, Blatt)
-    szene.addEventListener('click', function (e) { if (aktiv && !e.target.closest('.c6s-f-rad,.c6s-f-blatt,.c6s-f-carl')) schliesse(); });
+    szene.addEventListener('click', function (e) {
+      if (aktiv && !e.target.closest('.c6s-f-rad,.c6s-f-blatt,.c6s-f-carl')) schliesse();
+      if (tafelOffen && !e.target.closest('.c6s-f-blatt,.c6s-g-tafel') && Date.now() - tafelSeit > 300) tafelZu();
+    });
 
     function zeigeBlick(teilId) {
       var r = svg.getBoundingClientRect(), p = punktVon(teilId, aus());
@@ -689,9 +788,24 @@ C6.raum({
       try { ctl.kleid(C6.laden ? C6.laden.an() : {}); } catch (e) {}
       if (C6.geheim) C6.geheim.alles(ctl);
       if (ctl.gewohnheiten) { try { ctl.gewohnheiten(['schrauben', 'umsehen']); } catch (e) {} }
+      spiegelKoppeln();
       groesse();
     }
-    // Das UFO vor dem Garagentor: verschlossen, bis Carl mit Claude Code oder Codex verbunden ist
+    // Das Spiegelbild macht mit: Stimmung, Hüpfer und Blick gehen auch ans Bild im Glas (dort seitenverkehrt).
+    // Braucht vom Schrank (laden.js) schrank.bild() → die Figur im Spiegel; fehlt es, bleibt alles wie es ist.
+    function spiegelBildCtl() { try { return schrank && typeof schrank.bild === 'function' ? schrank.bild() : null; } catch (e) { return null; } }
+    function spiegelKoppeln() {
+      if (!ctl || ctl._c6sSpiegelt) return; ctl._c6sSpiegelt = true;
+      ['stimmung', 'huepf', 'schau'].forEach(function (n) {
+        var orig = ctl[n]; if (typeof orig !== 'function') return;
+        ctl[n] = function () {
+          var r = orig.apply(ctl, arguments), b = spiegelBildCtl();
+          if (b && b !== ctl && typeof b[n] === 'function') { try { b[n].apply(b, arguments); } catch (e) {} }
+          return r;
+        };
+      });
+    }
+    // Das UFO unter der Decke: verschlossen, bis Carl mit Claude Code oder Codex verbunden ist
     function verbunden() { try { return !!(C6.verbindung && C6.verbindung.verbunden()); } catch (e) { return false; } }
     function ufoMalen() {
       if (!ufoEl || !C6.einrichten) { if (ufoEl) ufoEl.hidden = true; return; }
@@ -713,8 +827,12 @@ C6.raum({
       e.stopPropagation();
       if (!verbunden()) {
         if (!C6.ruhig) { try { ufoEl.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-4px)' }, { transform: 'translateX(4px)' }, { transform: 'translateX(-2px)' }, { transform: 'none' }], { duration: 360 }); } catch (x) {} }
-        try { C6.sag((C6.stimme && C6.stimme.sag('ufo.zu')) || 'Das UFO schläft noch. Es wacht auf, wenn du mich mit deinem Rechner verbindest.'); } catch (x) {}
-        setTimeout(function () { try { C6.verbindung.oeffne && C6.verbindung.oeffne(); } catch (x) {} }, C6.ruhig ? 0 : 700);
+        if (aktiv) schliesse(true);
+        try {
+          Promise.resolve(C6.frag(satz('ufo.zu', 'Das UFO schläft. Es wacht auf, wenn dein Rechner mir einmal Hallo sagt. Steuern kann ich ihn nicht.'), [{ t: 'Zeig mir, wie', wert: 'ufo-wie' }], { id: 'garage-ufo' })).then(function (w) {
+            if (w === 'ufo-wie' || (w && w.wert === 'ufo-wie')) { try { C6.verbindung && C6.verbindung.oeffne && C6.verbindung.oeffne(); } catch (x) {} }
+          });
+        } catch (x) {}
         return;
       }
       if (aktiv) schliesse(true);
@@ -723,7 +841,127 @@ C6.raum({
     };
     if (C6.bus) {
       C6.bus.on('einrichten', function (d) { if (d && d.ort === 'ufo') ufoMalen(); });
-      C6.bus.on('verbindung', function (d) { ufoMalen(); if (C6.jetzt === 'fahrrad' && verbunden() && d && d.wach) ufoWacht(); });
+      C6.bus.on('verbindung', function (d) { ufoMalen(); staunenZu('garage.ufo'); if (C6.jetzt === 'fahrrad' && verbunden() && d && d.wach) ufoWacht(); });
+    }
+
+    // ---------- Die Quest-Tafel an der Wand: antippen zeigt die Quests, eine Quest antippen führt genau dorthin ----------
+    var tafelOffen = false, tafelSeit = 0;
+    var ZU_SVG = '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>';
+    var HAKEN_SVG = '<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M4 13l5 6L21 4" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    function tafelMalen(neuId) {
+      var l = questListe(), zahl = l.filter(function (q) { return !q.kommt; }), ab = zahl.filter(function (q) { return q.am; }).length;
+      tafelEl.innerHTML = tafelSvg(l, neuId);
+      tafelEl.setAttribute('aria-label', 'Quest-Tafel: ' + ab + ' von ' + zahl.length + ' abgehakt');
+      if (tafelOffen) malTafelBlatt();
+    }
+    function rechteWorte() { var v = S().verbindung || {}; return v.rechteSatz && v.rechteSatz.t ? String(v.rechteSatz.t) : ''; }
+    function malTafelBlatt() {
+      var l = questListe(), zahl = l.filter(function (q) { return !q.kommt; }), ab = zahl.filter(function (q) { return q.am; }).length;
+      var muenze = C6.muenzen && C6.muenzen.muenze ? C6.muenzen.muenze(18) : '';
+      var h = '<div class="c6s-f-bkopf c6s-g-tkopf"><h3 class="c6s-f-btitel">Quests</h3><span class="c6s-g-tzahl">' + ab + ' von ' + zahl.length + '</span><button type="button" class="c6s-f-zu" aria-label="Schließen">' + ZU_SVG + '</button></div>' +
+        '<p class="c6s-g-tsatz">Jede macht uns beide klüger. Münzen gibt es fürs Verstehen, nie fürs bloße Ja.</p><ul class="c6s-g-qs">';
+      l.forEach(function (q) {
+        var worte = q.id === 'rechte' && q.am && rechteWorte() ? '<span class="c6s-g-qworte">Deine Worte: „' + esc(rechteWorte()) + '“</span>' : '';
+        var lohn = q.kommt ? '<span class="c6s-g-qlohn c6s-g-kommt">kommt</span>' : '<span class="c6s-g-qlohn">' + muenze + '<b>' + q.muenzen + '</b></span>';
+        var innen = '<span class="c6s-g-qbox" aria-hidden="true">' + (q.am ? HAKEN_SVG : '') + '</span>' +
+          '<span class="c6s-g-qtext"><b class="c6s-g-qtitel">' + esc(q.titel) + '</b><i class="c6s-g-qsatz">' + esc(q.satz) + '</i>' +
+          (q.am ? '<em class="c6s-g-qam">abgehakt am ' + datum(q.am) + '</em>' : '') + worte + '</span>' + lohn;
+        if (q.kommt) h += '<li class="c6s-g-q c6s-g-q-kommt">' + innen + '</li>';
+        else h += '<li><button type="button" class="c6s-g-q' + (q.am ? ' c6s-g-q-ab' : '') + '" data-q="' + esc(q.id) + '" aria-label="' + esc(q.titel + (q.am ? ', abgehakt am ' + datum(q.am) : ', ' + q.muenzen + ' Münzen') + '. Dorthin gehen') + '">' + innen + '</button></li>';
+      });
+      // leise unten: wer nur spielen und Carl einkleiden will, findet hier seinen Weg (kein Zähler, kein Druck)
+      function weg(id, t) { return '<button type="button" class="c6s-g-tweg" data-weg="' + id + '">' + esc(t) + '</button>'; }
+      h += '</ul><div class="c6s-g-tmehr"><p class="c6s-g-tklein">Spielen</p><div class="c6s-g-twege">' +
+        weg('park', 'Kieselpark: fahren und Münzen sammeln') + weg('allein', 'Im Schrank liegt etwas ganz allein.') + '</div>' +
+        '<p class="c6s-g-tklein">Wofür Münzen?</p><div class="c6s-g-twege">' +
+        weg('schrank', 'Kleider für mich') + weg('rad', 'Teile fürs Rad') + weg('ufo', 'Das UFO') + weg('zuhause', 'Dinge fürs Zuhause') + '</div></div>';
+      tafelBlatt.innerHTML = h;
+      tafelBlatt.querySelector('.c6s-f-zu').onclick = function () { tafelZu(false, perTaste); };
+      Array.prototype.forEach.call(tafelBlatt.querySelectorAll('.c6s-g-tweg'), function (b) { b.onclick = function () { tafelWeg(b.dataset.weg); }; });
+      Array.prototype.forEach.call(tafelBlatt.querySelectorAll('.c6s-g-q[data-q]'), function (b) { b.onclick = function () { questHin(b.dataset.q); }; });
+    }
+    function tafelWeg(id) {
+      tafelZu(true);
+      if (id === 'park') { if (C6.kieselpark) C6.kieselpark.auf(); return; }
+      if (id === 'allein' || id === 'schrank') { schrankAuf(); return; }
+      if (id === 'rad') { oeffne('rahmen'); return; }
+      if (id === 'ufo') { try { ufoEl.onclick({ stopPropagation: function () {} }); } catch (e) {} return; }
+      if (id === 'zuhause') {
+        try { C6.geh('zuhause'); } catch (e) {}
+        setTimeout(function () { try { C6.einrichten && C6.einrichten.oeffne && C6.einrichten.oeffne({ ort: 'zuhause', platz: 'sessel' }); } catch (e) {} }, C6.ruhig ? 60 : 750);
+      }
+    }
+    function tafelSchwingt() {
+      if (C6.ruhig) return;
+      try { tafelEl.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(-3.5deg)', offset: .25 }, { transform: 'rotate(2.2deg)', offset: .55 }, { transform: 'rotate(-.8deg)', offset: .8 }, { transform: 'rotate(0)' }], { duration: 900, easing: 'ease-out' }); } catch (e) {}
+    }
+    function tafelAuf() {
+      if (C6.rundgang && C6.rundgang.an) return;
+      if (aktiv) schliesse(true);
+      if (schrankOffen()) schrankZu(true);
+      var war = tafelOffen;
+      if (!war) { try { C6.schweig && C6.schweig(); } catch (e) {} }
+      tafelOffen = true; tafelSeit = Date.now();
+      malTafelBlatt();
+      tafelBlatt.hidden = false;
+      buehne.classList.add('c6s-g-tafel-auf');
+      groesse();
+      staunenZu('garage.tafel');
+      if (!war) { try { tafelBlatt.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: C6.ruhig ? 0 : 260, easing: 'cubic-bezier(.3,.7,.3,1)' }); } catch (e) {} }
+      if (perTaste) setTimeout(function () { var z = tafelBlatt.querySelector('.c6s-f-zu'); try { z && z.focus({ preventScroll: true }); } catch (e) {} }, 30);
+    }
+    function tafelZu(still, taste) {
+      if (!tafelOffen) return;
+      tafelOffen = false;
+      tafelBlatt.hidden = true; tafelBlatt.innerHTML = '';
+      buehne.classList.remove('c6s-g-tafel-auf');
+      groesse();
+      if (!still && taste) { try { tafelEl.focus({ preventScroll: true }); } catch (e) {} }
+    }
+    // Wo die Quest zu tun ist. Carl sagt dort in einem Satz, was zu tun ist (nur, wo ein Satz hilft).
+    function questHin(id) {
+      tafelZu(true);
+      function geh(r, o) { try { if (C6.jetzt !== r) return C6.geh(r, o); } catch (e) {} return true; }
+      function dann(fn, ms) { setTimeout(function () { try { fn(); } catch (e) {} }, C6.ruhig ? 60 : (ms || 650)); }
+      function sagDort(rueck, ms) { dann(function () { try { C6.sag(questText(id, 'hin', rueck)); } catch (e) {} }, ms || 900); }
+      switch (id) {
+        case 'samen': geh('zuhause'); sagDort('Schreib unten einen Satz, an den du gerade denkst. Er wird dein Samen.'); dann(function () { C6.eingabe && C6.eingabe.fokus && C6.eingabe.fokus(); }, 1000); break;
+        case 'freund3': geh('bibliothek'); dann(function () { C6.atlas && typeof C6.atlas.oeffne === 'function' && C6.atlas.oeffne({}); }, 750); break;
+        case 'sternbild': geh('netz'); sagDort('Hier oben verbindest du zwei Planeten zu einem Sternbild.'); break;
+        case 'werkzeug': geh('werkstatt'); sagDort('An der Wand hängt „Neues Werkzeug“. Sag mir in deinen Worten, was es tun soll.'); break;
+        case 'ferdl': geh('werkstatt'); sagDort('Ferdl wartet auf Arbeit. Gib ihm ein Thema zum Nachlesen.'); break;
+        case 'fund':
+          if (C6.lesesaal && typeof C6.lesesaal.oeffne === 'function') { try { C6.lesesaal.oeffne(); } catch (e) {} }
+          else if (geh('lesesaal') === false) geh('bibliothek');
+          sagDort('Auf dem Tisch liegen deine Funde. Sag bei einem: stimmt, oder stimmt so nicht.', 1300); break;
+        case 'rechte': case 'rechner': try { C6.verbindung && C6.verbindung.oeffne({}); } catch (e) {} break;
+        case 'modell': try { C6.verbindung && C6.verbindung.oeffneLokal({}); } catch (e) {} break;
+        default: try { C6.quest && typeof C6.quest.geh === 'function' && C6.quest.geh(id); } catch (e) {}
+      }
+    }
+    tafelMalen();
+    tafelEl.onclick = function (e) {
+      e.stopPropagation();
+      tafelSchwingt();
+      if (tafelOffen) tafelZu(false, perTaste); else tafelAuf();
+    };
+    if (C6.bus) {
+      C6.bus.on('quest', function (d) {
+        var neu = d && d.neu ? d.id : null;
+        tafelMalen(neu);
+        if (neu && C6.jetzt === 'fahrrad') { staunenZu('garage.tafel'); tafelSchwingt(); }
+      });
+      C6.bus.on('verbindung', function () { tafelMalen(); });
+      // Tipp auf eine leere Stelle: jedes offene Blatt der Garage geht zu (nicht der Tipp, der es eben geöffnet hat)
+      C6.bus.on('leer', function (d) {
+        if (C6.jetzt !== 'fahrrad' || (d && d.raum && d.raum !== 'fahrrad')) return;
+        if (C6.kieselpark && C6.kieselpark.offen) return;
+        var z = d && d.ziel; if (z && z.closest && z.closest('.c6s-f-blatt,.c6v-blatt,.c6s-g-tafel')) return;
+        if (Date.now() - tafelSeit < 300) return;
+        if (aktiv) schliesse();
+        if (tafelOffen) tafelZu();
+        if (schrankOffen()) schrankZu();
+      });
     }
 
     // Carls Schrank mit Spiegel (Anprobieren, Kaufen mit Münzen, Wimpern, Gefährt: laden.js)
@@ -741,7 +979,7 @@ C6.raum({
       try { glasEl.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-10px) rotate(-4deg)', offset: .35 }, { transform: 'translateY(0) rotate(2deg)', offset: .7 }, { transform: 'none' }], { duration: 620, easing: 'cubic-bezier(.3,.7,.3,1)' }); } catch (e) {}
     }
     if (C6.bus) {
-      C6.bus.on('muenzen', function () { var n = stand(); if (glasStand !== null && n > glasStand && C6.jetzt === 'fahrrad') glasHuepf(); glasStand = n; });
+      C6.bus.on('muenzen', function () { var n = stand(); if (glasStand !== null && n > glasStand && C6.jetzt === 'fahrrad') glasHuepf(); if (glasStand !== n) staunenZu('garage.glas'); glasStand = n; });
       C6.bus.on('spiel', function (d) {
         if (!d || d.was !== 'kieselpark') return;
         if (d.offen) { parkStand = stand(); return; }
@@ -760,8 +998,96 @@ C6.raum({
       e.stopPropagation();
       var n = 0; try { n = C6.muenzen ? C6.muenzen.stand() : 0; } catch (x) {}
       if (!C6.ruhig) { try { glasEl.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(-7deg)', offset: .3 }, { transform: 'rotate(5deg)', offset: .6 }, { transform: 'rotate(0)' }], { duration: 520, easing: 'ease-in-out' }); } catch (x) {} }
-      try { C6.sag((n === 0 ? 'Das Glas ist leer.' : n === 1 ? 'Eine Münze im Glas.' : n + ' Münzen im Glas.') + ' ' + (schrank ? schrank.muenzSatz() : '')); } catch (x) {}
+      // leer: der Satz sagt, woher; das Tor zeigt den Weg. Voll: nur, wie viele.
+      try { C6.sag(n === 0 ? 'Das Glas ist leer. ' + (schrank ? schrank.muenzSatz() : '') : n === 1 ? 'Eine Münze im Glas.' : n + ' Münzen im Glas.'); } catch (x) {}
+      if (n === 0) torZeigen();
     };
+
+    // ---------- Zeigen statt sagen: Münzen fliegen, das Tor leuchtet, das Vorderrad dreht nach, der Spiegel schaut mit ----------
+    function staunenZu(id) { try { C6.staunen && typeof C6.staunen.zu === 'function' && C6.staunen.zu(id); } catch (e) {} }
+    function glasMitte() { var r = glasEl.getBoundingClientRect(); var sv = glasEl.querySelector('svg'), q = sv ? sv.getBoundingClientRect() : r; return { x: q.left + q.width / 2, y: q.top + q.height * 0.55 }; }
+    function teilMitte(id) { var r = svg.getBoundingClientRect(), p = punktVon(id || 'rahmen', aus()); return { x: r.left + p[0] / 600 * r.width, y: r.top + p[1] / 380 * r.height }; }
+    // genau so viele Münzen, wie das Teil kostet, eine nach der anderen vom Glas zum Teil
+    function muenzenFliegen(n, von, teilId) {
+      n = Math.max(0, n | 0); if (!n || !von) return;
+      var nach = teilMitte(teilId);
+      buehne.classList.add('c6s-g-zahlt');
+      var ende = 0;
+      for (var i = 0; i < n; i++) (function (i) {
+        var d = document.createElement('div');
+        d.className = 'c6s-g-flug'; d.setAttribute('aria-hidden', 'true'); d.setAttribute('data-c6s-flug', String(i + 1));
+        d.innerHTML = C6.muenzen ? C6.muenzen.muenze(22) : '';
+        d.style.left = von.x + 'px'; d.style.top = von.y + 'px';
+        document.body.appendChild(d);
+        var dx = nach.x - von.x, dy = nach.y - von.y, hoch = Math.min(-40, dy * 0.5 - 60);
+        var dauer = C6.ruhig ? 500 : 760, warte = i * (C6.ruhig ? 60 : 140);
+        ende = Math.max(ende, dauer + warte);
+        var k = C6.ruhig
+          ? [{ opacity: 0, transform: 'translate(-50%,-50%)' }, { opacity: 1, offset: .2 }, { opacity: 1, offset: .8, transform: 'translate(calc(-50% + ' + dx + 'px),calc(-50% + ' + dy + 'px))' }, { opacity: 0, transform: 'translate(calc(-50% + ' + dx + 'px),calc(-50% + ' + dy + 'px))' }]
+          : [{ opacity: 0, transform: 'translate(-50%,-50%) scale(.6)' },
+             { opacity: 1, offset: .12, transform: 'translate(-50%,-50%) translateY(-8px) scale(1)' },
+             { opacity: 1, offset: .55, transform: 'translate(calc(-50% + ' + (dx * .5) + 'px),calc(-50% + ' + hoch + 'px)) scale(1)' },
+             { opacity: 1, offset: .9, transform: 'translate(calc(-50% + ' + dx + 'px),calc(-50% + ' + dy + 'px)) scale(.8)' },
+             { opacity: 0, transform: 'translate(calc(-50% + ' + dx + 'px),calc(-50% + ' + dy + 'px)) scale(.4)' }];
+        try { var a = d.animate(k, { duration: dauer, delay: warte, easing: 'cubic-bezier(.3,.7,.3,1)', fill: 'both' }); a.onfinish = function () { d.remove(); }; }
+        catch (e) { setTimeout(function () { d.remove(); }, dauer + warte); }
+      })(i);
+      setTimeout(function () { buehne.classList.remove('c6s-g-zahlt'); }, ende + 200);
+    }
+    // „Zu wenig Münzen“: das Glas wackelt, das Tor leuchtet einmal auf. Der Handgriff wird gezeigt, nicht beschrieben.
+    var torT = null;
+    function torZeigen() {
+      if (!C6.ruhig) { try { glasEl.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(-7deg)', offset: .3 }, { transform: 'rotate(5deg)', offset: .6 }, { transform: 'rotate(0)' }], { duration: 520, easing: 'ease-in-out' }); } catch (x) {} }
+      buehne.classList.remove('c6s-g-tor-zeigt'); void torEl.offsetWidth; buehne.classList.add('c6s-g-tor-zeigt');
+      clearTimeout(torT); torT = setTimeout(function () { buehne.classList.remove('c6s-g-tor-zeigt'); }, C6.ruhig ? 2400 : 2600);
+    }
+    // Lebenszeichen nach einer Änderung: das Vorderrad dreht ein Stück und kommt zur Ruhe. Einmal, nie von selbst.
+    function nachdrehen() {
+      if (C6.ruhig) return;
+      var g = svg.querySelector('.c6s-r-vorne'); if (!g) return;
+      try { g.animate([{ transform: 'rotate(0deg)' }, { transform: 'rotate(34deg)', offset: .55 }, { transform: 'rotate(28deg)', offset: .8 }, { transform: 'rotate(30deg)' }], { duration: 1500, easing: 'cubic-bezier(.2,.7,.3,1)' }); } catch (e) {}
+    }
+    // Der Spiegel ist das Publikum: Ist am Rad etwas neu, schaut Carl es mit dir an. Einmal je neuem Teil.
+    var neuAmRad = null;
+    function spiegelSchaut() {
+      var n = neuAmRad; neuAmRad = null;
+      if (!n || C6.jetzt !== 'fahrrad' || aktiv || schrankOffen()) return;
+      var schl = n.art + ':' + n.id, sah = S().spiegelSah || [];
+      if (sah.indexOf(schl) >= 0) return;
+      aendern(function (s) { s.spiegelSah = (s.spiegelSah || []).concat([schl]).slice(-80); });
+      var K = katalog()[n.art], name = ''; if (K) K.teile.forEach(function (x) { if (x.id === n.id) name = x.name; });
+      var t = NACH[n.teil] || null;
+      var sp = schrankPlatz.querySelector('.c6s-g-spiegel'), gl = sp && sp.querySelector('.c6s-l-glas');
+      if (gl && !C6.ruhig) { try { gl.animate([{ filter: 'brightness(1)' }, { filter: 'brightness(1.18)', offset: .3 }, { filter: 'brightness(1)' }], { duration: 900, easing: 'ease-out' }); } catch (e) {} }
+      try {
+        if (ctl) {
+          var p = teilMitte(n.teil);
+          ctl.schau && ctl.schau(p.x, p.y);
+          ctl.stimmung && ctl.stimmung('staunt');
+          setTimeout(function () { try { if (sp && ctl.schau) { var r = sp.getBoundingClientRect(); ctl.schau(r.left + r.width / 2, r.top + r.height * .4); } ctl.stimmung('froh'); } catch (e) {} }, 1100);
+          setTimeout(function () { try { ctl.schau(); ctl.stimmung('ruhig'); } catch (e) {} }, 2600);
+        }
+      } catch (e) {}
+      if (t && name) { try { C6.sag('Neu ' + t.am + ': ' + name + '. Der Spiegel und ich haben es gesehen.'); } catch (e) {} }
+    }
+
+    // ---------- „Wie geht das?“: Halten sagt in einem Satz, was das Ding tut. Halten öffnet nie etwas. ----------
+    var gehaltenBis = 0;
+    function ding(el, id, text) {
+      if (!el || typeof C6.halten !== 'function' || !C6.staunen || typeof C6.staunen.sag !== 'function') return;
+      try {
+        if (typeof C6.staunen.text === 'function') C6.staunen.text(id, text);
+        C6.halten(el, function () { gehaltenBis = Date.now() + 700; if (aktiv && el === radBox) return; try { C6.staunen.sag(id, text); } catch (e) {} });
+      } catch (e) {}
+    }
+    // der Klick, der auf ein Halten folgt, erreicht kein Ding in der Garage (auch nicht die, deren Tipp ein anderes Modul hört)
+    buehne.addEventListener('click', function (e) { if (Date.now() < gehaltenBis) { gehaltenBis = 0; e.stopPropagation(); e.preventDefault(); } }, true);
+    ding(radBox, 'garage.rad', 'Jeder Punkt am Rad ist ein Teil. Was du wählst, siehst du sofort am Rad.');
+    ding(glasEl, 'garage.glas', 'Im Glas liegt, was du im Kieselpark gesammelt hast. Nichts anderes.');
+    ding(torEl, 'garage.tor', 'Durchs Tor geht es in den Kieselpark. Dort fährst du und sammelst Münzen.');
+    ding(tafelEl, 'garage.tafel', 'Die Tafel zeigt, was uns beide klüger macht. Münzen gibt es fürs Verstehen, nie fürs bloße Ja.');
+    ding(ufoEl, 'garage.ufo', 'Das UFO ist ein Zeichen. Es wacht auf, wenn dein Rechner mir einmal Hallo sagt.');
+    ding(schrankPlatz.querySelector('.c6s-g-spiegel'), 'garage.spiegel', 'Der Spiegel schaut mit, wenn an deinem Rad etwas neu ist. Und er hilft mir beim Anziehen.');
 
     // Wartezeit: ein Vogel landet auf dem Zaun, Carl schraubt ein bisschen, der Schlüssel wackelt
     var vogel = buehne.querySelector('.c6s-f-vogel'), vogelDa = false, schraubt = false;
@@ -848,17 +1174,43 @@ C6.raum({
       buehne.style.setProperty('--g-ly', Math.round(lyB) + 'px');
       lampeEl.style.left = Math.round(lxB) + 'px'; lampeEl.style.height = Math.round(lyB + 22) + 'px';
       lampe.x = br.width ? lxB / br.width : .5; lampe.y = br.height ? lyB / br.height : .2; lampe.px = br.left + lxB;
-      // Das UFO schwebt vor dem Tor, unter dem Schild
-      var tl = parseFloat(torEl.style.left) || 0, tw = parseFloat(torEl.style.width) || 100, th = parseFloat(torEl.style.height) || 100, tu = parseFloat(torEl.style.bottom) || 0;
-      var uw = Math.max(64, tw * 0.66);
-      ufoEl.style.width = Math.round(uw) + 'px'; ufoEl.style.left = Math.round(tl + tw / 2) + 'px';
-      ufoEl.style.bottom = Math.round(tu + th * (pc ? 0.34 : 0.32)) + 'px';
+      // Das UFO hängt schlafend an einer Schnur unter der Decke, rechts von der Lampe: weg von Tor und Schild
+      var uw = pc ? Math.round(Math.max(96, Math.min(140, w * 0.11))) : Math.round(Math.max(64, Math.min(84, w * 0.19)));
+      var oben = pc ? Math.max(70, naht * 0.16) : Math.max(64, naht * 0.2);
+      ufoEl.style.width = uw + 'px'; ufoEl.style.left = Math.round(w * (pc ? 0.71 : 0.72)) + 'px';
+      ufoEl.style.bottom = 'auto'; ufoEl.style.top = Math.round(oben) + 'px';
+      // Die Quest-Tafel hängt an einem Nagel: am Computer zwischen Tor und Lampe über der Lochwand, am iPhone über dem Tor
+      var tl, tw, tu, frei;
+      if (pc) {
+        var torR = w * 0.025 + Math.min(w * 0.27, 320), bbT = Math.min(w * 0.3, 340);
+        tl = torR + 18; frei = lx - 34 - tl;
+        tw = Math.max(96, Math.min(186, frei));
+        // unten darf sie die leere obere Lochreihe der Lochwand ein wenig verdecken (der Hammer beginnt tiefer)
+        tu = (h - naht - 2) + bbT * 262 / 320 * (1 - 0.07);
+        tl += Math.max(0, (frei - tw) / 2);
+      } else {
+        var torB = w * 0.3, torH = Math.min(naht * 0.78, torB * 1.9);
+        tw = Math.min(torB + 14, 150);
+        tu = (h - naht) + torH + 10;
+        tl = w * 0.02 + (torB - tw) / 2;
+      }
+      var tPlatz = h - 8 - tu;
+      if (tw * 124 / 160 > tPlatz) tw = tPlatz * 160 / 124;
+      tafelEl.hidden = tw < 72;
+      tafelEl.style.left = Math.round(tl) + 'px'; tafelEl.style.bottom = Math.round(tu) + 'px';
+      tafelEl.style.width = Math.round(tw) + 'px'; tafelEl.style.height = Math.round(tw * 124 / 160) + 'px';
       // Das Münzglas steht oben auf Carls Schrank: am iPhone und am Computer sichtbar, auch bei offenem Schrank
       var sEl = schrankPlatz.querySelector('.c6s-g-schrank');
       if (sEl) {
         var sl = parseFloat(sEl.style.left) || 0, su = parseFloat(sEl.style.bottom) || 0, sw = parseFloat(sEl.style.width) || 100;
+        // sichtbar so groß wie es zum Schrank passt, antippbar mindestens 44 × 44
         var gw = Math.max(30, Math.min(52, sw * 0.24));
-        glasEl.style.width = Math.round(gw) + 'px';
+        glasEl.style.width = Math.round(Math.max(44, gw)) + 'px';
+        glasEl.style.height = Math.round(Math.max(44, gw / 0.75)) + 'px';
+        glasEl.style.setProperty('--c6s-glas-w', Math.round(gw) + 'px');
+        // iPhone mit offenem Blatt: der Schrank ist weg, das Glas steht dann unten rechts an der Wand (sichtbar nur beim Zahlen)
+        glasEl.style.top = '';
+        if (!pc && ba) { glasEl.style.left = Math.round(w * 0.88) + 'px'; glasEl.style.bottom = 'auto'; glasEl.style.top = Math.round(Math.max(4, radBox.offsetTop + radBox.offsetHeight * 0.08 - 44)) + 'px'; }
         glasEl.style.left = Math.round(sl + sw * 0.66) + 'px';
         glasEl.style.bottom = Math.round(su + sw * 300 / 230 * (286 / 300) - 2) + 'px';
       }
@@ -882,6 +1234,7 @@ C6.raum({
     function schrankAuf(reihe) {
       if (!schrank) return;
       if (aktiv) schliesse(true);
+      if (tafelOffen) tafelZu(true);
       var war = schrank.offen;
       wandern(function () { buehne.classList.add('c6s-g-schrank-auf'); schrank.auf(reihe); groesse(); });
       if (!war) { try { kleidBlatt.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: C6.ruhig ? 0 : 260, easing: 'cubic-bezier(.3,.7,.3,1)' }); } catch (e) {} }
@@ -897,6 +1250,7 @@ C6.raum({
       C6.bus.on('rad', function (d) { if (d && d.was === 'teil' && aktiv) return; zeichneAlles(); if (aktiv && d && (d.was === 'lohn' || d.was === 'zu')) malBlatt(); });
       C6.bus.on('kleid', function (o) { try { ctl && ctl.kleid(o); } catch (e) {} });
       C6.bus.on('tastatur', function () { requestAnimationFrame(untenMessen); });
+      C6.bus.on('tageszeit', function () { try { licht(); } catch (e) {} });
       C6.bus.on('muenzen', function () { if (aktiv && C6.jetzt === 'fahrrad') { var hw = blatt.querySelector('.c6s-f-hinweis'); if (hw && hw.hidden) malBlatt(); } });
       C6.bus.on('warte', function (d) { if (C6.jetzt !== 'fahrrad' || !d || (C6.kieselpark && C6.kieselpark.offen)) return; if (d.stufe === 2) { vogelLandet(); schraubenAn(); } });
       C6.bus.on('wach', function () { if (C6.jetzt !== 'fahrrad') return; vogelWeg(); schraubenAus(); });
@@ -909,7 +1263,8 @@ C6.raum({
     var erstesMal = true;
 
     // Für Prüfungen und andere Räume
-    C6.fahrrad = { schrank: { auf: function (reihe) { if (C6.jetzt !== 'fahrrad') C6.geh('fahrrad', { schrank: true, reihe: reihe }); else schrankAuf(reihe); }, zu: function () { schrankZu(); }, get offen() { return schrankOffen(); } }, oeffne: function (id) { if (C6.jetzt !== 'fahrrad') C6.geh('fahrrad'); setTimeout(function () { oeffne(id); }, C6.jetzt === 'fahrrad' ? 0 : 500); }, schliesse: function () { schliesse(); }, get offen() { return aktiv; }, punkt: punktVon, teile: TEILE };
+    C6.fahrrad = { schrank: { auf: function (reihe) { if (C6.jetzt !== 'fahrrad') C6.geh('fahrrad', { schrank: true, reihe: reihe }); else schrankAuf(reihe); }, zu: function () { schrankZu(); }, get offen() { return schrankOffen(); } }, oeffne: function (id) { if (C6.jetzt !== 'fahrrad') C6.geh('fahrrad'); setTimeout(function () { oeffne(id); }, C6.jetzt === 'fahrrad' ? 0 : 500); }, schliesse: function () { schliesse(); }, get offen() { return aktiv; }, punkt: punktVon, teile: TEILE,
+      tafel: { auf: function () { if (C6.jetzt !== 'fahrrad') C6.geh('fahrrad', { tafel: true }); else tafelAuf(); }, zu: function () { tafelZu(); }, get offen() { return tafelOffen; }, quests: questListe } };
 
     return {
       betreten: function (o) {
@@ -924,28 +1279,27 @@ C6.raum({
         if (o.ufoWach) setTimeout(ufoWacht, C6.ruhig ? 0 : 500);
         if (o.schrank) schrankAuf(o.reihe);
         else if (schrankOffen()) schrankZu(true);
-        glasMalen();
+        glasMalen(); tafelMalen();
+        if (o.tafel) setTimeout(tafelAuf, C6.ruhig ? 0 : 350);
         if (o.teil && NACH[o.teil]) setTimeout(function () { oeffne(o.teil); }, 350);
         if (erstesMal && !o.rundgang && !(C6.rundgang && C6.rundgang.an)) {
           erstesMal = false;
           if (!S().radGesehen) {
             aendern(function (s) { s.radGesehen = Date.now(); });
-            buehne.classList.add('c6s-einladen');
-            setTimeout(function () { buehne.classList.remove('c6s-einladen'); }, C6.ruhig ? 0 : 3400);
             setTimeout(function () {
               if (C6.jetzt !== 'fahrrad' || aktiv) return;
-              try { C6.sag('Tipp ein Teil an. Mit Münzen aus dem Kieselpark baust du es um.'); } catch (e) {}
+              try { C6.sag(satz('garage.rad.erst', 'Dein Rad. Tipp es an.')); } catch (e) {}
             }, 600);
           } else if (!S().garageGesehen && !o.schrank) {
             aendern(function (s) { s.garageGesehen = Date.now(); });
             setTimeout(function () {
               if (C6.jetzt !== 'fahrrad' || aktiv) return;
-              try { C6.sag('Meine Garage. Links dein Rad, rechts mein Schrank. Das Tor geht zum Kieselpark.'); } catch (e) {}
+              try { C6.sag(satz('garage.erst', 'Meine Garage. Rechts steht mein Schrank, und durchs Tor geht es in den Kieselpark.')); } catch (e) {}
             }, 600);
           }
         }
       },
-      verlassen: function () { buehne.classList.remove('c6s-sichtbar'); buehne.classList.add('c6s-ruht'); schliesse(true); schrankZu(true); vogelWeg(); schraubenAus(); wach(false); },
+      verlassen: function () { buehne.classList.remove('c6s-sichtbar'); buehne.classList.add('c6s-ruht'); schliesse(true); schrankZu(true); tafelZu(true); vogelWeg(); schraubenAus(); wach(false); },
       groesse: groesse
     };
   }

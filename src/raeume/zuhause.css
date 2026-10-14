@@ -57,3 +57,76 @@
 /* s9 · Namen am Brett nie im Wort getrennt */
 .c6z-stube .c6z-sb-anh-name{-webkit-hyphens:manual;hyphens:manual;overflow-wrap:normal;word-break:normal}
 .c6z-stube .c6z-sb-anh-name{max-height:3.2em}
+
+/* s12 · Das Brett hängt am Computer immer ganz im Bild (überschreibt kern.css: top konnte bei 760 px Höhe negativ werden).
+   Ist die Wand niedrig, rückt der Wandkalender rechts darunter (das Bücherbord rückt im Raum selbst). */
+.c6z-stube.c6z-computer .c6z-sb-brett{top:max(10px,calc(var(--c6z-boden) - 470px))}
+.c6z-stube.c6z-computer .c6m-kalender{top:max(146px,calc(var(--c6z-boden) - 318px))}
+@media (max-height:800px){.c6z-stube.c6z-computer .c6m-kalender{width:100px}}
+
+/* s12 · Am Anhänger wächst die Pflanze seines Space (dieselbe Stufe wie unten): Topf, Samen, Keim, Knospe, Blüte */
+.c6z-sb-pflanze{display:block;width:22px;height:26px;margin:-2px 0 -1px -3px}
+.c6z-sb-pflanze svg{display:block;width:100%;height:100%;overflow:visible}
+.c6z-computer .c6z-sb-pflanze{width:24px;height:29px}
+/* Lebenszeichen: ein Anhänger mit Neuem schwingt einmal ganz leicht nach (≤ 2°) */
+.c6z-sb-nach{animation:c6z-sb-nach 2.2s cubic-bezier(.3,.6,.3,1) .1s}
+@keyframes c6z-sb-nach{0%{transform:rotate(var(--r,0deg))}30%{transform:rotate(calc(var(--r,0deg) + 2deg))}62%{transform:rotate(calc(var(--r,0deg) - 1.2deg))}100%{transform:rotate(var(--r,0deg))}}
+
+/* s12 · Die Stehlampe ist ein Ding: anfassbar, knipsbar */
+.c6z-stube .c6z-lampe{pointer-events:auto;cursor:pointer;min-width:44px}
+.c6z-stube .c6z-lampe svg{display:block;width:100%;height:auto;position:relative}
+/* aus, wenn es draußen dunkel ist: die Stube wird dunkler – der Rahmen nie */
+.c6z-stube:not(.c6m-lampe-an) .c6z-glut,.c6z-stube:not(.c6m-lampe-an) .c6z-lampen-licht{opacity:0}
+.c6z-wand,.c6z-boden,.c6z-fenster,.c6z-sofa,.c6z-sessel,.c6m-teppich,.c6m-regal,.c6m-kalender,.c6z-bild,.c6z-tuer,.c6m-gruen,.c6z-knaeuel{transition:filter 1.1s ease}
+.c6z-stube[data-daemmer=leicht] :is(.c6z-wand,.c6z-boden,.c6m-regal,.c6z-bild,.c6z-tuer,.c6m-gruen,.c6z-sessel,.c6z-knaeuel){filter:brightness(.86)}
+.c6z-stube[data-daemmer=tief] :is(.c6z-wand,.c6z-boden,.c6m-regal,.c6z-bild,.c6z-tuer,.c6m-gruen,.c6z-sessel,.c6z-knaeuel,.c6m-kalender){filter:brightness(.62) saturate(.85)}
+.c6z-stube[data-daemmer=tief] .c6z-sofa{filter:brightness(.6) saturate(.85)}
+.c6z-stube[data-daemmer=tief] .c6m-teppich svg{filter:brightness(.6) drop-shadow(0 3px 0 rgba(43,39,34,.12))}
+.c6z-stube[data-daemmer=tief] .c6z-fenster{filter:brightness(.82)}
+
+/* s12 · Der Knäuel rollt ein Stück zum Brett, ein roter Faden läuft mit; zurück, wenn kein Satz kommt */
+.c6z-stube .c6z-knaeuel{transform:translateX(var(--c6z-kn-dx,0px));transition:transform .95s cubic-bezier(.3,.6,.3,1),filter 1.1s ease,opacity .3s ease,bottom .3s cubic-bezier(.3,.7,.4,1)}
+.c6z-stube .c6z-knaeuel:active{transform:translateX(var(--c6z-kn-dx,0px)) scale(.97)}
+.c6z-kn-spur{position:absolute;z-index:-1;bottom:5px;height:2.6px;border-radius:2px;background:var(--faden,#d62a26);pointer-events:none;opacity:0;transform:scaleX(0);transition:transform .95s cubic-bezier(.3,.6,.3,1),opacity .3s ease}
+.c6z-kn-draussen .c6z-kn-spur{opacity:1;transform:scaleX(1)}
+@media (prefers-reduced-motion:reduce){.c6z-sb-nach{animation:none}.c6z-stube .c6z-knaeuel,.c6z-kn-spur{transition:none}}
+/* „Neuer Space“ zweizeilig wie am iPhone, damit am schmalen Brett ein Space mehr hängt */
+.c6z-stube.c6z-computer .c6z-sb-schl-neu .c6z-sb-anh{white-space:normal;max-width:84px}
+
+/* s13 · Der Sessel ist ein Ding: antippen, tauschen. Er steht auf dem Boden wie das Sofa, mit Kontaktschatten. */
+.c6z-stube .c6z-sessel{pointer-events:auto;cursor:pointer;min-height:44px}
+.c6z-sessel-bild{display:block;position:relative}
+.c6z-sessel-bild svg{display:block;width:100%;height:auto;overflow:visible}
+.c6z-stube[data-zeit=nacht] .c6z-sessel-bild{filter:brightness(.86) saturate(.9)}
+/* iPhone: der Sessel steht klein in der Leseecke neben der Lampe, auf der Bodenlinie hinter dem Sofa */
+.c6z-stube:not(.c6z-computer) .c6z-sessel{display:block;left:50px;right:auto;width:92px;bottom:calc(100% - var(--c6z-boden) - 6px);z-index:1}
+/* s17 · Auf dem Sessel liegt der Katalog (sichtbar, lesbar: „Katalog“) */
+.c6z-sessel{position:absolute}
+.c6z-katalog-heft{position:absolute;left:40%;bottom:16%;width:56%;pointer-events:none}
+.c6z-katalog-heft svg{display:block;width:100%;height:auto;overflow:visible}
+.c6z-stube:not(.c6z-computer) .c6z-katalog-heft{left:30%;bottom:8%;width:72%}
+.c6z-stube[data-zeit=nacht] .c6z-katalog-heft{filter:brightness(.88)}
+
+/* s18 · Die Lampe aus dem Katalog: ihre Lichtfarbe färbt Glut, Kegel und Wandlicht */
+.c6z-lampe-bild{display:block;position:relative}
+.c6z-lampe-bild svg{display:block;width:100%;height:auto;overflow:visible}
+.c6z-stube .c6z-glut{background:radial-gradient(closest-side,color-mix(in srgb,var(--c6z-lampe-licht,#f6c86a) 38%,transparent),transparent)}
+.c6z-stube .c6m-kegel::before{background:radial-gradient(closest-side,color-mix(in srgb,var(--c6z-lampe-licht,#f6c86a) 40%,transparent),color-mix(in srgb,var(--c6z-lampe-licht,#f6c86a) 15%,transparent) 45%,transparent)}
+.c6z-stube .c6m-wandlicht{background:radial-gradient(60% 70% at 30% 60%,color-mix(in srgb,var(--c6z-lampe-licht,#f0a830) 18%,transparent),transparent 70%)}
+.c6z-stube.c6z-computer .c6m-wandlicht{background:radial-gradient(34% 70% at 29% 62%,color-mix(in srgb,var(--c6z-lampe-licht,#f0a830) 20%,transparent),transparent 70%)}
+.c6z-stube.c6m-lampe-an .c6e-raumlampe-licht{opacity:.9}
+.c6z-stube:not(.c6m-lampe-an) .c6e-raumlampe-licht{opacity:0}
+.c6e-raumlampe-licht{transition:opacity 1.2s ease .2s}
+
+/* s19 · Tag/Nacht im gemeinsamen Takt (1,2 s): das Fenster zuerst (0–0,5 s), die Stube danach (0,3–1,2 s) */
+.c6k-tz-wechsel .c6z-stube,.c6k-tz-wechsel .c6z-stube *,.c6k-tz-wechsel .c6z-stube *::before,.c6k-tz-wechsel .c6z-stube *::after{transition-property:filter,fill,stroke,stop-color,background-color,color,opacity!important;transition-duration:.9s!important;transition-delay:.3s!important;transition-timing-function:ease-in-out!important}
+.c6k-tz-wechsel .c6z-stube .c6z-fenster,.c6k-tz-wechsel .c6z-stube .c6z-fenster *{transition-duration:.5s!important;transition-delay:0s!important}
+.c6k-ruhig.c6k-tz-wechsel .c6z-stube *,.c6k-ruhig .c6k-tz-wechsel .c6z-stube *{transition:none!important}
+@media (prefers-reduced-motion:reduce){.c6k-tz-wechsel .c6z-stube *{transition:none!important}}
+
+/* s20 · iPhone ruhiger: Fahrradbild und Bücherbord nur am Computer (Garage/Bibliothek über die Raumleiste);
+   Kalender und Fenster legt wandIphone() unter das Brett; Sessel mit Katalog steht gleich rechts neben der Lampe (verdeckt sie nie) */
+.c6z-stube:not(.c6z-computer) .c6z-bild,.c6z-stube:not(.c6z-computer) .c6m-regal{display:none!important}
+.c6z-stube:not(.c6z-computer) .c6m-kalender{transform:rotate(-1deg)}
+.c6z-stube:not(.c6z-computer) .c6z-sessel{left:58px;width:86px}
+@media (max-height:740px){.c6z-stube:not(.c6z-computer) .c6z-sessel{left:56px;width:74px}}

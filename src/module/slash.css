@@ -1,4 +1,4 @@
-/* Gerüste im Gespräch: „/“ im Feld öffnet einen kleinen Briefbogen über dem Dock */
+/* Werkzeuge im Gespräch: „/“ im Feld öffnet einen kleinen Briefbogen über dem Dock */
 .c6k-sl{position:absolute;z-index:3;left:12px;right:12px;bottom:calc(100% + 2px);box-sizing:border-box;
  background:var(--karte);color:var(--tusche);border:1.5px solid var(--tusche);border-radius:18px;box-shadow:var(--c6k-schwebt);overflow:hidden;
  opacity:0;transform:translateY(12px) scale(.985);transform-origin:24px 100%;transition:opacity .16s ease,transform .2s ease}
@@ -26,7 +26,7 @@
 .c6k-sl-name mark{background:none;color:inherit;text-decoration:underline 2.5px var(--faden);text-underline-offset:3px}
 .c6k-sl-satz{font:italic 400 13.5px/1.3 Fraunces,Georgia,serif;color:var(--leise);overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}
 
-/* der rote Faden zeigt, welches Gerüst Enter nimmt */
+/* der rote Faden zeigt, welches Werkzeug Enter nimmt */
 .c6k-sl-k{position:relative}
 .c6k-sl-k[aria-selected=true]::before{content:"";position:absolute;left:-3px;top:14px;bottom:14px;width:3px;border-radius:2px;background:var(--faden)}
 
@@ -36,3 +36,5 @@
 .c6k-sl[data-neu] .c6k-sl-k:nth-child(n+4){animation-delay:.06s}
 @keyframes c6k-sl-rein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .c6k-ruhig .c6k-sl,.c6k-ruhig .c6k-sl-k{animation:none!important;transition:none!important}
+/* schrittweise: der Rest hängt in der Werkstatt (ein leiser Satz unter der Liste, kein Knopf) */
+.c6k-sl-rest{margin:6px 18px 6px;font:italic 400 13.5px/1.35 Fraunces,Georgia,serif;color:var(--bleistift)}

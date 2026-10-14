@@ -391,3 +391,13 @@ button.c6r-at-w-text:focus-visible{outline:3px solid #b4460c;outline-offset:2px}
 .c6r-at-knopf:disabled{opacity:.45;cursor:default;box-shadow:none}
 .c6r-at-modell{position:relative}
 .c6r-at-modell-stand{font:500 11.5px/1.2 Figtree,sans-serif;color:#8a3b14;text-align:center;overflow-wrap:anywhere}
+
+/* Wer bei uns was darf */
+.c6r-at-sl .c6r-at-w-liste li{align-items:flex-start;justify-content:space-between;padding:8px 0}
+.c6r-at-sl-text{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+.c6r-at-sl-text b{font:700 15px Figtree,sans-serif;color:var(--at-tinte)}
+.c6r-at-sl-satz{font:400 14.5px/1.4 Figtree,sans-serif;color:#4a453e}
+.c6r-at-sl p.c6r-at-sl-satz{margin:4px 0}
+.c6r-at-sl-knopf{flex:none;min-height:44px;padding:0 12px;font-size:14px}
+.c6r-at-sl-aus .c6r-at-sl-satz{color:#8a3b14}
+.c6r-at-sl-vorschlag .c6r-at-sl-satz{font-style:italic}

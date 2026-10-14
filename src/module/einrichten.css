@@ -51,3 +51,21 @@ html.c6k-ruhig .c6e-funkel,html.c6k-ruhig .c6e-ufo-licht,html.c6k-ruhig .c6e-fan
 
 /* Tipp-Platzieren am iPhone: das Blatt macht sich klein, der Raum ist frei */
 .c6e-klein .c6e-reihen,.c6e-klein .c6e-karten,.c6e-klein .c6e-tun{display:none!important}
+
+/* s13 · Am Computer steht der Sessel-Katalog links, damit der Sessel rechts zu sehen bleibt */
+@media (min-width:820px){.c6e-blatt.c6e-links{right:auto;left:max(76px,6%)}}
+.c6e-karte-sessel .c6e-bild svg{width:86px;height:70px}
+.c6e-karte-sessel .c6e-bild{width:86px;height:70px}
+/* Lampen leuchten schon auf der Karte, leise */
+.c6e-bild-licht{position:relative}
+.c6e-bild-licht::before{content:"";position:absolute;left:50%;top:40%;width:70px;height:56px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(closest-side,var(--c6e-licht,#ffd58a),transparent);opacity:.55;pointer-events:none}
+.c6e-bild-licht svg{position:relative}
+/* s14 · reicht es nicht, wird der Preis leise (nie rot, kein Druck) */
+.c6e-zuteuer .c6e-preis{opacity:.55}
+.c6e-zuteuer .c6e-bild{opacity:.8}
+/* s17 · Katalog im Zuhause: Karten für die Spaces (Ortsbild, Name, wie viele Dinge es dort gibt) */
+.c6e-bild-ort svg{width:76px;height:58px;border-radius:8px}
+.c6e-karte-space{cursor:pointer}
+.c6e-leer{margin:6px 2px;font:400 italic 15px/1.4 Fraunces,Georgia,serif;color:var(--leise,#6f6a61)}
+/* s18 · Raumlampen im Katalog */
+.c6e-karte-raumlampe .c6e-bild svg{width:76px;height:62px}

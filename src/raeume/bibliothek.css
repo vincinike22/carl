@@ -1,13 +1,52 @@
-/* s4 · Die Geheimtür ist Teil der Regalwand: an der Fuge kein Strich, erst ein Lichtspalt, dann schwingt das Regal mit seinen Büchern auf */
-.c6w-tuer-spalt{opacity:0;transition:opacity .35s ease;pointer-events:none;filter:drop-shadow(0 0 6px #ffd98a)}
-.c6w-zieht .c6w-tuer-spalt{opacity:.95}
-.c6w-auf .c6w-tuer-spalt{opacity:0;transition-delay:.4s}
-.c6w-tuer-schatten{opacity:0;transition:opacity 1.1s ease;pointer-events:none}
-.c6w-auf .c6w-tuer-schatten{opacity:.55}
-.c6w-zieht .c6w-tuerblatt{transform:skewY(-.8deg) scaleX(.975)}
-.c6w-auf .c6w-tuerblatt{transform:skewY(-8deg) scaleX(.1)}
-.c6w-tuerblatt{transition:transform 1.25s cubic-bezier(.55,.04,.22,1)}
-@media (prefers-reduced-motion:reduce){.c6w-tuer-spalt,.c6w-tuer-schatten{transition:none}}
+/* s13 · Die Geheimtür: erst ein Lichtspalt an der Fuge, dann gleitet das Regal ruhig hinter den Mittelpfeiler. Kein Rucken, kein Kippen. */
+.c6w-regaltuer{transform:none;transition:transform .72s cubic-bezier(.55,0,.25,1)}
+.c6w-auf .c6w-regaltuer{transform:translateX(var(--tuer-w,-190px))}
+.c6w-flink .c6w-regaltuer{transition-duration:.42s}
+.c6w-tuer-still .c6w-regaltuer,.c6w-tuer-still .c6w-tuer-spalt,.c6w-tuer-still .c6w-tuer-schatten,.c6w-tuer-still .c6w-tuer-licht{transition:none!important}
+.c6w-tuer-spalt{opacity:0;transition:opacity .28s ease;pointer-events:none;filter:drop-shadow(0 0 5px #ffd98a)}
+.c6w-zieht .c6w-tuer-spalt{opacity:.9}
+.c6w-auf .c6w-tuer-spalt{opacity:0;transition:opacity .3s ease}
+.c6w-tuer-schatten{opacity:0;transition:opacity .72s ease;pointer-events:none}
+.c6w-zieht .c6w-tuer-schatten{opacity:.12}
+.c6w-auf .c6w-tuer-schatten{opacity:.45}
+.c6w-tuer-staub circle{opacity:0}
+.c6w-zieht .c6w-tuer-staub circle{animation:c6w-staub-fall 1.6s ease-in both}
+@keyframes c6w-staub-fall{0%{opacity:0;transform:translate(0,0)}15%{opacity:.8}100%{opacity:0;transform:translate(4px,80px)}}
+.c6w-tuer-licht{opacity:0;transition:opacity .9s ease .2s;pointer-events:none}
+.c6w-auf .c6w-tuer-licht{opacity:1}
+.c6w-bibliothek .c6w-zieht .c6w-lexikon .c6w-ding-innen{transform:rotate(-6deg);transition:transform .28s ease-out}
+@media (prefers-reduced-motion:reduce){.c6w-bibliothek .c6w-zieht .c6w-lexikon .c6w-ding-innen{transform:none}}
+/* s13 · Der Schrank: Licht im Holz. Die Nischen leuchten von innen, wenn die Leselampe brennt; der Samen im Medaillon glimmt. */
+.c6w-nischenlicht{opacity:0;mix-blend-mode:screen;transition:opacity .6s ease}
+.c6w-nischenleuchte{opacity:0;transition:opacity .4s ease}
+.c6w-lampe-an .c6w-nischenlicht{opacity:1}
+.c6w-lampe-an .c6w-nischenleuchte{opacity:.9}
+.c6w-bibliothek[data-tageszeit=mittag].c6w-lampe-an .c6w-nischenlicht,.c6w-bibliothek[data-tageszeit=morgen].c6w-lampe-an .c6w-nischenlicht{opacity:.5}
+.c6w-kronsamen{transition:filter .6s ease}
+.c6w-lampe-an .c6w-kronsamen{filter:drop-shadow(0 0 4px #ffd98a) brightness(1.2)}
+.c6w-glanzstufe{stop-color:var(--bib-glanz,#ffe9c0);transition:stop-color 1.6s ease}
+.c6w-holzglanz-l,.c6w-holzglanz-r{mix-blend-mode:soft-light;transition:opacity 1.6s ease}
+.c6w-holzglanz-l{opacity:var(--bib-holz-l,.1)}
+.c6w-holzglanz-r{opacity:var(--bib-holz-r,.4)}
+.c6w-krone-ding:hover .c6w-ding-innen,.c6w-krone-ding:focus-visible .c6w-ding-innen{filter:drop-shadow(0 0 7px rgba(255,222,150,.75))}
+.c6w-krone-ding.c6w-tipp .c6w-kronsamen{filter:drop-shadow(0 0 6px #ffd98a) brightness(1.35)}
+/* s13 · Die Sanduhr steht fest auf dem Tisch. Kopfüber misst sie; das Glas dreht sich um seine eigene Mitte. */
+.c6w-glaskoerper{transform-box:fill-box;transform-origin:50% 50%;transform:none;transition:transform .9s cubic-bezier(.45,.05,.25,1)}
+.c6w-glaskoerper.c6w-kopf{transform:rotate(180deg)}
+.c6w-sand-oben,.c6w-sand-unten{transition:y 1s linear,height 1s linear}
+.c6w-sand-strahl{transition:opacity .6s ease}
+.c6w-uhr:hover .c6w-ding-innen,.c6w-uhr:focus-visible .c6w-ding-innen{filter:drop-shadow(0 0 8px rgba(255,222,150,.8))}
+.c6w-uhr-zifferring{opacity:0;transform:scale(.82);transform-box:fill-box;transform-origin:50% 50%;transition:opacity .5s ease,transform .7s cubic-bezier(.3,1.25,.5,1)}
+.c6w-misst .c6w-uhr-zifferring{opacity:1;transform:none}
+.c6w-uhr-zeiger{transform-box:view-box}
+.c6w-misst .c6w-uhr-zeiger{animation:c6w-uhr-zeiger 60s linear infinite;animation-delay:var(--uhr-phase,0s)}
+@keyframes c6w-uhr-zeiger{to{transform:rotate(360deg)}}
+.c6w-uhrzeit{position:absolute;z-index:3;pointer-events:none;transform:translate(-50%,-100%) translateY(6px);opacity:0;transition:opacity .2s ease,transform .25s ease;
+  font:600 18px/1 Fraunces,Georgia,serif;font-variant-numeric:tabular-nums;color:#2b2722;background:#fbf5e8;border:1.5px solid #8a6524;border-radius:8px;padding:6px 10px 5px;box-shadow:0 0 0 2px #e6c987 inset,0 3px 0 rgba(43,39,34,.18);white-space:nowrap}
+.c6w-uhrzeit::after{content:"";position:absolute;left:50%;bottom:-6px;width:9px;height:9px;background:#fbf5e8;border-right:1.5px solid #8a6524;border-bottom:1.5px solid #8a6524;transform:translateX(-50%) rotate(45deg)}
+.c6w-uhrzeit.c6w-an{opacity:1;transform:translate(-50%,-100%)}
+.c6w-uhrzeit.c6w-steht{background:#fff3cf}
+.c6w-uhrzeit.c6w-steht::after{background:#fff3cf}
 /* s5 · Das blaue Lexikon schimmert leise, bis die Tür einmal offen war */
 .c6w-lex-schimmer .c6w-ding-innen{animation:c6w-lex-schimmer 5.5s ease-in-out infinite}
 @keyframes c6w-lex-schimmer{0%,70%,100%{filter:none}82%{filter:drop-shadow(0 0 7px rgba(255,226,150,.85)) brightness(1.12)}}
@@ -20,20 +59,6 @@
 .c6w-gemaelde .c6w-ding-innen{transform-box:fill-box;transform-origin:50% 0}
 .c6w-wandlampe ellipse:first-child{animation:c6w-lampe-atmet 6s ease-in-out infinite}
 @keyframes c6w-lampe-atmet{50%{opacity:.82}}
-/* s7 · Geheimtür: ein Rucken, die Bücher zittern, Staub rieselt, Licht fällt durch den Spalt, dann schwingt das Regal in die Tiefe */
-.c6w-tuerblatt{transition:none}
-.c6w-zieht .c6w-tuerblatt{animation:c6w-tuer-ruck .42s ease-in-out both}
-@keyframes c6w-tuer-ruck{0%{transform:none}30%{transform:translateX(-1.2px) skewY(-.3deg) scaleX(.992)}55%{transform:translateX(1px) skewY(.2deg) scaleX(.988)}80%{transform:translateX(-.6px) skewY(-.5deg) scaleX(.98)}100%{transform:skewY(-.8deg) scaleX(.975)}}
-.c6w-auf .c6w-tuerblatt{animation:c6w-tuer-schwing 1.5s cubic-bezier(.45,.05,.2,1) both}
-@keyframes c6w-tuer-schwing{0%{transform:skewY(-.8deg) scaleX(.975)}35%{transform:skewY(-4deg) scaleX(.72)}70%{transform:skewY(-7.5deg) scaleX(.24)}88%{transform:skewY(-8.3deg) scaleX(.07)}100%{transform:skewY(-8deg) scaleX(.1)}}
-.c6w-tuer-schatten{transition:opacity 1.5s cubic-bezier(.45,.05,.2,1)}
-.c6w-auf .c6w-tuer-schatten{opacity:.62}
-.c6w-tuer-staub circle{opacity:0}
-.c6w-zieht .c6w-tuer-staub circle{animation:c6w-staub-fall 1.8s ease-in both}
-@keyframes c6w-staub-fall{0%{opacity:0;transform:translate(0,0)}15%{opacity:.9}100%{opacity:0;transform:translate(6px,90px)}}
-.c6w-tuer-licht{opacity:0;transition:opacity 1.2s ease .3s;pointer-events:none}
-.c6w-auf .c6w-tuer-licht{opacity:1}
-@media (prefers-reduced-motion:reduce){.c6w-zieht .c6w-tuerblatt,.c6w-auf .c6w-tuerblatt,.c6w-zieht .c6w-tuer-staub circle,.c6w-gemaelde.c6w-tipp .c6w-ding-innen,.c6w-wandlampe ellipse:first-child{animation:none}.c6w-auf .c6w-tuerblatt{transform:skewY(-8deg) scaleX(.1)}}
 /* s11 · Licht ist die Magie: ein Raum, vier Lichter. Die Werte setzt bibliothek.js je Tageszeit als --bib-* auf die Bühne. */
 .c6w-h0{stop-color:var(--bib-h0,#27335a)}.c6w-h1{stop-color:var(--bib-h1,#6a5a7a)}.c6w-h2{stop-color:var(--bib-h2,#e2a46e)}
 .c6w-h0,.c6w-h1,.c6w-h2,.c6w-sonnenstufe,.c6w-waschstufe{transition:stop-color 1.6s ease}
@@ -61,7 +86,7 @@
 /* Der Wasch vom Fenster her über Wand und Regal */
 .c6w-wasch{opacity:var(--bib-wasch-a,.3);mix-blend-mode:soft-light;transition:opacity 1.6s ease}
 /* Die Nacht: ein blaues Dunkel über allem, mit Löchern, wo Lampen brennen */
-.c6w-dunkel{opacity:var(--bib-dunkel-a,0);mix-blend-mode:multiply;transition:opacity 1.6s ease}
+.c6w-bibliothek .c6w-dunkel{opacity:var(--bib-dunkel-a,0);mix-blend-mode:multiply;transition:opacity 1.6s ease}
 .c6w-lampenloch{opacity:0;transition:opacity .5s ease}
 .c6w-lampe-an .c6w-lampenloch{opacity:1}
 /* Rahmen werfen ihren Schatten dorthin, wo das Licht nicht herkommt */
@@ -91,17 +116,23 @@
 .c6w-bildliste small{display:block;font:500 13px/1.3 Figtree,system-ui,sans-serif;color:#5f5345;margin-top:1px}
 .c6w-bildliste p{margin:4px 0 2px;font:400 15px/1.4 Fraunces,Georgia,serif;color:#3a3128}
 .c6w-bildliste em{display:block;font:500 12.5px/1.3 Figtree,system-ui,sans-serif;font-style:normal;color:#6e5f47;letter-spacing:.02em}
-/* Die Sanduhr: der Sand folgt der Uhr; gedreht rieselt er in die andere Richtung */
-.c6w-sand-oben,.c6w-sand-unten{transition:y 1s linear,height 1s linear}
-.c6w-sand-strahl{transition:opacity .6s ease}
-.c6w-sand-gedreht .c6m-rieselt{animation-direction:reverse}
-.c6w-bibliothek .c6w-g-sanduhr{transition:transform 1.3s cubic-bezier(.5,.05,.25,1)}
 /* Das Flüstern des blauen Lexikons: ein Lichtsaum am Rücken, nur für den, der lange hinsieht */
 .c6w-lex-saum{opacity:0;transition:opacity 1.4s ease}
 .c6w-lex-lauscht .c6w-lex-saum{opacity:1;animation:c6w-saum-atmet 2.6s ease-in-out infinite}
 @keyframes c6w-saum-atmet{0%,100%{opacity:.55}50%{opacity:1}}
 .c6w-lex-lauscht .c6w-ding-innen{filter:drop-shadow(0 0 10px rgba(255,226,150,.9))}
 @media (prefers-reduced-motion:reduce){
-  .c6w-h0,.c6w-h1,.c6w-h2,.c6w-sonnenstufe,.c6w-waschstufe,.c6w-huegel,.c6w-sterne,.c6w-gestirn,.c6w-gestirn-kern,.c6w-mond-schatten,.c6w-lichtfleck,.c6w-wasch,.c6w-dunkel,.c6w-lampenloch,.c6w-wurf,.c6w-kegel,.c6w-birne,.c6w-staubfeld,.c6w-bildbuch .c6w-ding-innen,.c6w-sand-oben,.c6w-sand-unten,.c6w-sand-strahl,.c6w-bibliothek .c6w-g-sanduhr,.c6w-lex-saum{transition:none}
-  .c6w-sterne circle,.c6w-lichtfleck>g,.c6w-lex-lauscht .c6w-lex-saum{animation:none}
+  .c6w-h0,.c6w-h1,.c6w-h2,.c6w-sonnenstufe,.c6w-waschstufe,.c6w-huegel,.c6w-sterne,.c6w-gestirn,.c6w-gestirn-kern,.c6w-mond-schatten,.c6w-lichtfleck,.c6w-wasch,.c6w-dunkel,.c6w-lampenloch,.c6w-wurf,.c6w-kegel,.c6w-birne,.c6w-staubfeld,.c6w-bildbuch .c6w-ding-innen,.c6w-sand-oben,.c6w-sand-unten,.c6w-sand-strahl,.c6w-glaskoerper,.c6w-uhrzeit,.c6w-uhr-zifferring,.c6w-regaltuer,.c6w-tuer-spalt,.c6w-tuer-schatten,.c6w-tuer-licht,.c6w-nischenlicht,.c6w-nischenleuchte,.c6w-kronsamen,.c6w-holzglanz-l,.c6w-holzglanz-r,.c6w-lex-saum{transition:none}
+  .c6w-sterne circle,.c6w-lichtfleck>g,.c6w-lex-lauscht .c6w-lex-saum,.c6w-misst .c6w-uhr-zeiger,.c6w-zieht .c6w-tuer-staub circle{animation:none}
 }
+/* s18 · Die Lampe aus dem Katalog: ihr Licht-Teil glüht, wenn sie an ist; der Katalog im untersten Fach */
+.c6w-raumlampe .c6e-raumlampe-licht{transition:opacity .4s ease}
+.c6w-lampe-an .c6w-raumlampe .c6e-raumlampe-licht{opacity:1}
+.c6w-katalog:hover .c6w-ding-innen,.c6w-katalog:focus-visible .c6w-ding-innen{filter:drop-shadow(0 0 8px rgba(255,222,150,.8))}
+@media (prefers-reduced-motion:reduce){.c6w-raumlampe .c6e-raumlampe-licht{transition:none}}
+/* s19 · Tag ↔ Nacht im gemeinsamen Takt: Fenster 0–0,5 s, Raum, Lampe und Schatten 0,3–1,2 s (weich) */
+.c6w-ks{transition:cx .9s ease-in-out,cy .9s ease-in-out,rx .9s ease-in-out}
+.c6w-tz-takt .c6w-h0,.c6w-tz-takt .c6w-h1,.c6w-tz-takt .c6w-h2,.c6w-tz-takt .c6w-gestirn,.c6w-tz-takt .c6w-gestirn-kern,.c6w-tz-takt .c6w-mond-schatten,.c6w-tz-takt .c6w-sterne,.c6w-tz-takt .c6w-huegel{transition-duration:.5s;transition-delay:0s;transition-timing-function:ease-in-out}
+.c6w-tz-takt .c6w-dunkel,.c6w-tz-takt .c6w-wasch,.c6w-tz-takt .c6w-lichtfleck,.c6w-tz-takt .c6w-wurf,.c6w-tz-takt .c6w-sonnenstufe,.c6w-tz-takt .c6w-waschstufe,.c6w-tz-takt .c6w-glanzstufe,.c6w-tz-takt .c6w-holzglanz-l,.c6w-tz-takt .c6w-holzglanz-r,
+.c6w-tz-takt .c6w-kegel,.c6w-tz-takt .c6w-schein,.c6w-tz-takt .c6w-aura-rose,.c6w-tz-takt .c6w-birne,.c6w-tz-takt .c6w-lampenloch,.c6w-tz-takt .c6w-nischenlicht,.c6w-tz-takt .c6w-nischenleuchte,.c6w-tz-takt .c6w-kronsamen,.c6w-tz-takt .c6w-ks,.c6w-tz-takt .c6e-raumlampe-licht{transition-duration:.9s;transition-delay:.3s;transition-timing-function:ease-in-out}
+@media (prefers-reduced-motion:reduce){.c6w-ks{transition:none}}

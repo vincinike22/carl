@@ -110,10 +110,17 @@ html.c6k-ruhig .c6w-hf-schlaf .c6w-hf-z text{animation:none}
 .c6w-lupe-klein{transition:opacity .2s .25s}
 .c6w-lupe-text{font:600 15px Caveat,cursive;fill:#2b2722}
 /* Die Lampe aus: der Raum dunkelt, Kegel und Raumlicht gehen, Ferdls Tischlampe wirft ihren Schein */
-.c6w-aus-decke{opacity:0;transition:opacity .75s ease}
-.c6w-lampe-aus .c6w-aus-decke{opacity:.5}
+/* Licht: die Werkstatt zeichnet ihre Nacht selbst. --c6w-n = 0 (Mittag) … 1 (Nacht); die Dunkelheit hat weiche Löcher, wo die Lampe hinscheint */
+.c6w-dunkel{opacity:calc(var(--c6w-n,0) * .64);transition:opacity 1.2s ease}
+.c6w-lampe-aus .c6w-dunkel{opacity:calc(.3 + var(--c6w-n,0) * .46)}
+.c6w-loch-haupt{transition:opacity .75s ease}
+.c6w-lampe-aus .c6w-loch-haupt{opacity:0}
+.c6w-lichtschein{mix-blend-mode:screen;opacity:calc(.26 + var(--c6w-n,0) * .6);transition:opacity .9s ease}
+.c6w-lampe-aus .c6w-lichtschein{opacity:0}
+.c6w-schatten-dyn{transition:transform .9s ease}
 .c6w-g-raumlicht,.c6w-kegel,.c6w-staub,.c6w-ferdl-schein,.c6w-birne{transition:opacity .75s ease,fill .4s ease}
 .c6w-lampe-aus .c6w-g-raumlicht,.c6w-lampe-aus .c6w-kegel,.c6w-lampe-aus .c6w-staub{opacity:0}
+.c6w-sofort .c6w-dunkel,.c6w-sofort .c6w-lichtschein,.c6w-sofort .c6w-loch-haupt{transition:none}
 .c6w-ferdl-schein{opacity:0}
 .c6w-lampe-aus .c6w-ferdl-schein{opacity:1}
 .c6w-lampe-aus .c6w-birne{fill:#d9d2c3}
@@ -121,7 +128,7 @@ html.c6k-ruhig .c6w-hf-schlaf .c6w-hf-z text{animation:none}
 .c6w-sofort *{transition:none!important}
 .c6w-werkstatt .c6w-schieber{transition:background-color .75s ease}
 .c6w-werkstatt.c6w-aus-raum .c6w-schieber{background:#7a746e}
-.c6w-fenster-schein{transition:opacity .75s ease}
+.c6w-fenster-schein{transition:opacity .75s ease;pointer-events:none}
 .c6w-ws-wolke{animation:c6w-ws-wolke 46s linear infinite}
 @keyframes c6w-ws-wolke{from{transform:translateX(-10px)}to{transform:translateX(70px)}}
 /* Lochwand: Anhänger lassen sich an einen anderen Haken ziehen */
@@ -133,6 +140,52 @@ html.c6k-ruhig .c6w-hf-schlaf .c6w-hf-z text{animation:none}
 .c6w-ding.c6k-haelt .c6w-ding-innen{filter:drop-shadow(0 0 6px rgba(255,226,160,.8))}
 @media (prefers-reduced-motion:reduce){
   .c6w-ws-atmet,.c6w-ws-wolke{animation:none}
-  .c6w-lupe-gross,.c6w-lupe-klein,.c6w-aus-decke,.c6w-g-raumlicht,.c6w-kegel,.c6w-staub,.c6w-ferdl-schein,.c6w-birne,.c6w-fenster-schein{transition:none}
+  .c6w-lupe-gross,.c6w-lupe-klein,.c6w-aus-decke,.c6w-dunkel,.c6w-lichtschein,.c6w-loch-haupt,.c6w-schatten-dyn,.c6w-g-raumlicht,.c6w-kegel,.c6w-staub,.c6w-ferdl-schein,.c6w-birne,.c6w-fenster-schein{transition:none}
 }
 html.c6k-ruhig .c6w-ws-atmet,html.c6k-ruhig .c6w-ws-wolke{animation:none}
+
+/* s12 · Ferdl mit Budget: der Satz vor dem Losgehen, der lesende Ferdl, drei Zettel am Tisch */
+.c6w-auftrag-budget{margin:8px 0 0;font:500 14px/1.4 Figtree,system-ui,sans-serif;color:#5e564d}
+.c6w-liest .c6w-auftrag-budget{opacity:.55}
+/* liest er, nickt er über dem Blatt (leiser als Carl: kleiner Ausschlag, langsamer Takt) */
+.c6w-ferdl-liest .c6w-ws-atmet{animation:c6w-ferdl-nick 2.4s ease-in-out infinite}
+@keyframes c6w-ferdl-nick{0%,100%{transform:rotate(0)}50%{transform:rotate(2.2deg) translateY(1px)}}
+.c6w-ferdl-liest .c6w-hf-z{display:none}
+.c6w-ferdl-budget g{animation:c6w-ferdl-zettel .6s ease-out both}
+@keyframes c6w-ferdl-zettel{from{opacity:0}}
+@media (prefers-reduced-motion:reduce){.c6w-ferdl-liest .c6w-ws-atmet,.c6w-ferdl-budget g{animation:none}}
+/* s13 · die Wand zeigt einen Space: Papierschild */
+.c6w-fuer-text{font:700 24px Caveat,cursive;fill:#2b2722}
+.c6k[data-geraet=iphone] .c6w-fuer-text{font-size:28px}
+/* Ferdl stempelt. Alle sieben Sekunden einmal. Immer gleich. */
+.c6w-ferdl-stempel{transform-box:view-box;transform-origin:116px 84px;animation:c6w-stempel 7s ease-in-out infinite}
+@keyframes c6w-stempel{0%,78%,100%{transform:rotate(0)}84%{transform:rotate(-14deg)}89%{transform:rotate(3deg)}93%{transform:rotate(0)}}
+.c6w-ferdl-abdruck{animation:c6w-abdruck 7s ease-in-out infinite}
+@keyframes c6w-abdruck{0%,88%{opacity:.25}90%,100%{opacity:.85}}
+.c6w-ferdl-dampf{animation:c6w-dampf 3.8s ease-in-out infinite}
+@keyframes c6w-dampf{0%,100%{opacity:.15;transform:translateY(2px)}50%{opacity:.6;transform:translateY(-2px)}}
+.c6w-hf-schlaf .c6w-ferdl-stempel,.c6w-ferdl-liest .c6w-ferdl-stempel{animation:none}
+html.c6k-ruhig .c6w-ferdl-stempel,html.c6k-ruhig .c6w-ferdl-abdruck,html.c6k-ruhig .c6w-ferdl-dampf{animation:none}
+@media (prefers-reduced-motion:reduce){.c6w-ferdl-stempel,.c6w-ferdl-abdruck,.c6w-ferdl-dampf{animation:none}}
+.c6w-tb-ferdl{margin:2px 40px 10px 0;font:700 21px/1.15 Caveat,cursive;color:#5e564d}
+.c6w-tb-ferdl::before{content:'„';}
+.c6w-tb-ferdl::after{content:'“';}
+/* Ordnen: was übrig bleibt, liegt noch da */
+.c6w-rest{margin-top:14px}
+.c6w-rest-liste{display:grid;gap:6px}
+.c6w-rest-halm{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;padding:6px 10px;border-radius:8px;background:rgba(43,39,34,.05);font:600 18px/1.2 Caveat,cursive}
+.c6w-rest-halm span{flex:1 1 140px}
+/* s17 · eine Wand: die Leiste „Deine Werkzeuge“ unten am Brett */
+.c6w-schild-leiste{font-size:26px}
+.c6k[data-geraet=iphone] .c6w-schild-leiste{font-size:30px}
+/* Carls Bereich: Kiste, Sägebock, Wasserwaage – stehen auf dem Boden bzw. der Bank, mit Schatten */
+.c6w-kiste .c6w-kiste-inhalt{opacity:0;transition:opacity .25s}
+.c6w-kiste .c6w-deckel{transform-box:fill-box;transform-origin:0% 100%;transition:transform .45s cubic-bezier(.3,1.4,.5,1)}
+.c6w-kiste-auf .c6w-deckel{transform:rotate(-58deg) translate(-4px,-2px)}
+.c6w-kiste-auf .c6w-kiste-inhalt{opacity:1}
+.c6w-saegeblatt{transform-box:view-box}
+.c6w-span-liegt{opacity:.9}
+html.c6k-ruhig .c6w-kiste .c6w-deckel{transition:none}
+/* s18 · die Lampe aus dem Katalog: ihr Licht-Teil leuchtet nur, wenn sie an ist */
+.c6w-lampe-katalog .c6e-raumlampe-licht{opacity:1;transition:opacity .6s ease}
+.c6w-lampe-aus .c6w-lampe-katalog .c6e-raumlampe-licht{opacity:0}

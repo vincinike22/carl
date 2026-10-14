@@ -15,7 +15,7 @@ var T = {
   'geruestGeteilt': ['Dein Werkzeug hängt jetzt im Teleskop. Nur der Bauplan, nichts Privates.'],
   'nadel': ['Die Nadel steckt. Das ist der Satz, der bleibt.', 'Alles andere darf gehen. Das hier bleibt.'],
   'perle': ['Hängt als Zettel in deinem Space.'],
-  'teleskop': ['Werkzeuge von anderen. Nimm mit, was dich anstößt.'],
+  'teleskop': ['Hier liegen Werkzeuge, die ich als Beispiel gebaut habe. Nimm mit, was dich anstößt.'],
   'tippen': ['Ich hör zu.'],
   'nichtDa': ['Nicht da. Na gut, doch.'],
   'platzhalter': ['Woran denkst du gerade?'],
@@ -27,6 +27,51 @@ var T = {
   'satz.nameFrei': ['Wie soll er heißen?'],
   'satz.neu': ['„{titel}“ ist da. Dein Satz ist sein Samen.'],
   'satz.haengt': ['Hängt in „{titel}“.'],
+
+  // Was Otto schickt, wird ein Fund auf dem Tisch im Lesesaal
+  'fund.link': ['Den Link leg ich dir im Lesesaal auf den Tisch.', 'Liegt im Lesesaal auf dem Tisch. Ich schau ihn mir an.'],
+  'fund.text': ['Dein Text liegt jetzt im Lesesaal auf dem Tisch.'],
+  'fund.zahlen': ['Deine Zahlen liegen im Lesesaal. Daraus wird ein kleiner Verlauf.'],
+  'fund.hin': ['Zum Lesesaal'],
+  'fund.wofuer': ['Wofür willst du das wiederfinden?'],
+
+  // Eine gute Antwort darf bleiben: als Carls Zettel an der Leine
+  'leine.chip': ['An die Leine'],
+  'leine.chipZu': ['An die Leine von „{titel}“'],
+  'leine.haengt': ['Hängt an der Leine von „{titel}“. Als mein Zettel, du siehst es ihm an.'],
+
+  // Quests (Texte der Quest-Tafel, wörtlich)
+  'quest.samen.titel': ['Deinen ersten Samen pflanzen'],
+  'quest.samen.satz': ['Dann weiß ich, woran du gerade denkst.'],
+  'quest.samen.hin': ['Schreib unten einen Satz, an den du gerade denkst. Er wird dein Samen.'],
+  'quest.freund3.titel': ['Mir drei Dinge über dich erzählen'],
+  'quest.freund3.satz': ['Was du bestätigst, steht in unserem Freundschaftsbuch, und ich muss nicht mehr raten.'],
+  'quest.sternbild.titel': ['Zwei Planeten zu einem Sternbild verbinden'],
+  'quest.sternbild.satz': ['Dann sehe ich, was bei dir zusammengehört.'],
+  'quest.sternbild.hin': ['Hier oben verbindest du zwei Planeten zu einem Sternbild.'],
+  'quest.werkzeug.titel': ['Ein Werkzeug in deinen Worten bauen'],
+  'quest.werkzeug.satz': ['Dann weiß ich, wie du arbeiten willst, nicht nur was.'],
+  'quest.werkzeug.hin': ['An der Wand hängt „Neues Werkzeug“. Sag mir in deinen Worten, was es tun soll.'],
+  'quest.fund.titel': ['Einen Fund prüfen: stimmt oder stimmt so nicht'],
+  'quest.fund.satz': ['Dein Urteil wiegt mehr als meine Zusammenfassung.'],
+  'quest.fund.hin': ['Auf dem Tisch liegen deine Funde. Sag bei einem: stimmt, oder stimmt so nicht.'],
+  'quest.ferdl.titel': ['Ferdl einen Auftrag geben'],
+  'quest.ferdl.satz': ['Was er für dich nachliest, macht mich in deinem Thema klüger.'],
+  'quest.ferdl.hin': ['Ferdl wartet auf Arbeit. Gib ihm ein Thema zum Nachlesen.'],
+  'quest.rechte.titel': ['Sagen, was ich auf deinem Rechner darf'],
+  'quest.rechte.satz': ['Dann verbindest du, weil du es verstehst, nicht weil ich frage.'],
+  'quest.rechner.titel': ['Mich mit deinem Rechner verbinden'],
+  'quest.rechner.satz': ['Dann weiß ich, dass dort ein Helfer läuft, und das UFO wacht auf.'],
+  'quest.modell.titel': ['Carl auf deinem Rechner mitdenken lassen'],
+  'quest.modell.satz': ['Dann kann ich auf deinem Rechner mitdenken, gratis und privat.'],
+  'quest.github.titel': ['GitHub verbinden'],
+  'quest.github.satz': ['Kommt, sobald ich dort wirklich etwas für dich tun und es prüfen kann.'],
+  'garage.tafel': ['Die Tafel zeigt, was uns beide klüger macht. Münzen gibt es fürs Verstehen, nie fürs bloße Ja.'],
+  'verbinden.rechte.frage': ['Sag es mit deinen Worten. Was darf ich auf deinem Rechner?'],
+  'verbinden.rechte.kurz': ['Ein ganzer Satz, bitte. Ich will hören, wie du es sagst.'],
+  'verbinden.rechte.abschrift': ['Das sind meine Worte. Ich will deine hören.'],
+  'verbinden.rechte.grenze': ['Fast. Ich darf nur eins: wissen, dass es bei dir läuft. Steuern und hineinschauen kann ich nicht. Sag es noch einmal mit deinen Worten?'],
+  'verbinden.rechte.gut': ['Genau. Jetzt weißt du es, nicht nur ich.'],
 
   // Werkzeug bauen: Otto sagt in einem Satz, was ihm fehlt, Carl baut es ({werkzeug}, {titel} mitgeben)
   'werkzeug.erst': ['Sag mir in einem Satz, was dir fehlt. Ich bau dir das Werkzeug dazu.'],
@@ -42,7 +87,7 @@ var T = {
   'werkzeug.benutzt': ['Gemacht. Ich hab’s gesehen.', 'Steht drin.'],
 
   // Dein Wochenende: sechs kleine Schritte an zwei Tagen, abgehakt wird nur durchs Tun
-  'lernweg.einladung': ['Am Wochenende zeig ich dir alles. Es dauert nicht lang.'],
+  'lernweg.einladung': ['Am Wochenende zeig ich dir, was du brauchst.'],
   'lernweg.einladungJa': ['Zeig mal'],
   'lernweg.auf': ['Zwei Tage, sechs kleine Schritte. Fang an, wo du magst.'],
   'lernweg.tun': ['Jetzt du. Den Haken setzt du, indem du es tust.'],
@@ -72,7 +117,9 @@ var T = {
   'einrichten.fertig': ['Jetzt ist es deins.'],
 
   // UFO vor dem Garagentor
-  'ufo.zu': ['Das UFO schläft noch. Es wacht auf, wenn du mich mit deinem Rechner verbindest.'],
+  'garage.erst': ['Meine Garage. Rechts steht mein Schrank, und durchs Tor geht es in den Kieselpark.'],
+  'garage.rad.erst': ['Dein Rad. Tipp es an.'],
+  'ufo.zu': ['Das UFO schläft. Es wacht auf, wenn dein Rechner mir einmal Hallo sagt. Steuern kann ich ihn nicht.'],
   'ufo.wie': ['Wie das geht, zeig ich dir am Sonntag.'],
   'ufo.wach': ['Das UFO ist wach. Tipp es an, dann richten wir es ein.'],
   'ufo.einrichten': ['Wie soll es aussehen?'],
@@ -104,8 +151,13 @@ var T = {
   // Räume (ein Satz, wenn man ankommt oder etwas antippt)
   'himmel.leer': ['Noch still hier oben. Woran denkst du gerade?'],
   'himmel.raum': ['In der Mitte bist du. Tipp einen Planeten an, dann fliegen wir hin.'],
+  'himmel.ersterFrage': ['Du hast mir gesagt, du baust an „{t}“. Soll das dein erster Planet werden?'],
+  'himmel.duLeer': ['Noch keins. Zieh zwei Planeten zusammen.'],
   'bib.meisterFrage': ['Und du? Was davon ist schon in dir?'],
-  'lesesaal.erst': ['Dein Lesesaal. Leg mir hinein, was du gefunden hast.'],
+  'lesesaal.erst': ['Dein Lesesaal. Auf den Tisch leg ich, was du mir schickst.'],
+  'lesesaal.tisch.erst': ['Dein Lesesaal. Auf den Tisch leg ich, was du mir schickst.'],
+  'lesesaal.tisch.dunkel': ['Dunkel hier. Die Kerze steht auf dem Tisch.'],
+  'lesesaal.staunen.tisch': ['Was du mir tagsüber schickst, leg ich hier hin. Ich fass es zusammen, du sagst, ob es stimmt. Ohne dein Ja passiert damit nichts.'],
   'blatt.weiter': ['Ich denk weiter. Einen Moment.'],
   'blatt.beispiel': ['Ausarbeiten kann ich hier noch nicht. Das Ergebnis bleibt trotzdem.'],
 

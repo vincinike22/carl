@@ -1,4 +1,4 @@
-// Münzen (nur aus dem Kieselpark) und kleine Geheimnisse an Carl (ohne Münze)
+// Münzen (aus Spiel und Aufgaben), die Kasse und kleine Geheimnisse an Carl
 var C6 = window.C6 = window.C6 || {};
 
 function S() { return C6.S || (C6.S = {}); }
@@ -68,8 +68,10 @@ function flug(n, wo) {
   d.innerHTML = muenze(30) + '<span>+' + n + '</span>';
   d.style.left = x + 'px'; d.style.top = y + 'px';
   document.body.appendChild(d);
+  // Ziel: ein vom Aufrufer genannter Punkt, sonst die oberste sichtbare Anzeige (Ebenen liegen später im Dokument)
   var ziel = null, els = document.querySelectorAll('[data-c6s-stand]');
-  for (var i = 0; i < els.length; i++) { var rr = els[i].getBoundingClientRect(); if (rr.width && rr.top >= 0 && rr.top < innerHeight) { ziel = rr; break; } }
+  if (wo && wo.ziel && typeof wo.ziel.x === 'number') ziel = { left: wo.ziel.x - 14, top: wo.ziel.y - 12, width: 1 };
+  for (var i = els.length - 1; i >= 0 && !ziel; i--) { var rr = els[i].getBoundingClientRect(); if (rr.width && rr.top >= 0 && rr.top < innerHeight && !els[i].closest('[hidden]')) { ziel = rr; break; } }
   var dx = ziel ? (ziel.left + 14 - x) : 0, dy = ziel ? (ziel.top + 12 - y) : -70;
   var k = [
     { transform: 'translate(-50%,-50%) scale(.4)', opacity: 0 },
@@ -93,23 +95,80 @@ function poppe() {
   }
 }
 
+// ---------- Die Kasse: was du dir geholt hast ----------
+function kasse() {
+  var s = S();
+  if (!s.kasse || typeof s.kasse !== 'object') s.kasse = {};
+  if (!s.kasse.besitz || typeof s.kasse.besitz !== 'object') s.kasse.besitz = {};
+  if (!s.kasse.quest || typeof s.kasse.quest !== 'object') s.kasse.quest = {};
+  return s.kasse;
+}
+function gueltigeId(id) { return typeof id === 'string' && id.length > 0 && id.length <= 80 && /^[\w:.\-äöüß]+$/i.test(id); }
+var zuletztFehlt = 0;
+// Münzen kommen nur aus zwei Quellen: Spiel (Kieselpark, Spiele, Geheimnisse) und Aufgaben (je Aufgabe einmal)
+function quelle(grund) {
+  grund = String(grund || '');
+  if (/^(kieselpark|spiel|geheimnis)(:|$)/.test(grund)) return 'spiel';
+  if (/^quest:[\w.\-]+$/.test(grund)) return 'quest';
+  return null;
+}
+
 C6.muenzen = {
   muenze: muenze,
   stand: stand,
-  // Münzen kommen nur aus dem Kieselpark; jede andere Quelle wird still übergangen
   plus: function (n, grund, wo) {
-    if (!/^kieselpark/.test(String(grund || ''))) return stand();
-    n = Math.max(0, Math.floor(+n || 0));
+    var q = quelle(grund);
+    if (!q) return stand();
+    n = Math.max(0, Math.min(50, Math.floor(+n || 0)));
     if (!n) return stand();
+    if (q === 'quest') {
+      var qid = String(grund).slice(6);
+      if (kasse().quest[qid]) return stand();
+      aendern(function (s) { kasse(); s.kasse.quest[qid] = Date.now(); });
+    }
     aendern(function (s) { s.muenzen = (isFinite(+s.muenzen) ? Math.floor(+s.muenzen) : 0) + n; });
     if (stand() === n) zeigeStaende();   // vorher null: die Anzeige erscheint, die Münze fliegt hinein
     flug(n, wo);
     emit('muenzen', { stand: stand(), plus: n, grund: grund || '' });
     return stand();
   },
+  // Kaufen: offen, ohne Druck. Schon Gekauftes kostet nie zweimal.
+  kaufe: function (id, preis, o) {
+    o = o || {};
+    if (!gueltigeId(id)) return false;
+    if (this.hat(id)) return true;
+    preis = Math.max(0, Math.floor(+preis || 0));
+    if (stand() < preis) { zuletztFehlt = preis - stand(); return false; }
+    zuletztFehlt = 0;
+    var art = String(o.art || id.split(':')[0] || '').slice(0, 24), name = String(o.name || '').slice(0, 60);
+    aendern(function (s) {
+      kasse();
+      s.muenzen = stand() - preis;
+      s.kasse.besitz[id] = { preis: preis, art: art, name: name, t: Date.now() };
+    });
+    zeigeStaende();
+    emit('muenzen', { stand: stand(), plus: -preis, grund: 'kasse:' + id });
+    emit('gekauft', { id: id, preis: preis, art: art, name: name, stand: stand() });
+    return true;
+  },
+  // Gleiche Kasse in Objektform: C6.muenzen.kasse({id, preis, name, art, wo}) → true|false (wo: Element, von dem die Münzen abgehen)
+  kasse: function (o) {
+    o = o || {};
+    var vorher = stand(), ok = this.kaufe(o.id, o.preis, { art: o.art, name: o.name });
+    if (ok && vorher > stand() && o.wo && !ruhig()) { try { o.wo.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.06)' }, { transform: 'scale(1)' }], { duration: 300, easing: 'ease-out' }); } catch (e) {} }
+    return ok;
+  },
+  hat: function (id) { return !!(gueltigeId(id) && kasse().besitz[id]); },
+  besitz: function (art) {
+    var b = kasse().besitz, l = [];
+    for (var id in b) { if (!art || b[id].art === art) l.push({ id: id, art: b[id].art, preis: b[id].preis, name: b[id].name, t: b[id].t }); }
+    return l.sort(function (a, c) { return (a.t || 0) - (c.t || 0); });
+  },
+  warum: function () { return { fehlt: zuletztFehlt }; },
+  // Altcode (bitte kaufe benutzen): bucht ab, merkt sich aber nichts
   ausgeben: function (n) {
     n = Math.max(0, Math.floor(+n || 0));
-    if (stand() < n) return false;
+    if (stand() < n) { zuletztFehlt = n - stand(); return false; }
     aendern(function (s) { s.muenzen = stand() - n; });
     zeigeStaende();
     emit('muenzen', { stand: stand(), plus: -n, grund: 'laden' });

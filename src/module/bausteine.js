@@ -93,16 +93,17 @@ function leseTag(t) {
   if (w) return plusTage(+w[1] * (w[2] === 'woche' ? 7 : 1));
   return null;
 }
-function bisWann(sid, t) {
+function bisWann(sid, t, vorher) {
   var fr = naechsterTag(5);
   var opt = [{ text: 'Ohne Datum', wert: '__ohne' }, { text: 'Morgen', wert: plusTage(1) }, { text: wann(fr) === 'morgen' ? 'Samstag' : 'Freitag', wert: wann(fr) === 'morgen' ? naechsterTag(6) : fr }];
-  return frag('Bis wann?', opt, { frei: true, id: 'schritt-tag:' + sid, platzhalter: 'Oder ein Datum, z. B. 24.10.' }).then(function (a) {
+  // ein Satz zur Zeit: was nicht verstanden wurde, steht in der Frage selbst (nie davor, wo die Frage es überschreibt)
+  return frag((vorher ? vorher + ' ' : '') + 'Bis wann?', opt, { frei: true, id: 'schritt-tag:' + sid, platzhalter: 'Oder ein Datum, z. B. 24.10.' }).then(function (a) {
     if (a == null) return null;
     if (a === '__ohne') { setze(sid, { t: t }); return sag('Hängt an der Leine.'); }
     var tag = /^\d{4}-\d\d-\d\d$/.test(String(a)) ? a : leseTag(a);
-    if (!tag) { sag('Das Datum hab ich nicht verstanden. Versuch es mit 24.10. oder „Freitag“.'); return bisWann(sid, t); }
+    if (!tag) return bisWann(sid, t, 'Das Datum hab ich nicht verstanden. Versuch es mit 24.10. oder „Freitag“.');
     setze(sid, { t: t, tag: tag });
-    return sag('Bis ' + wann(tag) + '. Wenn es nah ist, steht es in meinem Brief.');
+    var w = wann(tag); return sag('Bis ' + w + (/\.$/.test(w) ? '' : '.') + ' Wenn es nah ist, steht es in meinem Brief.');
   });
 }
 function anlegen(sid) {

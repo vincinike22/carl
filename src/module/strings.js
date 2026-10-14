@@ -52,7 +52,7 @@ C6.strings = {
     }
     var s = {
       id: neueId('f'),
-      titel: kurz(o.titel || 'Ein neuer Faden', 48),
+      titel: kurz(o.titel || 'Ein neuer Space', 48),
       art: /^(projekt|idee|gewohnheit)$/.test(o.art) ? o.art : 'projekt',
       farbe: farbe,
       perlen: [],
@@ -73,6 +73,40 @@ C6.strings = {
     melde('perle', id);
     return p;
   },
+  // Was Otto abnimmt, ist überall weg (auch oben am Planeten). Gibt die Perle zurück, damit sie zurückgehängt werden kann.
+  // wer: der Text des Zettels (die jüngste Perle mit diesem Text) oder {ts} (genau diese)
+  perleWeg: function (id, wer) {
+    var weg = null;
+    var ts = wer && typeof wer === 'object' ? wer.ts : null, t = ts == null ? kurz(wer, 240) : null;
+    aendern(function (st) {
+      st.strings.forEach(function (s) {
+        if (s.id !== id || !Array.isArray(s.perlen)) return;
+        for (var i = s.perlen.length - 1; i >= 0; i--) {
+          var p = s.perlen[i];
+          if (ts != null ? p.ts === ts : p.t === t) { weg = s.perlen.splice(i, 1)[0]; break; }
+        }
+      });
+    });
+    if (weg) melde('perle-weg', id);
+    return weg;
+  },
+  // Rückweg: die Perle hängt wieder an ihrer alten Stelle (nach Zeit geordnet), nie doppelt
+  perleZurueck: function (id, p) {
+    if (!p || !p.t) return null;
+    var da = null;
+    aendern(function (st) {
+      st.strings.forEach(function (s) {
+        if (s.id !== id) return;
+        s.perlen = s.perlen || [];
+        if (s.perlen.some(function (x) { return x.ts === p.ts && x.t === p.t; })) { da = p; return; }
+        var neu = { t: kurz(p.t, 240), ts: +p.ts || Date.now() };
+        var i = 0; while (i < s.perlen.length && s.perlen[i].ts <= neu.ts) i++;
+        s.perlen.splice(i, 0, neu); da = neu;
+      });
+    });
+    if (da) melde('perle', id);
+    return da;
+  },
   knoten: function (a, b, satz, o) {
     if (!a || !b || a === b) return null;
     var k = { a: a, b: b, satz: kurz(satz, 240), ts: Date.now() };
@@ -90,11 +124,11 @@ C6.strings = {
     [[k.a, k.b], [k.b, k.a]].forEach(function (p) {
       var hier = self.hol(p[0]), dort = self.hol(p[1]);
       if (!hier || !dort) return;
-      try { sp.legeHin(p[0], { art: art, titel: 'Faden zu „' + kurz(dort.titel, 40) + '“', text: k.satz, farbe: dort.farbe, mit: p[1], knoten: k.ts }); } catch (e) {}
+      try { sp.legeHin(p[0], { art: art, titel: 'Sternbild mit „' + kurz(dort.titel, 40) + '“', text: k.satz, farbe: dort.farbe, mit: p[1], knoten: k.ts }); } catch (e) {}
     });
   },
-  // Faden-Ding aus dem Himmel (kein Echo zurück nach oben)
-  vonOben: function (d) { return !!d && (!!d.mit || !!d.knoten || /^Faden zu „/.test(d.titel || '')); },
+  // Sternbild-Ding aus dem Himmel (kein Echo zurück nach oben); ältere heißen noch „Faden zu …“
+  vonOben: function (d) { return !!d && (!!d.mit || !!d.knoten || /^(Faden zu|Sternbild mit) „/.test(d.titel || '')); },
   nadel: function (satz, stringId) {
     var n = { satz: kurz(satz, 240), stringId: stringId || null, ts: Date.now() };
     aendern(function (st) { st.nadeln.push(n); });
@@ -176,7 +210,7 @@ C6.strings = {
         var t = typeof a === 'string' ? a : (a.text || a.t || '');
         if (!t) return null;
         self.perle(s.id, t);
-        if (C6.sag) C6.sag('Ich hab es als Perle auf „' + s.titel + '“ gelegt.');
+        if (C6.sag) C6.sag('Hängt als Zettel in „' + s.titel + '“.');
         return s;
       });
   }
@@ -203,8 +237,8 @@ var FERTIG = [
     satz: 'Kipp dein Durcheinander hinein. Wir brennen den Heuhaufen ab, bis die Nadel rot daliegt.',
     schritte: ['Alles hineinkippen', 'Den Heuhaufen abbrennen', 'Die rote Nadel stecken'] },
   { id: 'fest', name: 'Festhalten', ort: 'regal', farbe: '#5f7f3e',
-    satz: 'Ich heb deinen Gedanken auf und leg ihn als Perle auf deinen Faden.',
-    schritte: ['Du sagst den Gedanken', 'Ich such den Faden', 'Er liegt als Perle'] },
+    satz: 'Ich heb deinen Gedanken auf und häng ihn als Zettel in deinen Space.',
+    schritte: ['Du sagst den Gedanken', 'Ich such den Space', 'Er hängt als Zettel'] },
   { id: 'morgen', name: 'Morgenbrief', ort: 'regal', farbe: '#8a6a3c',
     satz: 'Morgen früh liegt ein Brief da, mit zwei deiner Gedanken.',
     schritte: ['Zwei Gedanken aussuchen', 'Den Brief schreiben', 'Morgen früh hinlegen'] }
@@ -290,7 +324,7 @@ C6.geruest = {
     if (l.teile && l.teile.length) z.push((l.teileName || 'Fassungen') + ': ' + l.teile.map(function (x, i) { return (i + 1) + '. ' + x; }).join(' · '));
     (l.mehr || []).forEach(function (m) { z.push(m); });
     if (l.beispiel) z.push('Im Prototyp sind das Beispiele von mir.');
-    z.push(datum(l.ts) + ' · ' + (l.titel || 'Gerüst') + (l.runde > 1 ? ' · ' + l.runde + '. Runde' : ''));
+    z.push(datum(l.ts) + ' · ' + (l.titel || 'Werkzeug') + (l.runde > 1 ? ' · ' + l.runde + '. Runde' : ''));
     return z.filter(Boolean).join('\n');
   },
   // ein offener Lauf (für den Fall, dass die Seite neu lädt): {g, sid, raum, name, ts} oder null
@@ -337,7 +371,7 @@ C6.geruest = {
       var STOP = /^(für|fuer|meine?n?|mein|am|im|die|der|das|den|dem|ein|eine[nm]?|zu|und|mit|auf|an|in|bis|von|ich|will|soll|muss|wie|was|wenn)$/i;
       var w = String(auf || '').replace(/[^\wäöüÄÖÜß\s-]/g, ' ').split(/\s+/).filter(function (x) { return x.length > 2 && !STOP.test(x); });
       var gross = w.filter(function (x) { return /^[A-ZÄÖÜ]/.test(x); });
-      name = (gross.length ? gross : w).slice(0, 2).join(' ') || 'Mein Gerüst';
+      name = (gross.length ? gross : w).slice(0, 2).join(' ') || 'Mein Werkzeug';
       schritte = [];
       var basis = ['Sag mir, wo du gerade stehst', 'Ich leg dir drei Wege hin', 'Du nimmst den nächsten Schritt'];
       while (schritte.length < 3) schritte.push(basis[schritte.length]);

@@ -13,3 +13,7 @@
 /* die geparkte Couch, solange Carl vergnügt herumfliegt */
 .c6w-h-couch{position:absolute;left:0;top:0;z-index:2;pointer-events:none;transform-origin:40% 50%;will-change:transform}
 .c6w-h-couch[hidden]{display:none}
+/* Leer verbunden: der Platzhalter ist jetzt eine Frage, das Feld nickt einmal (kein Rot, kein Urteil) */
+.c6w-himmel .c6w-feld.c6w-feld-frage{animation:c6w-nicken .42s cubic-bezier(.3,.7,.4,1) 1}
+@keyframes c6w-nicken{0%{transform:none}35%{transform:translateY(3px)}70%{transform:translateY(-1px)}100%{transform:none}}
+@media (prefers-reduced-motion:reduce){.c6w-himmel .c6w-feld.c6w-feld-frage{animation:none}}

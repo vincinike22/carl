@@ -60,6 +60,14 @@ var SESSEL = '<svg viewBox="0 0 220 180" aria-hidden="true">' +
   '<g class="c6m-eigen" fill="url(#c6m-eg-sessel)" pointer-events="none"><path d="M40,30 C40,8 180,8 180,30 L184,118 L36,118Z"/><path d="M44,104 C44,92 176,92 176,104 L178,140 L42,140Z"/><path d="M12,80 C12,64 44,62 46,80 L46,150 L12,150Z"/><path d="M174,80 C176,62 208,64 208,80 L208,150 L174,150Z"/></g>' +
   '</svg>';
 
+// der Sessel kommt aus dem Katalog (austauschbar); ohne Katalog steht der alte da
+function sesselSvg() { try { var x = C6 && C6.einrichten && C6.einrichten.sessel && C6.einrichten.sessel(); if (x && x.svg) return x.svg; } catch (e) { } return SESSEL; }
+// Auf dem Sessel liegt der Katalog: ein Heft mit rotem Rücken, auf dem es steht
+var HEFT = '<svg viewBox="0 0 64 54" aria-hidden="true"><ellipse cx="32" cy="51" rx="28" ry="3" fill="rgba(43,39,34,.18)"/>' +
+  '<g transform="rotate(-8 32 28)"><path d="M6 8h50v40H6z" fill="#fbf7f0" stroke="#2b2722" stroke-width="2.2" stroke-linejoin="round"/>' +
+  '<path d="M6 8h8v40H6z" fill="#d62a26" stroke="#2b2722" stroke-width="2.2" stroke-linejoin="round"/>' +
+  '<text x="35" y="25" text-anchor="middle" font-family="Caveat,cursive" font-weight="700" font-size="14" fill="#2b2722">Katalog</text>' +
+  '<path d="M24 42l6-7 5 4 6-8 6 11z" fill="#8ea37a" stroke="#2b2722" stroke-width="1.2" stroke-linejoin="round"/><circle cx="46" cy="32" r="2.6" fill="#e2b93b"/></g></svg>';
 var TUER = '<svg viewBox="0 0 120 230" aria-hidden="true">' +
   '<rect x="4" y="4" width="112" height="226" rx="3" fill="#e2d2b8" stroke="#2b2722" stroke-width="2.6"/>' +
   '<rect x="14" y="14" width="92" height="216" fill="#4a3a2c"/>' +
@@ -160,7 +168,6 @@ var TEPPICH = (function () {
   return s;
 })();
 
-function zeitVon(h) { return h >= 5 && h < 9 ? 'morgen' : h >= 9 && h < 17 ? 'tag' : h >= 17 && h < 21 ? 'abend' : 'nacht'; }
 
 C6.raum({
   id: 'zuhause', name: 'Zuhause', hoehe: 'boden', reihe: 0,
@@ -179,20 +186,20 @@ C6.raum({
       '<button type="button" class="c6z-ding c6m-kalender" data-tiefe="fern" data-c6-bild aria-label="Dein Wochenende"></button>' +
       '<div class="c6m-kegel" aria-hidden="true"></div>' +
       '<div class="c6m-lampenschatten" aria-hidden="true"></div>' +
-      '<div class="c6z-ding c6z-lampe" data-tiefe="mitte" aria-hidden="true"><i class="c6m-schatten" data-sw="1.1" data-sh=".16"></i>' + LAMPE + '<i class="c6z-glut"></i></div>' +
+      '<button type="button" class="c6z-ding c6z-lampe" data-tiefe="mitte" aria-label="Stehlampe" aria-pressed="false"><i class="c6m-schatten" data-sw="1.1" data-sh=".16"></i><span class="c6z-lampe-bild">' + LAMPE + '</span><i class="c6z-glut"></i></button>' +
       '<button type="button" class="c6z-ding c6z-tuer" data-tiefe="mitte" aria-label="Zur Werkstatt"><i class="c6m-schatten" data-sw=".86" data-sh=".07"></i>' + TUER + '<span class="c6z-schild">Werkstatt</span></button>' +
       '<div class="c6z-ding c6m-gruen" data-tiefe="mitte" aria-hidden="true"><i class="c6m-schatten" data-sw=".7" data-sh=".12"></i>' + GRUEN + '</div>' +
-      '<div class="c6z-ding c6z-sessel" data-tiefe="mitte" aria-hidden="true"><i class="c6m-schatten" data-sw=".92" data-sh=".12"></i>' + SESSEL + '</div>' +
+      '<button type="button" class="c6z-ding c6z-sessel" data-tiefe="mitte" aria-label="Sessel"><i class="c6m-schatten" data-sw=".92" data-sh=".12"></i><span class="c6z-sessel-bild">' + sesselSvg() + '</span><i class="c6z-katalog-heft" aria-hidden="true">' + HEFT + '</i></button>' +
       '<div class="c6z-teppich c6m-teppich" data-tiefe="nah" aria-hidden="true">' + TEPPICH + '</div>' +
       '<div class="c6z-sofa" data-tiefe="mitte" aria-hidden="true"><i class="c6m-schatten" data-sw=".9" data-sh=".1"></i>' + SOFA + '</div>' +
       '<div class="c6z-carl"></div>' +
-      '<button type="button" class="c6z-ding c6z-knaeuel" data-tiefe="nah" aria-label="Fadenknäuel"><i class="c6m-schatten" data-sw=".5" data-sh=".2" data-sx="-.25"></i>' + KNAEUEL + '</button>' +
+      '<button type="button" class="c6z-ding c6z-knaeuel" data-tiefe="nah" aria-label="Knäuel"><i class="c6m-schatten" data-sw=".5" data-sh=".2" data-sx="-.25"></i>' + KNAEUEL + '<i class="c6z-kn-spur" aria-hidden="true"></i></button>' +
       '<div class="c6z-ablage" data-tiefe="nah" data-c6-ablage></div>' +
       '<div class="c6z-sb-brett" role="group" aria-label="Deine Spaces" lang="de"><i class="c6z-sb-brett-holz" aria-hidden="true"></i><div class="c6z-sb-haken"></div></div>' +
       '<button type="button" class="c6z-verlauf" aria-label="Unser Gespräch zeigen"></button>' +
       '<div class="c6z-flug" aria-hidden="true"></div>';
     function q(s) { return st.querySelector(s); }
-    var el = { brett: q('.c6z-sb-brett'), haken: q('.c6z-sb-haken'), carl: q('.c6z-carl'), fenster: q('.c6z-fenster'), tuer: q('.c6z-tuer'), bild: q('.c6z-bild'), knaeuel: q('.c6z-knaeuel'), verlauf: q('.c6z-verlauf'), flug: q('.c6z-flug'), sonne: q('.c6z-sonne'),
+    var el = { spur: q('.c6z-kn-spur'), brett: q('.c6z-sb-brett'), haken: q('.c6z-sb-haken'), carl: q('.c6z-carl'), fenster: q('.c6z-fenster'), tuer: q('.c6z-tuer'), bild: q('.c6z-bild'), knaeuel: q('.c6z-knaeuel'), verlauf: q('.c6z-verlauf'), flug: q('.c6z-flug'), sonne: q('.c6z-sonne'),
       kalender: q('.c6m-kalender'), lampe: q('.c6z-lampe'), gruen: q('.c6m-gruen'), regal: q('.c6m-regal'), sofa: q('.c6z-sofa'), sessel: q('.c6z-sessel'), kegel: q('.c6m-kegel'), lampenschatten: q('.c6m-lampenschatten'), vogel: q('.c6m-vogel'), licht: q('.c6z-licht') };
 
     // Ablage am Boden rechts vom Teppich (Gegenstück zum Knäuel): dort legt Carl Mitgebrachtes hin, z. B. einen Brief
@@ -212,12 +219,19 @@ C6.raum({
     var hier = false, uhrZeit = null, uhrSchlaf = null, uhrSitz = null, letzteRegung = Date.now(), sockenVorher = null;
 
     // ---------- Größe & Lage ----------
-    function groesse() {
+    // Die Stube hat eine feste Lage: Antwort-Chips, Blasen und Licht kommen und gehen, ohne dass sich der Raum bewegt.
+    // Gemessen wird nur das Dock (Feld + Raumleiste) ohne Chips; neu gelegt wird nur bei echter Größenänderung.
+    var lageSchl = '';
+    function groesse(neu) {
       var h = st.clientHeight || window.innerHeight, w = st.clientWidth || window.innerWidth;
       if (!h || !w) return;
       var comp = (C6.geraet || (w >= 820 ? 'computer' : 'iphone')) === 'computer';
-      var unten = Math.max(124, parseFloat(getComputedStyle(st).getPropertyValue('--c6-unten')) || 140);
-      try { var ue = D.querySelector('.c6k-unten'); if (ue) { var ur = ue.getBoundingClientRect(), sr = st.getBoundingClientRect(); if (ur.height > 0) unten = Math.max(unten, Math.round(sr.bottom - ur.top + 10)); } } catch (e) { }
+      var unten = 152;
+      try { var ue = D.querySelector('.c6k-unten'); if (ue) { var ur = ue.getBoundingClientRect(), sr = st.getBoundingClientRect(); if (ur.height > 0) unten = Math.max(124, Math.round(sr.bottom - ur.top + 20)); } } catch (e) { }
+      unten = Math.round(unten / 8) * 8;
+      var schl = w + 'x' + h + '|' + comp + '|' + unten;
+      if (schl === lageSchl && neu !== true) { clearTimeout(schattenUhr); schattenUhr = setTimeout(schatten, 70); return; }
+      lageSchl = schl;
       st.style.setProperty('--c6z-fuss', Math.round(unten + (comp ? 40 : 26)) + 'px');
       var px = comp ? Math.max(h * 0.38, Math.min(h * 0.44, h - unten - 260)) : Math.min(h * 0.35, h - unten - 210);
       px = Math.max(comp ? 220 : 170, Math.round(px));
@@ -229,45 +243,113 @@ C6.raum({
       st.style.setProperty('--c6z-boden', boden + 'px');
       if (ctl) ctl.groesse(px);
       einrichten(w, h, comp, px, boden);
+      if (hier) schluessel();
       clearTimeout(schattenUhr); schattenUhr = setTimeout(schatten, 70);
     }
     var schattenUhr = null;
-    // Die Einrichtung sucht sich ihren Platz: rechts zwischen Sofa und Tür steht der Sessel (oder, wenn es eng ist,
-    // die Pflanze); das Fahrradbild hängt immer frei an der Wand, nie hinter der Tür.
+    /* iPhone: eine ruhige Wand. Oben Ottos Brett, darunter links der Wandkalender, rechts das Fenster (Tag/Nacht);
+       Fahrradbild und Bücherbord gibt es nur am Computer (Garage und Bibliothek erreicht man über die Raumleiste).
+       Gemessen wird am Brett (Anhänger), an der Lampe, an der Tür und an Carls Kopf – nichts überdeckt etwas. */
+    function wandIphone() {
+      if (st.classList.contains('c6z-computer')) return;
+      var sr = st.getBoundingClientRect(); if (!sr.width) return;
+      var bb = 0;
+      [el.brett].concat([].slice.call(el.haken.querySelectorAll('.c6z-sb-anh'))).forEach(function (x) { var r = x.getBoundingClientRect(); if (r.height) bb = Math.max(bb, r.bottom - sr.top); });
+      if (!bb) return;
+      var lr = el.lampe.getBoundingClientRect(), tr = el.tuer.getBoundingClientRect(), cr = ctl && ctl.el ? ctl.el.getBoundingClientRect() : null;
+      var lampeOben = lr.height ? lr.top - sr.top : sr.height * 0.5;
+      // Carls Kopf: die Kuppe sitzt etwa 6 % unter der Oberkante seines Rahmens
+      var kopf = cr && cr.height ? cr.top - sr.top + cr.height * 0.06 : sr.height * 0.45;
+      var oben = Math.round(bb + 12);
+      // Wandkalender links unter dem Brett, nie in die Lampe hinein
+      var kh = Math.max(70, Math.min(116, lampeOben - 12 - oben)), kw = Math.round(kh * 120 / 150);
+      if (!el.kalender.hidden) setze(el.kalender, { left: '16px', right: 'auto', top: oben + 'px', width: kw + 'px' });
+      var links = el.kalender.hidden ? 16 : 16 + kw + 18;
+      // Fenster rechts daneben, bis vor die Tür, endet über Carls Kopf
+      var rechts = (tr.width ? tr.left - sr.left : sr.width - 70) - 14;
+      var fw = Math.min(124, rechts - links), fh = fw * 196 / 160;
+      if (oben + fh > kopf - 8) { fh = Math.max(84, kopf - 8 - oben); fw = fh * 160 / 196; }
+      setze(el.fenster, { left: Math.round(links + Math.max(0, (rechts - links - fw) / 2)) + 'px', top: oben + 'px', width: Math.round(fw) + 'px', maxWidth: 'none' });
+    }
+    // Die Einrichtung sucht sich ihren Platz: der Sessel in der Leseecke neben der Stehlampe, rechts zwischen Sofa und Tür
+    // die Pflanze; das Fahrradbild hängt immer frei an der Wand, nie hinter der Tür.
     function setze(e, o) { if (!e) return; for (var k in o) e.style[k] = o[k]; }
     function einrichten(w, h, comp, px, boden) {
       var keins = { left: '', right: '', top: '', width: '', display: '' };
-      if (!comp) { setze(el.sessel, keins); setze(el.bild, keins); setze(el.gruen, keins); setze(el.regal, keins); setze(el.kalender, { left: '', right: '', top: '' }); return; }
+      if (!comp) { setze(el.brett, { left: '' }); setze(el.sessel, keins); setze(el.bild, keins); setze(el.gruen, keins); setze(el.regal, keins); setze(el.kalender, { left: '', right: '', top: '' }); wandIphone(); return; }
       var sofaR = w / 2 + px * 0.66 + 18, tuerL = w * 0.95 - 150 - 18, gap = tuerL - sofaR;
       var regalTop = Math.max(118, boden - 442), bildTop = boden - 330, bw = 130;
+      // das Brett mit Ottos Spaces hängt immer ganz im Bild (zuhause.css: oben höchstens 10 px)
+      var brettTop = Math.max(10, boden - 470), regalR = 0;
+      try { var rr = el.regal.getBoundingClientRect(), sr0 = st.getBoundingClientRect(); regalR = rr.width ? rr.right - sr0.left : 0; } catch (e) { regalR = 0; }
+      // ist die Wand niedrig, rückt das Brett rechts neben das Bücherbord (beide bleiben, keins verdeckt das andere)
+      var brettL = w / 2 - 170;
+      if (regalR > brettL && brettTop + 134 > regalTop) brettL = regalR + 14;
+      setze(el.brett, { left: Math.round(brettL) + 'px' });
       setze(el.regal, { top: regalTop + 'px' });
       // der Wandkalender: neben der Tür, solange dort kein Bild hängt; sonst zwischen Fenster und Bücherbord
-      setze(el.kalender, gap >= 170 ? { left: (w * 0.1 + 232) + 'px', right: 'auto', top: (boden - 356) + 'px' } : { left: '', right: '', top: '' });
-      if (gap >= 170) {
-        var sw = Math.min(230, gap), sl = sofaR + (gap - sw) / 2;
-        setze(el.sessel, { display: '', left: sl + 'px', right: 'auto', width: sw + 'px' });
-        setze(el.bild, { left: (sl + sw / 2 - bw / 2) + 'px', right: 'auto', top: bildTop + 'px', width: bw + 'px' });
-        // in der Ecke rechts neben der Tür, wenn Platz ist
-        var ecke = w * 0.05 - 8;
-        setze(el.gruen, ecke >= 60 ? { display: 'block', left: 'auto', right: '2px', width: Math.min(92, ecke) + 'px' } : { display: 'none' });
-      } else {
-        setze(el.sessel, { display: 'none' });
-        var gw = Math.min(96, Math.max(0, gap));
-        setze(el.gruen, gw >= 60 ? { display: 'block', left: (sofaR + (gap - gw) / 2) + 'px', right: 'auto', width: gw + 'px' } : { display: 'none' });
-        if (gap >= bw + 10) setze(el.bild, { left: (sofaR + (gap - bw) / 2) + 'px', right: 'auto', top: bildTop + 'px', width: bw + 'px' });
-        else {
-          // links neben der Lampe, unter dem Bücherbord
-          var bw2 = 112, l = w * 0.1 + 318;
-          setze(el.bild, { left: l + 'px', right: 'auto', top: Math.max(regalTop + 82, bildTop) + 'px', width: bw2 + 'px' });
-        }
+      setze(el.kalender, { left: '', right: '', top: '' });
+      // der Sessel steht in der Leseecke: unter dem Fenster, gleich neben der Stehlampe
+      var lampeL = w * 0.1 + 240, sesB = Math.min(210, lampeL - 4 - w * 0.03);
+      if (sesB >= 120) setze(el.sessel, { display: '', left: Math.round(lampeL - 4 - sesB) + 'px', right: 'auto', width: Math.round(sesB) + 'px' });
+      else setze(el.sessel, { display: 'none' });
+      var gw = Math.min(96, Math.max(0, gap));
+      setze(el.gruen, gw >= 60 ? { display: 'block', left: (sofaR + (gap - gw) / 2) + 'px', right: 'auto', width: gw + 'px' } : { display: 'none' });
+      if (gap >= bw + 10) setze(el.bild, { left: (sofaR + (gap - bw) / 2) + 'px', right: 'auto', top: bildTop + 'px', width: bw + 'px' });
+      else {
+        // links neben der Lampe, unter dem Bücherbord
+        var bw2 = 112, l = w * 0.1 + 318;
+        setze(el.bild, { left: l + 'px', right: 'auto', top: Math.max(regalTop + 82, bildTop) + 'px', width: bw2 + 'px' });
       }
+      // das Bild darf nie hinter Carl hängen (sonst trifft ein Tipp ihn statt das Bild): dann hängt es über der Tür
+      try {
+        var sr1 = st.getBoundingClientRect(), br1 = el.bild.getBoundingClientRect(), cr1 = ctl && ctl.el ? ctl.el.getBoundingClientRect() : null;
+        var bx = br1.left + br1.width / 2, by = br1.top + br1.height / 2;
+        if (cr1 && cr1.width && bx > cr1.left && bx < cr1.right && by > cr1.top && by < cr1.bottom) {
+          var tr1 = el.tuer.getBoundingClientRect(), bw3 = Math.min(112, tr1.width - 20), bh3 = bw3 * 92 / 120;
+          setze(el.bild, { left: Math.round(tr1.left - sr1.left + (tr1.width - bw3) / 2) + 'px', right: 'auto', top: Math.round(Math.max(62, tr1.top - sr1.top - bh3 - 16)) + 'px', width: Math.round(bw3) + 'px' });
+        }
+      } catch (e) { }
     }
 
     // ---------- Tageszeit und das eine Licht ----------
-    var stundeFest = null, sonneU = 0.5, lampeAn = false;
-    function stundeJetzt() { if (stundeFest != null) return stundeFest; var d = new Date(); return d.getHours() + d.getMinutes() / 60; }
+    var stundeFest = null, sonneU = 0.5, lampeAn = false, lampeName = 'Stehlampe';
+    // Die Lampe kommt aus dem Katalog (Für Zuhause): nur die Zeichnung und die Lichtfarbe wechseln, Lage und Größe bleiben
+    function lampeMalen() {
+      var lp = null; try { lp = C6.einrichten && typeof C6.einrichten.lampe === 'function' ? C6.einrichten.lampe('zuhause') : null; } catch (e) { lp = null; }
+      var b = el.lampe && el.lampe.querySelector('.c6z-lampe-bild'); if (!b || !lp || !lp.svg) return;
+      if (b._id === lp.id) return;
+      var erst = !!b._id; b._id = lp.id; b.innerHTML = lp.svg;
+      lampeName = lp.name || 'Stehlampe';
+      el.lampe.setAttribute('data-lampe', lp.id);
+      el.lampe.setAttribute('aria-label', lampeName + (lampeAn ? ', an' : ', aus'));
+      if (/^#[0-9a-f]{6}$/i.test(lp.licht || '')) st.style.setProperty('--c6z-lampe-licht', lp.licht);
+      if (erst && !ruhig() && b.animate) b.animate([{ opacity: 0.2, transform: 'translateY(-8px)' }, { opacity: 1, transform: 'none' }], { duration: 420, easing: 'cubic-bezier(.3,.7,.3,1)' });
+      clearTimeout(schattenUhr); schattenUhr = setTimeout(schatten, 80);
+    }
+    // Die Tageszeit kommt aus derselben Uhr wie überall (C6.tageszeit); der Raum zeichnet „mittag“ als Tag.
+    function tageszeit() {
+      var t = null;
+      try { t = typeof C6.tageszeit === 'function' ? C6.tageszeit() : null; } catch (e) { t = null; }
+      if (!t) { var h0 = new Date().getHours(); t = h0 >= 6 && h0 < 11 ? 'morgen' : h0 >= 11 && h0 < 17 ? 'mittag' : h0 >= 17 && h0 < 21 ? 'abend' : 'nacht'; }
+      return t;
+    }
+    function stundeJetzt() {
+      if (stundeFest != null) return stundeFest;
+      var d = new Date(), h = d.getHours() + d.getMinutes() / 60, s = null;
+      try { s = C6.tageszeit && typeof C6.tageszeit.stunde === 'function' ? C6.tageszeit.stunde() : null; } catch (e) { s = null; }
+      // eine festgesetzte Tageszeit (Prüfstand) gibt ihre Stunde vor, sonst die Uhr
+      return (s != null && Math.floor(h) !== s) ? s + 0.5 : h;
+    }
+    // Die Stehlampe: abends und nachts geht sie von selbst an; Otto kann sie knipsen.
+    // Sein Knipsen gilt bis zum nächsten Wechsel der Tageszeit (und höchstens 12 Stunden).
+    function lampeWunsch(z) {
+      var w = C6.S && C6.S.zuhause && C6.S.zuhause.lampe;
+      if (!w || typeof w !== 'object' || w.zeit !== z || !(Date.now() - (w.ts || 0) < 432e5)) return null;
+      return !!w.an;
+    }
     function zeit() {
-      var h = stundeJetzt(), z = zeitVon(Math.floor(h));
+      var h = stundeJetzt(), tz = tageszeit(), z = tz === 'mittag' ? 'tag' : tz;
       st.setAttribute('data-zeit', z);
       // Sonne wandert über das Fenster
       var u = Math.max(0, Math.min(1, (h - 5) / 16)); sonneU = u;
@@ -276,9 +358,29 @@ C6.raum({
       st.style.setProperty('--c6z-schraeg', (15 - u * 30).toFixed(1) + 'deg');
       st.style.setProperty('--c6z-fleck', Math.round((0.5 - u) * 90) + 'px');
       st.style.setProperty('--c6z-fleck-b', (0.8 + Math.sin(u * Math.PI) * 0.35).toFixed(2));
-      var an = (z === 'abend' || z === 'nacht');
-      if (an !== lampeAn) { lampeAn = an; st.classList.toggle('c6m-lampe-an', an); }
+      var wunsch = lampeWunsch(tz), an = wunsch == null ? (z === 'abend' || z === 'nacht') : wunsch;
+      if (an !== lampeAn) {
+        lampeAn = an;
+        // ein neuer Zustand, ein neuer wahrer Satz: Halten darf ihn wieder sagen
+        try { C6.staunen && C6.staunen.zu && C6.staunen.zu('zuhause.lampe'); C6.staunen && C6.staunen.vergiss && C6.staunen.vergiss('zuhause.lampe'); } catch (e) { }
+      }
+      st.classList.toggle('c6m-lampe-an', an);
+      // Lampe aus am Abend oder in der Nacht: die Stube wird dunkler (nie der Rahmen)
+      st.setAttribute('data-daemmer', !an && z === 'nacht' ? 'tief' : !an && z === 'abend' ? 'leicht' : '');
+      if (el.lampe) { el.lampe.setAttribute('aria-pressed', an ? 'true' : 'false'); el.lampe.setAttribute('aria-label', lampeName + (an ? ', an' : ', aus')); }
+      lampeSatz();
       licht();
+    }
+    function lampeSatz() {
+      if (!C6.staunen || typeof C6.staunen.text !== 'function') return;
+      C6.staunen.text('zuhause.lampe', lampeAn
+        ? 'Die Lampe ist an. Tipp sie an, dann geht sie aus, und das Licht im Raum folgt ihr.'
+        : 'Die Lampe ist aus. Tipp sie an, dann wird es hier hell. Abends geht sie von selbst an.');
+    }
+    function lampeKnipsen() {
+      var tz = tageszeit(), an = !lampeAn;
+      try { C6.aendern(function (S) { S.zuhause = S.zuhause || {}; S.zuhause.lampe = { an: an, zeit: tz, ts: Date.now() }; }); } catch (e) { }
+      zeit();
     }
     // Lichtquelle des Raums: tags das Fenster (die Sonne darin), abends und nachts die Stehlampe
     function licht() {
@@ -344,7 +446,13 @@ C6.raum({
         el.kegel.style.bottom = (sr.bottom - kr.bottom - kr.width * 0.12) + 'px';
       }
     }
-    C6.zuhause.stunde = function (h) { stundeFest = (h == null ? null : Math.max(0, Math.min(23.99, +h))); zeit(); return stundeFest; };
+    // Prüfhilfe: eine Stunde fest setzen; die Tageszeit setzt dann die gemeinsame Uhr (C6.tageszeit.setze)
+    C6.zuhause.stunde = function (h) {
+      stundeFest = (h == null ? null : Math.max(0, Math.min(23.99, +h)));
+      try { if (C6.tageszeit && typeof C6.tageszeit.setze === 'function') C6.tageszeit.setze(stundeFest == null ? null : (typeof C6.tageszeit.aus === 'function' ? C6.tageszeit.aus(Math.floor(stundeFest)) : null)); } catch (e) { }
+      zeit(); return stundeFest;
+    };
+    try { C6.bus.on('tageszeit', function () { zeit(); }); } catch (e) { }
     C6.bus.on('geraet', function () { setTimeout(zeit, 80); });
 
     // ---------- Zettel ----------
@@ -448,29 +556,50 @@ C6.raum({
     // ---------- Schlüsselbrett: deine Spaces an der Wand ----------
     var brettSchl = '';
     var KEY = function (f) { return '<svg class="c6z-sb-key" viewBox="0 0 26 14" aria-hidden="true"><circle cx="6.5" cy="7" r="4.6" fill="' + f + '" stroke="#2b2722" stroke-width="1.6"/><circle cx="6.5" cy="7" r="1.5" fill="#fbf7f0"/><path d="M11 7h12.5M19.5 7v3.4M22.5 7v2.6" fill="none" stroke="#2b2722" stroke-width="1.8" stroke-linecap="round"/></svg>'; };
+    // die Pflanze des Space (eine Wahrheit: dieselbe Stufe wie unten im Space)
+    function pflanzeVon(sid) {
+      try { return C6.space && typeof C6.space.pflanze === 'function' ? C6.space.pflanze(sid) : null; } catch (e) { return null; }
+    }
+    function pflanzeBild(pf, farbe) {
+      // am Anhänger ist nur die Pflanze zu sehen, ohne den Rand des Bildes (der Topf wird so größer)
+      try { if (pf && C6.space && typeof C6.space.pflanzeBild === 'function') return String(C6.space.pflanzeBild(pf.st, farbe)).replace('viewBox="0 0 56 64"', 'viewBox="9 ' + (pf.st >= 2 ? 3 : 20) + ' 38 ' + (pf.st >= 2 ? 60 : 43) + '"'); } catch (e) { }
+      return KEY(farbe);
+    }
+    var brettHalt = [];
+    function staunenAn(e, id, satz) {
+      if (!e || !C6.staunen || typeof C6.staunen.an !== 'function') return null;
+      try { return C6.staunen.an(e, id, satz); } catch (x) { return null; }
+    }
     function schluessel() {
       var alle = []; try { alle = (C6.space && C6.space.alle) ? C6.space.alle() : []; } catch (e) { alle = []; }
       var w = el.haken.clientWidth;
-      var schl = alle.map(function (x) { return x.stringId + x.titel + x.farbe; }).join('|') + '#' + w;
+      var stufen = alle.map(function (x) { var pf = pflanzeVon(x.stringId); return pf ? pf.art : ''; });
+      var schl = alle.map(function (x, i) { return x.stringId + x.titel + x.farbe + stufen[i]; }).join('|') + '#' + w;
       if (schl === brettSchl) return;
       brettSchl = schl;
+      brettHalt.forEach(function (f) { try { f && f(); } catch (e) { } }); brettHalt = [];
       el.haken.textContent = '';
       var keys = alle.map(function (x, i) {
         var b = mach('button', 'c6z-sb-schl', el.haken); b.type = 'button';
-        b.setAttribute('aria-label', 'Space „' + x.titel + '“ öffnen');
+        var pf = pflanzeVon(x.stringId);
+        b.setAttribute('aria-label', 'Space „' + x.titel + '“ öffnen' + (pf ? ' · ' + pf.name : ''));
+        b.setAttribute('data-sid', x.stringId);
         b.style.setProperty('--r', ((i % 2 ? 1 : -1) * (1.2 + (i % 3) * 0.8)).toFixed(1) + 'deg');
         b.style.setProperty('--l', (16 + (i % 3) * 9) + 'px');
         b.innerHTML = '<i class="c6z-sb-nagel" aria-hidden="true"></i><i class="c6z-sb-schnur" aria-hidden="true"></i>';
         var t = mach('span', 'c6z-sb-anh', b);
-        t.innerHTML = KEY(x.farbe || '#d62a26');
+        var zeichen = mach('span', 'c6z-sb-pflanze', t); zeichen.innerHTML = pflanzeBild(pf, x.farbe || '#d62a26');
+        if (pf) zeichen.setAttribute('data-stufe', pf.art);
         passeName(mach('span', 'c6z-sb-anh-name', t), x.titel);
         b.addEventListener('click', function () { nimmSchluessel(b, function () { C6.space && C6.space.oeffne(x.stringId); }); });
+        brettHalt.push(staunenAn(b, 'zuhause.brett', 'Jeder Anhänger ist ein Space von dir. Die Pflanze daran wächst nur, wenn du dort etwas tust.'));
         return b;
       });
       var mehr = mach('button', 'c6z-sb-schl c6z-sb-schl-alle', el.haken); mehr.type = 'button';
       mehr.innerHTML = '<i class="c6z-sb-nagel" aria-hidden="true"></i><i class="c6z-sb-schnur" aria-hidden="true"></i><span class="c6z-sb-anh"></span>';
       mehr.addEventListener('click', function () { nimmSchluessel(mehr, function () { C6.space && C6.space.oeffne(null, { liste: true }); }); });
       mehr.hidden = true;
+      brettHalt.push(staunenAn(mehr, 'zuhause.brett', 'Jeder Anhänger ist ein Space von dir. Die Pflanze daran wächst nur, wenn du dort etwas tust.'));
       var n = mach('button', 'c6z-sb-schl c6z-sb-schl-neu', el.haken); n.type = 'button';
       n.setAttribute('aria-label', 'Neuer Space');
       n.innerHTML = '<i class="c6z-sb-nagel" aria-hidden="true"></i><i class="c6z-sb-schnur" aria-hidden="true"></i><span class="c6z-sb-anh"><b aria-hidden="true">+</b><span>Neuer Space</span></span>';
@@ -479,9 +608,11 @@ C6.raum({
         if (ctl) { var r = n.getBoundingClientRect(); ctl.schau(r.left + r.width / 2, r.top + r.height / 2); }
         if (C6.space && C6.space.frageNeu) C6.space.frageNeu();
       });
+      brettHalt.push(staunenAn(n, 'zuhause.neu', 'Hier hängt dein nächster Space, sobald er einen Namen hat.'));
       // so viele Schlüssel, wie ans Brett passen; der Rest hängt als Bund daneben
       if (!w) return;
       var weg = 0;
+      setTimeout(function () { if (!st.classList.contains('c6z-computer')) wandIphone(); }, 30);
       while (keys.length && el.haken.scrollWidth > el.haken.clientWidth + 1) {
         keys.pop().remove(); weg++;
         mehr.hidden = false;
@@ -513,12 +644,36 @@ C6.raum({
       setTimeout(function () { b.classList.remove('c6z-sb-schwingt'); if (ctl) { ctl.schau(); ctl.stimmungJetzt === 'froh' && ctl.stimmung('ruhig'); } }, 1400);
     }
     C6.bus.on('strings', function () { if (hier) schluessel(); });
+    C6.bus.on('space', function () { if (hier) schluessel(); });
+    // Lebenszeichen: ein Anhänger, dessen Space seit Ottos letztem Besuch hier etwas Neues bekommen hat, schwingt einmal nach
+    var zuletztDa = 0;
+    function nachschwingen() {
+      if (!zuletztDa || ruhig()) return;
+      var alle = []; try { alle = C6.space && C6.space.alle ? C6.space.alle() : []; } catch (e) { alle = []; }
+      alle.forEach(function (x) {
+        if (!(x.zuletzt > zuletztDa)) return;
+        var b = el.haken.querySelector('.c6z-sb-schl[data-sid="' + x.stringId + '"]');
+        if (!b) return;
+        b.classList.remove('c6z-sb-nach'); void b.offsetWidth; b.classList.add('c6z-sb-nach');
+        setTimeout(function () { b.classList.remove('c6z-sb-nach'); }, 3200);
+      });
+    }
 
     // ---------- Dinge im Raum ----------
+    // Das Fenster schaltet Tag und Nacht (Ottos Wahl, gilt überall); ein zweiter Tipp gibt die Uhr zurück
+    function fensterSatz() { try { if (C6.tageszeit && typeof C6.tageszeit.satz === 'function') return C6.tageszeit.satz(); } catch (e) { } return 'Das Fenster zeigt, wie spät es draußen ist. Es ist dieselbe Uhr wie deine.'; }
+    var fensterHalt = null;
+    function fensterStaunen() {
+      try { if (fensterHalt) fensterHalt(); } catch (e) { }
+      try { C6.staunen && C6.staunen.zu && C6.staunen.zu('zuhause.fenster'); C6.staunen && C6.staunen.vergiss && C6.staunen.vergiss('zuhause.fenster'); } catch (e) { }
+      fensterHalt = staunenAn(el.fenster, 'zuhause.fenster', fensterSatz());
+    }
     el.fenster.addEventListener('click', function () {
       regung();
+      try { if (C6.tageszeit && typeof C6.tageszeit.umschalten === 'function') C6.tageszeit.umschalten(); } catch (e) { }
       if (ctl) { var r = el.fenster.getBoundingClientRect(); ctl.schau(r.left + r.width / 2, r.top + r.height / 2); ctl.stimmung('staunt'); setTimeout(function () { ctl.schau(); ctl.stimmung('ruhig'); }, 1600); }
     });
+    try { C6.bus.on('tageszeit', function () { setTimeout(fensterStaunen, 0); }); } catch (e) { }
     el.tuer.addEventListener('click', function () {
       regung();
       el.tuer.classList.add('c6z-tuer-auf');
@@ -577,15 +732,109 @@ C6.raum({
       regung();
       if (C6.raeume && C6.raeume.fahrrad) C6.geh('fahrrad');
     });
+    // Der Sessel: antippen öffnet den kleinen Katalog „Dein Sessel“; was Otto wählt, steht sofort da
+    function sesselMalen() {
+      var b = el.sessel && el.sessel.querySelector('.c6z-sessel-bild'); if (!b) return;
+      var x = null; try { x = C6.einrichten && C6.einrichten.sessel && C6.einrichten.sessel(); } catch (e) { x = null; }
+      var svg = x && x.svg ? x.svg : SESSEL;
+      if (b._svg === svg) return;
+      var erst = !!b._svg; b._svg = svg; b.innerHTML = svg;
+      el.sessel.setAttribute('aria-label', 'Katalog auf dem Sessel' + (x && x.name ? ' (' + x.name + ')' : ''));
+      el.sessel.setAttribute('data-sessel', x ? x.id : 'alt');
+      if (erst && !ruhig() && el.sessel.animate) el.sessel.animate([{ transform: 'translateY(-14px) scale(1.02)', opacity: 0.4 }, { transform: 'translateY(2px) scale(.99,1.01)', opacity: 1, offset: 0.6 }, { transform: 'none' }], { duration: 520, easing: 'cubic-bezier(.3,.7,.3,1)' });
+      clearTimeout(schattenUhr); schattenUhr = setTimeout(schatten, 80);
+    }
+    sesselMalen(); lampeMalen();
+    try { C6.bus.on('raumlampe', function (d) { if (!d || d.raum === 'zuhause') lampeMalen(); }); } catch (e) { }
+    el.sessel.addEventListener('click', function () {
+      regung();
+      if (ctl) { var r = el.sessel.getBoundingClientRect(); ctl.schau(r.left + r.width / 2, r.top + r.height / 2); setTimeout(function () { ctl && ctl.schau(); }, 1400); }
+      if (!ruhig() && el.sessel.animate) el.sessel.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(-1.2deg)' }, { transform: 'rotate(.8deg)' }, { transform: 'rotate(0)' }], { duration: 420, easing: 'ease-in-out' });
+      try { if (C6.einrichten && C6.einrichten.oeffne) C6.einrichten.oeffne({ ort: 'zuhause' }); } catch (e) { }
+    });
+    try { C6.bus.on('einrichten', function (d) { if (d && d.ort === 'zuhause') sesselMalen(); }); } catch (e) { }
+    // Der Knäuel ist der Anfang: er rollt ein Stück zum Brett, ein roter Faden läuft mit, und das Feld wartet auf einen Satz.
+    // Aus dem Satz wird ein Space (Carl schlägt den Namen vor, Otto sagt Passt oder Anders). Leer oder abgebrochen: er rollt zurück.
+    var knaeuelDraussen = false;
+    function knaeuelRollt(hin) {
+      knaeuelDraussen = !!hin;
+      var dx = 0;
+      if (hin) {
+        var kr = el.knaeuel.getBoundingClientRect(), br = el.brett.getBoundingClientRect(), sr = st.getBoundingClientRect();
+        var ziel = br.width ? br.left + br.width / 2 : sr.left + sr.width / 2, mitte = kr.left + kr.width / 2, d = ziel - mitte;
+        var weit = Math.max(48, Math.min(84, Math.abs(d)));
+        dx = Math.round((Math.abs(d) < 30 ? 1 : Math.sign(d)) * weit);
+        // nie aus dem Bild
+        dx = Math.max(-(kr.left - sr.left - 6), Math.min(sr.right - kr.right - 6, dx));
+      }
+      st.style.setProperty('--c6z-kn-dx', dx + 'px');
+      // der rote Faden: vom Liegeplatz bis dorthin, wo der Knäuel jetzt liegt
+      // (der Faden liegt im Knäuel selbst und wandert mit ihm; er reicht zurück bis zum Liegeplatz)
+      if (hin && el.spur) {
+        var x0 = el.knaeuel.getBoundingClientRect().width * 0.25;
+        el.spur.style.left = Math.round(dx > 0 ? x0 - dx : x0) + 'px';
+        el.spur.style.width = Math.abs(dx) + 'px';
+        el.spur.style.transformOrigin = dx > 0 ? '0 50%' : '100% 50%';
+      }
+      st.classList.toggle('c6z-kn-draussen', !!hin);
+      if (!ruhig()) { el.knaeuel.classList.remove('c6z-rollt'); void el.knaeuel.offsetWidth; el.knaeuel.classList.add('c6z-rollt'); }
+    }
+    function nameFragen(satz) {
+      var vor = '';
+      try { vor = C6.space && typeof C6.space.kurzname === 'function' ? C6.space.kurzname(satz) : ''; } catch (e) { vor = ''; }
+      // findet sich kein guter Name, fragt Carl ehrlich, statt drei Wörter abzuschneiden
+      if (!vor) return C6.frag('Wie soll er heißen?', [], { frei: true, id: 'knaeuel-name-frei', platzhalter: 'Ein kurzer Name …' }).then(function (e) { return (typeof e === 'string' && e.trim()) ? e.trim() : null; });
+      return C6.frag('Ich nenn ihn „' + vor + '“?', [{ text: 'Passt', wert: 'ja' }, { text: 'Anders', wert: 'anders' }], { leise: true, id: 'knaeuel-name' }).then(function (n) {
+        if (n === 'ja') return vor;
+        if (n !== 'anders') return null;
+        return C6.frag('Wie soll er heißen?', [], { frei: true, id: 'knaeuel-name-frei', platzhalter: 'Ein kurzer Name …' }).then(function (e) { return (typeof e === 'string' && e.trim()) ? e.trim() : null; });
+      });
+    }
     el.knaeuel.addEventListener('click', function () {
       regung();
-      el.knaeuel.classList.remove('c6z-rollt'); void el.knaeuel.offsetWidth; el.knaeuel.classList.add('c6z-rollt');
       if (ctl) {
         var r = el.knaeuel.getBoundingClientRect(); ctl.schau(r.left + r.width * 0.3, r.top + r.height / 2);
         setTimeout(function () { ctl.stimmung('froh'); }, 380);
         setTimeout(function () { ctl.schau(); ctl.stimmungJetzt === 'froh' && ctl.stimmung('ruhig'); }, 2000);
       }
+      if (!C6.frag || !C6.space || typeof C6.space.neu !== 'function') { knaeuelRollt(false); return; }
+      knaeuelRollt(true);
+      // im Klick fokussieren, damit iOS die Tastatur zeigt
+      try { C6.eingabe && C6.eingabe.fokus && C6.eingabe.fokus(); } catch (e) { }
+      C6.frag('Ein Satz, und es wird ein Space.', [], { frei: true, id: 'knaeuel', platzhalter: 'Woran denkst du gerade?' }).then(function (a) {
+        var satz = typeof a === 'string' ? a.trim() : '';
+        if (!satz) { knaeuelRollt(false); return null; }
+        return nameFragen(satz).then(function (name) {
+          knaeuelRollt(false);
+          if (!name) return;
+          var sid = null;
+          try { sid = C6.space.neu(name, { oeffnen: false }); } catch (e) { sid = null; }
+          if (!sid) return;
+          try { if (C6.space.zettel) C6.space.zettel(sid, satz); } catch (e) { }
+          var f = null; try { f = C6.strings && C6.strings.hol ? C6.strings.hol(sid) : null; } catch (e) { f = null; }
+          var titel = f ? f.titel : name;
+          brettSchl = ''; schluessel();
+          C6.sag('Der Space „' + titel + '“ ist da. Dein Satz ist sein Samen.');
+          C6.frag(null, [{ text: 'Zu „' + (titel.length > 22 ? titel.slice(0, 21) + '…' : titel) + '“', wert: 'geh' }], { leise: true, id: 'knaeuel-hin' }).then(function (g) {
+            if (g === 'geh' && C6.space.oeffne) C6.space.oeffne(sid);
+          });
+        });
+      }, function () { knaeuelRollt(false); });
     });
+    el.lampe.addEventListener('click', function () {
+      regung();
+      if (ctl) { var r = el.lampe.getBoundingClientRect(); ctl.schau(r.left + r.width / 2, r.top + r.height * 0.15); setTimeout(function () { ctl && ctl.schau(); }, 1200); }
+      lampeKnipsen();
+    });
+    // „Wie geht das?“ – Halten sagt ehrlich, was ein Ding tut; es öffnet nichts und wechselt keinen Raum
+    staunenAn(el.lampe, 'zuhause.lampe');
+    staunenAn(el.knaeuel, 'zuhause.knaeuel', 'Der Knäuel macht nichts allein. Er wartet auf deinen Satz.');
+    fensterStaunen();
+    staunenAn(el.bild, 'zuhause.bild', 'Das Bild führt in die Garage. Dort steht dein Rad.');
+    staunenAn(el.kalender, 'zuhause.kalender', 'Das ist dein Wochenende mit mir: sechs Kästchen, Samstag und Sonntag. Tipp drauf, dann siehst du, was drin steht.');
+    staunenAn(el.regal, 'zuhause.regal', 'Das Bücherbord führt in die Bibliothek.');
+    staunenAn(el.tuer, 'zuhause.tuer', 'Die Tür führt in die Werkstatt. Dort hängen die Werkzeuge.');
+    staunenAn(el.sessel, 'zuhause.sessel', 'Auf dem Sessel liegt der Katalog: Lampen und Dinge für deine Spaces, und andere Sessel. Tipp drauf.');
     el.verlauf.addEventListener('click', function () { regung(); gespraechZeigen(); });
 
     // ---------- Der Vogel am Fenster (kommt, wenn du eine Weile still bist) ----------
@@ -626,7 +875,18 @@ C6.raum({
       clearTimeout(vogelUhr);
       vogelUhr = setTimeout(function () { vogelWeg(); if (ctl) ctl.schau(); }, 7000);
     }
-    C6.bus.on('warte', function (d) { if (!hier || !d) return; if (d.stufe === 2) vogelKommt(); });
+    // einmal je Sitzung: ist es still und niemand hat den Knäuel berührt, winkt er (leiser als Carl: ein Satz, ein kleiner Ruck)
+    var knaeuelGewinkt = false;
+    function knaeuelWink() {
+      if (knaeuelGewinkt || knaeuelDraussen || !C6.sag) return;
+      try { if (C6.frag && C6.frag.offen && C6.frag.offen()) return; } catch (e) { }
+      if ((C6.projektor && C6.projektor.offen) || (C6.rundgang && C6.rundgang.an)) return;
+      knaeuelGewinkt = true;
+      if (!ruhig() && el.knaeuel.animate) el.knaeuel.animate([{ transform: 'translateX(var(--c6z-kn-dx,0px))' }, { transform: 'translateX(calc(var(--c6z-kn-dx,0px) + 5px)) rotate(4deg)' }, { transform: 'translateX(var(--c6z-kn-dx,0px))' }], { duration: 700, easing: 'cubic-bezier(.3,.6,.3,1)' });
+      C6.sag('Der Knäuel wartet auf einen Satz.', { merken: false });
+    }
+    el.knaeuel.addEventListener('pointerdown', function () { knaeuelGewinkt = true; });
+    C6.bus.on('warte', function (d) { if (!hier || !d) return; if (d.stufe === 1) knaeuelWink(); if (d.stufe === 2) vogelKommt(); });
     C6.bus.on('wach', function () { if (vogelDa) { vogelWeg(); if (ctl) ctl.schau(); } });
     if (ctl && typeof ctl.gewohnheiten === 'function') { try { ctl.gewohnheiten(['sitzen', 'umsehen', 'gaehnen']); } catch (e) { } }
 
@@ -641,7 +901,7 @@ C6.raum({
     C6.bus.on('kleid', kleidAuffrischen);
     C6.bus.on('zustand', function () { sockenPruef(); });
     C6.bus.on('fertig', function (d) { if (hier && d && C6.projektor) C6.projektor.bereit(d); });
-    C6.bus.on('geraet', function () { groesse(); brettSchl = ''; schluessel(); });
+    C6.bus.on('geraet', function () { groesse(true); brettSchl = ''; schluessel(); });
     function rundgang(an) { st.classList.toggle('c6z-im-rundgang', !!an); }
     C6.bus.on('rundgang', rundgang);
     rundgang(C6.rundgang && C6.rundgang.an);
@@ -657,6 +917,8 @@ C6.raum({
         hier = true; letzteRegung = Date.now(); st.classList.remove('c6m-still');
         st.classList.toggle('c6z-im-rundgang', !!(o.rundgang || (C6.rundgang && C6.rundgang.an)));
         groesse(); zeit(); verlaufBauen(); schluessel();
+        try { zuletztDa = (C6.S && C6.S.zuhause && +C6.S.zuhause.da) || 0; } catch (e) { zuletztDa = 0; }
+        setTimeout(function () { if (hier) nachschwingen(); }, 900);
         setTimeout(groesse, 350); setTimeout(groesse, 1200); setTimeout(licht, 420);
         clearInterval(uhrZeit); uhrZeit = setInterval(zeit, 300000);
         clearInterval(uhrSchlaf); uhrSchlaf = setInterval(schlafPruef, 15000);
@@ -673,11 +935,13 @@ C6.raum({
       },
       verlassen: function () {
         hier = false; st.classList.add('c6m-still');
+        try { C6.aendern(function (S) { S.zuhause = S.zuhause || {}; S.zuhause.da = Date.now(); }); } catch (e) { }
+        if (knaeuelDraussen) knaeuelRollt(false);
         vogelWeg();
         aufstehen();
         clearInterval(uhrZeit); clearInterval(uhrSchlaf); clearInterval(uhrSitz); uhrZeit = uhrSchlaf = uhrSitz = null;
       },
-      groesse: function () { groesse(); brettSchl = ''; schluessel(); }
+      groesse: function () { groesse(true); brettSchl = ''; schluessel(); }
     };
   }
 });

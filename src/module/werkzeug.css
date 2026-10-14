@@ -95,3 +95,40 @@
 .c6wz-fach li{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 0;border-bottom:1px solid #e3dacb}
 .c6wz-fach b{flex:1;font:600 17px Fraunces,Georgia,serif}
 .c6wz-fach .c6wz-zeichen svg{width:30px;height:30px}
+
+/* s13 · das Werkzeug-Blatt: heute oben, der Verlauf als Bild, Carls ehrlicher Satz, der Bezug zum letzten Zettel */
+.c6wz-blatt{border-radius:20px 14px 22px 12px/14px 22px 12px 20px;background-image:radial-gradient(ellipse at 30% 0%,rgba(255,255,255,.7),transparent 60%)}
+@media (min-width:820px){.c6wz-blatt-gross{width:500px}}
+.c6wz-kicker{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center}
+.c6wz-wo,.c6wz-seit{display:inline-flex;gap:6px;align-items:center;font-weight:600;letter-spacing:0;color:#5e564d}
+.c6wz-wo i{width:9px;height:9px;border-radius:50%;border:1.5px solid #2b2722}
+.c6wz-seit{color:#8a8378}
+.c6wz-blatt-gross .c6wz-werkzeug{box-shadow:0 1px 0 #2b2722,0 10px 24px rgba(43,39,34,.1)}
+.c6wz-blatt-gross .c6wz-name{font-size:22px}
+.c6wz-wunschsatz{margin:10px 2px 0;font:600 18px/1.2 Caveat,cursive;color:#6b6259}
+.c6wz-verlauf .c6wz-rb{margin-top:12px}
+/* Kalenderblatt: vier Wochen, Montag zuerst, Kreuze mit der Hand */
+.c6wz-kal{max-width:440px}
+.c6wz-kw{display:grid;grid-template-columns:52px repeat(7,minmax(0,1fr)) 30px;gap:3px;align-items:center}
+.c6wz-kw-kopf b{font:700 11px Figtree,system-ui,sans-serif;letter-spacing:.04em;text-align:center;color:#8a8378}
+.c6wz-kw-d{font:600 16px/1 Caveat,cursive;color:#6b6259}
+.c6wz-kw-n{font:700 18px/1 Caveat,cursive;color:#2b2722;text-align:right}
+.c6wz-k{position:relative;display:block;height:34px;border-bottom:1px solid #e3d8c4;border-left:1px solid #efe6d6}
+.c6wz-k small{position:absolute;left:3px;top:1px;font:600 10px Figtree,system-ui,sans-serif;color:#b0a48f}
+.c6wz-k svg{position:absolute;left:50%;top:50%;width:24px;height:24px;margin:-8px 0 0 -10px;fill:none;stroke-width:3;stroke-linecap:round}
+.c6wz-k-spaeter{opacity:.35}
+.c6wz-k-heute::after{content:'';position:absolute;inset:1px 2px;border:2px solid #d62a26;border-radius:48% 52% 46% 54%/56% 44% 58% 42%;transform:rotate(-6deg);pointer-events:none}
+.c6wz-rb-balken{height:72px;gap:5px}
+.c6wz-rb-balken i{position:relative}
+.c6wz-rb-balken em{position:absolute;left:50%;top:-16px;transform:translateX(-50%);font:700 14px Caveat,cursive;font-style:normal;color:#2b2722}
+.c6wz-achse{display:flex;justify-content:space-between;margin:4px 0 0;font:600 11px Figtree,system-ui,sans-serif;color:#8a8378}
+/* Carl greift auf: ein Satz in seiner Tinte */
+.c6wz-carl{display:flex;gap:10px;align-items:flex-start;margin:14px 0 0;padding:10px 12px;border-radius:14px 10px 16px 8px/10px 16px 8px 14px;background:#f3ecdd}
+.c6wz-carl-kopf{flex:none;width:34px;height:30px;background:no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 30'%3E%3Cpath d='M17 9 q-1 -5 -5 -7 M17 9 q2 -5 7 -6' fill='none' stroke='%235f7f3e' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M4 20 Q4 9 17 9 Q30 9 30 20 Q30 28 17 28 Q4 28 4 20 Z' fill='%23f6f1e6' stroke='%232b2722' stroke-width='1.8'/%3E%3Ccircle cx='13' cy='18' r='2.2' fill='%23b4460c'/%3E%3Ccircle cx='21' cy='18' r='2.2' fill='%23b4460c'/%3E%3Cpath d='M14 23 q3 2 6 0' fill='none' stroke='%232b2722' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E")}
+.c6wz-carl-satz{margin:2px 0 0;font:600 20px/1.2 Caveat,cursive;color:#2f5f8a}
+.c6wz-bezug{margin-top:12px}
+.c6wz-bezug .c6d-leine{align-items:flex-start}
+.c6wz-bezug .c6d-zettel{flex:0 1 210px}
+.c6wz-bezug-satz{flex:1;margin:18px 0 0;font:600 19px/1.15 Caveat,cursive;color:#5e564d}
+.c6wz-leiste{display:flex;flex-wrap:wrap;gap:0 14px;margin-top:6px;padding-top:4px;border-top:1px dashed #e0d5c2}
+.c6wz-leiste .c6wz-link{font-weight:500;font-size:13px;color:#6b6259}

@@ -73,6 +73,15 @@ function schieber(f) {
     '<path d="M-3.55 1.55C-3.7 .1 -2.0 -.45 -.2 -.5C1.8 -.55 3.3 .1 3.1 1.35Q-.3 1.85 -3.55 1.55Z" fill="' + f + '" ' + SW + '/>' +
     '<path d="M-2.6 .6Q-.4 -.1 2.2 .5" fill="none" stroke="' + ton(f, 0.25) + '" stroke-width=".08"/>';
 }
+// Steinpilz: brauner Hut mit hellem Rand, eine Kerbe, wo das Keimblatt durchschaut
+function steinpilz() {
+  var f = '#8a5a34', h = '#b98352', rand = '#efe2c6';
+  return '<g transform="translate(0,-.85) scale(1,.84)"><path d="M-4.3 1.55C-4.6 -1.1 -2.4 -2.55 -.3 -2.55C1.9 -2.55 4.1 -1.1 3.8 1.5Q-.3 2.05 -4.3 1.55Z" fill="' + f + '" ' + SW + '/>' +
+    '<path d="M-3.2 -.6C-2.4 -1.6 -1.2 -2 .1 -2.05" fill="none" stroke="' + h + '" stroke-width=".32" stroke-linecap="round"/>' +
+    '<path d="M-4.25 1.5Q-.3 2.25 3.78 1.46L3.6 1.95Q-.3 2.6 -4.1 2.0Z" fill="' + rand + '" ' + SW + '/>' +
+    '<path d="M-2.6 1.95v.22M-1.4 2.08v.24M-.2 2.12v.24M1 2.08v.24M2.2 1.98v.22" stroke="' + ton(rand, -0.3) + '" stroke-width=".07" stroke-linecap="round"/>' +
+    '<circle cx="1.6" cy="-1.2" r=".26" fill="' + h + '"/><circle cx="-1.9" cy="-.2" r=".18" fill="' + h + '"/></g>';
+}
 function baske(f) {
   return '<g transform="rotate(-9 -.4 .2)"><ellipse cx="-.6" cy=".25" rx="3.9" ry="1.15" fill="' + f + '" ' + SW + '/>' +
     '<path d="M-3.9 .6Q-.6 1.6 2.7 .6" fill="none" stroke="' + ton(f, -0.25) + '" stroke-width=".1"/></g>';
@@ -136,6 +145,13 @@ function brille(art, A) {
     '<path d="M' + f2(AL[0] - r1) + ' .35H' + f2(AL[0] + r1) + 'Q' + f2(AL[0] + r1 - .1) + ' 1.35 ' + f2(AL[0]) + ' 1.35Q' + f2(AL[0] - r1 + .1) + ' 1.35 ' + f2(AL[0] - r1) + ' .35Z"/>' +
     '<path d="M' + f2(AR[0] - r2) + ' .2H' + f2(AR[0] + r2) + 'Q' + f2(AR[0] + r2 - .05) + ' 1.25 ' + f2(AR[0]) + ' 1.25Q' + f2(AR[0] - r2 + .07) + ' 1.25 ' + f2(AR[0] - r2) + ' .2Z"/>' +
     '<path fill="none" d="M' + f2(AL[0] + r1) + ' .35Q0 .1 ' + f2(AR[0] - r2) + ' .2' + buegel(.3) + '"/></g>';
+  if (art === 'flieger') { var wf = ab + r1 + .3; return '<g>' +
+    '<path d="M' + f2(-wf - .2) + ' -.25Q0 -.75 ' + f2(wf + .2) + ' -.35" fill="none" stroke="#7a4f2e" stroke-width=".5" stroke-linecap="round"/>' +
+    '<ellipse cx="' + f2(AL[0]) + '" cy="' + f2(AL[1]) + '" rx="' + f2(r1 + .12) + '" ry="' + f2(r1) + '" fill="#e7d9a8" fill-opacity=".45" stroke="#b8862f" stroke-width=".3"/>' +
+    '<ellipse cx="' + f2(AR[0]) + '" cy="' + f2(AR[1]) + '" rx="' + f2(r2 + .12) + '" ry="' + f2(r2) + '" fill="#e7d9a8" fill-opacity=".45" stroke="#b8862f" stroke-width=".3"/>' +
+    '<ellipse cx="' + f2(AL[0]) + '" cy="' + f2(AL[1]) + '" rx="' + f2(r1 + .12) + '" ry="' + f2(r1) + '" fill="none" stroke="' + T + '" stroke-width=".1"/>' +
+    '<ellipse cx="' + f2(AR[0]) + '" cy="' + f2(AR[1]) + '" rx="' + f2(r2 + .12) + '" ry="' + f2(r2) + '" fill="none" stroke="' + T + '" stroke-width=".1"/>' +
+    '<path d="M' + f2(AL[0] - .5) + ' ' + f2(AL[1] - .5) + 'l.35 .3M' + f2(AR[0] - .5) + ' ' + f2(AR[1] - .5) + 'l.35 .3" stroke="#fffdf6" stroke-width=".14" stroke-linecap="round"/></g>'; }
   if (art === 'taucher') { var w = ab + r1 + .4; return '<g>' +
     '<path d="M' + f2(-w) + ' -.3L' + f2(-w - .9) + ' -.1M' + f2(w) + ' -.4L' + f2(w + .9) + ' -.25" stroke="#3f6f9a" stroke-width=".42" stroke-linecap="round"/>' +
     '<ellipse cx="0" cy="0" rx="' + f2(w) + '" ry="1.5" fill="#8db4d6" fill-opacity=".28" stroke="#3f6f9a" stroke-width=".32"/>' +
@@ -267,6 +283,7 @@ var ARTIKEL = [
   A('m-schieber', 'muetze', 'Schiebermütze', 0, { svg: function () { return schieber('#8a6a3c'); } }),
   A('m-zipfel', 'muetze', 'Zipfelmütze', 5, { svg: function () { return zipfel('#b8333a'); } }),
   A('m-sonne', 'muetze', 'Sonnenhut', 7, { svg: function () { return sonnenhut('#e3c88a'); } }),
+  A('m-pilz', 'muetze', 'Steinpilz', 9, { svg: function () { return steinpilz(); } }),
   A('h-tuch', 'schal', 'Halstuch', 0, { svg: function () { return schal('#3f6f9a', null, 'tuch'); } }),
   A('h-wolle', 'schal', 'Wollschal', 0, { svg: function () { return schal('#a95f33', null, 'wolle'); } }),
   A('h-streifen', 'schal', 'Streifenschal', 0, { svg: function () { return schal('#e2b93b', '#2c7a6e', 'streifen'); } }),
@@ -275,6 +292,7 @@ var ARTIKEL = [
   A('b-lese', 'brille', 'Lesebrille', 0, { svg: function (a) { return brille('lese', a); } }),
   A('b-sonne', 'brille', 'Sonnenbrille', 0, { svg: function (a) { return brille('sonne', a); } }),
   A('b-taucher', 'brille', 'Taucherbrille', 7, { svg: function (a) { return brille('taucher', a); } }),
+  A('b-flieger', 'brille', 'Fliegerbrille', 8, { svg: function (a) { return brille('flieger', a); } }),
   A('g-fuss', 'gefaehrt', 'Zu Fuß', 0, { gefaehrt: null }),
   A('g-couch', 'gefaehrt', 'Schwebende Couch', 0, { gefaehrt: 'g-couch' }),
   A('g-wolke', 'gefaehrt', 'Wolkenkissen', 0, { gefaehrt: 'g-wolke' }),
@@ -284,7 +302,7 @@ var ARTIKEL = [
 var NACH = {}; ARTIKEL.forEach(function (a) { NACH[a.id] = a; });
 
 // Woher die Münzen kommen
-function woherMuenzen() { return 'Münzen gibt es im Kieselpark. Fahr durchs Tor, dann füllt sich das Glas.'; }
+function woherMuenzen() { return 'Münzen gibt es im Kieselpark und für Aufgaben, die du mit mir löst. Dann füllt sich das Glas.'; }
 
 function laden() {
   var s = S();
@@ -295,7 +313,11 @@ function laden() {
   if (s.laden.an.gefaehrt === undefined) s.laden.an.gefaehrt = 'g-couch';
   return s.laden;
 }
-function hat(id) { var a = NACH[id]; return !!a && (a.preis === 0 || laden().besitz.indexOf(id) >= 0); }
+function hat(id) {
+  var a = NACH[id]; if (!a) return false;
+  if (a.preis === 0 || laden().besitz.indexOf(id) >= 0) return true;
+  try { return !!(C6.muenzen && typeof C6.muenzen.hat === 'function' && C6.muenzen.hat('kleid:' + id)); } catch (e) { return false; }
+}
 
 function wert(a, A) {
   if (!a) return null;
@@ -371,6 +393,10 @@ function schrankSvg() {
     '<g class="c6s-l-tuer" style="transform-origin:190px 160px"><path d="M190 22L226 34V290L190 298Z" fill="' + HOLZ_H + '"' + TI + '/><path d="M198 50L218 56V250L198 256Z" fill="none" stroke="' + HOLZ_D + '" stroke-width="2.4"/><circle cx="196" cy="166" r="3.4" fill="#e2b93b" stroke="' + T + '" stroke-width="1.6"/></g>' +
     // Mütze oben drauf
     '<path d="M64 12C62 -6 104 -8 110 8Z" fill="#5f7f3e"' + TI.replace('3"', '2.4"') + '/><path d="M60 13Q86 6 114 9" fill="none" stroke="' + T + '" stroke-width="2.4"/>' +
+    // eine einzelne Socke hängt über die Kante ins untere Fach (ohne Partner)
+    '<g class="c6s-l-einzel"><rect class="c6s-l-einzel-treffer" x="96" y="196" width="84" height="104" fill="transparent"/>' +
+    '<g class="c6s-l-einzel-socke" style="transform-origin:150px 236px"><path d="M143 232h14v30q0 8 7 12l6 3q6 4 2 10t-12 2l-12-6q-6-4-6-12z" fill="#fbf7f0" stroke="' + T + '" stroke-width="2.2" stroke-linejoin="round"/>' +
+    '<path d="M143 242h14M143 252h14" stroke="#c8463d" stroke-width="4"/><path d="M141 230h18v6h-18z" fill="#c8463d" stroke="' + T + '" stroke-width="2"/></g></g>' +
     '</svg>';
 }
 var HERZ = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg>';
@@ -556,7 +582,8 @@ C6.laden.schrank = function (o) {
     var t = schrank.querySelector('.c6s-l-tuer'); if (!t || C6.ruhig) return;
     try { t.animate([{ transform: 'scaleX(1)' }, { transform: 'scaleX(.42)', offset: .32 }, { transform: 'scaleX(1.06)', offset: .7 }, { transform: 'scaleX(.97)', offset: .86 }, { transform: 'scaleX(1)' }], { duration: 900, easing: 'cubic-bezier(.3,.7,.3,1)' }); } catch (e) {}
   }
-  schrank.onclick = function () {
+  schrank.onclick = function (e) {
+    if (offen && e && e.target && e.target.closest && e.target.closest('.c6s-l-einzel')) { sockenSpiel(schrank); return; }
     federTuer();
     if (!offen) { if (o.auf) o.auf(); return; }
     if (o.zu) o.zu();
@@ -618,9 +645,14 @@ C6.laden.schrank = function (o) {
   haupt.onclick = function () {
     var id = haupt.dataset.id, art = haupt.dataset.art;
     if (art === 'kaufen') {
-      var a = NACH[id];
-      if (!C6.muenzen || !C6.muenzen.ausgeben(a.preis)) {
-        sag(satz('laden.zuwenig', 'Dafür reichen die Münzen noch nicht. Es läuft nicht weg.'), true);
+      var a = NACH[id], ok = false;
+      try {
+        if (C6.muenzen && typeof C6.muenzen.kaufe === 'function') ok = C6.muenzen.kaufe('kleid:' + id, a.preis, { art: 'kleid', name: a.name });
+        else if (C6.muenzen) ok = C6.muenzen.ausgeben(a.preis);
+      } catch (e) { ok = false; }
+      if (!ok) {
+        var fehlt = 0; try { fehlt = C6.muenzen.warum().fehlt; } catch (e) {}
+        sag(fehlt ? (fehlt === 1 ? 'Noch eine Münze' : 'Noch ' + fehlt + ' Münzen') + ', dann gehört es dir. Es läuft nicht weg.' : satz('laden.zuwenig', 'Dafür reichen die Münzen noch nicht. Es läuft nicht weg.'), true);
         return;
       }
       aendern(function (s) { laden(); if (s.laden.besitz.indexOf(id) < 0) s.laden.besitz.push(id); });
@@ -672,6 +704,7 @@ C6.laden.schrank = function (o) {
 
   waehleKat('socken', false);
   if (C6.bus) {
+    C6.bus.on('leer', function (e) { if (spielOffen()) return; if (e && e.raum && e.raum !== 'fahrrad') return; if (hier() && o.zu) o.zu(); });
     C6.bus.on('muenzen', function () { if (hier()) auffrischen(); });
     C6.bus.on('kleid', function (k) { if (bild) { try { bild.kleid(k); } catch (e) {} } if (hier()) { auffrischen(); zeige(); } });
   }
@@ -712,6 +745,111 @@ C6.laden.schrank = function (o) {
     muenzSatz: woherMuenzen
   };
 };
+
+// ---------- Verstecktes Spiel: Sockenpaare (die einzelne Socke im Schrank) ----------
+// Eine Serie aus zwölf gleichen Karten; nur das Muster wechselt. Keine Uhr, gezählt werden nur die Züge.
+var sp = null;
+function spielOffen() { return !!(sp && !sp.el.hidden); }
+function mischen(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+function sockenSpiel(von) {
+  if (!sp) {
+    var el = document.createElement('div');
+    el.className = 'c6s-sp'; el.hidden = true;
+    el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', 'Sockenpaare');
+    el.innerHTML = '<div class="c6s-sp-korb">' +
+      '<div class="c6s-sp-kopf"><p class="c6s-sp-titel">Sockenpaare</p>' +
+      '<button type="button" class="c6s-sp-zu" aria-label="Sockenpaare schließen"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button></div>' +
+      '<p class="c6s-sp-satz" aria-live="polite"></p>' +
+      '<div class="c6s-sp-feld" role="grid"></div>' +
+      '<div class="c6s-sp-fuss"><span class="c6s-sp-zuege"></span><button type="button" class="c6s-knopf c6s-sp-nochmal" hidden>Nochmal mischen</button></div>' +
+      '</div>';
+    document.body.appendChild(el);
+    sp = { el: el, feld: el.querySelector('.c6s-sp-feld'), satz: el.querySelector('.c6s-sp-satz'), zuegeEl: el.querySelector('.c6s-sp-zuege'), nochmal: el.querySelector('.c6s-sp-nochmal'), von: null };
+    el.querySelector('.c6s-sp-zu').onclick = spielZu;
+    el.addEventListener('click', function (e) { if (e.target === el) spielZu(); });
+    el.addEventListener('keydown', function (e) { if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); spielZu(); } });
+    sp.nochmal.onclick = function () { spielNeu(); };
+    if (C6.bus) {
+      C6.bus.on('leer', function () { if (spielOffen()) spielZu(); });
+      C6.bus.on('raum', function () { if (spielOffen()) spielZu(); });
+    }
+  }
+  sp.von = von || null;
+  spielNeu();
+  sp.el.hidden = false;
+  document.documentElement.classList.add('c6s-sp-auf');
+  if (!C6.ruhig) { try { sp.el.querySelector('.c6s-sp-korb').animate([{ transform: 'translateY(14px) scale(.97)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 280, easing: 'cubic-bezier(.3,.7,.3,1)' }); } catch (e) {} }
+  setTimeout(function () { try { sp.feld.querySelector('button').focus({ preventScroll: true }); } catch (e) {} }, 60);
+}
+function spielZu() {
+  if (!spielOffen()) return;
+  sp.el.hidden = true;
+  document.documentElement.classList.remove('c6s-sp-auf');
+  try { sp.von && sp.von.focus && sp.von.focus({ preventScroll: true }); } catch (e) {}
+}
+var SP_SAETZE = {
+  start: 'Die hier hat keinen Partner. Hilfst du mir suchen?',
+  paar: ['Ein Paar.', 'Die gehören zusammen.', 'Gefunden.', 'Noch warm.'],
+  falsch: ['Fast.', 'Die nicht.', 'Hm, anders.'],
+  fertig: 'Alle Paare. Jetzt hab ich keine Ausrede mehr für kalte Füße.',
+  wieder: 'Alle Paare. Ich räum sie wieder durcheinander, wenn du magst.'
+};
+function zufall(l) { return l[Math.floor(Math.random() * l.length)]; }
+function spielNeu() {
+  var socken = ARTIKEL.filter(function (a) { return a.kat === 'socken'; }).slice(0, 6);
+  var stapel = mischen(socken.concat(socken).map(function (a) { return a.id; }));
+  sp.zuege = 0; sp.offen = []; sp.paare = 0; sp.sperre = false;
+  sp.feld.innerHTML = '';
+  stapel.forEach(function (id, i) {
+    var a = NACH[id], b = document.createElement('button');
+    b.type = 'button'; b.className = 'c6s-sp-karte'; b.dataset.id = id; b.dataset.i = i;
+    b.setAttribute('aria-label', 'Verdeckte Socke');
+    b.innerHTML = '<span class="c6s-sp-innen"><span class="c6s-sp-rueck" aria-hidden="true">' + (C6.muenzen && C6.muenzen.muenze ? C6.muenzen.muenze(22) : '') + '</span>' +
+      '<span class="c6s-sp-vorn" aria-hidden="true">' + kartenBild(a) + '</span></span>';
+    b.onclick = function () { dreh(b); };
+    sp.feld.appendChild(b);
+  });
+  sp.satz.textContent = SP_SAETZE.start;
+  sp.nochmal.hidden = true;
+  zeigeZuege();
+}
+function zeigeZuege() {
+  var best = (S().laden && S().laden.sockenBest) || 0;
+  sp.zuegeEl.textContent = (sp.zuege === 1 ? '1 Zug' : sp.zuege + ' Züge') + (best ? ' · bisher am wenigsten: ' + best : '');
+}
+function dreh(b) {
+  if (sp.sperre || b.classList.contains('c6s-sp-auf') || b.classList.contains('c6s-sp-paar')) return;
+  b.classList.add('c6s-sp-auf');
+  b.setAttribute('aria-label', NACH[b.dataset.id].name);
+  sp.offen.push(b);
+  if (sp.offen.length < 2) return;
+  sp.zuege++; zeigeZuege();
+  var a = sp.offen[0], c = sp.offen[1];
+  sp.offen = [];
+  if (a.dataset.id === c.dataset.id) {
+    [a, c].forEach(function (x) { x.classList.add('c6s-sp-paar'); x.setAttribute('aria-label', NACH[x.dataset.id].name + ', Paar gefunden'); });
+    sp.paare++;
+    if (sp.paare >= 6) return gewonnen(c);
+    sp.satz.textContent = zufall(SP_SAETZE.paar);
+    return;
+  }
+  sp.sperre = true;
+  sp.satz.textContent = zufall(SP_SAETZE.falsch);
+  setTimeout(function () {
+    [a, c].forEach(function (x) { x.classList.remove('c6s-sp-auf'); x.setAttribute('aria-label', 'Verdeckte Socke'); });
+    sp.sperre = false;
+  }, C6.ruhig ? 600 : 850);
+}
+function gewonnen(el) {
+  var best = (S().laden && S().laden.sockenBest) || 0, erst = false;
+  if (!best || sp.zuege < best) aendern(function (s) { laden(); s.laden.sockenBest = sp.zuege; });
+  try { erst = !!(C6.muenzen && C6.muenzen.geheimnis && C6.muenzen.geheimnis('sockenpaare', 2, el)); } catch (e) {}
+  sp.satz.textContent = erst ? SP_SAETZE.fertig : (best && sp.zuege < best ? 'Alle Paare, in weniger Zügen als je zuvor.' : SP_SAETZE.wieder);
+  zeigeZuege();
+  sp.nochmal.hidden = false;
+  emit('spiel', { was: 'sockenpaare', fertig: true, zuege: sp.zuege });
+}
+C6.laden.sockenpaare = { auf: function () { sockenSpiel(); }, zu: spielZu, get offen() { return spielOffen(); } };
 
 // Der alte Laden-Reiter führt in die Garage, der Schrank steht dort offen
 C6.raum({

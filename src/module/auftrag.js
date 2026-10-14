@@ -127,6 +127,64 @@ function versuch(art, f) {
   }
   return null;
 }
+// ---------- Was wirklich war: der Brief greift zuerst Ottos echte Einträge auf, erst danach eine Vorlage ----------
+function schonGenutzt(quelle) {
+  var tg = A().tage;
+  return Object.keys(tg).some(function (k) { return k !== tag() && tg[k] && tg[k].quelle === quelle; });
+}
+function wannText(k) {
+  var m = /^(\d{4})-(\d\d)-(\d\d)$/.exec(k || ''); if (!m) return '';
+  var n = Math.round((new Date(+m[1], +m[2] - 1, +m[3]) - new Date(tag() + 'T00:00:00')) / TAG_MS);
+  return n < 0 ? 'seit ' + (+m[3]) + '.' + (+m[2]) + '.' : n === 0 ? 'heute' : n === 1 ? 'morgen' : 'bis ' + (+m[3]) + '.' + (+m[2]) + '.';
+}
+function echterBrief() {
+  var W = C6.werkzeug, sieben = tag(Date.now() - 6 * TAG_MS);
+  // 1 · ein eigenes Werkzeug mit neuen Einträgen: Carl rechnet im Code, was da steht
+  try {
+    var kand = [];
+    (W && W.alle ? W.alle() : []).forEach(function (w) {
+      var tage = W.benutztTage ? W.benutztTage(w.id) : [], l = tage[tage.length - 1];
+      if (l && l >= sieben) kand.push({ w: w, l: l, n: tage.filter(function (k) { return k >= sieben; }).length });
+    });
+    // das zuletzt benutzte zuerst; was schon einmal mit demselben Stand im Brief stand, kommt nicht wieder
+    kand.sort(function (a, b) { return a.l < b.l ? 1 : a.l > b.l ? -1 : b.n - a.n; });
+    for (var i = 0; i < kand.length && W.aufgreifen; i++) {
+      var c = kand[i], q = 'w:' + c.w.id + ':' + c.l, f = (c.w.sid && faden(c.w.sid)) || waehleFaden();
+      var satzW = W.aufgreifen(c.w.id);
+      if (f && satzW && !schonGenutzt(q)) return { art: 'verlauf', quelle: q, sid: f.id, text: '„' + kurz(c.w.name, 30) + '“: ' + satzW + ' Was ist dir dabei aufgefallen? Ein Satz reicht.' };
+    }
+  } catch (e) {}
+  // 2 · ein Nächster Schritt, der fällig ist
+  try {
+    var schritte = [];
+    faeden().forEach(function (f) { var b = C6.bausteine && C6.bausteine.alle ? C6.bausteine.alle(f.id)[0] : null; if (b && b.daten && b.daten.t) schritte.push({ f: f, t: b.daten.t, tag: b.daten.tag || '', id: b.id }); });
+    schritte.sort(function (a, b) { return (a.tag || '9') < (b.tag || '9') ? -1 : 1; });
+    var sc = schritte.filter(function (x) { return x.tag && x.tag <= tag(Date.now() + TAG_MS); })[0] || schritte[0];
+    if (sc) {
+      var q2 = 's:' + sc.id + ':' + tag();
+      var alt = 's:' + sc.id;
+      var schon = Object.keys(A().tage).some(function (k) { var x = A().tage[k]; return k !== tag() && x && String(x.quelle || '').indexOf(alt) === 0 && k >= tag(Date.now() - 3 * TAG_MS); });
+      if (!schon) return { art: 'schritt', quelle: q2, sid: sc.f.id, text: 'Dein nächster Schritt in „' + kurz(sc.f.titel, 30) + '“: „' + kurz(sc.t, 90) + '“' + (sc.tag ? ' (' + wannText(sc.tag) + ')' : '') + '. Was brauchst du noch dafür?' };
+    }
+  } catch (e) {}
+  // 3 · ein Fund, den Otto hingelegt und noch nicht geprüft hat
+  try {
+    var fu = (C6.lesesaal && C6.lesesaal.funde ? C6.lesesaal.funde() : []).filter(function (x) { return x && !x.urteil && x.ts && Date.now() - x.ts < 7 * TAG_MS; }).slice(-1)[0];
+    if (fu) {
+      var q3 = 'f:' + (fu.id || fu.ts), ff = (fu.sid && faden(fu.sid)) || (fu.hier && faden(fu.hier)) || waehleFaden();
+      if (ff && !schonGenutzt(q3)) return { art: 'fund', quelle: q3, sid: ff.id, text: 'Du hast am ' + datum(fu.ts) + ' „' + kurz(fu.titel || fu.text || fu.url || 'einen Fund', 50) + '“ hingelegt. Was wolltest du daraus?' };
+    }
+  } catch (e) {}
+  // 4 · eine Frage von gestern oder vorgestern, über die wir gesprochen haben
+  try {
+    var g = (S().gespraech || []).filter(function (z) { return z && z.von === 'du' && /\?\s*$/.test(String(z.t || '')) && z.ts && Date.now() - z.ts > 2 * 3600e3 && Date.now() - z.ts < 3 * TAG_MS && String(z.t).split(/\s+/).length >= 3; }).slice(-1)[0];
+    if (g) {
+      var q4 = 'q:' + g.ts, fq = waehleFaden();
+      if (fq && !schonGenutzt(q4)) return { art: 'frage', quelle: q4, sid: fq.id, text: 'Am ' + datum(g.ts) + ' hast du gefragt: „' + kurz(g.t, 90) + '“ ' + (/\boder\b/i.test(g.t) ? 'Hast du dich entschieden?' : 'Was ist daraus geworden?') };
+    }
+  } catch (e) {}
+  return null;
+}
 function bereit() {
   var s = S();
   if (C6.rundgang && C6.rundgang.an) return false;
@@ -138,11 +196,18 @@ function heute() {
   if (!bereit()) return null;
   var f = waehleFaden();
   if (!f) return null;
-  var vor = letzteArt(), start = vor ? (ARTEN.indexOf(vor) + 1) % ARTEN.length : 0;
   var x = null, art = 'satz';
-  for (var i = 0; i < ARTEN.length && !x; i++) { art = ARTEN[(start + i) % ARTEN.length]; x = versuch(art, f); }
-  if (!x) { art = 'satz'; x = versuch('satz', f); }
-  var a = { id: neueId('a'), tag: k, art: art, sid: f.id, sid2: x.sid2 || null, titel: f.titel, text: x.text, zitat: x.zitat || null, ts: Date.now(), ding: null, erledigt: null };
+  var echt = echterBrief();
+  if (echt && faden(echt.sid)) { x = echt; art = echt.art; f = faden(echt.sid); }
+  else {
+    var vor = letzteArt(), start = vor ? (ARTEN.indexOf(vor) + 1) % ARTEN.length : 0;
+    // die Vorlage „Jemand hält … für eine schlechte Idee“ nur, wenn der Space schon etwas trägt
+    var arten = ARTEN.filter(function (a0) { return a0 !== 'gegenspieler' || (f.perlen || []).length >= 3; });
+    if (start >= arten.length) start = 0;
+    for (var i = 0; i < arten.length && !x; i++) { art = arten[(start + i) % arten.length]; x = versuch(art, f); }
+    if (!x) { art = 'satz'; x = versuch('satz', f); }
+  }
+  var a = { id: neueId('a'), tag: k, art: art, quelle: x.quelle || null, sid: f.id, sid2: x.sid2 || null, titel: f.titel, text: x.text, zitat: x.zitat || null, ts: Date.now(), ding: null, erledigt: null };
   aendern(function (st) {
     st.tage[k] = a;
     var ks = Object.keys(st.tage).sort();
@@ -171,7 +236,8 @@ function erledigt(antwort) {
   if (!t || !a || a.erledigt) return false;
   var f = faden(a.sid);
   if (!f) return false;
-  try { C6.strings && C6.strings.perle && C6.strings.perle(a.sid, t); } catch (e) {}
+  // eine Wahrheit oben wie unten: als Zettel an die Leine (setzt auch die Perle); sonst nur die Perle
+  try { if (C6.space && typeof C6.space.zettel === 'function') C6.space.zettel(a.sid, t); else if (C6.strings && C6.strings.perle) C6.strings.perle(a.sid, t); } catch (e) {}
   var knoten = false;
   if (a.art === 'verbindung' && a.sid2 && faden(a.sid2)) { try { knoten = !!(C6.strings && C6.strings.knoten && C6.strings.knoten(a.sid, a.sid2, t)); } catch (e) {} }
   var k = a.tag;
@@ -417,7 +483,9 @@ function buehneZuhause() { try { return C6.gebaut ? C6.gebaut('zuhause') : null;
 function briefBauen() {
   var b = buehneZuhause();
   if (!b) return null;
-  if (briefEl && briefEl.parentNode === b) return briefEl;
+  // das Zuhause darf den Brief in seine Ablage legen: dann bleibt es derselbe Brief (nie ein zweiter mit gleicher id)
+  if (briefEl && b.contains(briefEl)) return briefEl;
+  var alt = D.getElementById('c6r-a-brief'); if (alt && alt !== briefEl && alt.parentNode) alt.parentNode.removeChild(alt);
   briefEl = D.createElement('button');
   briefEl.type = 'button';
   briefEl.id = 'c6r-a-brief';
@@ -434,6 +502,7 @@ function briefBauen() {
 }
 function lageBrief() {
   if (!briefEl || briefEl.hidden) return;
+  if (briefEl.parentNode && briefEl.parentNode.hasAttribute && briefEl.parentNode.hasAttribute('data-c6-ablage')) { briefEl.style.left = ''; briefEl.style.top = ''; return; }
   var b = buehneZuhause(); if (!b) return;
   var br = b.getBoundingClientRect(); if (!br.width) return;
   var comp = C6.geraet === 'computer';

@@ -49,7 +49,7 @@
     { id: 3, tag: 'Samstag', name: 'Ein Sternbild', ergebnis: 'Zwei Planeten mit deinem Satz verbunden. Er steht als Name am Himmel.',
       schritte: ['Tipp oben rechts auf „Himmel ↑“.', 'Zieh mit dem Finger von einem Planeten zum anderen.', 'Schreib den einen Satz, der beide verbindet.'], tu: 'Zum Himmel', braucht: 'Dafür brauchst du zwei Spaces.' },
     { id: 4, tag: 'Sonntag', name: 'Ein Werkzeug bauen', ergebnis: 'Ein eigenes kleines Werkzeug, zum Beispiel ein Haken für jeden Tag, das in deinem Space steht.',
-      schritte: ['Sag in einem Satz, was es können soll: „Ich will jeden Tag sehen, ob ich gelaufen bin.“', 'Carl baut es. Probier es gleich aus, dann „Passt“ oder „Anders“.', 'Stell es in einen Space.'], tu: 'Werkzeug bauen' },
+      schritte: ['Sag in deinen eigenen Worten, was es können soll. Ein Satz reicht.', 'Carl baut es. Probier es gleich aus, dann „Passt“ oder „Anders“.', 'Stell es in einen Space.'], tu: 'Werkzeug bauen' },
     { id: 5, tag: 'Sonntag', name: 'Einen Helfer arbeiten lassen', ergebnis: 'Ein Helfer liest für dich nach. Was er findet, hängt als Zettel in deinem Space.',
       schritte: ['Geh in die Werkstatt zum Tisch mit der Lampe.', 'Schreib ein Thema, über das du mehr wissen willst.', 'Gib den Auftrag. Den Fund hängst du in einen Space.'], tu: 'Zur Helferecke' },
     { id: 6, tag: 'Sonntag', name: 'Wer denkt mit', ergebnis: 'Du weißt, welcher Kopf mit Carl mitdenkt, und hast ihn selbst gewählt.',
@@ -61,14 +61,37 @@
     var l = S(); if (l.fertig[id]) return;
     l.fertig[id] = Date.now(); speichern();
     try { C6.bus && C6.bus.emit('lernweg', { was: 'haken', station: id, grund: grund || '' }); } catch (e) {}
-    // nur wer den Lernweg kennt, hört es; ein leiser Satz, keine Zahl
+    // nur wer den Lernweg kennt, hört es; ein leiser Satz, keine Zahl – und nie über eine offene Frage
     if (l.gesehen && C6.sag) {
       var st = station(id), alle = ST.every(function (s) { return fertig(s.id); }), samstag = st.tag === 'Samstag' && [1, 2, 3].every(fertig);
-      setTimeout(function () {
-        try { C6.sag(alle ? satz('lernweg.alles', 'Das war dein Wochenende. Alles Weitere wächst aus deinen Ideen.') : samstag ? satz('lernweg.samstag', 'Samstag geschafft. Morgen bauen wir dir ein Werkzeug.') : satz('lernweg.haken', 'Ein Haken im Kalender: „{name}“.').replace('{name}', st.name), { merken: false }); } catch (e) {}
-      }, 900);
+      var t = alle ? satz('lernweg.alles', 'Das war dein Wochenende. Alles Weitere wächst aus deinen Ideen.') : samstag ? satz('lernweg.samstag', 'Samstag geschafft. Morgen bauen wir dir ein Werkzeug.') : satz('lernweg.haken', 'Ein Haken im Kalender: „{name}“.').replace('{name}', st.name);
+      wennStill(function () { try { C6.sag(t, { merken: false }); } catch (e) {} }, 900);
     }
     if (offen && ansicht) zeige(ansicht);
+  }
+
+  // Ist gerade eine Frage offen (Chips, freie Antwort, Werkzeug-Blatt) oder ein „Wie geht das?“-Satz? Dann wartet der Haken-Satz.
+  function frageOffen() {
+    try { if (C6.frag && typeof C6.frag.offen === 'function') { if (C6.frag.offen()) return true; } else { var w = D.getElementById('c6'); if (w && w.hasAttribute('data-chips')) return true; } } catch (e) {}
+    try { if (C6.staunen && C6.staunen.offen && C6.staunen.offen()) return true; } catch (e) {}
+    try { if (D.querySelector('.c6wz-an, .c6w-blatt.c6w-an')) return true; } catch (e) {}
+    // Otto schreibt gerade (das Feld hat den Fokus): dann redet Carl nicht dazwischen
+    try { var a = D.activeElement; if (a && a.matches && a.matches('.c6k-feld, textarea, input[type=text], input:not([type])')) return true; } catch (e) {}
+    return false;
+  }
+  function carlSpricht() { try { var b = D.querySelector('.c6k-blase'); return !!(b && b.parentNode && b.parentNode.hasAttribute('data-an')); } catch (e) { return false; } }
+  // Ein Satz, der warten kann: nie über eine offene Frage (nach 20 s ohne Lücke fällt er still weg);
+  // spricht Carl gerade etwas anderes, darf das erst 6 s stehen
+  function wennStill(fn, ab) {
+    var t0 = Date.now(), bis = t0 + 20000, ruhe = 0;
+    // erst nach anderthalb Sekunden Ruhe: eine eben geschlossene Frage räumt ihre Blase noch weg
+    function versuch() {
+      var jetzt = Date.now(), belegt = frageOffen() || (carlSpricht() && jetzt - t0 < 6000);
+      if (belegt) ruhe = 0; else if (!ruhe) ruhe = jetzt;
+      if (!belegt && jetzt - ruhe >= 1500) { fn(); return; }
+      if (jetzt < bis) setTimeout(versuch, 400);
+    }
+    setTimeout(versuch, ab || 0);
   }
 
   // ——— Hören, was wirklich getan wird ———
@@ -76,26 +99,48 @@
     if (!C6.bus || hoeren.an) return; hoeren.an = true;
     C6.bus.on('strings', function (ev) {
       if (!ev) return;
-      if (ev.was === 'neu') hake(1, 'space');
+      // Station 1 hängt am Zustand: erst wenn irgendwo ein Zettel an der Leine hängt
+      pruefe1Bald();
       if (ev.was === 'perle') naehren('zettel', ev.id);
       if (ev.was === 'nadel') naehren('kernsatz');
       if (ev.was === 'knoten') hake(3, 'sternbild');
     });
-    C6.bus.on('space', function (ev) { if (ev && ev.was === 'zettel') naehren('zettel', ev.stringId); });
+    C6.bus.on('space', function (ev) { pruefe1Bald(); if (ev && ev.was === 'zettel') naehren('zettel', ev.stringId); });
+    C6.bus.on('zustand', pruefe1Bald);
     C6.bus.on('baustein', function (ev) { if (ev && (ev.was === 'neu' || ev.was === 'erledigt')) naehren('schritt'); });
     C6.bus.on('atlas', function (ev) { if (ev && ev.offen === false) pruefe6(); });
-    C6.bus.on('werkzeug-eigen', function (ev) { if (ev && ev.was === 'gehaengt') hake(4, 'werkzeug'); });
+    // Station 4 zählt nur ein Werkzeug aus Ottos eigenen Worten (kein reiner Vorlagen-Satz) – der Lernmoment bleibt
+    C6.bus.on('werkzeug-eigen', function (ev) { if (ev && ev.was === 'gehaengt' && ausEigenenWorten(ev.id)) hake(4, 'werkzeug'); });
     // Helfer: ein Fund, der in einem Space landet (auftrag.js), oder das eigene Ereignis der Helferecke
     C6.bus.on('auftrag', function (ev) { if (ev && ev.was === 'fund') hake(5, 'fund'); });
     C6.bus.on('helfer', function (ev) { if (ev && (ev.was === 'auftrag' || ev.was === 'fund')) hake(5, 'helfer'); });
   }
   // Nähren zählt erst nach dem Samen: der erste Zettel, der mit dem Space entsteht, ist noch der Samen selbst
   // Ein Zettel zählt nur, wenn er wirklich an der Leine hängt: mehr als der Samen in diesem Space
+  // Was Otto nicht getan hat, zählt nicht als seins: Fund-Zettel (Helfer, Lesesaal) hängen, haken aber keine Station
+  function vonOtto(n) { return !!n && n.von !== 'fund' && !/^Fund\s*·\s*/.test(String(n.t || '')); }
   function zettelZahl(sid) {
     var n = 0;
-    try { var x = C6.S.spaces && C6.S.spaces[sid]; n += x && Array.isArray(x.notizen) ? x.notizen.length : 0; } catch (e) {}
-    try { n += (C6.space && C6.space.dinge ? C6.space.dinge(sid) || [] : []).filter(function (d) { return !(C6.strings.vonOben && C6.strings.vonOben(d)); }).length; } catch (e) {}
+    try { var x = C6.S.spaces && C6.S.spaces[sid]; n += x && Array.isArray(x.notizen) ? x.notizen.filter(vonOtto).length : 0; } catch (e) {}
+    try { n += (C6.space && C6.space.dinge ? C6.space.dinge(sid) || [] : []).filter(function (d) { return !(C6.strings.vonOben && C6.strings.vonOben(d)) && d.von !== 'fund' && d.art !== 'fund'; }).length; } catch (e) {}
     return n;
+  }
+  // Station 1: am Zustand geprüft, nicht am Ereignis
+  function pruefe1() {
+    if (fertig(1)) return true;
+    var ids = [];
+    try { ids = Object.keys((C6.S && C6.S.spaces) || {}); } catch (e) { ids = []; }
+    for (var i = 0; i < ids.length; i++) if (zettelAnDerLeine(ids[i]) >= 1) { hake(1, 'zettel'); return true; }
+    return false;
+  }
+  var p1uhr = 0;
+  function pruefe1Bald() { if (fertig(1)) return; clearTimeout(p1uhr); p1uhr = setTimeout(pruefe1, 200); }
+  function zettelAnDerLeine(sid) { try { var x = C6.S.spaces && C6.S.spaces[sid]; return x && Array.isArray(x.notizen) ? x.notizen.filter(vonOtto).length : 0; } catch (e) { return 0; } }
+  function ausEigenenWorten(id) {
+    var w = null; try { w = C6.werkzeug && C6.werkzeug.hol ? C6.werkzeug.hol(id) : null; } catch (e) { w = null; }
+    var t = w && String(w.satz || '').trim(); if (!t) return false;
+    var vor = []; try { vor = (C6.werkzeug && C6.werkzeug.vorlagen) || []; } catch (e) { vor = []; }
+    return !vor.some(function (v) { return v && String(v.satz || '').trim() === t; });
   }
   function naehren(grund, sid) {
     var t = S().fertig[1]; if (!t || Date.now() - t < 1500) return;
@@ -120,7 +165,7 @@
       else if (w === 'tu') tun(+b.getAttribute('data-st'));
       else if (w === 'rechner') { zu(); setTimeout(function () { try { C6.verbindung && C6.verbindung.oeffne && C6.verbindung.oeffne({}); } catch (e2) {} }, C6.ruhig ? 0 : 240); }
       else if (w === 'kopf') {
-        // dieselbe Wahl wie im Freundschaftsbuch (S.du.modell); die beiden Rechner-Wege öffnen stan-lees Blätter
+        // dieselbe Wahl wie im Freundschaftsbuch (S.du.modell); die beiden Rechner-Wege öffnen die Verbinden-Blätter
         var v = b.getAttribute('data-wert');
         S().kopf = v; speichern();
         var modell = v === 'rechner' ? 'claude' : v;
@@ -163,7 +208,7 @@
       var zuWenig = st.id === 3 && (C6.strings && C6.strings.alle ? C6.strings.alle().length : 0) < 2;
       var hinweis = zuWenig ? st.braucht : '';
       var b = mk('button', 'c6w-knopf c6w-haupt c6lw-tu', fuss, zuWenig ? 'Einen zweiten Samen bringen' : st.tu); b.type = 'button'; b.setAttribute('data-lw', 'tu'); b.setAttribute('data-st', zuWenig ? 1 : st.id);
-      mk('p', 'c6lw-leise', fuss, hinweis || satz('lernweg.tun', 'Jetzt du. Den Haken setzt du, indem du es tust.'));
+      mk('p', 'c6lw-leise', fuss, hinweis || (st.id === 4 ? 'Jetzt du. Sag es in deinen eigenen Worten, dann baut Carl es. Ein fertiges Beispiel zählt hier nicht.' : satz('lernweg.tun', 'Jetzt du. Den Haken setzt du, indem du es tust.')));
     }
     fokus(blatt);
   }
@@ -257,12 +302,12 @@
     if (id === 1) { if (C6.hoeheJetzt && C6.hoeheJetzt !== 'boden') geh('zuhause'); setTimeout(function () { var f = D.querySelector('.c6k-feld'); if (f) f.focus(); }, 500); }
     else if (id === 2) { var a = []; try { a = C6.space && C6.space.alle ? C6.space.alle() : []; } catch (e) {} if (a.length) geh('space', { id: a[0].stringId }); else tun(1); }
     else if (id === 3) { try { C6.hoehe && C6.hoehe('vogel'); } catch (e) {} }
-    else if (id === 4) { if (C6.werkzeug && C6.werkzeug.oeffne) { try { C6.werkzeug.oeffne({}); } catch (e) { geh('werkstatt'); } } else geh('werkstatt'); }
+    else if (id === 4) { if (C6.werkzeug && C6.werkzeug.oeffne) { try { C6.werkzeug.oeffne({ eigen: true }); } catch (e) { geh('werkstatt'); } } else geh('werkstatt'); }
     else if (id === 5) geh('werkstatt', { zeig: 'helfer' });
   }
   function naechste() { var n = ST.filter(function (s) { return !fertig(s.id); })[0]; return n ? n.id : null; }
   function oeffne(o) {
-    o = o || {}; bauen(); hoeren(); pruefe6();
+    o = o || {}; bauen(); hoeren(); pruefe6(); pruefe1();
     var l = S(); if (!l.gesehen) { l.gesehen = Date.now(); speichern(); }
     offen = true; C6.lernweg.offen = true;
     wurzel.hidden = false; D.documentElement.classList.add('c6lw-auf');
