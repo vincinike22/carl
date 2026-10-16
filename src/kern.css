@@ -1,4 +1,4 @@
-:root{--c6k-schwebt:0 1px 0 rgba(43,39,34,.06),0 12px 28px -10px rgba(43,39,34,.32);--papier:#f4eee4;--karte:#fbf7f0;--feld:#fffdf9;--gedrueckt:#efe7da;--tusche:#2b2722;--leise:#6f6a61;--bleistift:#8a8378;--linie:#d8cfc0;--orange:#e8621a;--hand:#b4460c;--fokus:#b4460c;--faden:#d62a26;--keim:#8ea37a;--bern:#f0a830;
+:root{--c6k-schwebt:0 1px 0 rgba(43,39,34,.06),0 12px 28px -10px rgba(43,39,34,.32);--papier:#f4eee4;--karte:#fbf7f0;--feld:#fffdf9;--gedrueckt:#efe7da;--tusche:#2b2722;--leise:#6f6a61;--bleistift:#8a8378;--linie:#d8cfc0;--orange:#e8621a;--hand:#b4460c;--fokus:#b4460c;--faden:#2b2722;--nadel:#d62a26;--gruen:#4f8a5b;--gold:#ecd193;--blatt:#fffdf9;--sand2:#efe7da;--blatt-schatten:6px 6px 0 var(--sand2),6px 6px 0 1.5px var(--tusche);--keim:#8ea37a;--bern:#f0a830;
  --c6k-ease:cubic-bezier(.22,.78,.24,1);--c6-oben:calc(54px + env(safe-area-inset-top,0px));--c6-unten:140px;--c6-nadel-top:calc(env(safe-area-inset-top,0px) + 146px)}
 @media (min-width:820px){:root{--c6-nadel-top:162px}}
 html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--papier);color:var(--tusche);font-family:Figtree,system-ui,-apple-system,sans-serif;overscroll-behavior:none;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
@@ -145,16 +145,21 @@ html.c6z-proj-auf .c6k[data-geraet=iphone] .c6k-punkt-name{visibility:hidden;ani
 .c6k-hk:hover svg{transform:translateY(-2px)}
 .c6k-hk[data-runter=ja]:hover svg{transform:rotate(180deg) translateY(-2px)}
 .c6k-hk:hover .c6k-hk-wort{text-decoration:underline;text-decoration-color:var(--faden);text-decoration-thickness:1.5px;text-underline-offset:4px}
-.c6k-hk:focus-visible{outline:2px solid var(--fokus);outline-offset:-2px}
+.c6k-hk:focus-visible{outline:2px solid var(--fokus);outline-offset:1px}
 .c6k[data-licht=nacht] .c6k-hk{color:var(--c6k-n-text);text-shadow:0 0 8px var(--c6k-n-grund),0 0 2px var(--c6k-n-grund)}
 .c6k-ruhig .c6k-hk svg{transition:none}
 /* Höhen-Knopf und ‹ als kleine Papier-Pillen: lesbar auf hellem Blatt wie auf dunklem Himmel */
-.c6k-hk,.c6k-fd-hoch{min-height:38px;margin:3px 0;background:rgba(251,247,240,.94);border:1.5px solid var(--tusche);box-shadow:var(--c6k-schwebt);text-shadow:none;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+/* der Knopf selbst ist 44 px hoch und unsichtbar; die Pille (38 px) liegt als ::before darin – gleiches Bild, volle Trefferfläche */
+.c6k-hk,.c6k-fd-hoch{min-height:44px;margin:0;background:none;border:0;box-shadow:none;text-shadow:none;isolation:isolate}
+.c6k-hk::before,.c6k-fd-hoch::before{content:'';position:absolute;z-index:-1;left:0;right:0;top:3px;bottom:3px;border-radius:22px;background:rgba(251,247,240,.94);border:1.5px solid var(--tusche);box-shadow:var(--c6k-schwebt);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);pointer-events:none}
+/* ‹ zurück (Kopf im Space) behält sein Bild: nur Schatten und Unschärfe, keine Pille */
+.c6k-fd-hoch::before{background:none;border:0}
 .c6k-hk{padding:0 8px 0 13px}
 /* gleiches Bild, Trefferfläche 44 px und mehr */
-.c6k-hk,.c6k-fd-hoch{position:relative}.c6k-hk::after,.c6k-fd-hoch::after{content:'';position:absolute;inset:-5px -2px}
+.c6k-hk,.c6k-fd-hoch{position:relative}
 .c6k-fd-hoch{padding:0 13px 0 4px}
-.c6k[data-licht=nacht] .c6k-hk,.c6k[data-licht=nacht] .c6k-fd-hoch{background:rgba(29,36,69,.94);border-color:var(--c6k-n-text);color:var(--c6k-n-text);text-shadow:none;box-shadow:0 8px 22px -10px rgba(0,0,0,.6)}
+.c6k[data-licht=nacht] .c6k-hk,.c6k[data-licht=nacht] .c6k-fd-hoch{color:var(--c6k-n-text);text-shadow:none}
+.c6k[data-licht=nacht] .c6k-hk::before,.c6k[data-licht=nacht] .c6k-fd-hoch::before{background:rgba(29,36,69,.94);border-color:var(--c6k-n-text);box-shadow:0 8px 22px -10px rgba(0,0,0,.6)}
 .c6k[data-ohne-kopf] .c6k-kopf{display:none}
 html.c6r-an .c6k-kopf,html.c6r-an .c6k-hoehe,.c6k[data-rundgang] .c6k-kopf{display:none}
 .c6k[data-tippt] .c6k-dock{margin-bottom:8px}
@@ -236,7 +241,7 @@ html.c6z-proj-auf .c6k[data-geraet=iphone] .c6k-blase-mehr{margin:-8px 0 -14px -
 
 /* Verlauf: ein Briefbogen über dem Dock */
 .c6k-vl{position:absolute;left:12px;right:12px;bottom:calc(100% + var(--c6k-ueber,0px) + 8px);display:flex;flex-direction:column;max-height:60vh;box-sizing:border-box;
- background:var(--karte);border:1.5px solid var(--tusche);border-radius:16px;box-shadow:var(--c6k-schwebt);overflow:hidden;
+ background:var(--blatt,#fffdf9);border:1.5px solid var(--tusche);border-radius:4px;box-shadow:var(--blatt-schatten,6px 6px 0 #efe7da,6px 6px 0 1.5px #2b2722);overflow:hidden;
  opacity:0;transform:translateY(34px) scale(.985);transform-origin:50% 100%;transition:opacity .2s ease,transform .26s cubic-bezier(.5,0,.75,0)}
 .c6k-vl[hidden]{display:none}
 .c6k-vl[data-an]{opacity:1;transform:none;transition:opacity .24s ease,transform .56s cubic-bezier(.28,1.18,.45,1)}
@@ -281,6 +286,8 @@ html.c6z-proj-auf .c6k[data-geraet=iphone] .c6k-blase-mehr{margin:-8px 0 -14px -
 .c6k-blase-mehr[hidden]{display:none}
 /* solange das Gespräch offen ist, ruht der Nadel-Knopf (er läge sonst auf dem Blatt) */
 html.c6k-vl-auf #c6p-knopf{opacity:0!important;pointer-events:none!important;transition:opacity .2s ease}
+/* s14 · Solange ein Blatt im sichtbaren Raum offen ist, tritt der Nadel-Knopf zurück (Funktion bleibt; nach dem Schließen ist er wieder da) */
+html.c6e-auf #c6p-knopf,html:has(.c6-buehne:not([hidden]):not([data-sicht=aus]) [role=dialog]:not([hidden])) #c6p-knopf,html:has(.c6-buehne:not([hidden]):not([data-sicht=aus]) .c6k-sp-blatt:not([hidden])) #c6p-knopf{opacity:0!important;pointer-events:none!important;transition:opacity .2s ease}
 
 /* ---------- Der Hintergrund läuft weiter (n10) ---------- */
 /* Grund unter dem Bild: oben Papier, unten der Boden des Raums – so bleibt keine helle Fuge, wenn das Bild kurz höher rückt (Chips, Tastatur) */
@@ -294,14 +301,15 @@ html.c6k-vl-auf #c6p-knopf{opacity:0!important;pointer-events:none!important;tra
 .c6k-leiste{background:linear-gradient(to top,var(--c6k-grund-unten,var(--papier)) 72%,rgba(244,238,228,0))}
 .c6k[data-geraet=computer] .c6k-leiste{background:none}
 /* das Dock ist Rahmen, nicht Bühne: eine Papierplatte hält es lesbar, auch wenn die Lampe den Boden dunkel macht */
-.c6k[data-geraet=computer]:not([data-licht=nacht]) .c6k-leiste-spur{background:rgba(251,247,240,.86);border-radius:16px;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
-/* Verlauf: ein Blatt, durch das die Szene weich hindurchscheint */
-@supports ((-webkit-backdrop-filter:blur(2px)) or (backdrop-filter:blur(2px))){
- .c6k-vl{background:rgba(251,247,240,.84);-webkit-backdrop-filter:blur(14px) saturate(1.15);backdrop-filter:blur(14px) saturate(1.15)}
- .c6k-vl-kopf{border-bottom-color:rgba(216,207,192,.7)}
-}
+.c6k[data-geraet=computer]:not([data-licht=nacht]) .c6k-leiste-spur{background:rgba(251,247,240,.96);border-radius:16px;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+/* nachts trägt das Dock eine Nachtplatte (Himmel-Token), damit die Raumnamen auch über hellem Boden lesbar bleiben (Space nachts) */
+.c6k[data-geraet=computer][data-licht=nacht] .c6k-leiste-spur{background:rgba(20,26,51,.86);border-radius:16px}
+/* Verlauf: ein Blatt Papier wie alle Blätter über dem Bild (kein Glas) */
 /* dunkler Boden (z. B. Bibliothek am Abend): die Leiste spricht hell, wie im Nachtlicht */
 .c6k[data-unten-dunkel]:not([data-licht=nacht]) .c6k-raumknopf{color:#d9cfbf}
+.c6k[data-unten-dunkel]:not([data-licht=nacht]) .c6k-faden{background:#fbf7f0}
+/* Computer: die Raumnamen auf der Papierplatte lesbar (≥ 4,5:1 auch abends, wenn die Szene dunkel durchscheint) */
+.c6k[data-geraet=computer]:not([data-licht=nacht]):not([data-unten-dunkel]):not([data-unten-mittel]) .c6k-raumknopf:not([aria-current]):not([data-heimat]){color:#524d46}
 .c6k[data-unten-dunkel]:not([data-licht=nacht]) .c6k-raumknopf[aria-current],.c6k[data-unten-dunkel]:not([data-licht=nacht]) .c6k-raumknopf[data-heimat]{color:#fbf7f0}
 /* Computer: auf dunklem Boden wird die Papier-Pille dunkel, sonst steht helle Schrift auf hellem Grund */
 .c6k[data-geraet=computer][data-unten-dunkel]:not([data-licht=nacht]) .c6k-leiste-spur{background:rgba(36,30,26,.78)}
@@ -660,7 +668,7 @@ html:not(.c6k-ruhig) .c6r-a-brief:not([hidden]) .c6r-a-siegel{animation:c6r-a-at
 .c6z-bs-monat{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px;align-items:stretch}
 .c6z-bs-monat b{text-align:center;font:600 11px/1.6 Figtree,system-ui,sans-serif;color:#6f6a61}
 .c6z-bs-tagk{position:relative;min-height:44px;padding:0;border:0;border-radius:10px;background:none;font:500 15px/1 Figtree,system-ui,sans-serif;color:var(--tusche,#2b2722);cursor:pointer}
-.c6z-bs-tagk.c6z-bs-heute span{text-decoration:underline;text-decoration-color:var(--faden,#d62a26);text-underline-offset:4px;text-decoration-thickness:2px}
+.c6z-bs-tagk.c6z-bs-heute span{font-weight:700;color:var(--tusche,#2b2722);text-decoration:underline;text-decoration-color:var(--tusche,#2b2722);text-underline-offset:4px;text-decoration-thickness:2px}
 .c6z-bs-tagk.c6z-bs-hat::after{content:'';position:absolute;left:50%;bottom:6px;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:var(--tusche,#2b2722)}
 .c6z-bs-tagk.c6z-bs-gewaehlt{background:var(--tusche,#2b2722);color:#fbf7f0}
 .c6z-bs-tagk.c6z-bs-gewaehlt.c6z-bs-hat::after{background:#fbf7f0}
@@ -760,9 +768,9 @@ html.c6k-ruhig .c6w-bm-staub circle{animation:none}
 .c6k-ruhig .c6k-fd-kommt{animation:none}
 .c6k[data-rundgang] .c6k-fd,html.c6r-an .c6k-fd{display:none}
 .c6k[data-geraet=computer][data-faden] .c6k-kopf{top:12px;left:16px;right:80px}
-.c6k[data-licht=nacht] .c6k-fd-hoch{color:var(--c6k-n-text);text-shadow:0 0 8px var(--c6k-n-grund),0 0 2px var(--c6k-n-grund)}
+.c6k[data-licht=nacht] .c6k-fd-hoch{color:var(--c6k-n-text);text-shadow:none}
 .c6k[data-licht=nacht] .c6k-fd-farbe{border-color:var(--c6k-n-text)}
-.c6k[data-licht=nacht]{--faden:#e0504b}
+.c6k[data-licht=nacht]{--faden:#e9dfcc}
 .c6k-fd-haus{display:none;width:22px;height:22px}
 .c6k-fd-haus svg{width:22px;height:22px;display:block;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 .c6k[data-geraet=iphone] .c6k-fd-punkt .c6k-fd-haus{display:block}
@@ -797,7 +805,7 @@ html.c6k-ruhig .c6w-bm-staub circle{animation:none}
 .c6s-park-zu{right:12px}
 .c6s-park-kopf{position:absolute;top:calc(env(safe-area-inset-top,0px) + 14px);left:72px;right:72px;display:flex;flex-direction:column;align-items:center;gap:2px;pointer-events:none}
 .c6s-park-name{font:600 15px/1.2 Figtree,system-ui,sans-serif;color:var(--c6s-leise,#6f6a61)}
-.c6s-park-punkte{font:700 26px/1.1 Caveat,cursive;font-variant-numeric:tabular-nums;min-height:28px}
+.c6s-park-punkte{font:700 24px/1.1 Figtree,system-ui,sans-serif;font-variant-numeric:tabular-nums;min-height:28px}
 .c6s-park-trick{position:absolute;left:50%;top:28%;transform:translate(-50%,0);font:700 30px/1.1 Caveat,cursive;white-space:nowrap;pointer-events:none;transition:opacity .45s}
 .c6s-park-trick.c6s-weg{opacity:0}
 .c6s-park-hilfe{position:absolute;left:16px;right:16px;bottom:calc(env(safe-area-inset-bottom,0px) + 28px);display:flex;flex-wrap:wrap;justify-content:center;gap:4px 18px;font:600 22px/1.25 Caveat,cursive;color:var(--c6s-leise,#6f6a61);pointer-events:none;transition:opacity .8s}
@@ -980,7 +988,7 @@ html.c6k-ruhig .c6r-le *,html.c6k-ruhig .c6r-le *::before,html.c6k-ruhig .c6r-le
 .c6s-muenze{display:block;flex:none}
 .c6s-stand{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px 0 8px;border-radius:18px;background:var(--karte,#fbf7f0);border:2px solid var(--tusche,#2b2722);box-shadow:3px 3px 0 var(--tusche,#2b2722);font:600 16px/1 Figtree,system-ui,sans-serif;color:var(--tusche,#2b2722);font-variant-numeric:tabular-nums;transform-origin:center}
 .c6s-stand[hidden]{display:none}
-.c6s-flug-muenze{position:fixed;z-index:1200;pointer-events:none;display:flex;align-items:center;gap:4px;font:700 22px/1 Caveat,cursive;color:var(--tusche,#2b2722);transform:translate(-50%,-50%);opacity:0}
+.c6s-flug-muenze{position:fixed;z-index:1200;pointer-events:none;display:flex;align-items:center;gap:4px;font:700 18px/1 Figtree,system-ui,sans-serif;color:var(--tusche,#2b2722);transform:translate(-50%,-50%);opacity:0}
 .c6s-spiel-auf .c6s-flug-muenze,.c6s-flug-muenze.c6s-nacht{color:#eef0ff}
 .c6s-puste{position:fixed;z-index:1200;pointer-events:none;border-radius:50%;background:var(--karte,#fbf7f0);border:1.5px solid var(--tusche,#2b2722)}
 
@@ -1217,6 +1225,8 @@ html.c6z-proj-auf .c6z-stube .c6z-carl{z-index:51}
 .c6w-leicht.c6w-leicht:active{transform:none;box-shadow:none}
 .c6w-nur-lesbar{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
+/* Hinweis: ein rollendes Blatt (overflow:auto) über einem WebGL-Canvas ließ in Chromium Teile des Canvas verschwinden, solange zugleich die Blase stand.
+   Einziges WebGL heute: der Himmel (netz.js); dort setzt netz.css das Blatt auf overflow:hidden (nur .c6w-blatt-lang rollt). Wer WebGL unter ein Blatt legt, macht es ebenso. */
 .c6w-blatt{position:absolute;left:12px;right:12px;bottom:calc(var(--c6-unten,0px) + 12px);max-height:calc(100% - var(--c6-unten,0px) - 96px);overflow:auto;overscroll-behavior:contain;background:#fbf7f0;border:2px solid #2b2722;border-radius:20px;box-shadow:3px 3px 0 #2b2722;padding:20px 20px 18px;z-index:6;opacity:0;transform:translateY(24px);transition:opacity .3s ease,transform .36s cubic-bezier(.2,.8,.2,1);box-sizing:border-box}
 .c6w-blatt.c6w-an{opacity:1;transform:none}
 .c6w-blatt[hidden]{display:none}
@@ -1515,12 +1525,12 @@ textarea.c6w-feld{resize:vertical;min-height:96px;font-family:Caveat,cursive;fon
 .c6s-f-opt:active{transform:translateY(1px)}
 .c6s-f-bild{display:block;width:100%;height:100%}
 .c6s-f-bild svg{display:block;width:100%;height:100%;overflow:visible}
-.c6s-f-wort{font:700 19px/1 Caveat,cursive;color:var(--leise,#6f6a61)}
+.c6s-f-wort{font:600 14px/1 Figtree,system-ui,sans-serif;color:var(--leise,#6f6a61)}
 .c6s-f-farbe{width:30px;height:30px;border-radius:50%;border:2px solid var(--tusche,#2b2722);box-shadow:inset -3px -4px 0 rgba(0,0,0,.12)}
 .c6s-f-opt.c6s-zu .c6s-f-bild,.c6s-f-opt.c6s-zu .c6s-f-farbe{opacity:.55}
 .c6s-f-marke{position:absolute;right:-6px;top:-8px;display:inline-flex;align-items:center;gap:2px;padding:1px 6px 1px 3px;border-radius:10px;background:var(--karte,#fbf7f0);border:1.5px solid var(--tusche,#2b2722);font:700 12px/1.2 Figtree,system-ui,sans-serif;color:var(--tusche,#2b2722)}
 .c6s-f-park{padding:2px 4px}
-.c6s-f-neu{font:700 15px/1 Caveat,cursive;padding:2px 7px;background:#f3df9e}
+.c6s-f-neu{font:700 11.5px/1 Figtree,system-ui,sans-serif;letter-spacing:.02em;padding:2px 7px;background:#f3df9e}
 .c6s-f-hinweis{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:12px;padding:10px 12px;border-radius:14px;background:var(--papier,#f4eee4);font:400 15px/1.4 Figtree,system-ui,sans-serif}
 .c6s-f-hinweis[hidden]{display:none}
 .c6s-f-hinweis span{flex:1 1 180px}
@@ -1582,7 +1592,7 @@ html.c6k-ruhig .c6s-f-wolke,html.c6k-ruhig .c6s-f-fahne,html.c6k-ruhig .c6s-f-ha
 .c6s-f-bmx-bild{flex:none;width:64px;height:44px}
 .c6s-f-bmx-text{display:flex;flex-direction:column;gap:2px}
 .c6s-f-bmx-text b{font:600 16px/1.25 Figtree,system-ui,sans-serif}
-.c6s-f-bmx-text span{font:700 19px/1 Caveat,cursive;opacity:.9}
+.c6s-f-bmx-text span{font:600 15px/1 Figtree,system-ui,sans-serif;opacity:.9}
 
 /* Er fährt */
 .c6s-faehrt.c6s-sichtbar .c6s-r-rad{animation:c6s-dreh 1.6s linear infinite}
@@ -1661,7 +1671,7 @@ html.c6k-ruhig .c6s-f-wolke,html.c6k-ruhig .c6s-f-fahne,html.c6k-ruhig .c6s-f-ha
 .c6s-l-name{font:600 14px/1.2 Figtree,system-ui,sans-serif;text-align:center}
 .c6s-l-preis{display:flex;align-items:center;gap:4px;min-height:20px;font:500 14px/1 Figtree,system-ui,sans-serif;color:var(--leise,#6f6a61)}
 .c6s-l-preis span{color:var(--tusche,#2b2722);font-weight:600;font-variant-numeric:tabular-nums}
-.c6s-l-zeichen{font:700 18px/1 Caveat,cursive!important;color:var(--tusche,#2b2722)}
+.c6s-l-zeichen{font:600 13px/1 Figtree,system-ui,sans-serif!important;color:var(--tusche,#2b2722)}
 .c6s-traegt .c6s-l-name::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--tusche,#2b2722);margin-right:6px;vertical-align:1px}
 .c6s-l-tun{flex:none;display:flex;align-items:center;gap:10px;padding:0 16px;min-height:52px}
 .c6s-l-stand{flex:none;margin-right:auto}
@@ -1718,7 +1728,7 @@ html.c6k-ruhig .c6s-f-wolke,html.c6k-ruhig .c6s-f-fahne,html.c6k-ruhig .c6s-f-ha
 /* Lieblingsstücke: ein Schild am Haken */
 .c6s-l-lieb{position:absolute;z-index:3;display:flex;flex-direction:column;align-items:center;padding:0;border:0;background:none;cursor:pointer;min-width:44px;min-height:44px;-webkit-tap-highlight-color:transparent}
 .c6s-l-haken{width:12px;height:12px;border-radius:50%;background:#e2b93b;border:2px solid var(--tusche,#2b2722)}
-.c6s-l-schild{display:inline-flex;align-items:center;gap:6px;margin-top:-1px;padding:5px 12px 7px;border:2px solid var(--fokus,#b4460c);border-radius:4px;background:#fbf7f0;color:var(--fokus,#b4460c);font:700 20px/1 Caveat,cursive;box-shadow:2px 2px 0 rgba(180,70,12,.35);transform:rotate(-3deg);transform-origin:top center;white-space:nowrap;transition:transform .3s cubic-bezier(.3,.7,.3,1)}
+.c6s-l-schild{display:inline-flex;align-items:center;gap:6px;margin-top:-1px;padding:5px 12px 7px;border:1.5px solid var(--tusche,#2b2722);border-radius:4px;background:#fbf7f0;color:var(--tusche,#2b2722);font:600 15px/1 Figtree,system-ui,sans-serif;box-shadow:2px 2px 0 var(--tusche,#2b2722);transform:rotate(-3deg);transform-origin:top center;white-space:nowrap;transition:transform .3s cubic-bezier(.3,.7,.3,1)}
 .c6s-l-lieb:hover .c6s-l-schild{transform:rotate(2deg)}
 /* Karten stehen auf dem Boden wie auf einem Tablett */
 .c6s-l-karte{box-shadow:3px 3px 0 var(--tusche,#2b2722)}
@@ -1736,7 +1746,7 @@ html.c6k-ruhig .c6s-f-wolke,html.c6k-ruhig .c6s-f-fahne,html.c6k-ruhig .c6s-f-ha
   .c6s-l-wandlampe{right:96px;width:72px;bottom:calc(100% - var(--c6s-hz) + 78px)}
   .c6s-l-hocker,.c6s-l-pflanze{display:none}
   .c6s-l-lieb{left:6px;bottom:calc(100% - var(--c6s-hz) + 92px)}
-  .c6s-l-schild{font-size:18px;padding:4px 10px 6px}
+  .c6s-l-schild{font-size:14px;padding:5px 10px 6px}
   .c6s-l-zimmer{--c6s-lx:20%}
 }
 @media (min-width:820px){
@@ -1903,13 +1913,9 @@ html.c6k-ruhig .c6s-l-bildfigur.c6s-schwebt{animation:none;transform:translateY(
 
 .c6w-himmel .c6w-stimme{position:absolute;left:50%;top:64px;transform:translate(-50%,-8px);margin:0;max-width:min(560px,calc(100% - 32px));width:max-content;box-sizing:border-box;padding:10px 16px;background:#1d2445;border:2px solid #aab2dc;border-radius:16px;box-shadow:3px 3px 0 #0b0f22;font:400 17px/1.35 Fraunces,Georgia,serif;color:#eef0ff;text-align:center;opacity:0;pointer-events:none;transition:opacity .4s ease,transform .45s cubic-bezier(.2,.8,.2,1);z-index:4}
 .c6w-himmel .c6w-stimme.c6w-an{opacity:1;transform:translate(-50%,0)}
-.c6w-himmel .c6w-wink{position:absolute;left:0;right:0;bottom:calc(var(--c6-unten,0px) + 80px);margin:0;text-align:center;font:600 22px/1.2 Caveat,cursive;color:#c9cfee;opacity:0;transition:opacity .5s;pointer-events:none;padding:0 16px;z-index:3}
-.c6w-himmel .c6w-wink.c6w-an{opacity:1}
-.c6w-himmel.c6w-blatt-auf .c6w-wink,.c6w-himmel.c6w-wink-weg .c6w-wink{opacity:0}
 
 .c6w-himmel .c6w-netz-unten{position:absolute;left:0;right:0;bottom:calc(var(--c6-unten,0px) + 16px);display:flex;justify-content:center;gap:12px;pointer-events:none;z-index:3;transition:opacity .25s;padding:0 16px}
 .c6w-himmel .c6w-netz-unten .c6w-knopf.c6w-knopf{pointer-events:auto;background:#1d2445;color:#eef0ff;border-color:#aab2dc;box-shadow:3px 3px 0 #0b0f22}
-.c6w-himmel .c6w-netz-unten .c6w-haupt.c6w-haupt{background:#eef0ff;color:#141a33;border-color:#eef0ff}
 .c6w-himmel .c6w-netz-unten .c6w-knopf.c6w-knopf:active{box-shadow:1px 1px 0 #0b0f22}
 .c6w-himmel .c6w-netz-unten [hidden]{display:none}
 .c6w-himmel.c6w-blatt-auf .c6w-netz-unten{opacity:0}
@@ -1923,7 +1929,6 @@ html.c6k-ruhig .c6s-l-bildfigur.c6s-schwebt{animation:none;transform:translateY(
 .c6w-h-liste:focus-within li{position:static;width:auto;height:auto;transform:none;overflow:visible;clip-path:none;opacity:1}
 .c6w-h-liste:focus-within li button{width:auto;opacity:1;pointer-events:auto}
 .c6w-h-liste button{min-height:44px;padding:0 14px;border-radius:12px;border:2px solid #aab2dc;background:#1d2445;color:#eef0ff;font:600 15px Figtree,system-ui,sans-serif}
-.c6w-h-liste button:focus-visible{outline:3px solid #f08a4b;outline-offset:2px}
 
 /* Blatt im Nachtlicht */
 .c6w-himmel .c6w-blatt{background:#1d2445;border-color:#aab2dc;box-shadow:3px 3px 0 #0b0f22;color:#eef0ff}
@@ -1942,11 +1947,10 @@ html.c6k-ruhig .c6s-l-bildfigur.c6s-schwebt{animation:none;transform:translateY(
 .c6w-himmel .c6w-knoten{background:#eef0ff}
 .c6w-himmel .c6w-h-sternzeichen{border-radius:0;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)}
 .c6w-himmel .c6w-nadel-z{background:#ff5a4f}
-.c6w-himmel .c6w-knopf.c6w-knopf:focus-visible,.c6w-himmel .c6w-blatt button:focus-visible,.c6w-himmel .c6w-feld:focus-visible{outline-color:#f08a4b}
+.c6w-himmel .c6w-knopf.c6w-knopf:focus-visible,.c6w-himmel .c6w-blatt button:focus-visible,.c6w-himmel .c6w-feld:focus-visible{outline-color:var(--gold,#ecd193)}
 
-.c6w-im-rundgang .c6w-netz-unten,.c6w-im-rundgang .c6w-wink,.c6w-im-rundgang .c6w-stimme{display:none}
+.c6w-im-rundgang .c6w-netz-unten,.c6w-im-rundgang .c6w-stimme{display:none}
 /* am Computer reicht der Bleistift-Planet; der Knopf bleibt nur am iPhone */
-.c6k[data-geraet=computer] .c6w-himmel .c6w-netz-unten .c6w-haupt.c6w-haupt{display:none}
 @media (max-width:819px){.c6w-himmel .c6w-stimme{left:16px;right:96px;width:auto;max-width:none;transform:translateY(-8px);font-size:16px;text-align:left}.c6w-himmel .c6w-stimme.c6w-an{transform:none}}
 @media (prefers-reduced-motion:reduce){.c6w-h-tauch,.c6w-himmel .c6w-stimme{transition:none}}
 .c6w-h-carl{transform-origin:40% 50%}
@@ -1962,7 +1966,7 @@ html.c6k-ruhig .c6s-l-bildfigur.c6s-schwebt{animation:none;transform:translateY(
 /* das Regalbrett an der Wand rechts, zwischen Leine und Carl: Schatten fallen vom Fenster weg */
 /* der Tisch zwischen Carl und Briefkasten */
 /* Tagesschild: ein schmaler Anhänger an der Leine, senkrecht beschriftet, damit der erste Brief am iPhone ganz zu sehen ist */
-.c6p-tag{flex:0 0 auto;align-self:flex-start;margin:0;padding:8px 3px 10px;border-radius:8px;background:var(--p-karte);border:2px solid var(--p-tusche);font:600 14px Caveat,cursive;color:var(--p-leise);writing-mode:vertical-rl;transform:translateY(-4px) rotate(2deg);transform-origin:50% 0;box-shadow:var(--p-sdx) var(--p-sdy) 0 rgba(43,39,34,var(--p-sa))}
+.c6p-tag{flex:0 0 auto;align-self:flex-start;margin:0;padding:8px 3px 10px;border-radius:8px;background:var(--p-karte);border:2px solid var(--p-tusche);font:600 12px Figtree,system-ui,sans-serif;color:var(--p-leise);writing-mode:vertical-rl;transform:translateY(-4px) rotate(2deg);transform-origin:50% 0;box-shadow:var(--p-sdx) var(--p-sdy) 0 rgba(43,39,34,var(--p-sa))}
 .c6p-z{position:relative;flex:0 0 auto;width:min(236px,60vw);max-height:100%;box-sizing:border-box;padding:16px 14px 12px;background:var(--p-karte);border:2px solid var(--p-tusche);border-radius:3px 4px 5px 3px;
   box-shadow:var(--p-sdx) var(--p-sdy) 0 rgba(43,39,34,var(--p-sa)),var(--p-sdx) var(--p-sdy) 0 1px rgba(43,39,34,.06);transform-origin:50% -4px;overflow:hidden;display:flex;flex-direction:column}
 .c6p-zm{transform:rotate(-.8deg)}
@@ -2032,8 +2036,8 @@ html:not(.c6k-ruhig) .c6p-voll .c6p-fahne{animation:c6p-fahne .7s var(--p-weich)
 #c6r-schicht .c6r-bild svg{width:min(600px,100%);height:auto;max-height:100%;stroke:var(--b)}
 #c6r-schicht .c6r-bild.c6r-oben{align-items:center;transform:scale(1)}
 #c6r-schicht .c6r-bild.c6r-oben svg{width:min(820px,130%)}
-#c6r-schicht .c6r-bild .c6r-faden{stroke:#d62a26;stroke-width:3.2}
-#c6r-schicht .c6r-bild .c6r-knoten{fill:#d62a26;stroke:none}
+#c6r-schicht .c6r-bild .c6r-faden{stroke:var(--faden,#2b2722);stroke-width:3.2}
+#c6r-schicht .c6r-bild .c6r-knoten{fill:var(--faden,#2b2722);stroke:none}
 #c6r-schicht .c6r-bild .c6r-fadenwort{font:600 22px Caveat,cursive;fill:var(--t);stroke:none}
 
 /* Kopf: Zurück, Überspringen */
@@ -2286,7 +2290,7 @@ html.c6r-an .c6s-f-punkte,html.c6r-an .c6s-f-bmx{visibility:hidden}
 .c6z-sp-nadel{position:absolute;left:-9px;top:-13px;width:30px;height:30px;transform:rotate(-8deg)}
 .c6z-sp-nadel svg{display:block;width:100%;height:100%;fill:none}
 .c6k-sp-pin-nadel{stroke:#2b2722;stroke-width:1.8;stroke-linecap:round}
-.c6k-sp-pin-kopf{fill:var(--faden);stroke:#2b2722;stroke-width:1.4}
+.c6k-sp-pin-kopf{fill:var(--nadel,#d62a26);stroke:#2b2722;stroke-width:1.4}
 .c6k-sp .c6z-sp-kern-text{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;font:italic 400 13.5px/1.28 Fraunces,Georgia,serif;color:#2b2722}
 .c6k-sp .c6z-sp-kern-leer{border-color:#cdbfa9;background:rgba(255,253,246,.88);box-shadow:none}
 .c6k-sp .c6z-sp-kern-leer .c6z-sp-kern-text{color:#5f5a52}
@@ -2683,10 +2687,10 @@ html.c6z-proj-auf .c6k-sp:not(.c6k-sp-computer) .c6z-sp-welt{overflow:visible;-w
 @keyframes c6w-t-blitz{0%{box-shadow:0 0 14px 6px color-mix(in srgb,var(--f) 60%,#fff)}25%{box-shadow:0 0 34px 16px color-mix(in srgb,var(--f) 55%,#fff);opacity:1;transform:scale(1.25)}100%{box-shadow:0 0 14px 6px color-mix(in srgb,var(--f) 60%,#fff)}}
 .c6w-stern-name{font:600 14px/1.15 Figtree,system-ui,sans-serif;white-space:nowrap;text-shadow:0 1px 4px #0b0f22,0 0 8px #0b0f22}
 .c6w-stern-art{font:500 11px/1 Figtree,system-ui,sans-serif;color:#aab2dc;letter-spacing:.04em;text-shadow:0 1px 4px #0b0f22}
-.c6w-eigen .c6w-stern-art{color:#f08a4b}
+.c6w-eigen .c6w-stern-art{color:var(--gold,#ecd193)}
 .c6w-an-wand .c6w-stern-name::after{content:" ·  an deiner Wand";font-weight:500;color:#aab2dc}
 .c6w-t-beispiel{position:absolute;left:0;right:0;bottom:12px;margin:0;text-align:center;font:500 12px/1 Figtree,system-ui,sans-serif;color:#aab2dc;letter-spacing:.04em;pointer-events:none}
-.c6w-stern.c6w-stern:focus-visible{outline:3px solid #f08a4b;outline-offset:2px;border-radius:12px}
+.c6w-stern.c6w-stern:focus-visible{outline:3px solid var(--gold,#ecd193);outline-offset:2px;border-radius:12px}
 /* Carl am Rohr */
 .c6w-t-carl{position:absolute;left:0;top:0;z-index:3;pointer-events:none;will-change:transform;transform-origin:40% 50%}
 .c6w-t-carl[hidden]{display:none}
@@ -2842,7 +2846,7 @@ html.c6k-ruhig .c6w-staub circle{animation:none}
 .c6w-bleistift-note{font:600 20px/1.25 Caveat,cursive;color:#6b6259;margin:4px 0 10px}
 .c6w-blatt-k .c6w-liegt{margin:4px 0 0}
 .c6w-blatt-stapel{display:grid;gap:8px;margin:0 0 12px}
-.c6w-blatt-alt{text-align:left;min-height:44px;padding:8px 12px;border:2px solid #2b2722;border-radius:4px 10px 4px 4px;background:#f6f0e6;font:600 19px/1.2 Caveat,cursive;color:#2b2722;cursor:pointer;box-shadow:2px 2px 0 #2b2722}
+.c6w-blatt-alt{text-align:left;min-height:44px;padding:8px 12px;border:2px solid #2b2722;border-radius:4px 10px 4px 4px;background:#f6f0e6;font:500 16px/1.25 Fraunces,Georgia,serif;color:#2b2722;cursor:pointer;box-shadow:2px 2px 0 #2b2722}
 .c6w-blatt-alt span{display:block;font:600 12px/1.4 Figtree,system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#6b6259}
 .c6w-blatt-alt:focus-visible{outline:3px solid #b4460c;outline-offset:2px}
 
@@ -2924,7 +2928,7 @@ button.c6z-ding:active{transform:scale(.97)}
 .c6z-fenster{left:5%;top:calc(env(safe-area-inset-top,0px) + 96px);width:30%;max-width:132px}
 .c6z-stube .c6z-bild{right:35%;top:calc(env(safe-area-inset-top,0px) + 92px);width:23%;max-width:96px;transform:rotate(1.5deg)}
 .c6z-tuer{right:-34px;bottom:calc(100% - var(--c6z-boden));width:112px}
-.c6z-schild{position:absolute;left:10px;top:60%;font:700 15px/1 Caveat,cursive;color:var(--tusche,#2b2722);background:#fbf7f0;border:1.5px solid var(--tusche,#2b2722);padding:3px 7px 4px;border-radius:2px;transform:rotate(-4deg);box-shadow:2px 2px 0 var(--tusche,#2b2722);white-space:nowrap}
+.c6z-schild{position:absolute;left:10px;top:60%;font:600 13px/1 Fraunces,Georgia,serif;color:var(--tusche,#2b2722);background:#fbf7f0;border:1.5px solid var(--tusche,#2b2722);padding:3px 7px 4px;border-radius:2px;transform:rotate(-4deg);box-shadow:2px 2px 0 var(--tusche,#2b2722);white-space:nowrap}
 .c6z-sessel{left:-46px;bottom:calc(100% - var(--c6z-boden) - 44px);width:170px;pointer-events:none}
 .c6z-lampe{display:block;left:2%;bottom:calc(100% - var(--c6z-boden) - 24px);width:48px;pointer-events:none;z-index:1}
 .c6z-teppich{position:absolute;left:50%;bottom:calc(var(--c6z-fuss) - 20px);width:calc(var(--c6z-carl) * 1.25);height:calc(var(--c6z-carl) * .16);transform:translateX(-50%);border-radius:50%;
@@ -3092,14 +3096,14 @@ button.c6z-ding:active{transform:scale(.97)}
 .c6k-fg-an .c6k-fg-karte{transform:none}
 .c6k-fg-was{margin:0 0 8px;font:400 19px/1.35 Fraunces,Georgia,serif}
 .c6k-fg-folgen{margin:0 0 6px;font:italic 400 15px/1.4 Fraunces,Georgia,serif;color:var(--leise,#6f6a61)}
-.c6k-fg-nie{margin:6px 0 0;padding-left:10px;border-left:3px solid var(--faden,#d62a26);font:600 14px/1.35 Figtree,system-ui,sans-serif;color:var(--tusche,#2b2722)}
+.c6k-fg-nie{margin:6px 0 0;padding-left:10px;border-left:3px solid var(--nadel,#d62a26);font:600 14px/1.35 Figtree,system-ui,sans-serif;color:var(--tusche,#2b2722)}
 .c6k-fg-nie[hidden]{display:none}
-.c6k-fg-karte[data-zwei] .c6k-fg-folgen{color:var(--tusche,#2b2722);font-style:normal;padding-left:10px;border-left:3px solid var(--faden,#d62a26)}
+.c6k-fg-karte[data-zwei] .c6k-fg-folgen{color:var(--tusche,#2b2722);font-style:normal;padding-left:10px;border-left:3px solid var(--nadel,#d62a26)}
 .c6k-fg-knoepfe{display:flex;justify-content:flex-end;gap:10px;margin-top:16px;flex-wrap:wrap}
 .c6k-fg-knoepfe button{min-height:44px;padding:0 18px;border-radius:22px;font:600 15px/1 Figtree,system-ui,sans-serif;cursor:pointer;border:1.5px solid var(--tusche,#2b2722)}
 .c6k-fg-nein{background:var(--karte,#fbf7f0);color:var(--tusche,#2b2722)}
 .c6k-fg-ja{background:var(--tusche,#2b2722);color:var(--karte,#fbf7f0)}
-.c6k-fg-karte[data-zwei] .c6k-fg-ja{background:var(--faden,#d62a26);border-color:var(--faden,#d62a26)}
+.c6k-fg-karte[data-zwei] .c6k-fg-ja{background:var(--nadel,#d62a26);border-color:var(--nadel,#d62a26)}
 .c6k-fg-knoepfe button:focus-visible{outline:3px solid var(--fokus,#b4460c);outline-offset:2px}
 .c6k-ruhig .c6k-fg,.c6k-ruhig .c6k-fg-karte,html.c6k-ruhig .c6k-fg,html.c6k-ruhig .c6k-fg-karte{transition:none}
 
@@ -3143,7 +3147,11 @@ div.c6k-sp-carl{pointer-events:none}
 /* Ein Helfer arbeitet: leise im Kopf, unter dem Ortsnamen (kein Knopf; anhalten mit Esc oder im Freundschaftsbuch) */
 .c6k-lauf{display:flex;align-items:center;gap:6px;margin:2px 0 0;font:500 12px/1.2 Figtree,system-ui,sans-serif;color:var(--leise);pointer-events:none;max-width:60vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .c6k-lauf[hidden]{display:none}
-.c6k-lauf-punkt{width:7px;height:7px;border-radius:50%;background:var(--faden,#d62a26);opacity:.7;animation:c6k-lauf-atmen 2.4s ease-in-out infinite;flex:none}
+.c6k-lauf-punkt{width:7px;height:7px;border-radius:50%;background:var(--tusche,#2b2722);opacity:.7;animation:c6k-lauf-atmen 2.4s ease-in-out infinite;flex:none}
 @keyframes c6k-lauf-atmen{0%,100%{opacity:.35;transform:scale(.8)}50%{opacity:.85;transform:scale(1)}}
 .c6k-ruhig .c6k-lauf-punkt{animation:none}
 .c6k[data-licht=nacht] .c6k-lauf{color:var(--c6k-n-leise)}
+/* s14 · Papier bleibt Papier: Blätter über dem Bild liegen über dem Nachtschleier (z 40) und unter Carls Blase (z 52) */
+.c6-buehne .c6e-blatt,.c6-buehne .c6s-f-blatt,.c6-buehne .c6s-g-tafelblatt,.c6-buehne .c6k-sp-blatt,.c6-buehne .c6w-helfer-blatt,.c6-buehne .c6w-t-vorschau,.c6-buehne .c6rz-tagesblatt{z-index:44}
+/* grundsätzlich: jedes Blatt (role=dialog) in einem Raum mit Nachtschleier liegt darüber – neue Blätter brauchen keinen Eintrag in der Liste oben */
+.c6-buehne[data-c6k-nachtschleier] [role=dialog]:not(.c6-buehne){z-index:44}

@@ -261,7 +261,9 @@ C6.raum({
     var appleGesagt = false;
     function kalenderZeile(box, oben) {
       var st = C6.tage.status(), z = null, knopf = null, g = st.grund;
-      if (st.kalender === 'laedt') z = sp('kalender.laedt', null, 'Ich schau in deinen Kalender.');
+      // aus = der Schalter „Kalender lesen“ im Buch steht auf aus: ehrlich sagen und auf den einen Schalter zeigen (kein zweiter hier)
+      if (st.kalender === 'aus') { z = sp('kalender.aus', null, 'In deinen Kalender schau ich nicht, der Schalter steht auf aus. Hier liegt nur, was du selbst einträgst.'); if (C6.atlas && typeof C6.atlas.oeffne === 'function') knopf = { t: sp('kalender.zumSchalter', null, 'Zum Schalter im Buch'), f: function () { try { C6.atlas.oeffne({ seite: 'kann' }); } catch (e) {} } }; }
+      else if (st.kalender === 'laedt') z = sp('kalender.laedt', null, 'Ich schau in deinen Kalender.');
       else if (st.kalender === 'nicht-verbunden' && (g === 'kein-mcp' || g === 'not_granted' || /^capability_/.test(g || '') || g === 'user_changed')) z = sp('kalender.geht-nicht', null, 'Von hier aus komm ich an keinen Kalender heran. Was in deinen Werkzeugen steht, zeig ich trotzdem.');
       else if (st.kalender === 'nicht-verbunden' && g === 'selection_required') z = sp('kalender.auswahl', null, 'Ich seh mehr als einen Google Kalender und weiß nicht, welcher gemeint ist.');
       else if (st.kalender === 'nicht-verbunden') { z = sp('kalender.nicht-verbunden', null, 'Noch kein Kalender verbunden. Bis dahin zeig ich nur, was in deinen eigenen Werkzeugen steht.'); knopf = { t: sp('kalender.wieChip', null, 'Wie verbinde ich ihn?'), f: function (p) { p.textContent = sp('kalender.wie', null, 'In Claude unter Einstellungen bei den Konnektoren „Google Calendar“ hinzufügen. Danach lese ich deine Termine, ändern kann ich nichts.'); } }; }

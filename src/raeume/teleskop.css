@@ -26,3 +26,12 @@
 .c6w-t-bp-nie{margin:0;font:400 13px/1.4 Figtree,system-ui,sans-serif;color:#c9cfee}
 /* „an deiner Wand“ steht unter dem Namen statt daneben, damit nichts über den Rand des Rohrs ragt */
 .c6w-an-wand .c6w-stern-name::after{content:"an deiner Wand";display:block;margin-top:2px;font:500 12px/1.15 Figtree,system-ui,sans-serif;color:#aab2dc}
+/* die Sterne im Rohr: eigener Name (die Nachtsterne der Bibliothek heißen .c6w-sterne und sind tagsüber unsichtbar) */
+.c6w-t-sterne{position:absolute;inset:0}
+/* „von dir“ ist ein Etikett, kein Handeln: Sterngold statt Orange */
+.c6w-teleskop .c6w-eigen .c6w-stern-art{color:#ecd193}
+.c6w-teleskop .c6w-stern.c6w-stern:focus-visible,.c6w-t-vorschau .c6w-knopf:focus-visible{outline-color:#ecd193}
+/* die Vorschau spricht die Blattsprache des Himmels: Rand 1,5 px, harter Versatz, kleine Ecke; Übernehmen ist Handeln */
+.c6w-t-vorschau{border:1.5px solid #aab2dc;border-radius:4px;box-shadow:6px 6px 0 #0b0f22,6px 6px 0 1.5px #aab2dc}
+.c6w-t-vorschau .c6w-knopf.c6w-haupt{background:#e8621a;color:#0b0f22;border-color:#e8621a;box-shadow:3px 3px 0 #0b0f22;font-weight:700}
+.c6w-t-v-art i{box-shadow:0 0 0 2px rgba(238,240,255,.18)}

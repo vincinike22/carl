@@ -119,7 +119,7 @@
 .c6wz-k small{position:absolute;left:3px;top:1px;font:600 10px Figtree,system-ui,sans-serif;color:#b0a48f}
 .c6wz-k svg{position:absolute;left:50%;top:50%;width:24px;height:24px;margin:-8px 0 0 -10px;fill:none;stroke-width:3;stroke-linecap:round}
 .c6wz-k-spaeter{opacity:.35}
-.c6wz-k-heute::after{content:'';position:absolute;inset:1px 2px;border:2px solid #d62a26;border-radius:48% 52% 46% 54%/56% 44% 58% 42%;transform:rotate(-6deg);pointer-events:none}
+.c6wz-k-heute::after{content:'';position:absolute;inset:1px 2px;border:2.5px solid var(--tusche,#2b2722);border-radius:48% 52% 46% 54%/56% 44% 58% 42%;transform:rotate(-6deg);pointer-events:none}
 .c6wz-rb-balken{height:72px;gap:5px}
 .c6wz-rb-balken i{position:relative}
 .c6wz-rb-balken em{position:absolute;left:50%;top:-16px;transform:translateX(-50%);font:700 14px Caveat,cursive;font-style:normal;color:#2b2722}

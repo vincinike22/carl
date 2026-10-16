@@ -342,8 +342,10 @@
   // die leere Ablage sagt ehrlich, dass nichts da ist (nur auf Nachfrage: Halten / Drüberfahren)
   function postSatz() {
     var da = post && post.querySelector('#c6r-a-brief:not([hidden])');
+    var aus = false; try { aus = !!(C6.brief && typeof C6.brief.an === 'function' && C6.brief.an() === false); } catch (e) { aus = false; }
+    if (!da && aus) return satz('brief.ablageAus', 'Den Brief hast du ausgeschaltet, darum liegt hier keiner. Der Schalter steht in unserem Buch.');
     return da ? satz('brief.ablage', 'Hier liegt dein Brief. Tipp ihn an, dann mach ich ihn auf.')
-      : satz('brief.ablageLeer', 'Heute liegt hier noch kein Brief. Wenn ich dir etwas zu sagen habe, liegt er hier.');
+      : satz('brief.ablageLeer', 'Heute liegt hier noch kein Brief. Steht etwas an, liegt hier einer.');
   }
   function postPruefen() {
     if (!post) return;
@@ -441,6 +443,8 @@
     try { if (C6.staunen && C6.staunen.an) { C6.staunen.an(glocke, 'rz-glocke', glockeSatz()); C6.staunen.an(post, 'rz-post', postSatz()); } } catch (e) {}
     // der Brief wird von der Rezeption in die Ablage gelegt (oder wieder herausgenommen)
     if ('MutationObserver' in window) new MutationObserver(postPruefen).observe(post, { childList: true, subtree: true, attributes: true, attributeFilter: ['hidden'] });
+    // der Brief-Schalter ändert, was über der leeren Ablage wahr ist, auch wenn sich an ihr nichts bewegt
+    if (!C6.__rwBriefGelauscht) try { C6.__rwBriefGelauscht = true; C6.bus.on('brief', function (d) { if (d && d.was === 'schalter' && C6.staunen && C6.staunen.text) C6.staunen.text('rz-post', postSatz()); }); } catch (e) {}
     var b = slot.closest('.c6rz-buehne');
     if (b && 'MutationObserver' in window) new MutationObserver(offenMarkieren).observe(b, { attributes: true, attributeFilter: ['data-tag-offen'] });
     if ('ResizeObserver' in window) new ResizeObserver(function () { lage(); }).observe(root);

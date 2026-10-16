@@ -1,0 +1,293 @@
+[
+ {
+  "ger": "computer",
+  "schritt": "himmel-leer",
+  "bild": "computer-himmel-leer.png",
+  "carl": [
+   "Hier oben stehen später deine Spaces, jeder als Planet. Anfangen tust du im Zuhause: Sag mir dort, woran du denkst."
+  ],
+  "text": [
+   "Ins Zuhause"
+  ]
+ },
+ {
+  "ger": "computer",
+  "schritt": "himmel-eins",
+  "bild": "computer-himmel-eins.png",
+  "carl": [
+   "Der Planet hier oben ist „Gitarre lernen“, mit seinem Stand darunter. Verbinden geht ab zwei Spaces, den nächsten fängst du im Zuhause an."
+  ],
+  "text": []
+ },
+ {
+  "ger": "computer",
+  "schritt": "himmel-drei",
+  "bild": "computer-himmel-drei.png",
+  "carl": [
+   "Jeder Planet hier oben ist einer deiner Spaces, mit seinem Stand darunter. Gehören zwei zusammen, zieh den einen zum anderen."
+  ],
+  "text": []
+ },
+ {
+  "ger": "computer",
+  "schritt": "himmel-planet",
+  "bild": "computer-himmel-planet.png",
+  "carl": [],
+  "text": [
+   "Ein Keim · seit 16. Oktober | Gitarre lernen | 3 Zettel von dir und ein Werkzeug, noch kein Kernsatz. Ein nächster Schritt fehlt. | Zuletzt · 16. Oktober Sternbild mit „Bachelorarbeit schreiben“: „Beides braucht jeden Tag ein bisschen.“ | Den nächsten Schritt finden | Ich such dir einen nächsten Schritt. Denkt gerade keiner mit, schreibst du ihn, und ich häng ihn als Schild auf. | Hineingehen | Verbinden …"
+  ]
+ },
+ {
+  "ger": "computer",
+  "schritt": "himmel-verbinden-wahl",
+  "bild": "computer-himmel-verbinden-wahl.png",
+  "carl": [
+   "Tipp den Planeten an, der zu „Gitarre lernen“ gehört."
+  ],
+  "text": []
+ },
+ {
+  "ger": "computer",
+  "schritt": "himmel-verbinden-frage",
+  "bild": "computer-himmel-verbinden-frage.png",
+  "carl": [],
+  "text": [
+   "Neues Sternbild | Was verbindet „Gitarre lernen“ und „Durch Portugal reisen“? | Was die beiden verbindet | Verbinden"
+  ]
+ },
+ {
+  "ger": "computer",
+  "schritt": "space-werkzeug",
+  "bild": "computer-space-werkzeug.png",
+  "carl": [
+   "Ein Satz zu „Gitarre lernen“: Was fehlt dir, wenn es das nicht gibt?"
+  ],
+  "text": [
+   "Üben | Heute geschafft? | Sa | So | Mo | Di | Mi | Do | heute"
+  ]
+ },
+ {
+  "ger": "computer",
+  "schritt": "space-carl-karten",
+  "bild": "computer-space-carl-karten.png",
+  "carl": [
+   "Was machen wir damit?"
+  ],
+  "text": [
+   "Weiter­denken | Machen | Für dich arbeiten lassen | Verbinden"
+  ]
+ },
+ {
+  "ger": "computer",
+  "schritt": "space-zettel",
+  "bild": "computer-space-zettel.png",
+  "carl": [
+   "„Ein Lied für Marlenes Geburtstag“. Die Karten gelten jetzt diesem Zettel."
+  ],
+  "text": [
+   "zu „Ein Lied für Marlenes Geburtstag“ | Weiter­denken | Machen | Für dich arbeiten lassen | Verbinden"
+  ]
+ },
+ {
+  "ger": "computer",
+  "schritt": "space-ohne-werkzeug",
+  "bild": "computer-space-ohne-werkzeug.png",
+  "carl": [
+   "Der Kernsatz steht. Was machen wir als Nächstes?"
+  ],
+  "text": []
+ },
+ {
+  "ger": "computer",
+  "schritt": "space-keiner",
+  "bild": "computer-space-keiner.png",
+  "carl": [
+   "Noch hängt kein Space am Brett. Ein neuer fängt im Zuhause an."
+  ],
+  "text": []
+ },
+ {
+  "ger": "computer",
+  "schritt": "garage-katalog",
+  "bild": "computer-garage-katalog.png",
+  "carl": [],
+  "text": [
+   "Katalog | Lampen, Sessel und Dinge für deine Räume und Spaces | Für deine Spaces | 1 | Für Zuhause | 2 | Für die Werkstatt | 3 | Für die Bibliothek | 4 | Sessel | 5 | Für deine Spaces | Bachelor­arbeit schreiben | Schreibtisch | Gitarre lernen | Musikzimmer | Durch Portugal reisen | Am Meer | Lampen und Dinge holst du für einen Space. Such dir einen aus.",
+   "Katalog | Lampen, Sessel und Dinge für deine Räume und Spaces | Für deine Spaces | 1 | Für Zuhause | 2 | Für die Werkstatt | 3 | Für die Bibliothek | 4 | Sessel | 5",
+   "Für deine Spaces | Bachelor­arbeit schreiben | Schreibtisch | Gitarre lernen | Musikzimmer | Durch Portugal reisen | Am Meer"
+  ]
+ },
+ {
+  "ger": "computer",
+  "schritt": "garage-katalog-spaces",
+  "bild": "computer-garage-katalog-spaces.png",
+  "carl": [],
+  "text": [
+   "Für deine Spaces",
+   "Gitarre lernen | 5 Dinge für diesen Ort | Einrichten"
+  ]
+ },
+ {
+  "ger": "computer",
+  "schritt": "garage-katalog-bibliothek",
+  "bild": "computer-garage-katalog-bibliothek.png",
+  "carl": [],
+  "text": [
+   "Für die Bibliothek | Du hast | 8",
+   "Grüne Tisch­lampe | Holen | · | 4"
+  ]
+ },
+ {
+  "ger": "computer",
+  "schritt": "buch-inhalt",
+  "bild": "computer-buch-inhalt.png",
+  "carl": [],
+  "text": [
+   "Inhalt | WIR | Du | 2 | Otto · 3 Spaces | Carl | 3 | Damals | 4 | 3 Momente | WAS ICH TUE | Was ich kann | 5 | 8 an | Was ich für dich tue | 6 | Kalender nicht verbunden | WAS ICH WEISS | Was ich von dir weiß | 7 | 4 Einträge | Wer mitdenkt | 8 | WO UND WER | Wo du mich erreichst | 9 | nur dieses Gerät | Wer bei uns was darf | 10 | was ich sende, was ich nie tue | 1",
+   "WIR | Du | 2 | Otto · 3 Spaces | Carl | 3 | Damals | 4 | 3 Momente | WAS ICH TUE | Was ich kann | 5 | 8 an | Was ich für dich tue | 6 | Kalender nicht verbunden | WAS ICH WEISS | Was ich von dir weiß | 7 | 4 Einträge | Wer mitdenkt | 8 | WO UND WER | Wo du mich erreichst | 9 | nur dieses Gerät | Wer bei uns was darf | 10 | was ich sende, was ich nie tue",
+   "Du | Dein Name | Was du machst | Woran du baust | Bachelorarbeit schreiben | Gitarre lernen | Durch Portugal reisen | 2"
+  ]
+ },
+ {
+  "ger": "computer",
+  "schritt": "buch-kann",
+  "bild": "computer-buch-kann.png",
+  "carl": [],
+  "text": [
+   "Mitdenken | an | Ist es an, denkt Claude über claude.ai oder dein Rechner mit, wenn du mir etwas sagst. | Wer mitdenkt: Seite 8 › | Gedanken festhalten | an | Aus einem Satz von dir wird ein Space mit Zetteln. | 3 Spaces · 6 Zettel | Zuhause › | Werkzeuge bauen | an | Ein kleines Werkzeug aus deinem Satz: abhaken, zählen, merken. | 2 Werkzeuge | Werkstatt › | Vorbereiten | an | Karteikarten, Packliste oder Merkzettel vor einem Termin, wenn du ja sagst. | ohne Kalender nur Termine aus deinen Werkzeugen | Rezeption › | Kalender lesen | nicht verbunden | Ist er verbunden und der Schalter an, schau ich alle 5 Minuten in die nächsten 7 Tage. Hineinschreiben tu ich nie. | Ohne Verbindung sehe ich keine Termine. | Rezeption › | Nachlesen lassen | an | Ferdl liest für dich nach, seine Funde hängen als Zettel im Space. | Werkstatt › | Darstellungen | an | Zwei Wege, Skizze, Rückblick, Schritte oder Vergleich aus deinen Zetteln. | Zuhause › | Zusammenfassen | an | Was du im Lesesaal hinlegst, fasse ich zusammen. | Lesesaal › | Verbinden | an | Zwei Spaces im Himmel zusammenziehen: ein Sternbild. | 1 Sternbild | Himmel › | Auf deinem Rechner nachsehen | nicht verbunden | Ich sehe nur nach, ob dort ein Helfer läuft. Steuern kann ich nichts. | Verbinden: Seite 9 ›",
+   "Ein Brief am Tag | an | Steht etwas an, leg ich dir an der Rezeption einen Brief hin. Einer am Tag, solange der Schalter an ist. | Heute noch keiner | Rezeption › | Kalender lesen | nicht verbunden | Ohne Verbindung sehe ich keine Termine. | Schalter auf Seite 5 ›",
+   "Gerade arbeitet kein Helfer.",
+   "Der Brief am Morgen auf WhatsApp | kommt"
+  ]
+ },
+ {
+  "ger": "computer",
+  "schritt": "buch-tut",
+  "bild": "computer-buch-tut.png",
+  "carl": [],
+  "text": [
+   "Mitdenken | an | Ist es an, denkt Claude über claude.ai oder dein Rechner mit, wenn du mir etwas sagst. | Wer mitdenkt: Seite 8 › | Gedanken festhalten | an | Aus einem Satz von dir wird ein Space mit Zetteln. | 3 Spaces · 6 Zettel | Zuhause › | Werkzeuge bauen | an | Ein kleines Werkzeug aus deinem Satz: abhaken, zählen, merken. | 2 Werkzeuge | Werkstatt › | Vorbereiten | an | Karteikarten, Packliste oder Merkzettel vor einem Termin, wenn du ja sagst. | ohne Kalender nur Termine aus deinen Werkzeugen | Rezeption › | Kalender lesen | nicht verbunden | Ist er verbunden und der Schalter an, schau ich alle 5 Minuten in die nächsten 7 Tage. Hineinschreiben tu ich nie. | Ohne Verbindung sehe ich keine Termine. | Rezeption › | Nachlesen lassen | an | Ferdl liest für dich nach, seine Funde hängen als Zettel im Space. | Werkstatt › | Darstellungen | an | Zwei Wege, Skizze, Rückblick, Schritte oder Vergleich aus deinen Zetteln. | Zuhause › | Zusammenfassen | an | Was du im Lesesaal hinlegst, fasse ich zusammen. | Lesesaal › | Verbinden | an | Zwei Spaces im Himmel zusammenziehen: ein Sternbild. | 1 Sternbild | Himmel › | Auf deinem Rechner nachsehen | nicht verbunden | Ich sehe nur nach, ob dort ein Helfer läuft. Steuern kann ich nichts. | Verbinden: Seite 9 ›",
+   "Ein Brief am Tag | an | Steht etwas an, leg ich dir an der Rezeption einen Brief hin. Einer am Tag, solange der Schalter an ist. | Heute noch keiner | Rezeption › | Kalender lesen | nicht verbunden | Ohne Verbindung sehe ich keine Termine. | Schalter auf Seite 5 ›",
+   "Gerade arbeitet kein Helfer.",
+   "Der Brief am Morgen auf WhatsApp | kommt"
+  ]
+ },
+ {
+  "ger": "computer",
+  "schritt": "buch-mitdenken",
+  "bild": "computer-buch-mitdenken.png",
+  "carl": [],
+  "text": [
+   "Mitdenken | an | Ist es an, denkt Claude über claude.ai oder dein Rechner mit, wenn du mir etwas sagst. | Schalter auf Seite 5 ›",
+   "Ob jemand mitdenkt, weiß ich, sobald du mir etwas sagst. Hier ginge es mit Claude über claude.ai."
+  ]
+ },
+ {
+  "ger": "computer",
+  "schritt": "buch-erreichen",
+  "bild": "computer-buch-erreichen.png",
+  "carl": [],
+  "text": [
+   "Hier, auf diesem Gerät | du bist hier | Was du mir sagst, liegt zuerst auf diesem Gerät. | Abgleich | aus | Nur auf diesem Gerät. Bist du bei claude.ai angemeldet, gleiche ich deine Geräte ab. | Auf deinem iPhone | Mit der iPhone-Kamera scannen, in Safari „Teilen“ und „Zum Home-Bildschirm“. Einmal bei Claude anmelden. | Dein Rechner | nicht verbunden | Mit deinem Rechner verbunden, sehe ich, ob dort ein Helfer läuft. | Verbinden",
+   "WhatsApp | kommt | Schreib mir dort, wie du einem Freund schreibst. | Carl als App auf deinem Mac | kommt | Dann wohn ich auch auf deinem Mac, nicht nur im Browser.",
+   "Was meine Helfer dürfen | Alle Schlüssel liegen bei mir. Jeden nimmst du mit einem Schalter zurück. | auf Seite 5 › | Auf deinem Rechner | Auf deinem Rechner darf ich nur prüfen, ob dort ein Helfer läuft. Steuern kann ich nichts. | auf Seite 5 › | Wer außer dir mit mir reden darf | kommt mit WhatsApp | Heute nur du, hier in Carl."
+  ]
+ },
+ {
+  "ger": "computer",
+  "schritt": "buch-schluessel",
+  "bild": "computer-buch-schluessel.png",
+  "carl": [],
+  "text": [
+   "Hier, auf diesem Gerät | du bist hier | Was du mir sagst, liegt zuerst auf diesem Gerät. | Abgleich | aus | Nur auf diesem Gerät. Bist du bei claude.ai angemeldet, gleiche ich deine Geräte ab. | Auf deinem iPhone | Mit der iPhone-Kamera scannen, in Safari „Teilen“ und „Zum Home-Bildschirm“. Einmal bei Claude anmelden. | Dein Rechner | nicht verbunden | Mit deinem Rechner verbunden, sehe ich, ob dort ein Helfer läuft. | Verbinden",
+   "WhatsApp | kommt | Schreib mir dort, wie du einem Freund schreibst. | Carl als App auf deinem Mac | kommt | Dann wohn ich auch auf deinem Mac, nicht nur im Browser.",
+   "Was meine Helfer dürfen | Alle Schlüssel liegen bei mir. Jeden nimmst du mit einem Schalter zurück. | auf Seite 5 › | Auf deinem Rechner | Auf deinem Rechner darf ich nur prüfen, ob dort ein Helfer läuft. Steuern kann ich nichts. | auf Seite 5 › | Wer außer dir mit mir reden darf | kommt mit WhatsApp | Heute nur du, hier in Carl."
+  ]
+ },
+ {
+  "ger": "computer",
+  "schritt": "buch-tut-aus",
+  "bild": "computer-buch-tut-aus.png",
+  "carl": [],
+  "text": [
+   "Mitdenken | an | Ist es an, denkt Claude über claude.ai oder dein Rechner mit, wenn du mir etwas sagst. | Wer mitdenkt: Seite 8 › | Gedanken festhalten | an | Aus einem Satz von dir wird ein Space mit Zetteln. | 3 Spaces · 6 Zettel | Zuhause › | Werkzeuge bauen | an | Ein kleines Werkzeug aus deinem Satz: abhaken, zählen, merken. | 2 Werkzeuge | Werkstatt › | Vorbereiten | an | Karteikarten, Packliste oder Merkzettel vor einem Termin, wenn du ja sagst. | ohne Kalender nur Termine aus deinen Werkzeugen | Rezeption › | Kalender lesen | aus | Ist er verbunden und der Schalter an, schau ich alle 5 Minuten in die nächsten 7 Tage. Hineinschreiben tu ich nie. | Aus: Ich schaue nicht in deinen Kalender. | Rezeption › | Nachlesen lassen | an | Ferdl liest für dich nach, seine Funde hängen als Zettel im Space. | Werkstatt › | Darstellungen | an | Zwei Wege, Skizze, Rückblick, Schritte oder Vergleich aus deinen Zetteln. | Zuhause › | Zusammenfassen | an | Was du im Lesesaal hinlegst, fasse ich zusammen. | Lesesaal › | Verbinden | an | Zwei Spaces im Himmel zusammenziehen: ein Sternbild. | 1 Sternbild | Himmel › | Auf deinem Rechner nachsehen | nicht verbunden | Ich sehe nur nach, ob dort ein Helfer läuft. Steuern kann ich nichts. | Verbinden: Seite 9 ›",
+   "Ein Brief am Tag | aus | Steht etwas an, leg ich dir an der Rezeption einen Brief hin. Einer am Tag, solange der Schalter an ist. | Aus: Ich bringe keinen Brief, bis du ihn wieder anschaltest. | Rezeption › | Kalender lesen | aus | Aus: Ich schaue nicht in deinen Kalender. | Schalter auf Seite 5 ›",
+   "Gerade arbeitet kein Helfer.",
+   "Der Brief am Morgen auf WhatsApp | kommt"
+  ]
+ },
+ {
+  "ger": "computer",
+  "schritt": "buch-inhalt-aus",
+  "bild": "computer-buch-inhalt-aus.png",
+  "carl": [],
+  "text": [
+   "WIR | Du | 2 | Otto · 3 Spaces | Carl | 3 | Damals | 4 | 3 Momente | WAS ICH TUE | Was ich kann | 5 | 8 an · 1 ausgeschaltet | Was ich für dich tue | 6 | Kalender nicht verbunden | WAS ICH WEISS | Was ich von dir weiß | 7 | 4 Einträge | Wer mitdenkt | 8 | WO UND WER | Wo du mich erreichst | 9 | nur dieses Gerät | Wer bei uns was darf | 10 | was ich sende, was ich nie tue"
+  ]
+ },
+ {
+  "ger": "computer",
+  "schritt": "rezeption-an",
+  "bild": "computer-rezeption-an.png",
+  "carl": [
+   "Im Postfach liegt dein Brief für heute."
+  ],
+  "text": [
+   "heute | 16.",
+   "Sa | 17.",
+   "So | 18.",
+   "Mo | 19.",
+   "Di | 20.",
+   "Mi | 21.",
+   "Do | 22."
+  ]
+ },
+ {
+  "ger": "computer",
+  "schritt": "rezeption-kalender-aus",
+  "bild": "computer-rezeption-kalender-aus.png",
+  "carl": [
+   "Gut, in deinen Kalender schau ich nicht mehr. Was ich darin gelesen hab, hab ich vergessen."
+  ],
+  "text": []
+ },
+ {
+  "ger": "computer",
+  "schritt": "rezeption-brief-aus",
+  "bild": "computer-rezeption-brief-aus.png",
+  "carl": [
+   "Gut. Ich bring dir keinen Brief mehr, bis du ihn im Buch wieder anschaltest."
+  ],
+  "text": []
+ },
+ {
+  "ger": "computer",
+  "schritt": "rezeption-postfach-aus",
+  "bild": "computer-rezeption-postfach-aus.png",
+  "carl": [
+   "Gut. Ich bring dir keinen Brief mehr, bis du ihn im Buch wieder anschaltest."
+  ],
+  "text": []
+ },
+ {
+  "ger": "computer",
+  "schritt": "rezeption-tagesblatt-aus",
+  "bild": "computer-rezeption-tagesblatt-aus.png",
+  "carl": [],
+  "text": [
+   "In deinen Kalender schau ich nicht, so steht der Schalter. Termine von dort zeig ich hier keine.Zum Schalter im Buch"
+  ]
+ },
+ {
+  "ger": "computer",
+  "schritt": "rezeption-zum-schalter",
+  "bild": "computer-rezeption-zum-schalter.png",
+  "carl": [],
+  "text": [
+   "Mitdenken | an | Ist es an, denkt Claude über claude.ai oder dein Rechner mit, wenn du mir etwas sagst. | Wer mitdenkt: Seite 8 › | Gedanken festhalten | an | Aus einem Satz von dir wird ein Space mit Zetteln. | 3 Spaces · 6 Zettel | Zuhause › | Werkzeuge bauen | an | Ein kleines Werkzeug aus deinem Satz: abhaken, zählen, merken. | 2 Werkzeuge | Werkstatt › | Vorbereiten | an | Karteikarten, Packliste oder Merkzettel vor einem Termin, wenn du ja sagst. | ohne Kalender nur Termine aus deinen Werkzeugen | Rezeption › | Kalender lesen | aus | Ist er verbunden und der Schalter an, schau ich alle 5 Minuten in die nächsten 7 Tage. Hineinschreiben tu ich nie. | Aus: Ich schaue nicht in deinen Kalender. | Rezeption › | Nachlesen lassen | an | Ferdl liest für dich nach, seine Funde hängen als Zettel im Space. | Werkstatt › | Darstellungen | an | Zwei Wege, Skizze, Rückblick, Schritte oder Vergleich aus deinen Zetteln. | Zuhause › | Zusammenfassen | an | Was du im Lesesaal hinlegst, fasse ich zusammen. | Lesesaal › | Verbinden | an | Zwei Spaces im Himmel zusammenziehen: ein Sternbild. | 1 Sternbild | Himmel › | Auf deinem Rechner nachsehen | nicht verbunden | Ich sehe nur nach, ob dort ein Helfer läuft. Steuern kann ich nichts. | Verbinden: Seite 9 ›",
+   "Ein Brief am Tag | aus | Steht etwas an, leg ich dir an der Rezeption einen Brief hin. Einer am Tag, solange der Schalter an ist. | Aus: Ich bringe keinen Brief, bis du ihn wieder anschaltest. | Zuletzt gebracht gerade eben | Rezeption › | Kalender lesen | aus | Aus: Ich schaue nicht in deinen Kalender. | Schalter auf Seite 5 ›",
+   "Gerade arbeitet kein Helfer.",
+   "Der Brief am Morgen auf WhatsApp | kommt"
+  ]
+ }
+]

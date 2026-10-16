@@ -26,6 +26,13 @@
   // eine freie Frage: das Feld bekommt den Fokus (am iPhone kommt die Tastatur nur, wenn der Fokus schon im Tipp auf „Los“ gesetzt wurde)
   function frag(t, opt, o) { if (o && o.frei) fokus(); return C6.frag ? Promise.resolve(C6.frag(t, opt || [], o || {})) : Promise.resolve(null); }
   function ohneKopf() { try { var m = C6.mitdenken ? C6.mitdenken() : null; return !!m && m.echt === false; } catch (e) { return false; } }
+  // noch nie gedacht in dieser Sitzung: ob jemand mitdenkt, weiß Carl erst beim ersten Versuch
+  function kopfUnklar() { try { var m = C6.mitdenken ? C6.mitdenken() : null; return !!m && m.echt == null; } catch (e) { return false; } }
+  function schrittVersprechen() {
+    if (ohneKopf()) return stimme('machen.ohneKopf', null, 'Du schreibst den nächsten Schritt, ich häng ihn als Schild auf.');
+    if (kopfUnklar()) return stimme('machen.wasVielleicht', null, 'Ich such dir einen nächsten Schritt. Denkt gerade keiner mit, schreibst du ihn, und ich häng ihn als Schild auf.');
+    return stimme('machen.was', null, 'Ich schlag einen nächsten Schritt vor. Du sagst, bis wann.');
+  }
 
   /* ---------- Was wirklich da ist (nur echte Daten) ---------- */
   function faden(sid) { try { return C6.strings && C6.strings.hol ? C6.strings.hol(sid) : null; } catch (e) { return null; } }
@@ -57,8 +64,9 @@
     if (art === 'weiter') return ok ? stimme('weiter.was', { t: t }, 'Ich denk an „{t}“ weiter und häng dir eine Frage an die Leine.') : stimme('weiter.ohneKopf', { t: t }, 'Ich frag dich, was aus „{t}“ folgt. Deine Antwort hängt an der Leine.');
     if (art === 'machen') {
       var s = schritt(sid);
-      if (s) return stimme('machen.wasGeschafft', { s: kurz(s, 40) }, 'Auf dem Schild steht „{s}“. Geschafft? Dann hak ich ihn ab.');
-      return ok ? stimme('machen.was', null, 'Ich schlag einen nächsten Schritt vor. Du sagst, bis wann.') : stimme('machen.ohneKopf', null, 'Du schreibst den nächsten Schritt, ich häng ihn als Schild auf.');
+      // steht ein Schritt, wohnt „Geschafft?“ am Schild; die Karte baut nur das Werkzeug dazu
+      if (s) return ok ? stimme('machen.wasWerkzeugFuer', { s: kurz(s, 40) }, 'Ich bau dir ein Werkzeug für „{s}“. Abhaken tust du ihn am Schild.') : stimme('machen.wasWerkzeugVorlage', { s: kurz(s, 40) }, 'Ich bau dir ein Werkzeug für „{s}“, aus einer Vorlage, weil gerade keiner mitdenkt. Abhaken tust du ihn am Schild.');
+      return schrittVersprechen();
     }
     if (art === 'arbeiten') return ok ? stimme('arbeiten.was', { t: t }, 'Ich lese zu „{t}“ nach und häng dir den Fund an die Leine. Bitte selbst prüfen.') : stimme('arbeiten.ohneKopf', null, 'Nachlesen geht nur, wenn jemand mitdenkt. Hier ist gerade keiner.');
     if (art === 'verbinden') { var p = partner(sid); return p ? stimme('verbinden.was', { b: kurz(p.titel, 30) }, 'Mit „{b}“. Du sagst in einem Satz, was die beiden verbindet.') : stimme('verbinden.allein', null, 'Das ist dein einziger Space. Zum Verbinden braucht es zwei. Du gibst dem zweiten einen Namen.'); }
@@ -94,14 +102,8 @@
   }
   function machen(q) {
     var s = schritt(q.sid);
-    if (s) {
-      // ein Schritt steht schon: der Haken zuerst; ein Werkzeug nur, wenn du es wählst
-      return frag(stimme('machen.geschafftFrage', { s: kurz(s, 60) }, '„{s}“. Geschafft?'), [{ text: stimme('machen.geschafft', null, 'Geschafft'), wert: 'ok' }, { text: stimme('machen.werkzeugWahl', null, 'Ein Werkzeug dazu bauen'), wert: 'wz' }], { leise: true, id: 'vs-geschafft:' + q.sid }).then(function (a) {
-        if (a === 'ok') return Promise.resolve(C6.bausteine.erledige(q.sid)).then(function () { return { art: 'machen', ok: true, hing: s, satz: stimme('machen.abgehakt', { s: kurz(s, 50) }, '„{s}“ ist geschafft und hängt als Zettel an der Leine.') }; });
-        if (a === 'wz') return werkzeugDazu(q, s);
-        return { art: 'machen', ok: false, bug: stimme('machen.nochNicht', { s: kurz(s, 50) }, '„{s}“ bleibt auf dem Schild. Tipp das Schild an, wenn er geschafft ist.') };
-      });
-    }
+    // ein Schritt steht schon: „Geschafft?“ fragt das Schild (ein Ort); Machen baut nur das Werkzeug dazu
+    if (s) return werkzeugDazu(q, s);
     return denk('Schlage genau einen kleinen, konkreten nächsten Schritt vor (höchstens 10 Wörter, Befehlsform, ohne Anführungszeichen), der aus den Zetteln folgt. Nur der Schritt.', q).then(function (v) {
       v = kurz(v.split('\n')[0], 140);
       var p = v ? C6.bausteine.mitText(q.sid, v) : C6.bausteine.anlegen(q.sid);
@@ -114,7 +116,7 @@
   }
   function werkzeugDazu(q, s) {
     var satz = 'Ein Werkzeug für „' + titel(q.sid) + '“' + (q.satz ? ': ' + q.satz : ', nächster Schritt: ' + s);
-    if (!C6.werkzeug || !C6.werkzeug.baue) return Promise.resolve({ art: 'machen', ok: false, bug: 'Werkzeuge bauen geht hier gerade nicht.' });
+    if (!C6.werkzeug || !C6.werkzeug.baue) return Promise.resolve({ art: 'machen', ok: false, bug: stimme('machen.keinBau', null, 'Werkzeuge bauen geht hier gerade nicht.') });
     return Promise.resolve(C6.werkzeug.baue(satz)).then(function (sp) {
       if (!sp) return { art: 'machen', ok: false, bug: stimme('machen.leer', null, 'Daraus wurde kein Werkzeug. Sag mir unten in einem Satz, was es können soll.') };
       var w = C6.werkzeug.haenge(sp, q.sid);
@@ -173,13 +175,43 @@
     return Promise.all([kette, still]).then(function (x) { aktiv = Math.max(0, aktiv - 1); return x; }, function (e) { aktiv = Math.max(0, aktiv - 1); throw e; }).then(function () { bus({ was: 'fertig', sid: q.sid, arten: gewaehlt.slice(), ok: ergebnisse.filter(function (r) { return r && r.ok; }).length }); return ergebnisse; });
   }
 
+  /* ---------- Der eine Vorschlag (Himmel, und wer sonst nur einen zeigen will) ----------
+     Aus echten Zählungen: kein Zettel → der erste Zettel; kein Schritt → der nächste Schritt; Schritt steht → „geschafft?“ (das Schild fragt) */
+  function zettelZahl(sid) { return (roh(sid).notizen || []).filter(function (n) { return n && n.von !== 'carl'; }).length; }
+  function einer(sid) {
+    if (!sid || !faden(sid)) return null;
+    if (!zettelZahl(sid)) return { art: 'zettel', name: stimme('einer.zettel', null, 'Den ersten Zettel schreiben'), was: stimme('einer.zettelWas', null, 'Ein Satz reicht. Er hängt als erster Zettel an der Leine.') };
+    if (!C6.bausteine || !C6.bausteine.stand) return null;
+    var s = schritt(sid);
+    if (!s) return { art: 'schritt', name: stimme('einer.schritt', null, 'Den nächsten Schritt finden'), was: schrittVersprechen() };
+    return { art: 'geschafft', name: stimme('einer.geschafft', { s: kurz(s, 34) }, '„{s}“ geschafft?'), was: stimme('einer.geschafftWas', null, 'Hakst du ihn ab, hängt er als Zettel an der Leine.') };
+  }
+  // den einen Vorschlag ausführen: „schritt“ wie die Karte Machen ohne Schritt, „geschafft“ ist der Handgriff des Schilds
+  function tu(sid, art) {
+    if (art === 'schritt') return fuehre({ sid: sid }, ['machen']).then(function (e) { return e && e[0] || null; });
+    if (art !== 'geschafft' || !C6.bausteine || !C6.bausteine.tippe) return Promise.resolve(null);
+    var s = schritt(sid); if (!s) return Promise.resolve(null);
+    var erledigt = false, ab = null;
+    try { ab = C6.bus.on('baustein', function (d) { if (d && d.was === 'erledigt' && d.sid === sid) erledigt = true; }); } catch (e) {}
+    aktiv++;
+    var ende = function () { aktiv = Math.max(0, aktiv - 1); try { if (typeof ab === 'function') ab(); } catch (e) {} };
+    return Promise.resolve(C6.bausteine.tippe(sid)).then(function () {
+      ende();
+      var neu = schritt(sid);
+      if (erledigt) return { art: 'geschafft', ok: true, hing: s, satz: stimme('machen.abgehakt', { s: kurz(s, 50) }, '„{s}“ ist geschafft und hängt als Zettel an der Leine.') + (neu ? ' ' + stimme('machen.fertig', { s: kurz(neu, 50) }, 'Das Schild sagt jetzt: „{s}“.') : '') };
+      if (neu && neu !== s) return { art: 'geschafft', ok: true, hing: neu, satz: stimme('machen.fertig', { s: kurz(neu, 50) }, 'Das Schild sagt jetzt: „{s}“.') };
+      if (!neu) return { art: 'geschafft', ok: true, hing: '', satz: stimme('einer.abgenommen', { s: kurz(s, 50) }, '„{s}“ ist vom Schild abgenommen.') };
+      return { art: 'geschafft', ok: false, bug: stimme('machen.nochNicht', { s: kurz(s, 50) }, '„{s}“ bleibt auf dem Schild, bis du ihn abhakst.') };
+    }, function () { ende(); return null; });
+  }
+
   /* ---------- Die Karten ---------- */
   function male(el, o) {
     o = o || {};
     if (!el) return null;
     var q = Object.assign({}, o.quelle || {});
     var gewaehlt = [], laeuft = false, zustand = {};
-    var f = (faden(q.sid) || {}).farbe || '#d62a26';
+    var f = (faden(q.sid) || {}).farbe || 'var(--tusche,#2b2722)';
     el.classList.add('c6vs');
     el.setAttribute('role', 'group');
     el.style.setProperty('--vs-f', f);
@@ -260,5 +292,5 @@
     };
   }
 
-  C6.vorschlaege = { laeuft: function () { return aktiv > 0; }, male: male, fuehre: fuehre, arten: ARTEN.slice(), verspricht: verspricht, partner: partner };
+  C6.vorschlaege = { laeuft: function () { return aktiv > 0; }, male: male, fuehre: fuehre, arten: ARTEN.slice(), verspricht: verspricht, partner: partner, einer: einer, tu: tu };
 })();

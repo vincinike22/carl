@@ -67,7 +67,7 @@
 .c6w-huegel{fill:#223526;opacity:.85;transition:fill 1.6s ease}
 .c6w-bibliothek[data-tageszeit=nacht] .c6w-huegel{fill:#0b1226}
 .c6w-bibliothek[data-tageszeit=abend] .c6w-huegel{fill:#2a2838}
-.c6w-sterne{opacity:0;transition:opacity 1.6s ease}
+.c6w-bibliothek .c6w-sterne{opacity:0;transition:opacity 1.6s ease}
 .c6w-bibliothek[data-tageszeit=nacht] .c6w-sterne{opacity:1}
 .c6w-bibliothek[data-tageszeit=abend] .c6w-sterne{opacity:.35}
 .c6w-sterne circle{animation:c6w-funkelt 5s ease-in-out infinite}
@@ -136,3 +136,18 @@
 .c6w-tz-takt .c6w-dunkel,.c6w-tz-takt .c6w-wasch,.c6w-tz-takt .c6w-lichtfleck,.c6w-tz-takt .c6w-wurf,.c6w-tz-takt .c6w-sonnenstufe,.c6w-tz-takt .c6w-waschstufe,.c6w-tz-takt .c6w-glanzstufe,.c6w-tz-takt .c6w-holzglanz-l,.c6w-tz-takt .c6w-holzglanz-r,
 .c6w-tz-takt .c6w-kegel,.c6w-tz-takt .c6w-schein,.c6w-tz-takt .c6w-aura-rose,.c6w-tz-takt .c6w-birne,.c6w-tz-takt .c6w-lampenloch,.c6w-tz-takt .c6w-nischenlicht,.c6w-tz-takt .c6w-nischenleuchte,.c6w-tz-takt .c6w-kronsamen,.c6w-tz-takt .c6w-ks,.c6w-tz-takt .c6e-raumlampe-licht{transition-duration:.9s;transition-delay:.3s;transition-timing-function:ease-in-out}
 @media (prefers-reduced-motion:reduce){.c6w-ks{transition:none}}
+/* s14 · Die Mitte: unser Buch auf dem Lesetisch; das Lexikon leiser (Glanz nur, wenn man hinsieht) */
+.c6w-fbuch-titel{font-family:Fraunces,Georgia,serif;font-weight:600;fill:#2b2722;letter-spacing:.01em}
+.c6w-fbuch-name{font-family:Fraunces,Georgia,serif;font-style:italic;font-weight:400;fill:#5d574e}
+.c6w-fbuch .c6w-ding-innen{transform-box:fill-box;transform-origin:50% 100%;transition:transform .3s cubic-bezier(.3,1.3,.5,1),filter .3s ease}
+.c6w-fbuch:hover .c6w-ding-innen,.c6w-fbuch:focus-visible .c6w-ding-innen{transform:translateY(-4px)}
+.c6w-fbuch:focus-visible{outline:none}
+.c6w-fbuch:focus-visible .c6w-ding-innen{filter:drop-shadow(0 0 0 #fff) drop-shadow(0 0 6px rgba(180,70,12,.9))}
+.c6w-bibliothek .c6w-lexikon .c6w-aura{opacity:0;animation:none;transition:opacity .6s ease}
+.c6w-bibliothek .c6w-lexikon:hover .c6w-aura,.c6w-bibliothek .c6w-lex-lauscht .c6w-aura,.c6w-bibliothek .c6w-zieht .c6w-lexikon .c6w-aura{opacity:.7}
+.c6w-bibliothek .c6w-lexikon .c6w-ding-innen{filter:saturate(.7) brightness(.86)}
+.c6w-bibliothek .c6w-lexikon:hover .c6w-ding-innen,.c6w-bibliothek .c6w-lexikon:focus-visible .c6w-ding-innen{filter:none}
+.c6w-bibliothek .c6w-lex-schimmer .c6w-ding-innen{animation:c6w-lex-leise 9s ease-in-out infinite}
+@keyframes c6w-lex-leise{0%,80%,100%{filter:saturate(.7) brightness(.86)}90%{filter:saturate(.85) brightness(1) drop-shadow(0 0 4px rgba(255,226,150,.5))}}
+html.c6k-ruhig .c6w-bibliothek .c6w-lex-schimmer .c6w-ding-innen{animation:none}
+@media (prefers-reduced-motion:reduce){.c6w-bibliothek .c6w-lex-schimmer .c6w-ding-innen{animation:none}.c6w-fbuch .c6w-ding-innen{transition:none}}

@@ -1,0 +1,15 @@
+# s14 · Für alle Partien (Pflicht vor dem ersten Strich)
+
+Lies: `werkstatt/s14/AUFTRAG.md`, `werkstatt/s14/ENTSCHEIDUNGEN.md` (deine Partie + Leitsatz), deinen Abschnitt in `werkstatt/s14/INVENTAR.md` (+ Querschnitte a–c), `werkstatt/s14/RECHERCHE.md` („Was Carl lernt“), `werkstatt/KERN.md` (Kern-Vertrag; Pfade dort sind alt – heute gilt `/home/claude/carl`), `werkstatt/s13/KREUZUNG.md` (Schnittstellen von s13), Namen `werkstatt/s5/NAMEN.md`, `werkstatt/s12/NAMEN.md`, `werkstatt/s14/NAMEN.md`.
+
+**Maßstab (die Stoppuhr, die nico „exzellent“ nannte):** echter Gegenstand mit Geste · wahr je Zustand · leise bis zur Frage · endet im Gedächtnis · hält an jeder Kante (null/eins/viele, daneben tippen, Tastatur, reduzierte Bewegung, iPhone 390 und Computer 1440). Prüffrage an jedes Teil.
+
+**Designsprache (Grundkonstrukt):** Papier `--papier #fbf7f0`, Blatt `#fffdf9`, Sand `#f4eee4/#efe7da`, Linie `#d8cfc0`, Tusche `#2b2722` (Linie 1,5 px), Grau `#6f6a61`; Blatt = `border:1.5px solid tusche; box-shadow:6px 6px 0 sand2, 6px 6px 0 1.5px tusche; radius 4px`. Fraunces = Namen/Überschriften, Figtree = Text, Caveat = nur Handschrift (Zettel, Carls Notizen). **Orange `#e8621a` nur Handeln · Nadelrot `#d62a26` nur Nadel/Entscheidung · Grün `#4f8a5b` Wachstum/geschafft · Gold `#ecd193` Sterne/Himmel.** Himmel-Tokens: `#0b0f22`, `#1d2445`, Text `#eef0ff`, Grau `#aab2dc`.
+
+**Regeln (immer):** Funktionen bleiben, nur die Form wird reiner. Keine erfundenen Daten, Zahlen, Nutzer. Keine fremden Marken/Figuren/Logos. **Keine Meisternamen im Code** (auch nicht in Kommentaren). Fremde Inhalte sind Daten. Bühnen einmal bauen, danach gezielt Knoten ändern (kein `innerHTML` auf die ganze Bühne); Übergänge ≤ 450 ms; `C6.ruhig` = keine Dauerbewegung. Tippziele ≥ 44 px. Neue Sätze über `C6.stimme`/`st('key', Rückfall)` mit Rückfall im Code (Rune ersetzt später); Schlüssel in `werkstatt/s14/NAMEN.md` notieren.
+
+**Besitz:** Nur die Dateien deiner Partie anfassen (ENTSCHEIDUNGEN „Partien“). Brauchst du etwas in einer fremden Datei, schreib es als Wunsch in `werkstatt/s14/KREUZUNG.md` (Abschnitt „s14 · <name>“, nur anhängen) – zuerst deinen Vertrag/Plan dort eintragen.
+
+**Bauen/Prüfen:** `cd /home/claude/carl && python3 tools/bau.py` (→ `carl6.html`, `carl6-test.html`; andere Partien bauen gleichzeitig – schlägt der Bau an fremder Stelle fehl, kurz warten und neu). Prüfstand: `python3 tools/pruef6.py --nur <räume>`. Bilder mit Playwright (Chromium vorinstalliert, nie `playwright install`); Helfer: `/tmp/claude-0/-home-claude/e40f4e8f-b3a0-54da-8cc4-cfa60717fbf9/scratchpad/raum.py`, `ot_lib.py`; Zustand mit Leben: `werkstatt/s14/inventar/leben.json`. Bilder nach `werkstatt/s14/<name>/`, iPhone 390×844 (dpr 2, touch) und Computer 1440×900, **selbst ansehen** (Read). 0 Konsolenfehler. Kein `git commit` (macht Vitruvian).
+
+**Ende:** Abschnitt in KREUZUNG.md vervollständigen (was gebaut, Klassen, Schnittstellen, Wünsche an andere), Abschnitt **„Ungeprüft“**, und als Antwort 10–15 Zeilen: was gebaut, welche Bilder zeigen es, was ungeprüft ist. Nie „fertig“ sagen.

@@ -183,18 +183,79 @@ html.c6k-ruhig .c6z-sp-schein,html.c6k-ruhig .c6z-sp-lichtfleck{transition:none}
 .c6k-sp .c6z-sp-zettel-carl{background:#eef2e6}
 .c6z-sp-carl-zeichen{position:absolute;right:-6px;top:-9px;padding:1px 6px;border-radius:8px;background:#fbf7f0;box-shadow:0 0 0 1.5px #2b2722;font:600 10.5px/1.3 Figtree,system-ui,sans-serif;font-style:normal;color:#4f6b34}
 
-/* s17 · Der Katalog als Ding: eine Kiste mit Heft neben der Pflanze; leuchtet einmal, wenn es Neues gibt */
-.c6k-sp .c6z-sp-katalog{position:relative;flex:none;width:62px;min-height:56px;padding:0;margin:0;border:0;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent;align-self:flex-end}
-.c6k-sp .c6z-sp-katalog[hidden]{display:none}
-.c6k-sp-computer .c6z-sp-katalog{width:96px}
-.c6z-sp-katalog svg{display:block;width:100%;height:auto;overflow:visible;position:relative}
-.c6z-sp-katalog:focus-visible{outline:3px solid #b4460c;outline-offset:4px;border-radius:8px}
-.c6z-sp-katalog::before{content:"";position:absolute;left:50%;top:44%;width:150%;aspect-ratio:1;transform:translate(-50%,-50%) scale(.6);border-radius:50%;background:radial-gradient(closest-side,rgba(255,214,140,.75),rgba(255,214,140,0));opacity:0;pointer-events:none}
-.c6z-sp-katalog-neu::before{animation:c6z-sp-katalog-glut 1.6s ease-in-out 2}
-@keyframes c6z-sp-katalog-glut{0%,100%{opacity:0;transform:translate(-50%,-50%) scale(.6)}45%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
-@media (prefers-reduced-motion:reduce){.c6z-sp-katalog-neu::before{animation:none;opacity:.6;transform:translate(-50%,-50%) scale(.9)}}
-html.c6k-ruhig .c6z-sp-katalog-neu::before{animation:none;opacity:.6}
-
 /* s19 · Abzug des alten Bildes beim Tag/Nacht-Wechsel: liegt still darüber, fängt keine Tipps */
 .c6z-sp-abzug,.c6z-sp-abzug *{pointer-events:none!important;transition:none!important;animation-play-state:paused!important}
 
+
+/* s14 · Die reine Form: das Werkzeug ist die Mitte des Space (benutzbar, groß, nie unter der Blase) */
+.c6z-sp-mitte .c6z-sp-pfosten-stamm,.c6z-sp-mitte .c6z-sp-wz::before{display:none}
+.c6z-sp-mitte .c6z-sp-pfosten-liste{display:block;padding:0}
+.c6z-sp-mitte .c6z-sp-wz{width:100%}
+.c6z-sp-mitte .c6z-sp-wz .c6wz-werkzeug{box-sizing:border-box;width:100%;max-width:none;margin:0;border:1.5px solid var(--tusche,#2b2722);border-radius:4px;background:var(--blatt,#fffdf9);box-shadow:var(--blatt-schatten,6px 6px 0 #efe7da,6px 6px 0 1.5px #2b2722)}
+/* Reiter: die anderen Werkzeuge mit Namen über dem Blatt; der vordere hängt am Blatt */
+.c6z-sp-reiter{display:flex;gap:6px;margin:0 0 -1.5px 10px;overflow-x:auto;scrollbar-width:none;position:relative;z-index:1}
+.c6z-sp-reiter::-webkit-scrollbar{display:none}
+.c6z-sp-reiter[hidden]{display:none}
+.c6z-sp-reiter-k{flex:0 0 auto;min-height:44px;max-width:180px;padding:0 14px;border:1.5px solid var(--tusche,#2b2722);border-bottom:0;border-radius:6px 6px 0 0;background:var(--sand2,#efe7da);
+  font:600 14px/1 Figtree,system-ui,sans-serif;color:var(--grau,#6f6a61);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;box-shadow:inset 0 -1.5px 0 var(--tusche,#2b2722)}
+.c6z-sp-reiter-k[aria-selected=true]{background:var(--blatt,#fffdf9);color:var(--tusche,#2b2722);box-shadow:inset 0 3px 0 var(--wz,#2b2722);cursor:default}
+.c6z-sp-reiter-k:focus-visible{outline:3px solid #b4460c;outline-offset:2px}
+/* Computer: links neben Carl auf dem Boden, so groß wie die Hälfte neben ihm erlaubt */
+.c6k-sp-computer .c6z-sp-welt>.c6z-sp-mitte{position:absolute;z-index:6;right:calc(50% + var(--sp-carl,240px) * .5 + 30px);left:auto;bottom:calc(3% + 12px);width:min(460px,calc(50% - var(--sp-carl,240px) * .5 - 64px));max-height:calc(100% - 210px);display:flex;flex-direction:column;justify-content:flex-end}
+.c6k-sp-computer .c6z-sp-welt>.c6z-sp-mitte .c6z-sp-pfosten-liste{min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:0 8px 8px 0}
+/* iPhone: unter der Szene über die ganze Breite (16 px Rand), vor dem Schild */
+.c6k-sp:not(.c6k-sp-computer)>.c6z-sp-mitte{margin:2px 16px 0;padding:0}
+.c6k-sp:not(.c6k-sp-computer)>.c6z-sp-mitte .c6z-sp-pfosten-liste{flex-direction:column;overflow:visible;padding:0 6px 8px 0}
+.c6k-sp:not(.c6k-sp-computer)>.c6z-sp-mitte .c6z-sp-wz{width:auto;max-width:none}
+
+/* ohne Werkzeug: ein leiser Umriss an seinem Platz, ein Weg in die Werkstatt */
+.c6z-sp-bauweg{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:4px;min-height:60px;padding:10px 16px;border:1.5px dashed #8a8378;border-radius:4px;background:rgba(251,247,240,.72);
+  color:var(--tusche,#2b2722);text-align:left;cursor:pointer;font:inherit}
+.c6z-sp-bauweg[hidden]{display:none}
+.c6z-sp-bauweg-t{font:600 15px/1.2 Figtree,system-ui,sans-serif}
+.c6z-sp-bauweg-u{font:500 13.5px/1.2 Figtree,system-ui,sans-serif;color:var(--grau,#6f6a61)}
+.c6z-sp-bauweg-u::after{content:" ›"}
+.c6z-sp-bauweg:hover{border-color:var(--tusche,#2b2722)}
+.c6z-sp-bauweg:focus-visible{outline:3px solid #b4460c;outline-offset:3px}
+.c6k-sp-computer .c6z-sp-welt>.c6z-sp-bauweg{position:absolute;z-index:5;right:calc(50% + var(--sp-carl,240px) * .5 + 40px);bottom:calc(3% + 18px);width:min(280px,calc(50% - var(--sp-carl,240px) * .5 - 80px))}
+.c6k-sp:not(.c6k-sp-computer)>.c6z-sp-bauweg{align-self:center;max-width:calc(100% - 32px);margin:8px 16px 0;padding:8px 14px;min-height:52px;align-items:center;text-align:center}
+.c6k-sp:not(.c6k-sp-computer)>.c6z-sp-bauweg .c6z-sp-bauweg-t{font-size:14px}
+.c6k-sp:not(.c6k-sp-computer)>.c6z-sp-bauweg .c6z-sp-bauweg-u{font-size:13px}
+
+/* die vier Karten: nur auf Geste. Sie liegen auf einem Blatt; am iPhone über dem Feld, die Szene bleibt stehen */
+.c6k-sp .c6vs-platz{box-sizing:border-box;padding:4px 12px 10px;border:1.5px solid var(--tusche,#2b2722);border-radius:4px;background:var(--blatt,#fffdf9);box-shadow:var(--blatt-schatten,6px 6px 0 #efe7da,6px 6px 0 1.5px #2b2722)}
+.c6k-sp:not(.c6k-sp-computer)>.c6vs-platz{position:absolute;left:16px;right:22px;bottom:10px;margin:0;z-index:9}
+.c6k-sp-computer .c6z-sp-welt>.c6vs-platz{z-index:7}
+.c6k-sp-computer.c6z-sp-vs-auf .c6z-sp-welt>.c6z-sp-bauweg{visibility:hidden}
+/* iPhone mit Werkzeug: Carl etwas kleiner, darüber Luft für seine Blase */
+.c6k-sp.c6z-sp-mit-wz:not(.c6k-sp-computer):not(.c6k-sp-leer) .c6z-sp-welt{height:clamp(340px,50vh,430px)}
+.c6z-sp-mitte .c6wz-tag{min-width:44px}
+/* Computer mit Werkzeug: die Dinge am Boden (Sternbild) liegen rechts, das Werkzeug links */
+.c6k-sp-computer.c6z-sp-mit-wz .c6z-sp-dinge{left:auto;right:150px}
+
+/* „Deine Spaces“: die Liste ist das Ding; darunter drei leise Handgriffe als Tusche-Umriss */
+.c6z-sp-liste-taten{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 0;padding:14px 0 0;border-top:1.5px solid var(--linie,#d8cfc0)}
+.c6k-sp .c6z-sp-liste-tat{display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 16px 0 12px;border:1.5px solid var(--tusche,#2b2722);border-radius:24px;background:transparent;color:var(--tusche,#2b2722);
+  font:600 15px/1 Figtree,system-ui,sans-serif;cursor:pointer;box-shadow:none}
+.c6k-sp .c6z-sp-liste-tat svg{flex:none;width:20px;height:20px}
+.c6k-sp .c6z-sp-liste-tat:hover{background:rgba(43,39,34,.05)}
+.c6k-sp .c6z-sp-liste-tat:active{transform:translate(1px,1px)}
+.c6k-sp .c6z-sp-liste-tat:focus-visible{outline:3px solid #b4460c;outline-offset:3px}
+.c6k-sp .c6z-sp-liste-tat .c6z-sp-umzug-bild{width:26px;height:26px}
+
+/* das Sternbild am Boden: Name ganz lesbar, keine rote Linie (eine Verbindung ist keine Entscheidung) */
+.c6z-sp-ding-faden .c6z-sp-ding-name{border-bottom:0}
+.c6k-sp .c6z-sp-ding-faden .c6z-sp-ding-name{width:128px;padding:3px 6px;font:600 12.5px/1.18 Figtree,system-ui,sans-serif;border:1.5px solid var(--tusche,#2b2722);border-radius:3px;background:var(--blatt,#fffdf9)}
+.c6k-sp-computer .c6z-sp-ding-faden .c6z-sp-ding-name{width:150px;font-size:13.5px}
+/* die Nadel am Kernsatz ist eine Entscheidung: Nadelrot, nur dort */
+.c6k-sp .c6k-sp-pin-kopf{fill:var(--nadel,#d62a26)}
+.c6k-sp .c6z-sp-kern-leer .c6k-sp-pin-kopf{fill:#fbf7f0}
+.c6k-sp:not(.c6k-sp-computer) .c6z-sp-ding-faden .c6z-sp-ding-name{width:84px;font-size:12px}
+.c6k-sp:not(.c6k-sp-computer) .c6z-sp-dinge{z-index:6}
+/* das Kartenblatt am Computer: so hoch wie die Karten (der Satz erscheint erst, wenn eine gewählt ist) */
+.c6k-sp .c6vs-platz .c6vs-unten{min-height:0}
+.c6k-sp .c6vs-platz .c6vs-satz:not(.c6vs-satz-an){display:none}
+/* der gemeinte Zettel trägt die Farbe des Space (kein Nadelrot: meinen ist keine Entscheidung) */
+.c6k-sp .c6z-sp-zettel.c6vs-gemeint{outline-color:var(--sp-akzent,#2b2722)}
+/* das Plus im Knopf „Aufhängen“ (Blatt „An der Leine“) war unsichtbar: Strich in Knopffarbe */
+.c6k-sp .c6k-sp-neu svg{flex:none;width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}

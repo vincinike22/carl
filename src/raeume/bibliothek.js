@@ -299,9 +299,7 @@
   }
 
 
-  // Unser Freundschaftsbuch: Leinen, Titel von Hand (das Buch selbst baut jung)
-  var ATLAS_W = 70;
-  // Die versteckte Tür: ein schmales Regalteil, dahinter ein Gang in Schwarzweiß, nur der Faden ist rot
+  // Die versteckte Tür: ein schmales Regalteil, dahinter ein Gang in Schwarzweiß
 
   // ——— Über mich: Kapitel, die im Freundschaftsbuch wohnen (C6.bibliothek.du) ———
   var KAPITEL = [
@@ -568,8 +566,6 @@
     var f = '';
     for (var i = 0; i < 5; i++) f += '<circle cx="' + (ax0 - aw * 0.6 + zufall(i * 3) * aw * 2.2).toFixed(1) + '" cy="' + (at - zufall(i * 7 + 1) * h * 0.18).toFixed(1) + '" r="' + (1 + zufall(i) * 1.6).toFixed(1) + '" fill="#fff4d0"/>';
     o += '<g class="c6w-funke">' + f + '</g>';
-    // der rote Faden läuft die Stufen hinab
-    o += '<path d="M' + (fx + 10) + ' ' + y1 + ' C' + (fx + w * 0.16) + ' ' + (y1 - (y1 - fy) * 0.35) + ', ' + (fx - w * 0.08) + ' ' + (fy + (y1 - fy) * 0.3) + ', ' + fx + ' ' + (fy + 1) + '" fill="none" stroke="#d62a26" stroke-width="2.2" stroke-linecap="round"/>';
     return o + '</g>';
   }
 
@@ -650,15 +646,7 @@
     rechts += lexikon(D + 10, b1, Math.min(150, fachH - 10));
     fuell(D + 10 + 14 + 104, innenX + innenW - 4, 46, b1, 'r', 0.88);
     var b2 = boeden[2];
-    // Ein Katalog lehnt am Ende des untersten Fachs: darin Lampen für die Bibliothek
-    var heftDa = !!(C6.einrichten && typeof C6.einrichten.oeffne === 'function'), hx = heftDa ? mitteX - 4 - 60 : mitteX - 4;
-    fuell(innenX + 8, hx, 53, b2, null, 0.95);
-    if (heftDa) {
-      var hs = typeof C6.einrichten.heft === 'string' && /^\s*<svg\b/.test(C6.einrichten.heft) ? C6.einrichten.heft.replace(/^\s*<svg\b/, '<svg x="' + (hx + 2) + '" y="' + (b2 - 48) + '" width="56" height="48" overflow="visible"')
-        : '<g transform="rotate(-8 ' + (hx + 30) + ' ' + b2 + ')"><rect x="' + (hx + 6) + '" y="' + (b2 - 44) + '" width="46" height="40" fill="#fbf7f0" stroke="#2b2722" stroke-width="2"/><rect x="' + (hx + 6) + '" y="' + (b2 - 44) + '" width="8" height="40" fill="#d62a26" stroke="#2b2722" stroke-width="2"/></g>';
-      links += '<g class="c6w-ding c6w-katalog" data-id="katalog" tabindex="0" role="button" aria-label="Ein Katalog mit Lampen für die Bibliothek">' +
-        '<rect x="' + (hx - 6) + '" y="' + (b2 - 70) + '" width="70" height="72" fill="transparent"/><g class="c6w-ding-innen">' + hs + '</g></g>';
-    }
+    fuell(innenX + 8, mitteX - 4, 53, b2, null, 0.95);
     fuell(D + 6, innenX + innenW - 4, 57, b2, 'r', 0.9);
 
     // Der Durchgang hinter der Tür, vom Gesims bis auf den Boden
@@ -738,22 +726,42 @@
       fachL + links + niL + liL + brL + sockelL + leaf + pfM + pfL + pfR + fuesse + '</g>';
   }
 
-  // Carls Schreibtisch mit dem glühenden Freundschaftsbuch
+  // Die Mitte des Raums: unser Buch, aufgestellt auf dem Lesetisch, den Deckel dir zugewandt.
+  // Leinen in Rosé, das Herz ins Leinen geprägt (kein Rot), ein Schild mit deinem Namen, das Lesebändchen hängt heraus.
   function freundschaftsbuch(cx, y, w, glueht) {
-    var h = w * 0.34, x0 = cx - w / 2;
-    return '<g class="c6w-ding c6w-fbuch' + (glueht ? ' c6w-leuchtet' : '') + '" data-id="atlas" tabindex="0" role="button" aria-label="Unser Freundschaftsbuch">' +
-      '<ellipse class="c6w-aura c6w-aura-rose" cx="' + cx + '" cy="' + (y - h * 0.5) + '" rx="' + (w * 0.85) + '" ry="' + (h * 1.6) + '" fill="url(#c6w-aura-rose)"/>' +
-      kschatten(cx, y, w * 0.52, h + 12, 0.9) +
-      '<g class="c6m-seite" style="transform-origin:' + (x0 + w * 0.1) + 'px ' + (y - 12 - h) + 'px"><path d="M' + (x0 + w * 0.12) + ' ' + (y - 14) + ' L' + (x0 + w * 0.2) + ' ' + (y - 10 - h) + ' L' + (x0 + w * 0.86) + ' ' + (y - 10 - h) + ' L' + (x0 + w - 14) + ' ' + (y - 14) + ' Z" fill="#fbf5e8" stroke="#8a7a5c" stroke-width="1"/><path d="M' + (x0 + w * 0.3) + ' ' + (y - 20 - h * 0.55) + ' h' + (w * 0.36) + ' M' + (x0 + w * 0.3) + ' ' + (y - 20 - h * 0.3) + ' h' + (w * 0.3) + '" stroke="#cdbd9c" stroke-width="1.2"/></g>' +
-      '<rect x="' + (x0 - 10) + '" y="' + (y - h - 24) + '" width="' + (w + 20) + '" height="' + (h + 28) + '" fill="transparent"/>' +
+    var bh = Math.round(w * 1.26), x0 = cx - w / 2, x1 = cx + w / 2, yt = y - 12 - bh, yb = y - 12, kipp = w * 0.035, tief = Math.max(7, w * 0.05);
+    var name = String((du().name || '')).trim().slice(0, 14);
+    var schildW = w * 0.68, schildH = name ? w * 0.27 : w * 0.18, sy = yt + bh * 0.52;
+    var herzS = w / 150, hx = cx, hy = yt + bh * 0.3;
+    var herz = 'M' + hx + ' ' + (hy + 13 * herzS) + ' c' + (-11 * herzS) + ' ' + (-7 * herzS) + ' ' + (-15 * herzS) + ' ' + (-16 * herzS) + ' ' + (-8 * herzS) + ' ' + (-21 * herzS) + ' c' + (5 * herzS) + ' ' + (-3 * herzS) + ' ' + (8 * herzS) + ' 0 ' + (8 * herzS) + ' ' + (4 * herzS) + ' c0 ' + (-4 * herzS) + ' ' + (3 * herzS) + ' ' + (-7 * herzS) + ' ' + (8 * herzS) + ' ' + (-4 * herzS) + ' c' + (7 * herzS) + ' ' + (5 * herzS) + ' ' + (3 * herzS) + ' ' + (14 * herzS) + ' ' + (-8 * herzS) + ' ' + (21 * herzS) + ' Z';
+    var deckel = 'M' + x0 + ' ' + yb + ' L' + x1 + ' ' + yb + ' L' + (x1 - kipp) + ' ' + yt + ' L' + (x0 + kipp) + ' ' + yt + ' Z';
+    return '<g class="c6w-ding c6w-fbuch' + (glueht ? ' c6w-leuchtet' : '') + '" data-id="atlas" tabindex="0" role="button" aria-label="Unser Buch. Tipp es an, dann schlägt es sich auf">' +
+      '<ellipse class="c6w-aura c6w-aura-rose" cx="' + cx + '" cy="' + (yt + bh * 0.55) + '" rx="' + (w * 0.95) + '" ry="' + (bh * 0.72) + '" fill="url(#c6w-aura-rose)"/>' +
+      kschatten(cx + w * 0.08, y, w * 0.6, 22, 0.9) +
+      // eine Seite, die bei Wartezeit oben herausschaut
+      '<g class="c6m-seite" style="transform-origin:' + cx + 'px ' + (yt + 6) + 'px"><path d="M' + (x0 + w * 0.18) + ' ' + (yt + 10) + ' L' + (x0 + w * 0.22) + ' ' + (yt - 14) + ' L' + (x1 - w * 0.2) + ' ' + (yt - 16) + ' L' + (x1 - w * 0.16) + ' ' + (yt + 10) + ' Z" fill="#fbf5e8" stroke="#8a7a5c" stroke-width="1"/></g>' +
+      '<rect x="' + (x0 - 10) + '" y="' + (yt - 18) + '" width="' + (w + tief + 20) + '" height="' + (bh + 36) + '" fill="transparent"/>' +
       '<g class="c6w-ding-innen">' +
-      '<path d="M' + (x0 + 4) + ' ' + y + ' L' + (x0 + w - 4) + ' ' + y + ' L' + (x0 + w) + ' ' + (y - 12) + ' L' + x0 + ' ' + (y - 12) + ' Z" fill="#f3e8d2" stroke="#140d09" stroke-width="1.2"/>' +
-      '<path d="M' + (x0 + 8) + ' ' + (y - 4) + ' H' + (x0 + w - 8) + ' M' + (x0 + 6) + ' ' + (y - 8) + ' H' + (x0 + w - 6) + '" stroke="#d9c9a8" stroke-width="1"/>' +
-      '<path d="M' + x0 + ' ' + (y - 12) + ' L' + (x0 + w * 0.1) + ' ' + (y - 12 - h) + ' L' + (x0 + w * 0.92) + ' ' + (y - 12 - h) + ' L' + (x0 + w) + ' ' + (y - 12) + ' Z" fill="#c99a8e" stroke="#140d09" stroke-width="1.6"/>' +
-      '<path d="M' + (x0 + 12) + ' ' + (y - 16) + ' L' + (x0 + w * 0.13) + ' ' + (y - 8 - h) + ' L' + (x0 + w * 0.9) + ' ' + (y - 8 - h) + ' L' + (x0 + w - 12) + ' ' + (y - 16) + ' Z" fill="none" stroke="#f6e3c8" stroke-width="1.4" opacity=".9"/>' +
-      '<path d="M' + cx + ' ' + (y - 16 - h * 0.18) + ' c-9 -6 -12 -14 -6 -18 c4 -2 6 0 6 3 c0 -3 2 -5 6 -3 c6 4 3 12 -6 18 Z" fill="#d62a26" stroke="#140d09" stroke-width=".9"/>' +
-      '<path d="M' + (x0 + w * 0.7) + ' ' + (y - 12) + ' v22 l5 -6 5 6 v-22" fill="#d62a26" stroke="#140d09" stroke-width=".9"/>' +
-      '<path d="M' + (x0 + w * 0.14) + ' ' + (y - 14 - h) + ' L' + (x0 + w * 0.5) + ' ' + (y - 14 - h) + '" stroke="#fff" stroke-width="2" opacity=".25"/>' +
+      // die Stütze hinten und der Buchblock rechts (Papierkanten)
+      '<path d="M' + (cx + w * 0.1) + ' ' + (yt + bh * 0.35) + ' L' + (cx + w * 0.34) + ' ' + y + '" stroke="#3e2a1d" stroke-width="' + Math.max(4, w * 0.035).toFixed(1) + '" stroke-linecap="round"/>' +
+      '<path d="M' + x1 + ' ' + yb + ' L' + (x1 + tief) + ' ' + (yb - tief * 0.6) + ' L' + (x1 + tief - kipp) + ' ' + (yt - tief * 0.6) + ' L' + (x1 - kipp) + ' ' + yt + ' Z" fill="#f3e8d2" stroke="#140d09" stroke-width="1.2"/>' +
+      [0.25, 0.5, 0.75].map(function (t) { var yy = yt + bh * t; return '<path d="M' + (x1 + 2) + ' ' + (yy) + ' l' + (tief - 3) + ' ' + (-tief * 0.6) + '" stroke="#d9c9a8" stroke-width="1"/>'; }).join('') +
+      // Deckel: Leinen, Rücken links, geprägter Rand
+      '<path d="' + deckel + '" fill="#c99a8e" stroke="#2b2722" stroke-width="1.8" stroke-linejoin="round"/>' +
+      '<path d="M' + x0 + ' ' + yb + ' L' + (x0 + w * 0.09) + ' ' + yb + ' L' + (x0 + kipp + w * 0.085) + ' ' + yt + ' L' + (x0 + kipp) + ' ' + yt + ' Z" fill="#a5706a" stroke="#2b2722" stroke-width="1.2"/>' +
+      '<path d="M' + (x0 + w * 0.15) + ' ' + (yb - 9) + ' L' + (x1 - 9) + ' ' + (yb - 9) + ' L' + (x1 - kipp - 9) + ' ' + (yt + 9) + ' L' + (x0 + kipp + w * 0.14) + ' ' + (yt + 9) + ' Z" fill="none" stroke="#f6e3c8" stroke-width="1.3" opacity=".75"/>' +
+      // Herz, ins Leinen geprägt: Schatten unten, Licht oben
+      '<path d="' + herz + '" fill="#a5706a" stroke="#8c5a54" stroke-width="1" transform="translate(' + (w * 0.03).toFixed(1) + ',0)"/>' +
+      '<path d="' + herz + '" fill="none" stroke="#f6e3c8" stroke-width="1" opacity=".7" transform="translate(' + (w * 0.03 - 0.8).toFixed(1) + ',-0.8)"/>' +
+      // das Schild: Papier mit Tuschelinie, darauf das Buch und dein Name
+      '<rect x="' + (cx + w * 0.03 - schildW / 2).toFixed(1) + '" y="' + sy.toFixed(1) + '" width="' + schildW.toFixed(1) + '" height="' + schildH.toFixed(1) + '" rx="2" fill="#fffdf9" stroke="#2b2722" stroke-width="1.3"/>' +
+      '<text class="c6w-fbuch-titel" x="' + (cx + w * 0.03).toFixed(1) + '" y="' + (sy + (name ? schildH * 0.44 : schildH * 0.66)).toFixed(1) + '" text-anchor="middle" font-size="' + (w * 0.105).toFixed(1) + '">Unser Buch</text>' +
+      (name ? '<text class="c6w-fbuch-name" x="' + (cx + w * 0.03).toFixed(1) + '" y="' + (sy + schildH * 0.82).toFixed(1) + '" text-anchor="middle" font-size="' + (w * 0.082).toFixed(1) + '">' + esc(name) + ' &amp; ' + esc(String(du().carlName || 'Carl').slice(0, 12)) + '</text>' : '') +
+      // Lesebändchen in Sand, es hängt über die Tischkante
+      '<path d="M' + (x0 + w * 0.72) + ' ' + (yb - 2) + ' v' + (w * 0.2).toFixed(1) + ' l5 -6 5 6 v' + (-(w * 0.2)).toFixed(1) + '" fill="#efe7da" stroke="#2b2722" stroke-width="1.1"/>' +
+      // die Leiste vorn, auf der das Buch steht
+      '<rect x="' + (x0 - 8) + '" y="' + (yb - 3) + '" width="' + (w + tief + 14) + '" height="15" rx="2" fill="#7a5638" stroke="#2b2722" stroke-width="1.6"/>' +
+      '<path d="M' + (x0 - 6) + ' ' + (yb + 1) + ' H' + (x1 + tief + 4) + '" stroke="#fff" stroke-width="1.5" opacity=".18"/>' +
       '</g></g>';
   }
   function tee(x, y) {
@@ -1006,17 +1014,17 @@
   // Zwei Aufstellungen: quer (Computer) und hochkant (iPhone)
   var AUF = {
     quer: {
-      w: 1200, h: 700, boden: 640, carl: [800, 694], carlH: 262, blick: [0.95, 0.15],
+      w: 1200, h: 700, boden: 640, carl: [786, 694], carlH: 262, blick: [0.95, 0.15],
       regal: { x: 40, y: 92, w: 700, h: 528 }, fenster: [905, 96, 100, 250], skizzen: [772, 110],
-      tuer: { ziel: [628, 632], skala: 0.6 }, faden: 'M640 640 C 660 662, 700 650, 730 672 S 780 700, 806 690',
-      tisch: [876, 580, 318, 110], buch: [1012, 578, 150], tee: [912, 578], sanduhr: [1118, 578], lampe: [1186, 580, 1136, 352, true],
+      tuer: { ziel: [628, 632], skala: 0.6 },
+      tisch: [876, 580, 318, 110], buch: [1026, 580, 162], tee: [903, 578], sanduhr: [1137, 578], lampe: [1186, 580, 1160, 338, true],
       schein: [1030, 500, 260, 150], teppich: [900, 690, 300, 24]
     },
     hoch: {
       w: 600, h: 1000, boden: 624, carl: [470, 986], carlH: 236, blick: [-0.95, 0.25],
       regal: { x: 22, y: 82, w: 470, h: 522 }, fenster: [516, 262, 68, 150], skizzen: [512, 290],
-      tuer: { ziel: [380, 610], skala: 0.48 }, faden: 'M392 618 C 400 680, 450 700, 466 760 S 500 880, 474 968',
-      tisch: [20, 880, 372, 112], buch: [234, 876, 154], tee: [338, 876], sanduhr: [106, 876], lampe: [44, 878, 72, 742, false],
+      tuer: { ziel: [380, 610], skala: 0.48 },
+      tisch: [16, 880, 380, 112], buch: [230, 880, 176], tee: [354, 876], sanduhr: [100, 876], lampe: [40, 878, 70, 742, false],
       schein: [206, 820, 230, 120], teppich: [300, 934, 292, 60]
     }
   };
@@ -1058,7 +1066,6 @@
           '<path d="M-1400 ' + a.boden + ' H' + (W + 1400) + '" stroke="' + T + '" stroke-width="2.5"/>' +
           '<path d="M-1400 ' + (a.boden + 40) + ' H' + (W + 1400) + ' M-1400 ' + (a.boden + 96) + ' H' + (W + 1400) + ' M-1400 ' + (a.boden + 170) + ' H' + (W + 1400) + '" stroke="#3e2a1d" stroke-width="1.4" opacity=".6"/>' +
           teppich(a.teppich[0], a.teppich[1], a.teppich[2], a.teppich[3]) +
-          '<path class="c6w-rfaden" d="' + a.faden + '" fill="none" stroke="#d62a26" stroke-width="2.6" stroke-linecap="round"/>' +
           (a.fenster ? lichtfleck(a.fenster[0], a.fenster[2], a.boden, 150) : '');
         // Das Licht über allem: ein Wasch vom Fenster her über Wand und Regal, und nachts das Dunkel mit Löchern für die Lampen
         var f = a.fenster, k = kegel(a), kx = (k[2][0] + k[3][0]) / 2;
@@ -1344,15 +1351,14 @@
 
       // ——— „Wie geht das?“: je Ding ein ehrlicher Satz, beim langen Halten ———
       var STAUNEN = {
-        'lampe': function () { return lampeAn() ? 'Die Lampe ist an. Fass sie an, dann geht sie aus. Mehr tut sie nicht. Schau aber, wohin ihr Licht fällt.' : 'Die Lampe ist aus. Fass sie an, dann geht sie an und wirft ihr Licht auf den Tisch.'; },
+        'lampe': function () { return (lampeAn() ? satz('bib.lampe.an', 'Die Lampe ist an. Fass sie an, dann geht sie aus. Schau, wohin ihr Licht fällt.') : satz('bib.lampe.aus', 'Die Lampe ist aus. Fass sie an, dann geht sie an und wirft ihr Licht auf den Tisch.')) + ' ' + satz('bib.lampe.katalog', 'Andere Lampen für hier liegen im Katalog in der Garage.'); },
         'fenster': function () { return fensterSatz(); },
-        'katalog': 'Ein Katalog mit Lampen für die Bibliothek. Was du dir aussuchst, leuchtet danach hier am Tisch. Manche kosten Münzen.',
         'ding:sanduhr': function () { return uhrSatz(); },
         'ding:krone': function () { return lampeAn() ? 'Die Leselampe brennt, darum leuchtet der Schrank von innen. Mach sie aus, dann schläft das Licht im Holz.' : 'Das Licht im Holz schläft. Mach die Leselampe an, dann leuchtet der Schrank von innen.'; },
         'bildbuch': 'Zieh das Buch heraus. Drin steht, was die Bilder an der Wand wirklich sind, und wer das Original bewahrt.',
         'lexikon': 'Hinter dem Lexikon geht es weiter. Zieh daran, dann siehst du, wohin.',
         'bild': 'Das bin ich, hineingemalt in ein berühmtes Bild. Das echte hängt in einem Museum. Welches, steht im Buch mit dem breiten Rücken oben im Regal.',
-        'atlas': 'Unser Freundschaftsbuch. Da steht drin, was ich von dir weiß, und du darfst alles ändern.'
+        'atlas': satz('bib.buch.staunen', 'Unser Buch. Vorn steht, was drin ist: was ich kann, was ich für dich tue, was ich von dir weiß. Du darfst alles ändern.')
       };
       var gebunden = [];
       function binden() {
@@ -1437,7 +1443,7 @@
         if (b) return { titel: b.titel, farbe: '#b9837a' };
         if (id === 'text') return { titel: 'Über mich', farbe: '#5c2f27' };
         if (id === 'lexikon' || id.indexOf('mappe:') === 0) return { titel: 'Das Lexikon', farbe: '#1e2e52' };
-        if (id === 'atlas') return { titel: 'Unser Freundschaftsbuch', farbe: '#b9837a' };
+        if (id === 'atlas') return { titel: 'Unser Buch', farbe: '#b9837a' };
         if (id === 'bilder') return { titel: 'Was an der Wand hängt', farbe: '#8a4a2e' };
         if (id === 'meister' || id === 'meister-neu') return { titel: 'Meister-Regal', farbe: '#2e3b52' };
         if (id === 'grund' || id === 'carlyle') return { titel: 'Alte Bücher über Meister', farbe: '#5c2f27' };
@@ -1830,7 +1836,6 @@
         var l = FENSTER_SATZ[zeit] || [], n = (genieZ.fenster = ((genieZ.fenster == null ? -1 : genieZ.fenster) + 1) % Math.max(1, l.length));
         if (C6.sag && l.length) C6.sag(satz('bib.fenster.' + zeit, l[n]));
       }
-      function katalogAuf() { if (offen) zuklappen(); try { if (C6.einrichten && typeof C6.einrichten.oeffne === 'function') C6.einrichten.oeffne({ raum: 'bibliothek' }); } catch (e) {} }
       // Eine neue Lampe aus dem Katalog: Raum, Tisch, Licht, Staub neu – Knipsen und Lage bleiben
       function lampeWechsel() {
         var vor = RL ? RL.id : '', neu = raumlampeHolen(); if ((neu ? neu.id : '') === vor && aufName) return;
@@ -1839,7 +1844,7 @@
         if (staub) { try { staub.zurueck(); } catch (e) {} staub = null; }
         zeichneRaum(); zeichneEcke(); licht(true); binden(); staubMessen(); lichtSetzen(); staubSetzen();
       }
-      function tippe(id) { if (id === 'katalog') katalogAuf(); else if (id === 'lexikon') durchDieTuer(); else if (id === 'lampe') lampeKnipsen(); else if (id === 'fenster') fensterTipp(); else if (id === 'bildbuch') buchZiehen(); else if (id === 'ding:sanduhr') uhrTipp(); else if (id === 'meister' || id === 'meister-neu' || id.indexOf('meister:') === 0) zuDenMeistern(id); else if (id.indexOf('ding:') === 0) genie(id.slice(5)); else if (id === 'atlas') atlasAuf(); else aufschlagen(id); }
+      function tippe(id) { if (id === 'lexikon') durchDieTuer(); else if (id === 'lampe') lampeKnipsen(); else if (id === 'fenster') fensterTipp(); else if (id === 'bildbuch') buchZiehen(); else if (id === 'ding:sanduhr') uhrTipp(); else if (id === 'meister' || id === 'meister-neu' || id.indexOf('meister:') === 0) zuDenMeistern(id); else if (id.indexOf('ding:') === 0) genie(id.slice(5)); else if (id === 'atlas') atlasAuf(); else aufschlagen(id); }
       svg.addEventListener('click', function (e) { var d = e.target.closest && e.target.closest('.c6w-ding[data-id]'); if (d) tippe(d.dataset.id); else leer(); });
       // Ein Tipp ins Leere schließt, was offen liegt (das Buch, das Zeitschild); der Kern meldet es auch als Bus 'leer'
       function leer() { if (C6.jetzt !== 'bibliothek') return; if (offen) zuklappen(); if (!gemessen) tagZeig(false); }

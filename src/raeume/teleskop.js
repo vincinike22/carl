@@ -15,7 +15,7 @@
         '<div class="c6w-t-halter" aria-hidden="false">' +
         '<i class="c6w-t-schraube" style="--w:45deg" aria-hidden="true"></i><i class="c6w-t-schraube" style="--w:135deg" aria-hidden="true"></i>' +
         '<i class="c6w-t-schraube" style="--w:225deg" aria-hidden="true"></i><i class="c6w-t-schraube" style="--w:315deg" aria-hidden="true"></i>' +
-        '<div class="c6w-rohr"><canvas class="c6w-himmel" aria-hidden="true"></canvas><div class="c6w-sterne" role="list" aria-label="Werkzeuge im Teleskop"></div></div>' +
+        '<div class="c6w-rohr"><canvas class="c6w-himmel" aria-hidden="true"></canvas><div class="c6w-t-sterne" role="list" aria-label="Werkzeuge im Teleskop"></div></div>' +
         '<i class="c6w-t-fuss" aria-hidden="true"></i>' +
         '</div>' +
         '<div class="c6w-t-carl" aria-hidden="true"></div>' +
@@ -25,7 +25,7 @@
       var rohr = buehne.querySelector('.c6w-rohr');
       var lein = buehne.querySelector('.c6w-himmel');
       var ctx = lein.getContext('2d');
-      var sterneEl = buehne.querySelector('.c6w-sterne');
+      var sterneEl = buehne.querySelector('.c6w-t-sterne');
       var carlEl = buehne.querySelector('.c6w-t-carl');
       var blatt = buehne.querySelector('.c6w-blatt');
       var karte = buehne.querySelector('.c6w-t-vorschau');

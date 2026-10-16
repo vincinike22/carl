@@ -55,8 +55,8 @@
 .c6s-g-aussen .c6s-f-wimpel{left:auto;right:10%;top:auto;bottom:13%;width:26%}
 .c6s-g-aussen .c6s-f-vogel{left:28%;right:auto;top:auto;bottom:14%;width:15%}
 .c6s-g-rolle{position:absolute;left:5px;right:5px;top:5px;height:20%;border:2px solid var(--tusche,#2b2722);border-radius:3px;background:repeating-linear-gradient(180deg,#d2bc98 0 10px,#9c7f5c 10px 12px);box-shadow:0 4px 0 rgba(43,39,34,.18)}
-.c6s-g-schild{position:absolute;left:50%;top:9%;translate:-50% 0;display:flex;align-items:center;gap:8px;min-height:48px;padding:4px 14px 4px 16px;border-radius:14px;border:2px solid var(--tusche,#2b2722);background:var(--tusche,#2b2722);color:var(--karte,#fbf7f0);box-shadow:3px 3px 0 var(--orange,#e8621a);white-space:nowrap;text-align:left;transition:transform .18s cubic-bezier(.3,.7,.3,1),box-shadow .18s}
-.c6s-g-tor:active .c6s-g-schild{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--orange,#e8621a)}
+.c6s-g-schild{position:absolute;left:50%;top:9%;translate:-50% 0;display:flex;align-items:center;gap:6px;min-height:0;padding:5px 10px 5px 11px;border-radius:4px;border:1.5px solid var(--tusche,#2b2722);background:var(--blatt,#fffdf9);color:var(--tusche,#2b2722);box-shadow:2px 2px 0 var(--tusche,#2b2722);white-space:nowrap;text-align:left;transition:transform .18s cubic-bezier(.3,.7,.3,1),box-shadow .18s}
+.c6s-g-tor:active .c6s-g-schild{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--tusche,#2b2722)}
 html.c6r-an .c6s-g-schild{visibility:hidden}
 
 /* Blätter: das Teil-Blatt rechts, der Schrank links (Computer) */
@@ -66,7 +66,7 @@ html.c6r-an .c6s-g-schild{visibility:hidden}
 .c6s-g-kkopf{display:flex;align-items:center;gap:10px;position:sticky;top:-4px;background:var(--karte,#fbf7f0);z-index:1;padding-top:4px}
 .c6s-g-kkopf .c6s-f-btitel{flex:1 1 auto}
 .c6s-garage .c6s-g-lieb{position:relative;left:auto;bottom:auto;top:auto;right:auto;min-height:44px;display:flex;align-items:center}
-.c6s-garage .c6s-g-lieb .c6s-l-schild{font-size:19px;padding:4px 10px 6px}
+.c6s-garage .c6s-g-lieb .c6s-l-schild{font-size:15px;padding:5px 10px 6px}
 
 @media (min-width:820px){
   .c6s-garage .c6s-f-blatt:not(.c6s-g-kleid){left:auto;right:max(76px,7%)}
@@ -85,8 +85,9 @@ html.c6r-an .c6s-g-schild{visibility:hidden}
   .c6s-g-schrank-auf .c6s-f-rad{opacity:0;pointer-events:none}
   .c6s-g-schrank-auf .c6s-g-tor,.c6s-g-schrank-auf .c6s-g-bank{opacity:0;pointer-events:none}
   .c6s-g-tor,.c6s-g-bank{transition:opacity .3s}
-  .c6s-g-schild{left:50%;translate:-50% 0;top:4%;min-height:44px;padding:3px 10px 3px 12px;gap:6px}
-  .c6s-garage .c6s-g-schild b{font-size:20px}
+  .c6s-g-schild{left:50%;translate:-50% 0;top:5%;min-height:0;padding:3px 7px 3px 8px;gap:4px}
+  .c6s-garage .c6s-g-schild b{font-size:13px}
+  .c6s-g-schild .c6s-muenze{width:14px;height:14px}
   .c6s-garage .c6s-l-glas{border-width:4px}
   .c6s-g-kleid{max-height:min(54vh,400px)}
 }
@@ -96,8 +97,7 @@ html.c6k-ruhig .c6s-g-lampe{animation:none}
 .c6s-g-schrankplatz>*{position:absolute;pointer-events:auto}
 
 /* s4: Schild nur mit Namen und Münze; Schrankblatt ohne Titel, nur so hoch wie nötig */
-.c6s-g-schild b{font:700 23px/1 Caveat,cursive}
-.c6s-g-schild .c6s-muenze path:first-child{stroke:#fbf7f0}
+.c6s-g-schild b{font:600 16px/1 Fraunces,Georgia,serif}
 .c6s-g-kkopf{justify-content:space-between;margin-bottom:4px}
 .c6s-garage .c6s-g-kleid{flex:none}
 .c6s-g-kleid .c6s-l-tun:not(:has(button:not([hidden]))){display:none}
@@ -300,7 +300,8 @@ html.c6-ruhig .c6s-sp-innen{transition:none}
 
 /* Der Katalog lehnt am Schrank (16.10.): ein Heft, Tipp öffnet den Katalog; bei offenem Schrank tritt es zurück wie Bank und Tor */
 .c6s-g-heft{position:absolute;z-index:1;min-width:44px;min-height:44px;padding:0;border:0;background:none;cursor:pointer;display:flex;align-items:flex-end;justify-content:center;transform-origin:50% 100%;transition:opacity .3s,transform .2s;-webkit-tap-highlight-color:transparent}
-.c6s-g-heft svg{display:block;width:100%;height:auto;overflow:visible;filter:drop-shadow(2px 3px 0 rgba(43,39,34,.18))}
+.c6s-g-heft svg{display:block;width:100%;height:auto;overflow:visible}
+.c6s-g-heft:focus-visible{outline:3px solid var(--fokus,#b4460c);outline-offset:3px;border-radius:6px}
 .c6s-g-heft:hover,.c6s-g-heft:focus-visible{transform:translateY(-3px) rotate(-2deg)}
 .c6s-g-heft[hidden]{display:none}
 .c6s-g-schrank-auf .c6s-g-heft{opacity:0;pointer-events:none}

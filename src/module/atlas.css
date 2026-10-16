@@ -401,3 +401,91 @@ button.c6r-at-w-text:focus-visible{outline:3px solid #b4460c;outline-offset:2px}
 .c6r-at-sl-knopf{flex:none;min-height:44px;padding:0 12px;font-size:14px}
 .c6r-at-sl-aus .c6r-at-sl-satz{color:#8a3b14}
 .c6r-at-sl-vorschlag .c6r-at-sl-satz{font-style:italic}
+
+/* ---------- s14: das Verzeichnis des Ganzen (Inhalt, Zeilen mit Zustand und Schalter) ---------- */
+/* Blättern sichtbar: zwei Pfeile und dazwischen, wo du bist */
+.c6r-at-fuss{gap:10px;pointer-events:none}
+.c6r-at-fuss>*{pointer-events:auto}
+.c6r-at-fuss button{display:inline-flex;align-items:center;justify-content:center;width:52px;height:44px;padding:0 0 3px;font-size:26px}
+.c6r-at-fuss .c6r-at-nr{position:static;width:auto;height:auto;min-height:0;max-width:calc(100% - 150px);padding:6px 12px;clip:auto;overflow:hidden;border-radius:14px;background:rgba(251,247,240,.94);font:500 13.5px/1.25 Figtree,sans-serif;color:var(--at-tusche);white-space:nowrap;text-overflow:ellipsis;cursor:default}
+.c6r-at-fuss .c6r-at-nr::after{content:none}
+/* Platz für Pfeile und Schließen: das Buch rückt zwischen beide */
+.c6r-at-buch{width:calc(100% - 64px);height:calc(100% - 140px);margin:4px 44px 0 0}
+@media (min-width:820px){.c6r-at-buch{width:calc(100% - 130px);height:calc(100% - 128px);max-height:1000px;margin:-8px 40px 0 0}}
+/* Reiter: am iPhone breit genug für den Daumen (sichtbar 34 px, Tippfläche 44 px nach außen) */
+.c6r-at-reiter{right:-35px;width:36px}
+.c6r-at-reit{position:relative;width:34px;max-height:150px;font-size:12px}
+.c6r-at-reit::after{content:"";position:absolute;top:0;bottom:0;left:0;right:-10px}
+.c6r-at-reit-an{width:36px}
+@media (min-width:820px){.c6r-at-reiter{right:-33px;width:34px}.c6r-at-reit{width:32px;font-size:13px}.c6r-at-reit-an{width:34px}.c6r-at-reit::after{right:-4px}}
+
+/* Inhalt: Wort, Punkte, Seitenzahl; darunter leise, wie es gerade steht */
+.c6r-at-s-inhalt .c6r-at-titel{margin-bottom:2px}
+.c6r-at-iv-gruppe{margin:14px 0 0}
+.c6r-at-iv-gruppe:first-child{margin-top:6px}
+.c6r-at-iv-liste{list-style:none;margin:0;padding:0}
+.c6r-at-iv-e{display:flex;flex-direction:column;align-items:stretch;gap:0;width:100%;min-height:44px;padding:5px 2px 6px;border:0;border-bottom:1.5px solid var(--at-linie);border-radius:0;background:none;color:var(--at-tinte);text-align:left;cursor:pointer}
+.c6r-at-iv-z{display:flex;align-items:baseline;gap:8px}
+.c6r-at-iv-wort{font:500 19px/1.25 Fraunces,Georgia,serif}
+.c6r-at-iv-punkte{flex:1;min-width:14px;border-bottom:2px dotted rgba(43,39,34,.32);transform:translateY(-5px)}
+.c6r-at-iv-nr{flex:none;font:600 17px/1 Fraunces,Georgia,serif;font-variant-numeric:tabular-nums;color:var(--at-tinte)}
+.c6r-at-iv-stand{margin-top:1px;font:400 13px/1.3 Figtree,sans-serif;color:#6f6a61;overflow-wrap:anywhere}
+.c6r-at-iv-e:hover .c6r-at-iv-wort,.c6r-at-iv-e:focus-visible .c6r-at-iv-wort{text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:4px}
+.c6r-at-iv-e:focus-visible{outline:3px solid #b4460c;outline-offset:2px}
+.c6r-at-verweis{display:flex;align-items:baseline;gap:8px;width:100%;min-height:44px;margin:16px 0 0;padding:8px 2px;border:0;border-top:1.5px solid var(--at-linie);background:none;color:var(--at-tinte);font:italic 400 16px/1.3 Fraunces,Georgia,serif;cursor:pointer;text-align:left}
+.c6r-at-verweis>span:first-child{flex:1}
+.c6r-at-verweis>span:first-child::after{content:"  ›";font-style:normal;color:#8a3b14}
+
+/* Zeilen: Name · Zustand · Schalter, darunter ein Satz, darunter Stand und Ort */
+.c6r-at-zliste{list-style:none;margin:2px 0 0;padding:0}
+.c6r-at-z{padding:6px 0 10px;border-bottom:1.5px solid var(--at-linie)}
+.c6r-at-z-kopf{display:flex;align-items:center;gap:10px;min-height:44px}
+.c6r-at-z-name{flex:1;min-width:0;font:600 18px/1.25 Fraunces,Georgia,serif;color:var(--at-tinte);overflow-wrap:anywhere}
+.c6r-at-z-zu{flex:none;display:inline-flex;align-items:center;gap:6px;padding:3px 9px 4px;border:1.5px solid rgba(43,39,34,.28);border-radius:12px;font:600 12.5px/1.1 Figtree,sans-serif;color:#3d3832;white-space:nowrap}
+.c6r-at-z-zu::before{content:"";width:8px;height:8px;border-radius:50%;border:1.5px solid #8a8378;box-sizing:border-box}
+.c6r-at-z-an .c6r-at-z-zu::before{border:0;background:#4f8a5b;box-shadow:0 0 0 3px rgba(79,138,91,.16)}
+.c6r-at-z-braucht .c6r-at-z-zu{border-style:dotted;color:#7a5a1e}
+.c6r-at-z-braucht .c6r-at-z-zu::before{border-color:#a07a2a}
+.c6r-at-z-kommt .c6r-at-z-zu{border-style:dashed;color:#6f6a61}
+.c6r-at-z-kommt .c6r-at-z-zu::before{display:none}
+.c6r-at-z-satz{margin:0;font:400 14.5px/1.4 Figtree,sans-serif;color:#4a453e}
+.c6r-at-z-aussatz{margin-top:4px;font:italic 400 14.5px/1.4 Fraunces,Georgia,serif;color:#6b4a2a}
+.c6r-at-z-fuss{display:flex;flex-wrap:wrap;align-items:center;gap:0 14px;margin-top:2px}
+.c6r-at-z-stand{font:italic 400 14px/1.3 Fraunces,Georgia,serif;color:#6f6a61}
+.c6r-at-z-wo{margin-left:auto}
+.c6r-at-z-tat{margin:6px 0 0}
+.c6r-at-z-leer{padding:12px 0;font:italic 400 15px/1.4 Fraunces,Georgia,serif;color:#6f6a61}
+.c6r-at-zliste-kommt .c6r-at-z{border-bottom-style:dashed}
+.c6r-at-zliste-kommt .c6r-at-z-name{font-weight:400;color:#5d574e}
+.c6r-at-zliste-kommt .c6r-at-z-kopf{min-height:36px}
+.c6r-at-z-qr{margin:8px 0 2px}
+.c6r-at-z-qr svg{display:block;width:132px;height:132px;padding:6px;background:#fffdf9;border:1.5px solid var(--at-tusche);box-shadow:3px 3px 0 #efe7da,3px 3px 0 1.5px var(--at-tusche)}
+/* Der Schalter: Tusche heißt an; daneben tippen trifft ihn trotzdem (44 px) */
+.c6r-at-schalter{flex:none;position:relative;width:52px;height:30px;padding:0;border:1.5px solid var(--at-tusche);border-radius:16px;background:#fffdf9;cursor:pointer;box-shadow:2px 2px 0 var(--at-tusche);transition:background .2s ease}
+.c6r-at-schalter::before{content:"";position:absolute;inset:-8px -4px}
+.c6r-at-schalter-knopf{position:absolute;top:2.5px;left:3px;width:22px;height:22px;box-sizing:border-box;border-radius:50%;background:#fffdf9;border:1.5px solid var(--at-tusche);transition:transform .2s cubic-bezier(.3,.7,.3,1)}
+.c6r-at-schalter[aria-checked="true"]{background:var(--at-tusche)}
+.c6r-at-schalter[aria-checked="true"] .c6r-at-schalter-knopf{transform:translateX(21px);background:#fbf7f0;border-color:#fbf7f0}
+.c6r-at-schalter:focus-visible{outline:3px solid #b4460c;outline-offset:3px}
+.c6r-at-schalter:active{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--at-tusche)}
+html.c6k-ruhig .c6r-at-schalter,html.c6k-ruhig .c6r-at-schalter-knopf{transition:none}
+@media (prefers-reduced-motion:reduce){.c6r-at-schalter,.c6r-at-schalter-knopf{transition:none}}
+/* s14 · ruhiger: mit Schalter nur das Wort; Pfeile stehen fest, die Seitenangabe hat eine feste Breite */
+.c6r-at-z-zu-wort{padding:0;border:0;font:500 13px/1 Figtree,sans-serif;color:#6f6a61}
+.c6r-at-z-zu-wort::before{display:none}
+.c6r-at-z-satz{font-size:14px}
+.c6r-at-z-tat{min-height:44px;padding:0 16px;font-size:15px;border-radius:12px}
+.c6r-at-unter{font-size:15px}
+.c6r-at-fuss .c6r-at-nr{width:min(236px,calc(100% - 140px));max-width:none;box-sizing:border-box;text-align:center}
+@media (min-width:820px){.c6r-at-fuss .c6r-at-nr{width:330px}}
+/* s14 · Damals: das Datum bricht um statt über den Zettel zu laufen; „jetzt“ in Tusche fett (nicht Orange); Monate mit 44 px Tippfläche */
+.c6r-at-m-kopf{flex-wrap:wrap;row-gap:0}
+.c6r-at-moment:nth-child(2n){margin-left:6px}
+.c6r-at-mo2.c6r-at-mo-jetzt{border-color:var(--at-tusche)}
+.c6r-at-mo-jetzt .c6r-at-mo-name{color:var(--at-tusche);font-weight:800}
+.c6r-at-mo-jetzt::after{border-color:var(--at-tusche);opacity:.5}
+.c6r-at-mo2::before{content:"";position:absolute;top:0;bottom:0;left:-2px;right:-2px}
+.c6r-at-zeile-hand .c6r-at-hand{min-height:44px}
+@media (min-width:820px){.c6r-at-reit::after{right:-10px}}
+@media (min-width:820px){.c6r-at-reit::after{right:-12px}}
+.c6r-at-fuss button:disabled{opacity:1;color:#c9c1b3;border-color:#c9c1b3;box-shadow:none;background:#fbf7f0}

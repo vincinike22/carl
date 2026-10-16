@@ -500,7 +500,7 @@
     o += '<text x="' + ((n.x0 + n.x1) / 2) + '" y="' + (by + 9) + '" text-anchor="middle" class="c6w-ls-nischentitel" style="font-size:' + (q ? 11 : 12) + 'px">Deine Meister</text>';
     o += '<rect x="' + (n.x0 - 6) + '" y="' + (top - 4) + '" width="' + (n.x1 - n.x0 + 12) + '" height="' + (fh + 18) + '" fill="transparent"/>';
     var nm = ms.length;
-    return '<g class="c6w-ding c6w-ls-nische" data-id="meister" role="button" tabindex="0" aria-label="' + (nm ? 'Deine Meister, ' + nm + ' Skizzen' : 'Deine Meister. Wen bewunderst du?') + '"><g class="c6w-ding-innen">' + o + '</g></g>';
+    return '<g class="c6w-ding c6w-ls-nische" data-id="meister" data-c6-bild role="button" tabindex="0" aria-label="' + (nm ? 'Deine Meister, ' + nm + ' Skizzen' : 'Deine Meister. Wen bewunderst du?') + '"><g class="c6w-ding-innen">' + o + '</g></g>';
   }
   // Das Bild über dem Blatt der Meister: ein Stück Bücherwand, darin die Skizzen groß
   function skizzenwandSVG() {

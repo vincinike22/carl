@@ -144,7 +144,7 @@ function klima(sid) {
   return {
     zeit: zeit, tageszeit: Z.name, wetter: wetter, wetterName: WETTER_NAME[wetter], nacht: nacht, familie: fam,
     himmel: [o, u], licht: Z.glanz, staerke: Z.a, gx: Z.gx, gy: Z.gy, papier: papier,
-    zustand: zustand, ruht: !!ruht, fuelle: voll, farbe: f.farbe || '#d62a26', art: art
+    zustand: zustand, ruht: !!ruht, fuelle: voll, farbe: f.farbe || '#2b2722', art: art
   };
 }
 
@@ -165,16 +165,6 @@ function eigen(n) { return !istFund(n) && !istCarl(n); }
 function ohneFund(t) { return String(t || '').replace(/^Fund\s*·\s*/, ''); }
 var PIN = '<svg viewBox="0 0 24 24" aria-hidden="true"><path class="c6k-sp-pin-nadel" d="M12.6 11.4 6 18"/><circle class="c6k-sp-pin-kopf" cx="15" cy="9" r="4.2"/></svg>';
 var PLUS = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.5v13M5.5 12h13"/></svg>';
-// Der Katalog als Ding: eine Holzkiste, aus der ein Heft mit „Katalog“ ragt
-var KISTE = '<svg viewBox="0 0 80 74" aria-hidden="true">' +
-  '<ellipse cx="40" cy="70" rx="36" ry="4" fill="rgba(43,39,34,.16)"/>' +
-  '<g transform="rotate(-5 40 22)"><path d="M10 2h60l3 42H7z" fill="#fbf7f0" stroke="#2b2722" stroke-width="2.2" stroke-linejoin="round"/>' +
-  '<path d="M10 2h60l.6 8H9.4z" fill="#d62a26" stroke="#2b2722" stroke-width="1.6" stroke-linejoin="round"/>' +
-  '<text x="40" y="27" text-anchor="middle" font-family="Caveat,cursive" font-weight="700" font-size="17" fill="#2b2722">Katalog</text>' +
-  '<path d="M26 40l6-6 4 3 6-7 7 10z" fill="#8ea37a" stroke="#2b2722" stroke-width="1.2" stroke-linejoin="round"/><circle cx="54" cy="34" r="2.6" fill="#e2b93b"/></g>' +
-  '<path d="M4 38h72v30H4z" fill="#c99d63" stroke="#2b2722" stroke-width="2.4" stroke-linejoin="round"/>' +
-  '<path d="M4 48h72M4 58h72" stroke="#2b2722" stroke-width="1.4" opacity=".45"/><path d="M12 38v30M68 38v30" stroke="#2b2722" stroke-width="2" opacity=".6"/>' +
-  '<path d="M8 42h24" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".35"/></svg>';
 var PFEIL_L = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg>';
 var PFEIL_R = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 5.5 16 12l-6.5 6.5"/></svg>';
 var ZU = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg>';
@@ -285,7 +275,7 @@ var LEBEN = {
     '<g class="c6z-sp-l-zug"><g transform="translate(40 76)"><path d="M0 0v-15" ' + LT + '/><ellipse cx="-3.5" cy="1" rx="4" ry="2.8" fill="#2b2722"/></g><g transform="translate(78 68)"><path d="M0 0v-16l9-3v16" ' + LT + '/><ellipse cx="-3.5" cy="1" rx="4" ry="2.8" fill="#2b2722"/><ellipse cx="5.5" cy="-2" rx="4" ry="2.8" fill="#2b2722"/></g><g transform="translate(118 74)"><path d="M0 0v-15c3 2 7 4 6 9" ' + LT + '/><ellipse cx="-3.5" cy="1" rx="4" ry="2.8" fill="#2b2722"/></g></g>' +
     '<g transform="translate(178 250)"><path d="M-11 0l11-12 11 12M0 -12v-34" ' + LT + '/><g class="c6z-sp-l-wipp"><path d="M-16 -44h32l-3-24h-26z" fill="#fbf7f0" ' + LT + ' stroke-width="1.4"/><path d="M-11 -62h22M-11 -57h22M-11 -52h20" ' + LT + ' stroke-width=".9" stroke-opacity=".5"/><path d="M-16 -44h32" ' + LT + ' stroke-width="2.2"/></g></g>' +
     '<g transform="translate(372 196)"><g class="c6z-sp-l-note c6z-sp-l-note-a"><path d="M0 0v-16l9-3v16" ' + LT + '/><ellipse cx="-3.5" cy="1" rx="4" ry="2.8" fill="#2b2722"/><ellipse cx="5.5" cy="-2" rx="4" ry="2.8" fill="#2b2722"/></g></g><g transform="translate(410 190)"><g class="c6z-sp-l-note c6z-sp-l-note-b"><path d="M0 0v-14" ' + LT + '/><ellipse cx="-3.5" cy="1" rx="3.8" ry="2.6" fill="#2b2722"/></g></g>',
-  bergweg: '<g transform="translate(361 14)"><path d="M0 0v28" ' + LT + '/><path class="c6z-sp-l-fahne" d="M0 2l24 6-24 7z" fill="#d62a26" ' + LT + ' stroke-width="1.2"/></g><g class="c6z-sp-l-gras"><path d="M120 246c-2-7-5-10-9-13M123 246c0-9 2-13 4-18M126 246c2-6 5-9 9-11" ' + LT + ' stroke-opacity=".55"/><path d="M300 250c-2-6-5-9-8-11M303 250c0-8 2-12 4-16M306 250c2-6 4-8 8-10" ' + LT + ' stroke-opacity=".55"/><path d="M420 244c-2-6-4-9-8-11M423 244c0-8 2-12 4-16M426 244c2-5 4-8 7-10" ' + LT + ' stroke-opacity=".55"/><path d="M60 252c-2-7-5-10-9-13M63 252c0-9 2-13 4-18M66 252c2-6 5-9 9-11" ' + LT + ' stroke-opacity=".55"/><path d="M360 248c-2-6-5-9-8-11M363 248c0-8 2-12 4-16M366 248c2-6 4-8 8-10" ' + LT + ' stroke-opacity=".55"/></g>',
+  bergweg: '<g transform="translate(361 14)"><path d="M0 0v28" ' + LT + '/><path class="c6z-sp-l-fahne" d="M0 2l24 6-24 7z" fill="#c8463d" ' + LT + ' stroke-width="1.2"/></g><g class="c6z-sp-l-gras"><path d="M120 246c-2-7-5-10-9-13M123 246c0-9 2-13 4-18M126 246c2-6 5-9 9-11" ' + LT + ' stroke-opacity=".55"/><path d="M300 250c-2-6-5-9-8-11M303 250c0-8 2-12 4-16M306 250c2-6 4-8 8-10" ' + LT + ' stroke-opacity=".55"/><path d="M420 244c-2-6-4-9-8-11M423 244c0-8 2-12 4-16M426 244c2-5 4-8 7-10" ' + LT + ' stroke-opacity=".55"/><path d="M60 252c-2-7-5-10-9-13M63 252c0-9 2-13 4-18M66 252c2-6 5-9 9-11" ' + LT + ' stroke-opacity=".55"/><path d="M360 248c-2-6-5-9-8-11M363 248c0-8 2-12 4-16M366 248c2-6 4-8 8-10" ' + LT + ' stroke-opacity=".55"/></g>',
   kaffeehaus: '<ellipse class="c6z-sp-l-sch" cx="70" cy="251" rx="30" ry="3.6"/><ellipse class="c6z-sp-l-sch" cx="420" cy="251" rx="30" ry="3.6"/><ellipse class="c6z-sp-l-sch" cx="118" cy="251" rx="12" ry="2.6"/>' +
     '<g transform="translate(290 149)"><circle r="28" fill="#d5dee3"/><path d="M-15 27L0 0l15 27" ' + LT + ' stroke-width="2.2"/><g class="c6z-sp-l-rad"><circle r="25" ' + LT + ' stroke-width="2"/><path d="M0-25V25M-25 0H25M-17.7-17.7L17.7 17.7M-17.7 17.7L17.7-17.7" ' + LT + ' stroke-width="1.2"/>' +
     '<circle cx="0" cy="-25" r="3.4" fill="#d6a24a" ' + LT + ' stroke-width="1.1"/><circle cx="25" cy="0" r="3.4" fill="#c75b4a" ' + LT + ' stroke-width="1.1"/><circle cx="0" cy="25" r="3.4" fill="#5c7fa8" ' + LT + ' stroke-width="1.1"/><circle cx="-25" cy="0" r="3.4" fill="#6e9a62" ' + LT + ' stroke-width="1.1"/></g><circle r="2.6" fill="#2b2722"/></g>' +
@@ -433,6 +423,8 @@ function kurzOhneUnsinn(satz) {
   var t = String(satz || '').replace(/\s+/g, ' ').trim().replace(/[„“"»«]/g, '');
   t = t.split(/[.!?;:\n]/)[0].trim() || t;
   var w = t.split(' ').map(function (x) { return x.replace(/[^\wäöüÄÖÜß-]/g, ''); }).filter(Boolean);
+  // ist der Satz schon ein Name („Gitarre lernen“), bleibt er es
+  if (w.length && w.length <= 3 && w.join(' ').length <= 26 && !KZ_KLEIN.test(w[0]) && !KZ_ZEIT.test(w[0])) { var g0 = w.join(' '); return g0.charAt(0).toUpperCase() + g0.slice(1); }
   var gut = function (x, i) { return i > 0 && /^[A-ZÄÖÜ]/.test(x) && !KZ_ZEIT.test(x) && !KZ_KLEIN.test(x); };
   var a = -1; for (var i = 1; i < w.length; i++) if (gut(w[i], i)) { a = i; break; }
   var name = [];
@@ -447,7 +439,10 @@ function kurzOhneUnsinn(satz) {
     // ein einzelner Begriff und am Satzende ein Tun: „Gitarre lernen“, „Durch Portugal reisen“
     if (name.length === 1 && a + 2 === w.length && /^[a-zäöü]/.test(w[a + 1]) && !KZ_KLEIN.test(w[a + 1])) {
       if (a > 1 && KZ_PRAEP.test(w[a - 1])) name.unshift(w[a - 1]);
-      name.push(w[a + 1]);
+      // „wie man Brot backt“ → „Brot backen“: nach „man“ steht das Tun in der Grundform (nur regelmäßige Formen, sonst wie gesagt)
+      var tu = w[a + 1];
+      if (a > 1 && /^man$/i.test(w[a - 1]) && /[^s]t$/.test(tu) && !/[äöü]/.test(tu)) tu = tu.replace(/e?t$/, 'en');
+      name.push(tu);
     }
     // zu lang: dann nur der erste Begriff (nie halb abgeschnitten)
     if (name.join(' ').length > 26) name = [w[a]].filter(function (x) { return x.length <= 26; });
@@ -476,7 +471,7 @@ api.bild = function (pid, klein) { return bild(pid, null, !!klein); };
 api.hol = function (sid) { return rec(sid); };
 // die Pflanze eines Space (eine Wahrheit für Brett, Space und Himmel): {st, art, name}
 api.pflanze = function (sid) { if (!sid || !faden(sid)) return null; return pflanzeVon(roh(sid)); };
-api.pflanzeBild = function (stufe, farbe) { return pflanze(stufe, farbe || '#d62a26'); };
+api.pflanzeBild = function (stufe, farbe) { return pflanze(stufe, farbe || '#2b2722'); };
 api.klima = function (sid) { var k = klima(sid); return k ? { tageszeit: k.zeit, name: k.tageszeit, wetter: k.wetter, himmel: k.himmel.slice(), licht: k.licht, nacht: k.nacht, zustand: k.zustand } : null; };
 api.alle = function () {
   return faeden().map(function (f) {
@@ -615,9 +610,6 @@ var DEF = {
     var stueck = mach('div', 'c6z-sp-stueck', welt);
     var topf = mach('button', 'c6z-sp-pflanze', stueck); topf.type = 'button';
     mach('i', 'c6z-sp-kontakt', topf);
-    // der Katalog steht als Ding neben der Pflanze: antippen, dann holst du Dinge für diesen Ort
-    var katalogK = mach('button', 'c6z-sp-katalog', stueck); katalogK.type = 'button'; katalogK.innerHTML = KISTE;
-    katalogK.setAttribute('aria-label', 'Katalog: Lampen und Dinge für diesen Ort');
     var schild = mach('button', 'c6z-sp-schritt', stueck); schild.type = 'button';
     var schildOben = mach('span', 'c6z-sp-schritt-oben', schild, 'Nächster Schritt');
     var schildText = mach('span', 'c6z-sp-schritt-text', schild);
@@ -625,13 +617,19 @@ var DEF = {
     // die vier Karten am Boden (Weiterdenken · Machen · Für dich arbeiten lassen · Verbinden)
     var vsPlatz = mach('div', 'c6vs-platz', welt); vsPlatz.hidden = true; vsPlatz.setAttribute('data-c6-bild', ''); vsPlatz.setAttribute('data-c6-kein-wisch', '');
     var vs = null, vsSid = null, gemeint = null;
-    // Ottos eigene Werkzeuge: am Pfosten neben Carl (höchstens drei)
-    var pfosten = mach('div', 'c6z-sp-pfosten', welt); pfosten.hidden = true;
+    // Ottos Werkzeug steht in der Mitte, groß, neben Carl: eins vorn, die anderen als Reiter darüber (antippen holt es nach vorn)
+    var pfosten = mach('div', 'c6z-sp-pfosten c6z-sp-mitte', welt); pfosten.hidden = true;
     pfosten.setAttribute('role', 'group'); pfosten.setAttribute('aria-label', 'Deine Werkzeuge');
     mach('i', 'c6z-sp-pfosten-stamm', pfosten).setAttribute('aria-hidden', 'true');
+    var reiter = mach('div', 'c6z-sp-reiter', pfosten); reiter.hidden = true;
+    reiter.setAttribute('role', 'tablist'); reiter.setAttribute('aria-label', 'Deine Werkzeuge hier');
     var pfostenListe = mach('div', 'c6z-sp-pfosten-liste', pfosten);
+    // ohne Werkzeug: genau ein leiser Weg zu „Bau mir was“ (die Werkstatt), an der Stelle, wo es stehen wird
+    var bauweg = mach('button', 'c6z-sp-bauweg', welt); bauweg.type = 'button'; bauweg.hidden = true;
+    var bauwegT = mach('span', 'c6z-sp-bauweg-t', bauweg);
+    var bauwegU = mach('span', 'c6z-sp-bauweg-u', bauweg);
     // die Blase meidet Werkzeuge und das Schild „Nächster Schritt“
-    pfosten.setAttribute('data-c6-bild', ''); stueck.setAttribute('data-c6-bild', ''); pfostenListe.setAttribute('data-c6-kein-wisch', '');
+    pfosten.setAttribute('data-c6-bild', ''); stueck.setAttribute('data-c6-bild', ''); pfostenListe.setAttribute('data-c6-kein-wisch', ''); bauweg.setAttribute('data-c6-bild', '');
     var carlPlatz = mach('div', 'c6k-sp-carl', welt);
     var sitzEl = mach('div', 'c6z-sp-sitz', carlPlatz); sitzEl.setAttribute('aria-hidden', 'true');
     var sitzSchatten = mach('i', 'c6z-sp-kontakt c6z-sp-sitz-kontakt', carlPlatz);
@@ -801,8 +799,8 @@ var DEF = {
     // noch kein Space: ein Bauplatz im Frühdunst, die Leine ist schon gespannt
     function leerKlima() {
       var z = zeitJetzt(), Z = ZEIT[z];
-      return { zeit: z, tageszeit: Z.name, wetter: Z.nacht ? 'sterne' : 'klar', wetterName: '', nacht: !!Z.nacht, himmel: [mische(Z.o, '#d62a26', 0.12), Z.u], licht: Z.glanz, staerke: Z.a, gx: Z.gx, gy: Z.gy,
-        papier: mische('#f4eee4', Z.u, 0.2), zustand: 'neu', ruht: false, fuelle: 0, farbe: '#d62a26', art: 'projekt', leer: true };
+      return { zeit: z, tageszeit: Z.name, wetter: Z.nacht ? 'sterne' : 'klar', wetterName: '', nacht: !!Z.nacht, himmel: [mische(Z.o, '#6f6a61', 0.12), Z.u], licht: Z.glanz, staerke: Z.a, gx: Z.gx, gy: Z.gy,
+        papier: mische('#f4eee4', Z.u, 0.2), zustand: 'neu', ruht: false, fuelle: 0, farbe: '#2b2722', art: 'projekt', leer: true };
     }
     // Wechselt dabei Tag ↔ Nacht (egal, wer das Neuzeichnen auslöst), blendet der Space im gemeinsamen Takt über statt zu springen
     var inBlende = false;
@@ -1072,14 +1070,17 @@ var DEF = {
       // die Pflanze steht immer rechts neben Carl: am Computer im Stück, am iPhone in der Szene
       if (c) { if (topf.parentNode !== stueck) stueck.insertBefore(topf, schild); }
       else if (topf.parentNode !== welt) welt.insertBefore(topf, carlPlatz);
-      if (c) { if (stueck.parentNode !== welt) welt.insertBefore(stueck, carlPlatz); if (pfosten.parentNode !== welt) welt.insertBefore(pfosten, carlPlatz); if (vsPlatz.parentNode !== welt) welt.insertBefore(vsPlatz, carlPlatz); }
-      else { if (vsPlatz.parentNode !== wurzel || vsPlatz.nextSibling !== pult) wurzel.insertBefore(vsPlatz, pult); if (pfosten.parentNode !== wurzel || pfosten.nextSibling !== vsPlatz) wurzel.insertBefore(pfosten, vsPlatz); if (stueck.parentNode !== wurzel || stueck.nextSibling !== pfosten) wurzel.insertBefore(stueck, pfosten); }
+      // Computer: alles in der Szene. iPhone: unter der Szene das Werkzeug (die Mitte), dann das Schild; die Karten nur auf Geste
+      if (c) { [stueck, pfosten, bauweg, vsPlatz].forEach(function (e) { if (e.parentNode !== welt) welt.insertBefore(e, carlPlatz); }); }
+      else { [vsPlatz, stueck, bauweg, pfosten].forEach(function (e, i, l) { var vor = i ? l[i - 1] : pult; if (e.parentNode !== wurzel || e.nextSibling !== vor) wurzel.insertBefore(e, vor); }); }
       spaeter(schattenLegen, 80);
       var h = welt.clientHeight || 300, w = welt.clientWidth || 390;
       // Carl steht auf dem Boden der Zeichnung: Höhe des Bildes = Breite × 300/480
       // die Zeichnung füllt die Bühne (auch am iPhone, keine leere obere Hälfte); Carl wächst mit
       var bildH = h;
-      var px = Math.round(c ? Math.min(h * 0.38, 280) : Math.min(h * 0.44, w * 0.5, 196));
+      // steht ein Werkzeug da, rückt Carl ein wenig zurück: das Werkzeug ist das größte Ding neben ihm
+      var mitWz = !pfosten.hidden;
+      var px = Math.round(c ? Math.min(h * (mitWz ? 0.34 : 0.38), 280) : Math.min(h * 0.44, w * 0.5, mitWz ? 132 : 196));
       if (ctl) ctl.groesse(Math.max(96, px));
       welt.style.setProperty('--sp-carl', Math.max(96, px) + 'px');
       ganzesBild(c);
@@ -1106,13 +1107,13 @@ var DEF = {
       wurzel.classList.toggle('c6k-sp-leer', !f);
       if (f) {
         titelT.textContent = f.titel;
-        punkt.style.background = f.farbe || 'var(--faden)';
+        punkt.style.background = f.farbe || '#2b2722';
         titelK.setAttribute('aria-label', f.titel + ' · Deine Spaces');
         if (C6.benenne) C6.benenne('space', f.titel);
         leineSchl = '';
       } else {
         titelT.textContent = 'Dein erster Space';
-        punkt.style.background = 'var(--faden)';
+        punkt.style.background = '#2b2722';
         titelK.setAttribute('aria-label', 'Deine Spaces');
         unterT.textContent = 'Ein Ort für einen Gedanken.';
         if (C6.benenne) C6.benenne('space', 'Space');
@@ -1209,7 +1210,7 @@ var DEF = {
         ci.setAttribute('cx', px.toFixed(1)); ci.setAttribute('cy', (yBei(px) + 0.5).toFixed(1));
         ci.setAttribute('r', c ? 6 : 5);
         ci.setAttribute('class', 'c6z-sp-perle');
-        ci.setAttribute('fill', i % 3 === 2 ? mische(K ? K.farbe : '#d62a26', '#ffffff', 0.35) : (K ? K.farbe : '#d62a26'));
+        ci.setAttribute('fill', i % 3 === 2 ? mische(K ? K.farbe : '#2b2722', '#ffffff', 0.35) : (K ? K.farbe : '#2b2722'));
         leineSvg.appendChild(ci);
       }
     }
@@ -1243,7 +1244,7 @@ var DEF = {
           if (d.art === 'faden' && d.mit && d.mit.farbe) b.style.setProperty('--sp-ding-faden', d.mit.farbe);
           var dn = dingName(d);
           b.setAttribute('aria-label', dn + ' · lesen');
-          var nm = mach('span', 'c6z-sp-ding-name', b, istSternbild(d) ? 'Sternbild mit „' + kurz(dn.replace(/^Sternbild mit „|“$/g, ''), 12) + '“' : kurz(dn, 16));
+          var nm = mach('span', 'c6z-sp-ding-name', b, istSternbild(d) ? dn : kurz(dn, 16));
           if (istSternbild(d)) nm.title = dn;
           // Namensschilder nebeneinander liegender Dinge versetzen, damit sie sich nicht überlagern
           nm.style.setProperty('--n', String(j % 2));
@@ -1286,7 +1287,7 @@ var DEF = {
       if (topf._st !== schl) {
         var war = topf._st;
         topf._st = schl;
-        topf.innerHTML = pflanze(pf.st, K ? K.farbe : '#d62a26');
+        topf.innerHTML = pflanze(pf.st, K ? K.farbe : '#2b2722');
         topf.setAttribute('aria-label', pf.name);
         if (war && war.split('|')[0] !== String(pf.st) && !C6.ruhig && topf.animate) topf.animate([{ transform: 'scale(.86)' }, { transform: 'scale(1.1)', offset: 0.6 }, { transform: 'none' }], { duration: 720, easing: 'cubic-bezier(.3,.7,.4,1)' });
       }
@@ -1332,30 +1333,64 @@ var DEF = {
       schildTag.hidden = !schildTag.textContent;
       schild.setAttribute('aria-label', hat ? 'Nächster Schritt: ' + st.naechster + (st.tag ? ', ' + schildTag.textContent : '') : 'Nächsten Schritt aufschreiben');
     }
-    var wzSchl = '', wzAuf = false;
+    // Das Werkzeug in der Mitte: eins vorn, in voller Form (benutzbar wie in der Werkstatt); die anderen als Reiter mit Namen.
+    // Welches vorn steht, merkt sich der Space (x.vorn); ein neu gehängtes kommt nach vorn.
+    var wzSchl = '';
     function werkzeugeZeichnen(neu) {
       var l = [];
       try { l = (sid && C6.werkzeug && C6.werkzeug.alle) ? (C6.werkzeug.alle(sid) || []) : []; } catch (e) { l = []; }
-      l = l.slice(-3).reverse();
-      var eng = !comp() && l.length > 1 && !wzAuf;
-      var schl = (sid || '') + '|' + l.map(function (w) { return w.id; }).join(',') + '|' + eng;
+      l = l.slice().reverse();
+      var x = r() || {}, vorn = l.filter(function (w) { return w.id === x.vorn; })[0] || l[0] || null;
+      var schl = (sid || '') + '|' + l.map(function (w) { return w.id + ':' + (w.name || ''); }).join(',') + '|' + (vorn ? vorn.id : '');
+      var war = !pfosten.hidden;
       pfosten.hidden = !l.length;
       wurzel.classList.toggle('c6z-sp-mit-wz', !!l.length);
+      bauwegZeichnen(!l.length);
+      if (war !== !pfosten.hidden) spaeter(groesse, 30);
       if (schl === wzSchl && !neu) return;
       wzSchl = schl;
       pfostenListe.textContent = '';
-      (eng ? l.slice(0, 1) : l).forEach(function (w) {
-        var h = mach('div', 'c6z-sp-wz', pfostenListe);
-        try { C6.werkzeug.male(h, w, { sid: sid, klein: true }); } catch (e) { h.remove(); }
+      reiter.textContent = '';
+      reiter.hidden = l.length < 2;
+      if (!vorn) return;
+      var h = mach('div', 'c6z-sp-wz', pfostenListe);
+      h.setAttribute('role', 'tabpanel');
+      try { C6.werkzeug.male(h, vorn, { sid: sid }); } catch (e) { h.remove(); }
+      if (l.length < 2) return;
+      l.forEach(function (w) {
+        var k = mach('button', 'c6z-sp-reiter-k', reiter, w.name || 'Werkzeug'); k.type = 'button';
+        k.setAttribute('role', 'tab');
+        k.setAttribute('aria-selected', w === vorn ? 'true' : 'false');
+        k.style.setProperty('--wz', w.farbe || '#2b2722');
+        k.addEventListener('click', function () {
+          if (w === vorn) return;
+          aendern(function (s) { var y = s.spaces[sid]; if (y) y.vorn = w.id; });
+          werkzeugeZeichnen(true);
+          var neuEl = pfostenListe.firstChild;
+          if (neuEl && !C6.ruhig && neuEl.animate) neuEl.animate([{ transform: 'translateY(10px)', opacity: 0.4 }, { transform: 'none', opacity: 1 }], { duration: 260, easing: 'cubic-bezier(.3,.7,.4,1)' });
+        });
       });
-      if (eng || (wzAuf && !comp() && l.length > 1)) {
-        var m = mach('button', 'c6z-sp-wz-mehr', pfostenListe, eng ? '+' + (l.length - 1) : '‹'); m.type = 'button';
-        m.setAttribute('aria-label', eng ? 'Noch ' + (l.length - 1) + ' Werkzeuge zeigen' : 'Weniger zeigen');
-        m.setAttribute('aria-expanded', eng ? 'false' : 'true');
-        m.addEventListener('click', function () { wzAuf = !wzAuf; werkzeugeZeichnen(true); });
-      }
     }
-    try { C6.bus.on('werkzeug-eigen', function (d) { if (!hier) return; if (!d || !d.sid || d.sid === sid || d.was === 'weg') { werkzeugeZeichnen(d && (d.was === 'gehaengt' || d.was === 'weg')); spaeter(groesse, 30); } }); } catch (e) {}
+    // Ohne Werkzeug: ein gestrichelter Umriss an seinem Platz, ein Satz, ein Weg in die Werkstatt
+    function bauwegZeichnen(an) {
+      var f = sid ? faden(sid) : null;
+      bauweg.hidden = !an || !f;
+      if (bauweg.hidden) return;
+      bauwegT.textContent = stimme('space.bauweg', { titel: kurz(f.titel, 28) }, 'Ein Werkzeug für „' + kurz(f.titel, 28) + '“?');
+      bauwegU.textContent = stimme('space.bauwegWo', null, 'Baust du dir in der Werkstatt');
+      bauweg.setAttribute('aria-label', bauwegT.textContent + ' ' + bauwegU.textContent);
+    }
+    bauweg.addEventListener('click', function () {
+      aufstehen();
+      if (!C6.raeume || !C6.raeume.werkstatt) return;
+      try { C6.geh('werkstatt', { zeig: 'wand' }); } catch (e) {}
+    });
+    staunenAn(bauweg, 'space.bauweg', 'Hier steht später dein Werkzeug. Bauen tust du es in der Werkstatt; danach stellst du es hierher.');
+    try { C6.bus.on('werkzeug-eigen', function (d) {
+      if (d && d.was === 'gehaengt' && d.sid && d.id) aendern(function (s) { var y = s.spaces && s.spaces[d.sid]; if (y) y.vorn = d.id; });
+      if (!hier || (d && d.was === 'benutzt')) return;
+      if (!d || !d.sid || d.sid === sid || d.was === 'weg') werkzeugeZeichnen(d && (d.was === 'gehaengt' || d.was === 'weg'));
+    }); } catch (e) {}
     // Nach „Geschafft“ dreht sich das Schild einmal um: hinten ist es leer und fragt nach dem nächsten Schritt.
     // Im selben Moment geht die Blüte auf (pflanzeZeichnen sieht die neue Stufe).
     function schildDreht() {
@@ -1581,12 +1616,16 @@ var DEF = {
     }
     // nach jedem Wort kann der Ort sich ändern (Pflanze, Licht)
     function auffrischen() { if (!sid) return; lichtSetzen(); leineZeichnen(); pflanzeZeichnen(); werkzeugeZeichnen(); dingeZeichnen(); einrZeichnen(); lichtQuelleSetzen(); vsZeichnen(); }
-    // Die Karten liegen da, sobald an der Leine etwas von dir hängt; sie meinen den ganzen Space oder den Zettel, den du angetippt hast
+    // Die vier Karten liegen nur da, wenn du fragst: Carl antippen (sie meinen den ganzen Space) oder einen Zettel antippen
+    // (sie meinen ihn). Daneben tippen legt sie leise weg, solange nichts läuft. Ohne eigenen Zettel gibt es sie nicht.
+    var vsOffen = false;
+    function vsMoeglich() { return !!(sid && C6.vorschlaege && ((r() || {}).notizen || []).filter(eigen).length); }
     function vsZeichnen() {
-      var n = sid ? ((r() || {}).notizen || []).filter(eigen).length : 0;
-      vsPlatz.hidden = !n || !C6.vorschlaege;
-      // am iPhone macht die Szene den Karten Platz (sie liegen über dem Feld, nie darunter)
-      if (wurzel.classList.contains('c6vs-mit') === vsPlatz.hidden) { wurzel.classList.toggle('c6vs-mit', !vsPlatz.hidden); if (!comp()) spaeter(groesse, 30); }
+      if (vsOffen && !vsMoeglich()) vsOffen = false;
+      var lauf = !!(vs && vs.laeuft && vs.laeuft());
+      vsPlatz.hidden = !(vsOffen || lauf);
+      // die Karten liegen als Blatt über dem Boden (iPhone: über dem Feld); die Szene selbst bewegt sich dabei nicht
+      wurzel.classList.toggle('c6z-sp-vs-auf', !vsPlatz.hidden);
       if (vsPlatz.hidden) return;
       if (!vs || vsSid !== sid) {
         vsSid = sid; gemeint = null;
@@ -1595,10 +1634,47 @@ var DEF = {
       if (gemeint) { var gz = haken.querySelector('.c6z-sp-zettel[data-ts="' + gemeint.ts + '"]'); if (gz) gz.classList.add('c6vs-gemeint'); }
       spaeter(vsLage, 60);
     }
+    function vsAuf(n) {
+      if (!vsMoeglich()) return false;
+      var war = vsOffen;
+      vsOffen = true;
+      vsZeichnen();
+      if (vs && !vs.laeuft()) { if (!war && vs.zuruecksetzen) vs.zuruecksetzen(); meinen(n || null); }
+      if (!war && !C6.ruhig && vsPlatz.animate) vsPlatz.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 240, easing: 'cubic-bezier(.3,.7,.4,1)' });
+      return true;
+    }
+    function vsZu(sofort) {
+      if (!vsOffen || (vs && vs.laeuft && vs.laeuft())) return;
+      vsOffen = false;
+      meinen(null);
+      if (sofort || C6.ruhig || !vsPlatz.animate || vsPlatz.hidden) { vsZeichnen(); return; }
+      var a = vsPlatz.animate([{ opacity: 1 }, { opacity: 0, transform: 'translateY(8px)' }], { duration: 180, easing: 'ease-in' });
+      a.onfinish = function () { if (!vsOffen) vsZeichnen(); };
+    }
+    // Carl antippen: „Was machen wir damit?“ – die Karten meinen den ganzen Space. Ohne Zettel sagt Carl, wo man anfängt.
+    // (Fängt den Tipp vor dem Kern ab: im Space fokussiert Carl das Feld nicht, er bietet die Karten an.)
+    carlPlatz.addEventListener('click', function (e) {
+      if (!hier || !sid) return;
+      var t = e.target; if (!t || !t.closest || !ctl || !ctl.el || !ctl.el.contains(t)) return;
+      e.stopPropagation();
+      aufstehen();
+      if (vsOffen && !gemeint) { vsZu(); return; }
+      if (vsAuf(null)) {
+        try { ctl.stimmung('froh'); spaeter(function () { ctl && ctl.stimmungJetzt === 'froh' && ctl.stimmung('ruhig'); }, 1200); } catch (x) {}
+        if (C6.sag) C6.sag(stimme('vorschlag.frage', null, 'Was machen wir damit?'), { merken: false });
+        return;
+      }
+      var f = faden(sid) || {};
+      modus = 'zettel'; platzhalter();
+      try { C6.eingabe && C6.eingabe.fokus && C6.eingabe.fokus(); } catch (x) {}
+      if (C6.sag) C6.sag('Was fällt dir zu „' + kurz(f.titel, 30) + '“ ein? Ich häng es an die Leine.', { merken: false });
+    }, true);
     // am Computer liegen links unten auch die Dinge (Sternbilder, Ergebnisse): die Karten rücken dann über sie, nie auf sie
     function vsLage() {
       vsPlatz.style.bottom = '';
       if (!comp() || vsPlatz.hidden) return;
+      // steht das Werkzeug links neben Carl, liegen die Karten darüber, nie darauf
+      if (!pfosten.hidden) { var pr = pfosten.getBoundingClientRect(), wr0 = welt.getBoundingClientRect(); if (pr.height) { vsPlatz.style.bottom = Math.round(wr0.bottom - pr.top + 12) + 'px'; return; } }
       var o = ortNodes.filter(function (n) { return n.getAttribute('data-place') === place; })[0], box = o && o.querySelector('.c6z-sp-dinge');
       var br = box && box.children.length ? box.getBoundingClientRect() : null, vr = vsPlatz.getBoundingClientRect(), wr = welt.getBoundingClientRect();
       if (!br || !br.width || br.right < vr.left || br.left > vr.right) return;
@@ -1610,7 +1686,7 @@ var DEF = {
       if (gemeint) { var z = haken.querySelector('.c6z-sp-zettel[data-ts="' + gemeint.ts + '"]'); if (z) z.classList.add('c6vs-gemeint'); }
       if (vs && !vs.laeuft()) vs.quelle(gemeint ? { satz: istFund(gemeint) ? ohneFund(gemeint.t) : gemeint.t } : {});
     }
-    C6.bus.on('leer', function () { if (hier && gemeint && vs && !vs.laeuft()) meinen(null); });
+    C6.bus.on('leer', function () { if (hier) vsZu(); });
 
     /* ----- Einrichten: Dinge aus dem Katalog, gespeichert je Space; Leine, Kernsatz, Schritt und Carl bleiben frei ----- */
     function freiZonen() {
@@ -1709,26 +1785,8 @@ var DEF = {
         if (d.name) e.setAttribute('title', d.name);
       });
     }
-    // die Kiste leuchtet einmal, wenn es Neues gibt: noch nie geöffnet, oder seit dem letzten Blick sind Münzen dazugekommen
-    function katalogStand() { try { return C6.muenzen && C6.muenzen.stand ? +C6.muenzen.stand() || 0 : 0; } catch (e) { return 0; } }
-    function katalogNeu() { var e = (C6.S && C6.S.einrichten) || {}; return !e.katalogAuf || katalogStand() > (+e.katalogStand || 0); }
-    function katalogZeichnen() {
-      katalogK.hidden = !sid || !C6.einrichten;
-      var neu = !katalogK.hidden && katalogNeu();
-      if (neu && !katalogK.classList.contains('c6z-sp-katalog-neu')) { katalogK.classList.remove('c6z-sp-katalog-neu'); void katalogK.offsetWidth; katalogK.classList.add('c6z-sp-katalog-neu'); }
-      if (!neu) katalogK.classList.remove('c6z-sp-katalog-neu');
-    }
-    katalogK.addEventListener('click', function () {
-      if (ctl) { var rr = katalogK.getBoundingClientRect(); try { ctl.blickZu(rr.left + rr.width / 2, rr.top + rr.height / 2, 1400); } catch (e) {} }
-      if (!C6.ruhig && katalogK.animate) katalogK.animate([{ transform: 'none' }, { transform: 'translateY(-4px) rotate(-2deg)' }, { transform: 'none' }], { duration: 320, easing: 'ease-out' });
-      spaeter(einrichtenOeffnen, C6.ruhig ? 0 : 160);
-    });
-    staunenAn(katalogK, 'space.katalog', 'Das ist der Katalog. Darin sind Lampen und Dinge für diesen Ort; was du holst, steht dann hier.');
-    try { C6.bus.on('muenzen', function () { if (hier) katalogZeichnen(); }); } catch (e) {}
     function einrichtenOeffnen() {
       if (!sid) return;
-      try { C6.aendern(function (s) { s.einrichten = s.einrichten || {}; s.einrichten.katalogAuf = Date.now(); s.einrichten.katalogStand = katalogStand(); }); } catch (e) {}
-      katalogK.classList.remove('c6z-sp-katalog-neu');
       var E = C6.einrichten;
       if (E && E.oeffne) { try { E.oeffne({ ort: 'space', sid: sid, frei: freiZonen(), place: place }); return; } catch (e) {} }
       if (C6.sag) C6.sag('Der Katalog zum Einrichten kommt bald. Das Licht kannst du schon wählen.', { merken: false });
@@ -1808,12 +1866,12 @@ var DEF = {
     // „Hängen lassen“ gibt es nicht mehr: wer nichts tun will, tippt daneben, und der Zettel hängt einfach weiter.
     function zettelFrage(n) {
       if (!C6.frag) return;
-      meinen(n);
+      if (!vsAuf(n)) meinen(n);
       if (blattArt === 'zettel') schliesseBlatt();
       var sat = istFund(n) ? ohneFund(n.t) : n.t;
       C6.frag(stimme('zettel.gemeint', { t: kurz(sat, 60) }, '„' + kurz(sat, 60) + '“. Die Karten unten meinen jetzt diesen Zettel.'), [{ text: 'Wird der Kernsatz', wert: 'k' }, { text: 'Abnehmen', wert: 'w' }], { leise: true, id: 'zettel-wahl' }).then(function (a) {
-        if (a === 'w') { meinen(null); abnehmen(n); }
-        else if (a === 'k') { meinen(null); schliesseBlatt(); setzeKern(sat); }
+        if (a === 'w') { vsZu(true); meinen(null); abnehmen(n); }
+        else if (a === 'k') { vsZu(true); meinen(null); schliesseBlatt(); setzeKern(sat); }
       });
     }
     /* Abnehmen mit Rückweg: der Zettel ist unten und oben weg (auch seine Perle am Planeten).
@@ -1998,20 +2056,27 @@ var DEF = {
       } else {
         blattT.textContent = 'Deine Spaces';
         blatt.setAttribute('aria-label', 'Deine Spaces');
+        // oben das Ding (die Liste deiner Spaces), darunter leise drei Handgriffe als Tusche-Umriss
         var liste = mach('div', 'c6k-sp-liste', blattInhalt);
+        var taten = mach('div', 'c6z-sp-liste-taten', blattInhalt);
         if (sid) {
-          var umK = mach('button', 'c6k-sp-neu c6z-sp-umzug', liste); umK.type = 'button';
+          var umK = mach('button', 'c6z-sp-liste-tat c6z-sp-umzug', taten); umK.type = 'button';
           mach('span', 'c6z-sp-umzug-bild', umK).innerHTML = bild(place, 'c6k-sp-mini-bild', true);
           mach('span', null, umK, 'Ort wechseln · jetzt ' + P().name);
           umK.addEventListener('click', function () { oeffneBlatt('places'); });
-          var einK = mach('button', 'c6k-sp-neu c6z-sp-einrichten', liste); einK.type = 'button';
-          einK.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16M6 20v-6h12v6M8 14V9a4 4 0 0 1 8 0v5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>';
+          var einK = mach('button', 'c6z-sp-liste-tat c6z-sp-einrichten', taten); einK.type = 'button';
+          einK.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 3.5h7l3 7h-13z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 10.5v9M8 20.5h8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
           mach('span', null, einK, 'Einrichten');
           einK.addEventListener('click', function () { schliesseBlatt(); spaeter(einrichtenOeffnen, 180); });
         }
-        var neuK = mach('button', 'c6k-sp-neu', liste); neuK.type = 'button';
-        neuK.innerHTML = PLUS + '<span>Neuer Space</span>';
-        neuK.addEventListener('click', function () { schliesseBlatt(); spaeter(function () { api.frageNeu(); }, 180); });
+        // ein neuer Space entsteht im Zuhause (am Brett): dieser Knopf führt dorthin und fängt dort an
+        var neuK = mach('button', 'c6z-sp-liste-tat c6z-sp-liste-neu', taten); neuK.type = 'button';
+        neuK.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.5v13M5.5 12h13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><span>Neuer Space</span>';
+        neuK.setAttribute('aria-label', 'Neuer Space, im Zuhause am Brett');
+        neuK.addEventListener('click', function () {
+          schliesseBlatt();
+          spaeter(function () { if (C6.raeume && C6.raeume.zuhause) C6.geh('zuhause', { neu: true }); else api.frageNeu(); }, 180);
+        });
         api.alle().forEach(function (s) {
           var k = mach('button', 'c6k-sp-zeile', liste); k.type = 'button';
           if (s.stringId === sid) k.setAttribute('aria-current', 'true');
@@ -2019,7 +2084,7 @@ var DEF = {
           var bi = mach('span', 'c6k-sp-zeile-bild c6z-sp-zeile-licht', k); bi.innerHTML = bild(s.places[0], 'c6k-sp-mini-bild', true);
           if (kl) { bi.style.setProperty('--sp-o', kl.himmel[0]); bi.style.setProperty('--sp-u', kl.himmel[1]); bi.style.setProperty('--sp-a', String(Math.min(kl.staerke, 0.6))); }
           var tx = mach('span', 'c6k-sp-zeile-text', k);
-          var b = mach('b', null, tx); var pk = mach('i', 'c6k-sp-punkt', b); pk.style.background = s.farbe || 'var(--faden)'; b.appendChild(D.createTextNode(s.titel));
+          var b = mach('b', null, tx); var pk = mach('i', 'c6k-sp-punkt', b); pk.style.background = s.farbe || '#2b2722'; b.appendChild(D.createTextNode(s.titel));
           mach('small', null, tx, s.kern ? '„' + kurz(s.kern, 60) + '“' : (PLACES[(roh(s.stringId) || {}).jetzt] || PLACES[s.places[0]] || {}).name || '');
           k.addEventListener('click', function () { schliesseBlatt(); if (s.stringId !== sid) api.oeffne(s.stringId); });
         });
@@ -2124,13 +2189,15 @@ var DEF = {
         var a = api.alle();
         neuSid = (sid && faden(sid)) ? sid : (a[0] && a[0].stringId) || null;
       }
-      var anderer = neuSid !== sid;
+      var anderer = neuSid !== sid, war = sid;
       sid = neuSid;
       var x = r();
       var ps = placesJetzt();
       var ziel = o.place && ps.indexOf(o.place) >= 0 ? o.place : (anderer || !place || ps.indexOf(place) < 0 ? ((x && x.jetzt && ps.indexOf(x.jetzt) >= 0) ? x.jetzt : ps[0]) : place);
-      if (anderer) { place = null; modus = null; schliesseBlatt(); leineSchl = ''; dingSchl = ''; bodenWeg(true); }
+      // ein anderer Space: was Carl im vorigen fragte (Blase, offene Wahl) gilt hier nicht mehr; die Karten liegen wieder weg
+      if (anderer) { if (war && C6.schweig) { try { C6.schweig(); } catch (e) {} } place = null; modus = null; vsOffen = false; schliesseBlatt(); leineSchl = ''; dingSchl = ''; bodenWeg(true); }
       kopfZeichnen();
+      if (!sid) { stueck.hidden = topf.hidden = true; pfosten.hidden = true; bauweg.hidden = true; vsOffen = false; vsPlatz.hidden = true; wurzel.classList.remove('c6z-sp-mit-wz', 'c6z-sp-vs-auf'); }
       orteZeichnen();
       setzePlace(ziel, false);
       fadenZeichnen(true);
@@ -2245,10 +2312,8 @@ var DEF = {
       // 3. Carl nährt den Samen: fragen, Kernsatz vorschlagen, nächsten Schritt vorschlagen. Entscheiden tust du.
       if (!nz) return { satz: 'Was fällt dir zu „' + titel + '“ ein? Ich häng es an die Leine.', zettel: true };
       if (!x.kern && nz >= 3 && !x.kernVorschlag) return { satz: '', direkt: naehreKern };
-      if (x.kern && !st.naechster && vs && !vsPlatz.hidden) return { satz: stimme('vorschlag.lage', { titel: titel }, 'Der Kernsatz steht. Was mache ich als Nächstes?'), direkt: function () { C6.sag(stimme('vorschlag.lage', { titel: titel }, 'Der Kernsatz steht. Was mache ich als Nächstes?'), { merken: false }); spaeter(function () { if (vs) vs.wippe(); }, 400); } };
-      // einmal: Carl zeigt auf den Katalog (wenn Kernsatz und Schritt stehen und Münzen da sind)
-      var ES = (C6.S && C6.S.einrichten) || {};
-      if (!ES.katalogGesagt && !ES.katalogAuf && katalogStand() >= 1 && C6.einrichten) return { satz: 'Die Kiste neben mir ist der Katalog. Mit deinen Münzen holst du dir Lampen und Dinge für diesen Ort.', chip: 'Ansehen', katalog: true, tun: function () { einrichtenOeffnen(); } };
+      // der Kernsatz steht, ein Schritt fehlt: Carl fragt, und nur dann liegen die vier Karten als Antworten da
+      if (x.kern && !st.naechster && vsMoeglich()) return { satz: stimme('vorschlag.lage', { titel: titel }, 'Der Kernsatz steht. Was mache ich als Nächstes?'), direkt: function () { C6.sag(stimme('vorschlag.lage', { titel: titel }, 'Der Kernsatz steht. Was mache ich als Nächstes?'), { merken: false }); if (vsAuf(null)) spaeter(function () { if (vs) vs.wippe(); }, 400); } };
       var fr = stimme('naehren.frage', { titel: titel }, 'Was hat dich auf „' + titel + '“ gebracht?');
       return { satz: fr, zettel: true };
     }
@@ -2291,7 +2356,6 @@ var DEF = {
       if (andererSpricht()) return;
       var s0 = sid, l = lage();
       if (l.fund) fundGezeigt[s0] = Date.now();
-      if (l.katalog) aendern(function (s) { s.einrichten = s.einrichten || {}; s.einrichten.katalogGesagt = Date.now(); });
       if (l.ortFrage) aendern(function (s) { var y = s.spaces[s0]; if (y) y.ortGefragt = Date.now(); });
       letzteLage[s0] = { ts: Date.now(), satz: l.satz };
       if (l.direkt) { l.direkt(); return; }
@@ -2302,11 +2366,18 @@ var DEF = {
     function begruessen(o) {
       var neu = o.neu;
       if (ctl) { try { ctl.stimmung('ruhig'); if (!C6.ruhig) spaeter(function () { ctl && ctl.huepf(10); }, 300); } catch (e) {} }
-      if (!sid) { spaeter(function () { api.frageNeu(); }, 520); platzhalter(); return; }
+      // noch kein Space: der entsteht im Zuhause am Brett (ein Ort, eine Geste); ein Satz unten ins Feld geht trotzdem
+      if (!sid) {
+        spaeter(function () {
+          if (!hier || sid) return;
+          if (!C6.raeume || !C6.raeume.zuhause || !C6.frag) { api.frageNeu(); return; }
+          C6.frag(stimme('space.keiner', null, 'Noch hängt kein Space am Brett. Ein neuer fängt im Zuhause an.'), [{ text: stimme('space.keinerHin', null, 'Ins Zuhause'), wert: 'hin' }], { leise: true, id: 'space-keiner' }).then(function (a) { if (a === 'hin' && hier && !sid) C6.geh('zuhause', { neu: true }); });
+        }, 520);
+        platzhalter(); return;
+      }
       if (o.mit) { mitbringen(o.mit); return; }
       mitbringen(null);
-      katalogZeichnen();
-      // vom Katalog im Zuhause hergeschickt: gleich den Katalog dieses Ortes aufschlagen, sonst nichts sagen
+      // vom Katalog in der Garage („Für deine Spaces“) hergeschickt: gleich das Einrichten dieses Ortes aufschlagen, sonst nichts sagen
       if (o.einrichten) { var s1 = sid; spaeter(function () { if (hier && sid === s1) einrichtenOeffnen(); }, C6.ruhig ? 60 : 650); return; }
       gesagt[sid + ':' + place] = 1;
       if (!neu && letzteLage[sid] && Date.now() - letzteLage[sid].ts < 90000 && letzteLage[sid].satz === lage().satz) return;

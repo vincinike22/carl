@@ -1146,7 +1146,7 @@ C6.raum({
         setze(bankEl, w * 0.5 - bb / 2, h - naht - 2, bb);
         var sb = Math.min(w * 0.17, 210);
         setze(schrankPlatz.querySelector('.c6s-g-schrank'), w * 0.985 - sb, h - naht - 16, sb);
-        if (heftEl) { var hb = Math.max(44, Math.min(64, sb * 0.3)); setze(heftEl, w * 0.985 - sb - hb - 6, h - naht - 14, hb); }
+        if (heftEl) { var hb = Math.max(54, Math.min(72, sb * 0.36)); setze(heftEl, w * 0.985 - sb - hb - 6, h - naht - 14, hb); }
         var gb = cs * SP, gl = w * 0.985 - sb - gb - w * 0.008;
         setze(schrankPlatz.querySelector('.c6s-g-spiegel'), gl, h - naht - 26, gb);
         cx = gl - cs * 0.3;
@@ -1165,7 +1165,7 @@ C6.raum({
         setze(bankEl, w * 0.33 - bbi / 2 + w * 0.12, h - naht - 1, bbi);
         var sbi = sa ? w * 0.34 : w * 0.27;
         setze(schrankPlatz.querySelector('.c6s-g-schrank'), w * 0.99 - sbi, h - naht - 4, sbi);
-        if (heftEl) { var hbi = Math.max(44, Math.min(56, sbi * 0.4)); setze(heftEl, w * 0.99 - sbi - hbi - 2, h - naht - 2, hbi); }
+        if (heftEl) { var hbi = Math.max(50, Math.min(60, sbi * 0.52)); setze(heftEl, w * 0.99 - sbi - hbi - 2, h - naht - 2, hbi); }
         var gbi = cs * SP, gli = w * 0.99 - sbi - gbi - 2;
         setze(schrankPlatz.querySelector('.c6s-g-spiegel'), gli, h - naht - (sa ? 12 : 10), gbi);
         cx = gli - cs * 0.3;

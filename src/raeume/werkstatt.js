@@ -901,7 +901,7 @@
         '<path d="M-34 24 H34 M-34 52 H34 M-34 80 H34" stroke="' + f + '" stroke-width="7" stroke-linecap="round"/><path d="M-34 24 H34 M-34 52 H34 M-34 80 H34" stroke="' + T + '" stroke-width="1.6"/>' +
         (aus === 'teleskop' ? '<path d="M0 -14 l4 9 10 1 -8 6 3 10 -9 -6 -9 6 3 -10 -8 -6 10 -1z" transform="translate(30,-4) scale(.8)" fill="#e8c46a" stroke="' + T + '" stroke-width="1.6"/>' : '') + '</g>';
     },
-    // Wandkalender: sieben Spalten, drei Wochen, Kreuze in der Farbe, heute rot umkringelt
+    // Wandkalender: sieben Spalten, drei Wochen, Kreuze in der Farbe, heute in Tusche umkringelt
     woche: function (f) {
       var h = '<g transform="translate(0,24)"><path d="M-13 0 L13 0" stroke="' + T + '" stroke-width="2"/>' +
         '<rect x="-48" y="2" width="96" height="104" rx="4" fill="' + P + '" stroke="' + T + '" stroke-width="2.5"/>' +
@@ -913,7 +913,7 @@
         h += '<rect x="' + x.toFixed(1) + '" y="' + y + '" width="10.5" height="17" rx="1.5" fill="none" stroke="#b9ab92" stroke-width="1.3"/>';
         if (an[i]) h += '<path d="M' + (x + 2).toFixed(1) + ' ' + (y + 4) + ' l6.5 9 M' + (x + 8.5).toFixed(1) + ' ' + (y + 4) + ' l-6.5 9" stroke="' + f + '" stroke-width="2.4" stroke-linecap="round"/>';
       }
-      h += '<ellipse cx="' + (-42 + 4 * 12.2 + 5.2).toFixed(1) + '" cy="82.5" rx="9" ry="12" fill="none" stroke="#d62a26" stroke-width="2.2" transform="rotate(-8 ' + (-42 + 4 * 12.2 + 5.2).toFixed(1) + ' 82.5)"/>';
+      h += '<ellipse cx="' + (-42 + 4 * 12.2 + 5.2).toFixed(1) + '" cy="82.5" rx="9" ry="12" fill="none" stroke="' + T + '" stroke-width="2.8" transform="rotate(-8 ' + (-42 + 4 * 12.2 + 5.2).toFixed(1) + ' 82.5)"/>';
       return h + '</g>';
     },
     // Wegweiser: zwei Arme in zwei Richtungen, unten Steine und Gras
@@ -1126,11 +1126,10 @@
     var n = helferName();
     return {
       lupe: 'Die Lupe macht groß, was auf ' + n + 's Zettel steht. Mehr tut sie nicht.',
-      lampe: (function () { try { return (C6.S && C6.S.werkstatt && C6.S.werkstatt.lampe === 'aus') ? 'Die Lampe ist aus. Tipp sie an, dann wird es hier wieder hell.' : 'Die Lampe geht aus, wenn du sie antippst. Das Licht im Raum folgt ihr.'; } catch (e) { return 'Die Lampe geht aus, wenn du sie antippst. Das Licht im Raum folgt ihr.'; } })(),
+      lampe: (function () { try { return (C6.S && C6.S.werkstatt && C6.S.werkstatt.lampe === 'aus') ? 'Die Lampe ist aus. Tipp sie an, dann wird es hier wieder hell.' : 'Die Lampe geht aus, wenn du sie antippst. Das Licht im Raum folgt ihr. Eine andere liegt im Katalog in der Garage.'; } catch (e) { return 'Die Lampe geht aus, wenn du sie antippst. Das Licht im Raum folgt ihr. Eine andere liegt im Katalog in der Garage.'; } })(),
       lochwand: 'Das sind deine Werkzeuge. Zieh eins an einen anderen Haken, dann bleibt es dort.',
       neu: 'Hier bauen wir ein Werkzeug aus Bausteinen. Du sagst mir, was es tun soll, mehr braucht es nicht.',
       fenster: (function () { try { if (C6.tageszeit && typeof C6.tageszeit.satz === 'function') { var t = C6.tageszeit.satz(); if (t) return t; } } catch (e) {} return 'Das Fenster zeigt, wie spät es draußen ist. Es ist dieselbe Uhr wie deine.'; })(),
-      heft: 'Das ist der Katalog für die Werkstatt: Lampen und Dinge, die du mit Münzen holen kannst.',
       waage: 'Die Wasserwaage zeigt, ob etwas gerade liegt. Die Hobelbank liegt gerade. Meistens.',
       saege: 'Am Sägebock säge ich ein Stück vom Brett. Die Späne bleiben liegen, bis du sie vergisst.',
       kiste: 'In der Kiste liegen Hammer und Schraubenzieher. Auf oder zu, wie du sie lässt.',
@@ -1613,23 +1612,6 @@
         el.setAttribute('aria-label', 'Werkzeugkiste, ' + (wS().kiste ? 'offen' : 'zu') + '. Antippen öffnet oder schließt sie');
         schauAuf(el);
       }
-      // Das Katalog-Heft steht aufgestellt auf der Hobelbank; Tipp öffnet den Katalog „Für die Werkstatt“
-      function heftBild() {
-        return '<g class="c6w-ding c6w-heft" data-id="heft" tabindex="0" role="button" aria-label="Katalog für die Werkstatt: Lampen und Dinge. Antippen öffnet ihn" transform="translate(22,-118)"><g class="c6w-ding-innen">' +
-          '<ellipse cx="2" cy="1" rx="22" ry="2.6" fill="rgba(43,39,34,.18)"/>' +
-          '<path d="M14 0 L22 -40" stroke="#8a6a3c" stroke-width="2.4" stroke-linecap="round"/>' +
-          '<g transform="rotate(-8)"><rect x="-16" y="-46" width="32" height="46" rx="2" fill="#fbf7f0" stroke="' + T + '" stroke-width="2"/>' +
-          '<rect x="-16" y="-46" width="32" height="9" rx="2" fill="#a95f33" stroke="' + T + '" stroke-width="2"/>' +
-          '<path d="M-8 -30 Q0 -38 8 -30 Z" fill="#2f5f8a" stroke="' + T + '" stroke-width="1.2"/><path d="M0 -38 v-4" stroke="' + T + '" stroke-width="1"/><circle cx="0" cy="-27" r="2" fill="#f0d9a0" stroke="' + T + '" stroke-width=".8"/>' +
-          '<path d="M-10 -16 h20 M-10 -11 h14 M-10 -6 h17" stroke="#8a8378" stroke-width="1.4"/></g></g>' +
-          '<rect class="c6w-treffer" x="-' + (hochkant ? 38 : 30) + '" y="-' + (hochkant ? 74 : 62) + '" width="' + (hochkant ? 76 : 60) + '" height="' + (hochkant ? 80 : 68) + '" fill="transparent"/></g>';
-      }
-      function heftAuf() {
-        schauAuf(svg.querySelector('.c6w-heft'));
-        var hi = svg.querySelector('.c6w-heft .c6w-ding-innen'); if (hi && !C6.ruhig && hi.animate) hi.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(-4deg) translateY(-3px)' }, { transform: 'rotate(0)' }], { duration: 380, easing: 'ease-out' });
-        if (C6.einrichten && typeof C6.einrichten.oeffne === 'function') { try { C6.einrichten.oeffne({ raum: 'werkstatt' }); return; } catch (e) {} }
-        try { C6.sag('Den Katalog bekomme ich hier gerade nicht auf.', { merken: false }); } catch (e) {}
-      }
       function zeichneEcke() {
         var g = svg.querySelector('.c6w-g-ecke'); if (!g) return;
         var eig = lochwandListe();
@@ -1645,9 +1627,8 @@
           // Späne am Boden
           '<path d="M30 8 q8 -10 16 -2 q4 6 -4 6 M58 12 q6 -8 13 -2 M128 6 q8 -9 15 0 q2 6 -5 5 M-26 10 q6 -8 12 -1" fill="none" stroke="#c99e66" stroke-width="2.2" stroke-linecap="round"/>' +
           '</g>' + waageBild();
-        g.innerHTML = h + heftBild();
+        g.innerHTML = h;
         var wa = g.querySelector('.c6w-waage'); if (wa) staunen(wa, 'waage');
-        var hf = g.querySelector('.c6w-heft'); if (hf) staunen(hf, 'heft');
         // Anhänger der eigenen Werkzeuge: an der Leiste unten an derselben Wand
         var anh = eig.map(function (w, i) {
           var x = HAKEN_X[i], z = (C6.werkzeug.zeichen(w.zeichen, w.farbe) || '').replace('<svg ', '<svg x="' + (x - 16) + '" y="446" width="32" height="32" ');
@@ -2204,7 +2185,6 @@
         if (id === 'lupe') { lupeSchalten(); return; }
         if (id === 'fenster') { fensterTipp(); return; }
         if (id === 'waage') { waageAus(); return; }
-        if (id === 'heft') { heftAuf(); return; }
         if (id === 'saege') { saegen(); return; }
         if (id === 'kiste') { kisteSchalten(); return; }
         if (id === 'stift') { stiftRollt(); schauAuf(svg.querySelector('.c6w-stift')); return; }

@@ -1,15 +1,15 @@
-/* Himmel: Der neue Planet wohnt im Bild (der leere Kreis auf der Bahn). Der Knopf bleibt für Tastatur und Vorlesen. */
-.c6w-himmel .c6w-netz-unten [data-tu="neu"]:not(:focus-visible){position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
-.c6w-himmel .c6w-wink{bottom:calc(var(--c6-unten,0px) + 28px)}
+/* Himmel: im leeren Himmel zeigt ein Knopf dorthin, wo ein Space anfängt (das Zuhause) */
+.c6w-himmel .c6w-netz-unten .c6w-knopf.c6w-h-heim{gap:10px}
+.c6w-himmel .c6w-netz-unten .c6w-knopf.c6w-h-heim svg{width:20px;height:20px}
+.c6w-himmel.c6w-im-rundgang .c6w-h-heim{display:none}
 /* Teleskop: nur vom Himmel aus, als Ding am Rand der Bühne */
 .c6w-h-teleskop{position:absolute;left:14px;bottom:calc(var(--c6-unten,0px) + 12px);z-index:4;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:56px;min-height:56px;padding:4px 6px;background:none;border:0;cursor:pointer;color:#c9cfee;font:600 12px/1.1 Figtree,system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
 .c6w-h-teleskop svg{width:44px;height:44px;filter:drop-shadow(0 3px 6px rgba(5,8,20,.5));transition:transform .25s cubic-bezier(.2,.8,.2,1)}
 .c6w-h-teleskop:hover svg,.c6w-h-teleskop:focus-visible svg{transform:rotate(-8deg) translateY(-2px)}
-.c6w-h-teleskop:focus-visible{outline:3px solid #f0a830;outline-offset:2px;border-radius:12px}
+.c6w-h-teleskop:focus-visible{outline:3px solid #ecd193;outline-offset:2px;border-radius:12px}
 .c6w-himmel.c6w-blatt-auf .c6w-h-teleskop,.c6w-himmel.c6w-im-rundgang .c6w-h-teleskop{opacity:0;pointer-events:none}
 @media (min-width:820px){.c6w-h-teleskop{left:24px;bottom:calc(var(--c6-unten,0px) + 20px)}}
 @media (max-width:819px){.c6w-h-teleskop{left:auto;right:12px}}
-@media (max-width:819px){.c6w-himmel .c6w-wink{padding:0 76px 0 16px}}
 /* die geparkte Couch, solange Carl vergnügt herumfliegt */
 .c6w-h-couch{position:absolute;left:0;top:0;z-index:2;pointer-events:none;transform-origin:40% 50%;will-change:transform}
 .c6w-h-couch[hidden]{display:none}
@@ -17,3 +17,37 @@
 .c6w-himmel .c6w-feld.c6w-feld-frage{animation:c6w-nicken .42s cubic-bezier(.3,.7,.4,1) 1}
 @keyframes c6w-nicken{0%{transform:none}35%{transform:translateY(3px)}70%{transform:translateY(-1px)}100%{transform:none}}
 @media (prefers-reduced-motion:reduce){.c6w-himmel .c6w-feld.c6w-feld-frage{animation:none}}
+
+/* Das Blatt im Himmel: dieselbe Blattsprache (Rand 1,5 px, harter Versatz, kleine Ecke) in den Nachttönen */
+.c6w-himmel .c6w-blatt.c6w-blatt{background:#1d2445;border:1.5px solid #aab2dc;border-radius:4px;box-shadow:6px 6px 0 #0b0f22,6px 6px 0 1.5px #aab2dc;padding:18px 18px 16px;overflow:hidden;transition:opacity .24s ease,transform .3s cubic-bezier(.2,.8,.2,1)}
+/* Das Planetenblatt rollt nicht (ein rollendes Blatt über dem WebGL-Himmel ließ in Chromium Planeten verschwinden); nur die lange Geschichte rollt */
+.c6w-himmel .c6w-blatt.c6w-blatt-lang{overflow:auto}
+@media (max-width:819px){.c6w-himmel .c6w-blatt.c6w-blatt{left:12px;right:18px;max-height:calc(56% - var(--c6-unten,0px))}}
+.c6w-himmel .c6w-blatt .c6w-kicker{margin-bottom:4px}
+.c6w-himmel .c6w-blatt .c6w-kicker i{width:10px;height:10px;border-radius:50%;flex:none;box-shadow:0 0 0 2px rgba(238,240,255,.16)}
+.c6w-himmel .c6w-blatt-planet .c6w-titel,.c6w-himmel .c6w-blatt-planet .c6w-kicker{margin-right:0}
+.c6w-himmel .c6w-blatt .c6w-titel{margin-bottom:8px}
+.c6w-himmel .c6w-blatt .c6w-titel.c6w-gold{color:#f6e7c4}
+.c6w-himmel .c6w-blatt p{margin-top:0}
+.c6w-himmel .c6w-oben-stand{margin:0 0 8px;font:500 16px/1.42 Figtree,system-ui,sans-serif;color:#eef0ff}
+.c6w-himmel .c6w-oben-zuletzt{margin:0 0 12px;font:400 14px/1.38 Figtree,system-ui,sans-serif;color:#c9cfee}
+.c6w-himmel .c6w-oben-zuletzt small{display:inline;font:600 12px/1 Figtree,system-ui,sans-serif;color:#aab2dc;margin:0}
+.c6w-himmel .c6w-oben-carl{margin:0 0 10px;padding:0 0 0 10px;border-left:2px solid #ecd193;font:400 16px/1.38 Fraunces,Georgia,serif;color:#f6e7c4}
+/* der eine Vorschlag: Handeln, also Orange */
+.c6w-himmel .c6w-oben-vs1{margin:4px 0 12px}
+.c6w-himmel .c6w-blatt .c6w-knopf.c6w-tun{width:100%;background:#e8621a;color:#0b0f22;border-color:#e8621a;box-shadow:3px 3px 0 #0b0f22;font-weight:700;padding:10px 16px;line-height:1.2;text-align:center}
+.c6w-himmel .c6w-blatt .c6w-knopf.c6w-tun:active{box-shadow:1px 1px 0 #0b0f22;transform:translate(2px,2px)}
+.c6w-himmel .c6w-oben-vs-satz{margin:8px 0 0;font:400 14px/1.38 Figtree,system-ui,sans-serif;color:#aab2dc}
+.c6w-himmel .c6w-oben-vs-name{display:block;margin:0 0 2px;font:600 14px/1.3 Figtree,system-ui,sans-serif;color:#eef0ff}
+.c6w-himmel .c6w-oben-vs1.c6w-perle-form .c6w-feld{margin:4px 0 10px}
+/* zwei leise Wege darunter: hinein (auf den Boden) und verbinden (die Tat des Himmels, in Sterngold) */
+.c6w-himmel .c6w-oben-wege{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}
+.c6w-himmel .c6w-blatt .c6w-knopf.c6w-oben-hin{display:inline-flex;width:auto;margin:0;flex:0 0 auto;min-height:44px;padding:0 14px 0 18px}
+.c6w-himmel .c6w-oben-hin svg{width:18px;height:18px}
+.c6w-himmel .c6w-oben-mit{min-height:44px;padding:0 4px;border:0;background:none;font:600 15px/1.2 Figtree,system-ui,sans-serif;color:#ecd193;text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:4px;cursor:pointer}
+.c6w-himmel .c6w-oben-mit:focus-visible,.c6w-himmel .c6w-blatt .c6w-knopf.c6w-knopf:focus-visible{outline:3px solid #ecd193;outline-offset:2px}
+/* Frage nach dem Satz: das Feld trägt, der Knopf handelt */
+.c6w-himmel .c6w-blatt form .c6w-knopf.c6w-tun{margin-top:2px}
+.c6w-himmel.c6w-h-waehlt .c6w-h-vorn{cursor:pointer}
+.c6w-himmel .c6w-feld:focus-visible,.c6w-himmel .c6w-zu.c6w-zu:focus-visible{outline:3px solid #ecd193;outline-offset:2px}
+.c6w-himmel .c6w-h-liste button:focus-visible{outline:3px solid #ecd193;outline-offset:2px}

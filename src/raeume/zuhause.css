@@ -32,8 +32,7 @@
 
 @media (prefers-reduced-motion:reduce){.c6m-gruen .c6m-blattwerk{animation:none}}
 
-/* s4 · das Bücherbord führt in die Bibliothek, auch am iPhone */
-.c6z-stube .c6m-regal{pointer-events:auto;cursor:pointer}
+/* s4 · das Bücherbord (seit s14 nur Kulisse; der Weg in die Bibliothek ist das Dock) */
 .c6z-stube:not(.c6z-computer) .c6m-regal{display:block;left:14px;top:calc(env(safe-area-inset-top,0px) + 240px);width:132px}
 .c6m-regal:focus-visible{outline:3px solid #b4460c;outline-offset:4px;border-radius:6px}
 
@@ -99,12 +98,7 @@
 .c6z-stube[data-zeit=nacht] .c6z-sessel-bild{filter:brightness(.86) saturate(.9)}
 /* iPhone: der Sessel steht klein in der Leseecke neben der Lampe, auf der Bodenlinie hinter dem Sofa */
 .c6z-stube:not(.c6z-computer) .c6z-sessel{display:block;left:50px;right:auto;width:92px;bottom:calc(100% - var(--c6z-boden) - 6px);z-index:1}
-/* s17 · Auf dem Sessel liegt der Katalog (sichtbar, lesbar: „Katalog“) */
 .c6z-sessel{position:absolute}
-.c6z-katalog-heft{position:absolute;left:40%;bottom:16%;width:56%;pointer-events:none}
-.c6z-katalog-heft svg{display:block;width:100%;height:auto;overflow:visible}
-.c6z-stube:not(.c6z-computer) .c6z-katalog-heft{left:30%;bottom:8%;width:72%}
-.c6z-stube[data-zeit=nacht] .c6z-katalog-heft{filter:brightness(.88)}
 
 /* s18 · Die Lampe aus dem Katalog: ihre Lichtfarbe färbt Glut, Kegel und Wandlicht */
 .c6z-lampe-bild{display:block;position:relative}
@@ -148,3 +142,25 @@
 .c6z-stube.c6z-computer .c6z-meine .c6rz-wz:nth-child(2){bottom:78px}
 .c6z-stube.c6z-computer .c6z-meine .c6rz-wz:nth-child(n+3){display:none}
 .c6z-stube[data-zeit=nacht] .c6z-meine{filter:brightness(.9)}
+
+/* s14 · Die reine Form: das Dock ist der Weg. Bild, Bücherbord und Tür sind Kulisse – kein Knopf, kein Schild */
+.c6z-stube .c6z-kulisse{pointer-events:none;cursor:default}
+.c6z-stube .c6z-tuer .c6z-schild{display:none}
+/* Das Brett ist die Mitte: Namen der Spaces in Fraunces (Namen, nicht Handschrift), ganz lesbar, nie im Wort getrennt */
+.c6z-stube .c6z-sb-anh{font:600 15px/1.12 Fraunces,Georgia,serif;letter-spacing:-.005em;max-width:92px}
+.c6z-stube .c6z-sb-anh-name{max-height:3.45em}
+.c6z-stube.c6z-computer .c6z-sb-anh{font-size:17px;max-width:150px;padding:6px 10px 8px}
+.c6z-stube .c6z-sb-schl-alle .c6z-sb-anh{font:600 17px/1 Figtree,system-ui,sans-serif}
+/* „Neuer Space“: die eine Geste am Brett (Handeln = Orange), schmal genug, dass drei Spaces daneben hängen */
+.c6z-stube .c6z-sb-schl-neu .c6z-sb-anh{font:600 13.5px/1.1 Figtree,system-ui,sans-serif;max-width:74px;padding:6px 8px 7px;gap:3px}
+.c6z-stube .c6z-sb-schl-neu .c6z-sb-anh b{font-size:16px}
+.c6z-stube.c6z-computer .c6z-sb-schl-neu .c6z-sb-anh{font-size:15px;max-width:none;padding:7px 10px 8px}
+/* iPhone: das Brett hängt unter Himmel- und Nadelknopf über die ganze Breite; die Anhänger dürfen dreizeilig sein */
+.c6z-stube:not(.c6z-computer) .c6z-sb-brett{top:calc(env(safe-area-inset-top,0px) + 106px);left:12px;right:12px;height:150px}
+.c6z-stube.c6z-computer .c6z-sb-brett{height:150px}
+.c6z-stube:not(.c6z-computer) .c6z-sb-haken{gap:5px}
+.c6z-stube:not(.c6z-computer) .c6z-sb-anh{font-size:14.5px;max-width:108px;padding:5px 7px 6px}
+.c6z-stube:not(.c6z-computer) .c6z-sb-schl-neu .c6z-sb-anh{max-width:72px;font-size:13.5px}
+/* ein Anhänger ist so breit wie sein längstes Wort: so hängen drei Spaces nebeneinander, keiner wird gekürzt */
+.c6z-stube .c6z-sb-anh-name{width:min-content;max-width:100%}
+.c6z-stube .c6z-kn-spur{background:#c9952f}

@@ -16,6 +16,9 @@
   function hash(s) { s = String(s); var h = 7; for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0; return h.toString(36); }
   function emit(d) { try { C6.bus.emit('tage', d); } catch (e) {} }
   function S() { var s = C6.S || (C6.S = {}); if (!s.tage || typeof s.tage !== 'object') s.tage = {}; if (!s.tage.vorbereitet || typeof s.tage.vorbereitet !== 'object') s.tage.vorbereitet = {}; return s.tage; }
+  // Der Schalter (im Buch): aus = der Kalender wird nicht beobachtet, die Fächer zeigen nur deine eigenen Termin-Werkzeuge
+  function istAn() { return S().aus !== true; }
+  function sagSatz(k, r) { try { var t = C6.stimme && C6.stimme.fest ? C6.stimme.fest(k, {}) : ''; if (t && t !== k) return t; } catch (e) {} return r; }
 
   // Art aus dem Titel (und dem Ereignistyp des Kalenders); unsicher → null, dann wird nichts angeboten
   function artVon(titel, typ) {
@@ -94,16 +97,23 @@
     return { termine: aus, ungelesen: unl };
   }
   function stamp(res) { var c = res && res.cache; return c && c.storedAt ? c.storedAt : Date.now(); }
+  // wann Carl zuletzt in deinen Kalender geschaut hat, bleibt über das Neuladen hinaus (höchstens einmal je Minute geschrieben)
+  function zuletztMerken(ms) {
+    if (!ms || (S().zuletzt && ms - S().zuletzt < 60000 && ms >= S().zuletzt)) return;
+    try { C6.aendern(function (st) { if (!st.tage || typeof st.tage !== 'object') st.tage = {}; st.tage.zuletzt = Math.max(st.tage.zuletzt || 0, ms); }, { schluessel: 'tage', wer: 'carl' }); } catch (e) { S().zuletzt = ms; }
+  }
   function annehmen(res) {
+    if (!istAn()) return;
     var r = lies(res);
     if (!r) { kal.termine = []; kal.ungelesen = 0; kal.stand = stamp(res); setze('fehler', 'unlesbar'); emit({ was: 'stand' }); return; }
     kal.termine = r.termine; kal.ungelesen = r.ungelesen; kal.stand = stamp(res);
+    zuletztMerken(kal.stand);
     setze('verbunden', null);
     emit({ was: 'stand' });
   }
   function fehler(err) {
     var code = (err && err.code) || 'upstream_error';
-    if (code === 'cancelled') return;
+    if (code === 'cancelled' || !istAn()) return;
     if (code === 'user_changed') { stop(); kal.termine = []; setze('nicht-verbunden', code); emit({ was: 'stand' }); return; }
     if (RETRAKT[code]) { kal.termine = []; kal.ungelesen = 0; kal.stand = null; setze(zustandVon(code), code); emit({ was: 'stand' }); return; }
     // vorübergehend: was zuletzt gut war, bleibt sichtbar; ein einziger Versuch nach kurzer Pause, wenn erlaubt
@@ -128,18 +138,33 @@
     } catch (e) { fehler({ code: 'bad_request' }); }
   }
   function verbinden() {
+    if (!istAn()) { setze('aus', 'schalter'); emit({ was: 'stand' }); return; }
     var cl = window.claude;
     if (!cl || typeof cl.use !== 'function') { setze('nicht-verbunden', 'kein-mcp'); emit({ was: 'stand' }); return; }
     setze('laedt', null);
     var p; try { p = cl.use('mcp'); } catch (e) { p = null; }
     Promise.resolve(p).then(function (m) {
       if (!m) { setze('nicht-verbunden', 'kein-mcp'); emit({ was: 'stand' }); return; }
-      kal.mcp = m; beobachte();
+      kal.mcp = m; if (istAn()) beobachte();
     }, function () { setze('nicht-verbunden', 'kein-mcp'); emit({ was: 'stand' }); });
   }
   // ein neuer Tag: neues Fenster (die Eingabe trägt das Datum)
   var tagJetzt = heute();
-  function tagPruef() { if (tagJetzt === heute()) return; tagJetzt = heute(); if (kal.mcp) beobachte(); emit({ was: 'stand' }); }
+  function tagPruef() { if (tagJetzt === heute()) return; tagJetzt = heute(); if (kal.mcp && istAn()) beobachte(); emit({ was: 'stand' }); }
+  // an/aus: aus hört sofort auf zu beobachten und vergisst die gelesenen Termine; an schaut gleich wieder nach
+  function schalte(an) {
+    an = !!an;
+    if (an === istAn()) return an;
+    try { C6.aendern(function (st) { if (!st.tage || typeof st.tage !== 'object') st.tage = {}; if (an) delete st.tage.aus; else st.tage.aus = true; }, { schluessel: 'tage', wer: 'du' }); } catch (e) { if (an) delete S().aus; else S().aus = true; }
+    if (!an) { stop(); kal.termine = []; kal.ungelesen = 0; kal.stand = null; setze('aus', 'schalter'); }
+    else if (kal.mcp) { setze('laedt', null); beobachte(); }
+    else verbinden();
+    emit({ was: 'schalter', an: an });
+    emit({ was: 'stand' });
+    // steht man an der Rezeption, sagt Carl gleich, was jetzt in den Fächern liegt
+    if (C6.jetzt === 'rezeption' && C6.rezeption && C6.rezeption.sag) { try { C6.rezeption.sag(sagSatz(an ? 'tage.schalterAn' : 'tage.schalterAus', an ? 'Gut, ich schau wieder in deinen Kalender.' : 'Gut, in deinen Kalender schau ich nicht mehr. In den Fächern liegt nur, was du selbst einträgst.')); } catch (e) {} }
+    return an;
+  }
   C6.bus.on('tageszeit', tagPruef);
   setInterval(tagPruef, 60000);
 
@@ -160,7 +185,7 @@
 
   /* ---------- Die sieben Tage ---------- */
   function lebt(id) { try { return !!(id && C6.werkzeug && C6.werkzeug.hol && C6.werkzeug.hol(id)); } catch (e) { return false; } }
-  function alleTermine() { return kal.termine.concat(ausWerkzeugen()); }
+  function alleTermine() { return (istAn() ? kal.termine : []).concat(ausWerkzeugen()); }
   // Verknüpfungen: was hier vorbereitet wurde (C6.S.tage) und Werkzeuge, die selbst sagen, zu welchem Termin sie gehören
   function verknuepft() {
     var r = {}, vb = S().vorbereitet;
@@ -383,6 +408,10 @@
   C6.tage = {
     liste: tageListe,
     status: function () { return { kalender: kal.status, grund: kal.grund, ungelesen: kal.ungelesen, stand: kal.stand, termine: kal.termine.length }; },
+    // der Schalter fürs Kalender-Lesen (Bus 'tage' {was:'schalter', an}); zuletzt = wann Carl zuletzt hineingeschaut hat (ms, bleibt gespeichert)
+    an: istAn,
+    setze: schalte,
+    zuletzt: function () { return S().zuletzt || kal.stand || null; },
     fach: fach,
     termin: termin,
     vorschlag: vorschlag,
@@ -398,13 +427,14 @@
     abstand: abstand,
     // nach „neu verbinden“ oder für einen frischen Blick: Kalender neu holen
     neu: function () {
+      if (!istAn()) return;
       if (!kal.mcp) { verbinden(); return; }
       kal.versucht = 0;
       try { var p = kal.mcp.invalidate && kal.mcp.invalidate(SERVER, WERKZEUG); if (p && p.catch) p.catch(function () { beobachte(); }); else beobachte(); } catch (e) { beobachte(); }
     },
     // „braucht deine Freigabe“: einmal mit der Geste des Menschen fragen (die Beobachtung fragt nie selbst)
     freigeben: function () {
-      if (!kal.mcp || typeof kal.mcp.callTool !== 'function') return Promise.resolve(false);
+      if (!istAn() || !kal.mcp || typeof kal.mcp.callTool !== 'function') return Promise.resolve(false);
       setze('laedt', kal.grund);
       return kal.mcp.callTool(SERVER, WERKZEUG, eingabe()).then(function (res) { annehmen(res); return true; }, function (err) { fehler(err); return false; });
     }

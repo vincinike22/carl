@@ -54,6 +54,8 @@ var RUECK = {
   'brief.frageWichtig': ['Was davon ist dir am wichtigsten?'],
   'brief.spaceName': ['Was ansteht'],
   'brief.zettel': ['Hängt als Zettel in „{titel}“.'],
+  'brief.aus': ['Gut. Ab jetzt bring ich dir keinen Brief mehr.'],
+  'brief.wiederAn': ['Dein Brief liegt wieder im Postfach.'],
   'brief.zettelNeu': ['Hängt als erster Zettel in einem neuen Space, „{titel}“. Du findest ihn im Zuhause am Brett.']
 };
 var NIX = { der: 1, die: 1, das: 1, und: 1, oder: 1, aber: 1, eine: 1, einen: 1, einem: 1, einer: 1, eines: 1, nicht: 1, noch: 1, auch: 1, schon: 1, dann: 1, wenn: 1, weil: 1, dass: 1, mich: 1, mir: 1, dich: 1, dir: 1, sich: 1, sein: 1, seine: 1, mein: 1, meine: 1, dein: 1, deine: 1, ich: 1, wir: 1, ihr: 1, sie: 1, ist: 1, sind: 1, war: 1, hat: 1, habe: 1, haben: 1, wird: 1, werden: 1, kann: 1, soll: 1, will: 1, muss: 1, mit: 1, von: 1, für: 1, fuer: 1, auf: 1, aus: 1, bei: 1, nach: 1, über: 1, unter: 1, zum: 1, zur: 1, den: 1, dem: 1, des: 1, wie: 1, was: 1, wer: 1, wo: 1, warum: 1, welche: 1, welcher: 1, welches: 1, heute: 1, gerade: 1, immer: 1, mal: 1, sehr: 1, viel: 1, etwas: 1, nur: 1, man: 1, hier: 1, jetzt: 1, also: 1, doch: 1, eben: 1 };
@@ -68,6 +70,8 @@ function sicher(s) {
   return a;
 }
 function A() { return sicher(S()); }
+// Der Schalter (im Buch): aus = kein Brief im Postfach, Carl bringt keinen und sagt nichts dazu
+function briefAn() { return A().aus !== true; }
 function aendern(fn) {
   if (typeof C6.aendern === 'function') C6.aendern(function (s) { fn(sicher(s)); });
   else fn(A());
@@ -221,6 +225,7 @@ function bereit() {
   return !!(s.du && s.du.fertig);
 }
 function heute() {
+  if (!briefAn()) return null;
   var tg = A().tage, k = tag();
   if (tg[k]) return tg[k];
   if (!bereit()) return null;
@@ -289,7 +294,7 @@ function wannVon(n) { return n === 0 ? 'heute' : n === 1 ? 'morgen' : n === 2 ? 
 function frageVorbText(f) { return satz('brief.frageVorb', { titel: f.termin.titel, wann: wannVon(f.termin.abstand), was: WAS[f.vorb] || f.vorb }, true); }
 function oeffne(o) {
   o = o || {};
-  if (fragt) return Promise.resolve(null);
+  if (fragt || !briefAn()) return Promise.resolve(null);
   // das Briefing (an der Rezeption): ohne Aufgabe, oder mit der Frage nach einer Vorbereitung
   var b = o.still || o.aufgabe ? null : tageBrief();
   if (b) {
@@ -645,6 +650,7 @@ function briefBauen() {
 // Was heute im Brief steht: das Briefing (C6.tage) oder, ohne es, die Aufgabe des Tages
 function briefStand() {
   if (C6.rundgang && C6.rundgang.an) return null;
+  if (!briefAn()) return null;
   var b = tageBrief(), a = null;
   try { a = heute(); } catch (e) { a = null; }
   if (b) return { schl: b.tag + '|' + JSON.stringify([b.heute.length, b.naechste.length, b.vorbereitet.length, b.frage && (b.frage.art + (b.frage.termin ? b.frage.termin.id : ''))]) + '|' + (a && !a.erledigt ? a.id : ''), b: b, a: a && !a.erledigt ? a : null, farbe: (a && faden(a.sid) || {}).farbe };
@@ -671,7 +677,7 @@ function postBrief() {
   // beim ersten Sehen am Tag fällt der Brief ins Postfach: Carl hat ihn mitgebracht
   var k = tag();
   if (A().gesehen[k]) return;
-  aendern(function (st) { st.gesehen = {}; st.gesehen[k] = Date.now(); });
+  aendern(function (st) { st.gesehen = {}; st.gesehen[k] = Date.now(); st.zuletzt = Date.now(); });
   if (!ruhig() && el.animate) {
     el.classList.add('c6r-a-fliegt');
     setTimeout(function () { el.classList.remove('c6r-a-fliegt'); }, 1300);
@@ -716,7 +722,25 @@ function briefWeg() {
 // das Postfach fragt: liegt ein Brief da? (Bus 'brief' bei jeder Änderung)
 var briefDa = null;
 function briefMelden() { var da = !!(briefEl && !briefEl.hidden); if (da !== briefDa) { briefDa = da; emit('brief', { da: da, gelesen: A().gelesen === tag() }); } }
-C6.brief = { beantwortet: function () { var a = A().antwort; return !!(a && a[tag()]); }, da: function () { return !!(briefEl && !briefEl.hidden); }, gelesen: function () { return A().gelesen === tag(); }, oeffne: function () { return oeffne(); } };
+function briefSchalte(an) {
+  an = !!an;
+  if (an === briefAn()) return an;
+  aendern(function (st) { if (an) delete st.aus; else st.aus = true; });
+  if (!an && blattEl) blattZu(true);
+  briefTag = '';
+  postBrief();
+  // an der Rezeption gilt Carls Satz zum Brief dann nicht mehr: er sagt, was jetzt stimmt
+  if (!fragt && C6.jetzt === 'rezeption') {
+    try { C6.schweig && C6.schweig(); } catch (e) {}
+    var jetztDa = !!(briefEl && !briefEl.hidden);
+    try { if (C6.rezeption && C6.rezeption.sag && (!an || jetztDa)) C6.rezeption.sag(satz(an ? 'brief.wiederAn' : 'brief.aus', null, true)); } catch (e) {}
+  }
+  emit('brief', { was: 'schalter', an: an });
+  return an;
+}
+C6.brief = { beantwortet: function () { var a = A().antwort; return !!(a && a[tag()]); }, da: function () { return !!(briefEl && !briefEl.hidden); }, gelesen: function () { return A().gelesen === tag(); }, oeffne: function () { return oeffne(); },
+  // der Schalter (Bus 'brief' {was:'schalter', an}); zuletzt = wann Carl zuletzt einen Brief gebracht hat (ms, bleibt gespeichert)
+  an: briefAn, setze: briefSchalte, zuletzt: function () { var a = A(); if (a.zuletzt) return a.zuletzt; var g = a.gesehen || {}, m = 0; Object.keys(g).forEach(function (k) { m = Math.max(m, +g[k] || 0); }); return m || null; } };
 C6.auftrag = {
   heute: heute,
   offen: offen,

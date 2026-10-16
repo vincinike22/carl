@@ -45,8 +45,8 @@ var T = {
   'quest.samen.satz': ['Dann weiß ich, woran du gerade denkst.'],
   'quest.samen.hin': ['Schreib unten einen Satz, an den du gerade denkst. Er wird dein Samen.'],
   'quest.freund3.titel': ['Mir drei Dinge über dich erzählen'],
-  'quest.freund3.satz': ['Was du bestätigst, steht in unserem Freundschaftsbuch, und ich muss nicht mehr raten.'],
-  'quest.sternbild.titel': ['Zwei Planeten zu einem Sternbild verbinden'],
+  'quest.freund3.satz': ['Was du bestätigst, steht in unserem Buch, und ich muss nicht mehr raten.'],
+  'quest.sternbild.titel': ['Zwei Spaces zu einem Sternbild verbinden'],
   'quest.sternbild.satz': ['Dann sehe ich, was bei dir zusammengehört.'],
   'quest.sternbild.hin': ['Hier oben verbindest du zwei Planeten zu einem Sternbild.'],
   'quest.werkzeug.titel': ['Ein Werkzeug in deinen Worten bauen'],
@@ -81,7 +81,7 @@ var T = {
   'werkzeug.vorlage': ['Mitdenken kann ich hier noch nicht, darum aus einer Vorlage. Probier es aus.'],
   'werkzeug.anders': ['Was soll anders sein?'],
   'werkzeug.wohin': ['Wo soll es stehen?'],
-  'werkzeug.steht': ['„{werkzeug}“ steht jetzt in „{titel}“, neben mir.'],
+  'werkzeug.steht': ['„{werkzeug}“ steht jetzt in „{titel}“.'],
   'werkzeug.ohneSpace': ['Fertig. Es steht neben mir an der Rezeption.'],
   'werkzeug.geteilt': ['Hängt im Teleskop. Andere dürfen es sich nehmen.'],
   'werkzeug.benutzt': ['Gemacht. Ich hab’s gesehen.', 'Steht drin.'],
@@ -148,7 +148,7 @@ var T = {
   'helfer.ordnet': ['Deine Werkzeuge hängen. Alle an ihrem Platz.'],
   'helfer.mehr': ['Ich krieg bald Verstärkung. Dann bin ich nicht mehr allein hier.'],
 
-  // Einrichten: ein Katalog für alles (Space, UFO). Leine, Zettel und Carl bleiben frei.
+  // Einrichten: das Blatt im Space und beim UFO (der Katalog selbst liegt nur in der Garage). Leine, Zettel und Carl bleiben frei.
   'einrichten.auf': ['Richte es dir ein, wie du magst.'],
   'einrichten.ziehen': ['Auf den Raum ziehen oder antippen.'],
   'einrichten.tippen': ['Tipp in den Raum, wo es stehen soll.'],
@@ -192,10 +192,6 @@ var T = {
   'naehren.anders': ['Anders'],
 
   // Räume (ein Satz, wenn man ankommt oder etwas antippt)
-  'himmel.leer': ['Noch still hier oben. Woran denkst du gerade?'],
-  // s13: ein Planet antippen zeigt ihn erst von oben (Hineingehen ist der zweite Schritt)
-  'himmel.raum': ['In der Mitte bist du. Tipp einen Planeten an, dann schauen wir ihn von oben an.'],
-  'himmel.ersterFrage': ['Du hast mir gesagt, du baust an „{t}“. Soll das dein erster Planet werden?'],
   'himmel.duLeer': ['Noch keins. Zieh zwei Planeten zusammen.'],
   'bib.meisterFrage': ['Und du? Was davon ist schon in dir?'],
   'lesesaal.erst': ['Dein Lesesaal. Auf den Tisch leg ich, was du mir schickst.'],
@@ -242,7 +238,7 @@ var T = {
   'fund.herkunft.carl': ['Carls Gedanke, nicht nachgeprüft'],
   'fund.herkunft.recherche': ['Aus der Recherche, bitte selbst prüfen'],
 
-  // Freundschaftsbuch
+  // Unser Buch (in der Bibliothek)
   'atlas.antwort': ['Hab ich gelesen. Zweimal.', 'Das kleb ich mir ins Gedächtnis.', 'Steht drin. Mit Tinte, nicht mit Bleistift.'],
 
   // Bausteine im Space
@@ -398,7 +394,7 @@ var T = {
   'vorb.merk.gefunden': ['Aus deinen Zetteln: {n} Ideen. Streich, was nicht passt.'],
   'vorb.merk.gefundenEins': ['Aus deinen Zetteln: eine Idee.'],
 
-  // Vorschläge · vier Karten im Space und am Planeten
+  // Vorschläge · vier Karten im Space (auf eine Geste: Carl oder einen Zettel antippen)
   'vorschlag.frage': ['Was machen wir damit?'],
   'vorschlag.weiter': ['Weiterdenken'],
   'vorschlag.machen': ['Machen'],
@@ -418,14 +414,6 @@ var T = {
   'vorschlag.machen.ohneKopf': ['Du schreibst den nächsten Schritt, ich häng ihn als Schild auf.'],
   'vorschlag.arbeiten.ohneKopf': ['Nachlesen geht nur, wenn jemand mitdenkt. Hier ist gerade keiner.'],
 
-  // Vorschläge · Stand von oben (Planet), ein Satz aus echten Daten
-  'vorschlag.stand.leer': ['Noch kein Zettel, nur der Name.'],
-  'vorschlag.stand.zettel': ['{n} Zettel, kein nächster Schritt.'],
-  'vorschlag.stand.schritt': ['{n} Zettel, nächster Schritt: „{schritt}“.'],
-  'vorschlag.stand.zuletzt': ['Zuletzt dazugekommen, {wann}: „{zettel}“.'],
-  'vorschlag.stand.still': ['Seit {wann} still hier. Das darf so sein.'],
-  'vorschlag.stand.kernsatz': ['Kernsatz: „{satz}“.'],
-
   // Nachtrag (Rezeption, Brief, Angebote)
   'brief.erster': ['Das ist dein Postfach. An jedem Tag, an dem etwas ansteht, liegt hier ein Brief von mir.'],
   'brief.spaceName': ['Was ansteht'],
@@ -440,6 +428,7 @@ var T = {
   // Nachtrag (Postfach)
   'brief.ablage': ['Hier liegt dein Brief. Tipp ihn an, dann mach ich ihn auf.'],
   'brief.ablageLeer': ['Heute liegt hier noch kein Brief. Steht etwas an, liegt hier einer.'],
+  'brief.ablageAus': ['Den Brief hast du ausgeschaltet, darum liegt hier keiner. Der Schalter steht in unserem Buch.'],
 
   // Nachtrag (Vorschläge im Space)
   'vorschlag.weiter.was': ['Ich denk an „{t}“ weiter und häng dir eine Frage an die Leine.'],
@@ -448,16 +437,12 @@ var T = {
   'vorschlag.weiter.offen': ['Noch kein Gedanke. Tipp die Karte noch einmal, wenn dir einer kommt.'],
   'vorschlag.weiter.deins': ['Dein Gedanke hängt an der Leine.'],
   'vorschlag.machen.was': ['Ich schlag dir einen nächsten Schritt vor. Du sagst, bis wann.'],
-  'vorschlag.machen.wasGeschafft': ['Auf dem Schild steht „{s}“. Ist er geschafft, hak ich ihn ab.'],
-  'vorschlag.machen.geschafftFrage': ['„{s}“. Geschafft?'],
-  'vorschlag.machen.geschafft': ['Geschafft'],
-  'vorschlag.machen.werkzeugWahl': ['Ein Werkzeug dazu bauen'],
   'vorschlag.machen.abgehakt': ['„{s}“ ist geschafft. Er hängt jetzt als Zettel an der Leine.'],
   'vorschlag.machen.nochNicht': ['„{s}“ bleibt auf dem Schild, bis du ihn abhakst.'],
   'vorschlag.machen.offen': ['Noch kein Schritt. Weißt du einen, tipp das Schild „Nächster Schritt“ an.'],
   'vorschlag.machen.leer': ['Daraus wurde kein Werkzeug. Sag mir unten in einem Satz, was es können soll.'],
-  'vorschlag.machen.vorlage': ['„{n}“ steht neben mir, aus einer Vorlage, weil hier gerade keiner mitdenkt.'],
-  'vorschlag.machen.werkzeug': ['„{n}“ steht neben mir.'],
+  'vorschlag.machen.vorlage': ['„{n}“ steht jetzt hier im Space, aus einer Vorlage, weil gerade keiner mitdenkt.'],
+  'vorschlag.machen.werkzeug': ['„{n}“ steht jetzt hier im Space.'],
   'vorschlag.arbeiten.was': ['Ich lese zu „{t}“ nach und häng dir, was ich finde, an die Leine. Bitte selbst prüfen.'],
   'vorschlag.arbeiten.ohne': ['Nachlesen geht nur, wenn jemand mitdenkt, und hier ist gerade keiner. Häng dir eine Quelle selbst an die Leine.'],
   'vorschlag.arbeiten.nichts': ['Beim Nachlesen kam ich nicht weiter, darum hängt nichts. Versuch es später noch einmal.'],
@@ -465,15 +450,15 @@ var T = {
   'vorschlag.verbinden.frage': ['Was verbindet „{a}“ und „{b}“?'],
   'vorschlag.verbinden.platz': ['Ein Satz, deiner'],
   'vorschlag.verbinden.offen': ['Noch kein Satz. Im Himmel ziehst du „{b}“ jederzeit selbst heran.'],
-  'vorschlag.verbinden.neuFrage': ['Zum Verbinden braucht es einen zweiten Gedanken. Wie heißt er?'],
-  'vorschlag.verbinden.neuPlatz': ['Name des zweiten Gedankens …'],
-  'vorschlag.verbinden.keinZweiter': ['Ohne zweiten Gedanken gibt es nichts zu verbinden.'],
+  'vorschlag.verbinden.neuFrage': ['Zum Verbinden braucht es einen zweiten Space. Wie soll er heißen?'],
+  'vorschlag.verbinden.neuPlatz': ['Name des zweiten Space …'],
+  'vorschlag.verbinden.keinZweiter': ['Ohne zweiten Space gibt es nichts zu verbinden.'],
   'vorschlag.bezug': ['zu „{t}“'],
   'vorschlag.losEins': ['Los: {n}'],
   'vorschlag.losViele': ['Los, {n} nacheinander'],
   'vorschlag.fertigViele': ['Fertig. {n} Sachen hängen jetzt hier.'],
   'vorschlag.lage': ['Der Kernsatz steht. Was machen wir als Nächstes?'],
-  'zettel.gemeint': ['„{t}“. Die Vorschläge unten meinen jetzt diesen Zettel.'],
+  'zettel.gemeint': ['„{t}“. Die Karten gelten jetzt diesem Zettel.'],
   'naehren.kernAufgehaengt': ['Ich hab dir einen Kernsatz vorgeschlagen, er hängt an der Leine. Tipp ihn an, wenn er trägt.'],
   'naehren.kernDeiner': ['Vielleicht trägt „{satz}“ diesen Space. Tipp den Zettel an, wenn er der Kernsatz ist.'],
   'himmel.standLeer': ['Noch leer. Der erste Zettel ist der Samen.'],
@@ -501,11 +486,162 @@ var T = {
   'vorb.merk.klein': ['{n} Ideen'],
   'vorb.merk.deinZettel': ['dein Zettel'],
   'vorb.deins': ['von dir'],
-  'vorb.kleinLeer': ['noch leer']
+  'vorb.kleinLeer': ['noch leer'],
+
+  // ---- s14 · Die reine Form: ein Ort, ein Wort, eine Geste ----
+  // Wörter (werkstatt/s14/NAMEN.md): „Space“ überall, „Planet“ nur im Himmel; „Katalog“ nur in der Garage; „unser Buch“;
+  // „Schalter“ mit „an · aus“; „Brief“; „Kalender“; „Sternbild“; „Werkzeug“. {n|eins|# viele} wählt die Zahlform (# = die Zahl).
+
+  // Katalog (nur in der Garage)
+  'einrichten.heft.unter': ['Lampen, Sessel und Dinge für deine Räume und Spaces'],
+  'einrichten.heft.tasche': ['Du hast'],
+  'einrichten.heft.holen': ['Holen'],
+  'einrichten.heft.hin': ['Hinstellen'],
+  'einrichten.heft.einrichten': ['Einrichten'],
+  'einrichten.heft.steht': ['steht bei dir'],
+  'einrichten.heft.deins': ['deins'],
+  'einrichten.heft.dort': ['{n|Ein Ding|# Dinge} für diesen Ort'],
+  'einrichten.heft.fehlt': ['{n|Dir fehlt noch eine Münze|Dir fehlen noch # Münzen}. Im Kieselpark gibt es welche.'],
+  'einrichten.spaces.hinweis': ['Lampen und Dinge holst du für einen Space. Such dir einen aus.'],
+  'einrichten.katalog.auf': ['Lampen und Dinge holst du für einen Space. Welchen richten wir ein?'],
+  'zuhause.sessel': ['Mein Sessel. Einen anderen holst du dir im Katalog in der Garage.'],
+  'zuhause.sesselKatalog': ['Den Katalog hab ich in die Garage gelegt. Dort liegt alles, was mich und meine Räume verändert.'],
+  'bib.lampe.katalog': ['Andere Lampen für hier liegen im Katalog in der Garage.'],
+
+  // Himmel: „Sieh, wo jedes deiner Dinge steht, und verbinde, was zusammengehört.“
+  'himmel.tat': ['Jeder Planet hier oben ist einer deiner Spaces, mit seinem Stand darunter. Gehören zwei zusammen, zieh den einen zum anderen.'],
+  'himmel.tatEins': ['Der Planet hier oben ist „{t}“, mit seinem Stand darunter. Verbinden geht ab zwei Spaces, den nächsten fängst du im Zuhause an.'],
+  'himmel.leerTat': ['Hier oben stehen später deine Spaces, jeder als Planet. Anfangen tust du im Zuhause: Sag mir dort, woran du denkst.'],
+  'himmel.heim': ['Ins Zuhause'],
+  'himmel.wahl': ['Tipp den Planeten an, der zu „{t}“ gehört.'],
+  'himmel.standKurzLeer': ['noch kein Zettel'],
+  'himmel.standKurzStill': ['still seit {n} Tagen'],
+  'himmel.standKurzSchritt': ['Schritt fehlt'],
+  'himmel.standKurzKern': ['Kernsatz steht'],
+  'himmel.standStill': ['Seit {n} Tagen ist hier nichts dazugekommen. Das darf so sein.'],
+  'himmel.zuletzt': ['Zuletzt'],
+  'himmel.verbinden': ['Verbinden …'],
+  'himmel.zettelLeer': ['Ein Satz reicht, deiner.'],
+  'himmel.zettelHaengt': ['Hängt jetzt als Zettel in „{t}“.'],
+  'himmel.schonVerbunden': ['Die beiden sind schon ein Sternbild.'],
+  'himmel.sternbild.kopf': ['Sternbild'],
+  'himmel.sternbild.neu': ['Neues Sternbild'],
+  'himmel.sternbild.frage': ['Was verbindet „{a}“ und „{b}“?'],
+  'himmel.sternbild.label': ['Was die beiden verbindet'],
+  'himmel.sternbild.platz': ['Ein Satz, deiner'],
+  'himmel.sternbild.leer': ['Was haben die beiden gemeinsam? Ein Satz reicht.'],
+  'himmel.sternbild.los': ['Verbinden'],
+
+  // Space: das Werkzeug in der Mitte; ohne Werkzeug ein leiser Weg in die Werkstatt
+  'space.bauweg': ['Ein Werkzeug für „{titel}“?'],
+  'space.bauwegWo': ['Baust du dir in der Werkstatt'],
+  'space.keiner': ['Noch hängt kein Space am Brett. Ein neuer fängt im Zuhause an.'],
+  'space.keinerHin': ['Ins Zuhause'],
+
+  // Der eine Vorschlag (Himmel) und Machen ohne Doppel („geschafft“ fragt nur das Schild)
+  'vorschlag.einer.zettel': ['Den ersten Zettel schreiben'],
+  'vorschlag.einer.zettelWas': ['Ein Satz reicht. Er hängt als erster Zettel an der Leine.'],
+  'vorschlag.einer.schritt': ['Den nächsten Schritt finden'],
+  'vorschlag.einer.geschafft': ['„{s}“ geschafft?'],
+  'vorschlag.einer.geschafftWas': ['Hakst du ihn am Schild ab, hängt er als Zettel an der Leine.'],
+  'vorschlag.einer.abgenommen': ['„{s}“ ist vom Schild abgenommen.'],
+  'vorschlag.machen.wasWerkzeugFuer': ['Ich bau dir ein Werkzeug für „{s}“. Den Schritt selbst hakst du am Schild ab.'],
+  'vorschlag.machen.wasWerkzeugVorlage': ['Ich bau dir ein Werkzeug für „{s}“, aus einer Vorlage, weil gerade keiner mitdenkt. Den Schritt selbst hakst du am Schild ab.'],
+  'vorschlag.machen.wasVielleicht': ['Ich such dir einen nächsten Schritt. Denkt gerade keiner mit, schreibst du ihn, und ich häng ihn als Schild auf.'],
+  'vorschlag.machen.keinBau': ['Werkzeuge bauen geht hier gerade nicht.'],
+
+  // Schalter für Brief und Kalender (der Schalter steht in unserem Buch; an der Rezeption sagt Carl, was jetzt stimmt)
+  'brief.aus': ['Gut. Ich bring dir keinen Brief mehr, bis du ihn im Buch wieder anschaltest.'],
+  'brief.wiederAn': ['Dein Brief liegt wieder im Postfach.'],
+  'tage.schalterAus': ['Gut, in deinen Kalender schau ich nicht mehr. Was ich darin gelesen hab, hab ich vergessen.'],
+  'tage.schalterAn': ['Gut, ich schau wieder in deinen Kalender.'],
+  'kalender.aus': ['In deinen Kalender schau ich nicht, so steht der Schalter. Termine von dort zeig ich hier keine.'],
+  'kalender.zumSchalter': ['Zum Schalter im Buch'],
+
+  // Unser Buch in der Bibliothek: das Verzeichnis. Zustände nur echt, Wörter an · aus · braucht Mitdenken · kommt
+  'bib.buch.staunen': ['Unser Buch. Vorn steht, was drin ist: was ich kann, was ich für dich tue, was ich von dir weiß. Die Schalter darin gehören dir.'],
+  'bib.lampe.an': ['Die Lampe ist an. Fass sie an, dann geht sie aus. Schau, wohin ihr Licht fällt.'],
+  'bib.lampe.aus': ['Die Lampe ist aus. Fass sie an, dann geht sie an und wirft ihr Licht auf den Tisch.'],
+  'buch.seite': ['auf Seite'],
+  'buch.kann.unter': ['Was ich kann, ob es an ist, und wo es wohnt.'],
+  'buch.kann.spaces': ['Aus einem Satz von dir wird ein Space mit Zetteln.'],
+  'buch.kann.spacesLeer': ['Noch kein Space.'],
+  'buch.kann.werkzeug': ['Ein kleines Werkzeug aus deinem Satz: abhaken, zählen, merken.'],
+  'buch.kann.werkzeugLeer': ['Noch keins gebaut.'],
+  'buch.kann.werkzeugVorlage': ['ohne Mitdenken aus Vorlagen'],
+  'buch.kann.werkzeugAus': ['Aus: Ich baue nur aus Vorlagen und denke dabei nicht mit.'],
+  'buch.kann.vorbereiten': ['Karteikarten, Packliste oder Merkzettel vor einem Termin, wenn du ja sagst.'],
+  'buch.kann.mitKalender': ['mit deinem Kalender'],
+  'buch.kann.ohneKalender': ['ohne Kalender nur Termine aus deinen Werkzeugen'],
+  'buch.kann.kalenderAus': ['Aus: Ich schaue nicht in deinen Kalender.'],
+  'buch.kann.ferdl': ['Ferdl liest für dich nach, seine Funde hängen als Zettel im Space.'],
+  'buch.kann.ferdlAus': ['Aus: Ferdl liest nichts nach, bis du ihn wieder anschaltest.'],
+  'buch.kann.darstellung': ['Zwei Wege, Skizze, Rückblick, Schritte oder Vergleich aus deinen Zetteln.'],
+  'buch.kann.darstellungAus': ['Aus: keine Darstellungen, bis du sie wieder anschaltest.'],
+  'buch.kann.lesesaal': ['Was du im Lesesaal hinlegst, fasse ich zusammen.'],
+  'buch.kann.lesesaalAus': ['Aus: Im Lesesaal fasse ich nichts zusammen.'],
+  'buch.kann.verbinden': ['Zwei Spaces im Himmel zusammenziehen: ein Sternbild.'],
+  'buch.kann.verbindenZwei': ['braucht zwei Spaces'],
+  'buch.kann.rechner': ['Ich sehe nur nach, ob dort ein Helfer läuft. Steuern kann ich nichts.'],
+  'buch.kann.rechnerAus': ['Aus: Ich sehe auf deinem Rechner nicht nach.'],
+  'buch.kann.nichtVerbunden': ['nicht verbunden'],
+  'buch.kann.verbindenSeite': ['Verbinden: Seite'],
+  'buch.kann.werDenkt': ['Wer mitdenkt: Seite'],
+  'buch.kann.aus': ['Aus: Das tue ich nicht, bis du es wieder anschaltest.'],
+  'buch.kann.brauchtAus': ['Mitdenken ist gerade aus. Sein Schalter steht oben auf dieser Seite.'],
+  'buch.kann.brauchtFehlt': ['Gerade denkt niemand mit. Wer mitdenken kann, steht auf „Wer mitdenkt“.'],
+  'buch.kann.kommtTitel': ['Kommt mit Carl auf deinem Mac'],
+  'buch.kann.verweis': ['Was ich für dich tue'],
+  'buch.kommt.apple': ['Eine Seite im Browser kommt da nicht hin.'],
+  'buch.kommt.whatsapp': ['Schreib mir dort, wie du einem Freund schreibst.'],
+  'buch.kommt.macapp': ['Dann wohn ich auch auf deinem Mac, nicht nur im Browser.'],
+  'buch.tut.unter': ['Was von selbst passiert. Nach außen geht nichts ohne dein Ja.'],
+  'buch.tut.brief': ['Steht etwas an, leg ich dir an der Rezeption einen Brief hin. Einer am Tag, solange der Schalter an ist.'],
+  'buch.tut.briefHeute': ['Heute gebracht'],
+  'buch.tut.briefZuletzt': ['Zuletzt gebracht'],
+  'buch.tut.briefNoch': ['Heute noch keiner'],
+  'buch.tut.briefAus': ['Aus: Ich bringe keinen Brief, bis du ihn wieder anschaltest.'],
+  'buch.tut.briefOhne': ['noch ohne Schalter'],
+  'buch.tut.gelesen': ['gelesen'],
+  'buch.tut.ungelesen': ['noch nicht gelesen'],
+  'buch.tut.kalender': ['Ist er verbunden und der Schalter an, schau ich alle 5 Minuten in die nächsten 7 Tage. Hineinschreiben tu ich nie.'],
+  'buch.tut.kalSchalter': ['Schalter auf Seite'],
+  'buch.tut.zuletzt': ['zuletzt'],
+  'buch.tut.jetzt': ['Jetzt nachsehen'],
+  'buch.tut.schaut': ['Ich schaue …'],
+  'buch.tut.erlauben': ['Erlauben'],
+  'buch.tut.neu': ['Neu verbinden'],
+  'buch.tut.kal.nicht-verbunden': ['Ohne Verbindung sehe ich keine Termine.'],
+  'buch.tut.kal.neu-verbinden': ['Dein Kalender und ich haben uns aus den Augen verloren. Verbinde ihn neu, dann seh ich deine Termine wieder.'],
+  'buch.tut.kal.kein-zugriff': ['In deinen Kalender schau ich erst, wenn du es erlaubst.'],
+  'buch.tut.kal.laedt': ['Ich schaue gerade nach.'],
+  'buch.tut.kal.fehler': ['Beim letzten Nachsehen hat es nicht geklappt.'],
+  'buch.tut.arbeitTitel': ['Gerade bei der Arbeit'],
+  'buch.tut.keiner': ['Gerade arbeitet kein Helfer.'],
+  'buch.tut.laeuft': ['arbeitet'],
+  'buch.tut.anhalten': ['Anhalten'],
+  'buch.mit.unter': ['Wer gerade mit mir denkt, und wer es sein soll.'],
+  'buch.mit.an': ['Ist es an, denkt Claude über claude.ai oder dein Rechner mit, wenn du mir etwas sagst.'],
+  'buch.mit.aus': ['Aus: Ich lege nur Beispiele hin und schicke nichts zum Mitdenken.'],
+  'buch.mit.niemand': ['Gerade denkt niemand mit, weil Mitdenken aus ist.'],
+  'buch.mit.schalterSeite': ['Schalter auf Seite'],
+  'buch.erreichen.unter': ['Überall derselbe Carl, wenn du bei Claude angemeldet bist.'],
+  'buch.erreichen.hier': ['Was du mir sagst, liegt zuerst auf diesem Gerät.'],
+  'buch.erreichen.hierZu': ['du bist hier'],
+  'buch.erreichen.qr': ['Mit der iPhone-Kamera scannen, in Safari „Teilen“ und „Zum Home-Bildschirm“. Einmal bei Claude anmelden.'],
+  'buch.erreichen.home': ['In Safari unten „Teilen“, dann „Zum Home-Bildschirm“ und „Hinzufügen“.'],
+  'buch.erreichen.rechner': ['Mit deinem Rechner verbunden, sehe ich, ob dort ein Helfer läuft.'],
+  'buch.darf.helfer': ['Was meine Helfer dürfen'],
+  'buch.darf.weg': ['Bei dir liegen die Schlüssel für: '],
+  'buch.darf.alle': ['Alle Schlüssel liegen bei mir. Jeden nimmst du mit einem Schalter zurück.'],
+  'buch.darf.rechner': ['Auf deinem Rechner'],
+  'buch.darf.reden': ['Wer außer dir mit mir reden darf'],
+  'buch.darf.redenSatz': ['Heute nur du, hier in Carl.'],
+  'buch.darf.redenKommt': ['kommt mit WhatsApp']
 };
 
 // Wahlen mit festen Wörtern, damit alle Orte dieselben zeigen (höchstens drei, wo Carl fragt).
-// ton: die eine Ton-Wahl (Freundschaftsbuch), Wert in S.du.ton. socken: Rundgang und Schrank.
+// ton: die eine Ton-Wahl (unser Buch), Wert in S.du.ton. socken: Rundgang und Schrank.
 var WAHL = {
   ton: [['warm', 'Warm'], ['trocken', 'Trocken, mit Witz'], ['ehrlich', 'Ehrlich, auch wenn’s piekst']],
   socken: [['#d62a26', 'Rot'], ['#e8621a', 'Orange'], ['#e3b23c', 'Senf'], ['#8ea37a', 'Moos'], ['#3f6fa8', 'Blau'], ['#2b2722', 'Schwarz']]
@@ -517,6 +653,8 @@ function fuell(t, w) {
   var du = S().du || {};
   w = w || {};
   var name = w.name != null ? w.name : (du.name || '');
+  // Zahlform: {n|eine Münze|# Münzen} – nur wenn der Aufrufer den Wert mitgibt (# = die Zahl)
+  t = t.replace(/\{(\w+)\|([^|{}]*)\|([^{}]*)\}/g, function (m, k, eins, viele) { if (w[k] == null) return m; return (+w[k] === 1 ? eins : viele).replace(/#/g, String(w[k])); });
   var r = t.replace(/\{name\}/g, name).replace(/\{carl\}/g, w.carl || du.carlName || 'Carl').replace(/\{baut\}/g, w.baut != null ? w.baut : (du.baut || ''));
   // weitere Werte, die der Aufrufer mitgibt ({titel}, {a}, {b} …)
   r = r.replace(/\{(\w+)\}/g, function (m, k) { return w[k] != null ? String(w[k]) : m; });

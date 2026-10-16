@@ -9,9 +9,9 @@
   function esc(t) { return String(t == null ? '' : t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function mk(tag, kl, el, txt) { var e = D.createElement(tag); if (kl) e.className = kl; if (txt != null) e.textContent = txt; if (el) el.appendChild(e); return e; }
 
-  // ——— Ergebnis-Bilder: aus Kreis, Quadrat und Linie gebaut, eine Tusche, ein Rot ———
+  // ——— Ergebnis-Bilder: aus Kreis, Quadrat und Linie gebaut; Tusche, Rot nur für die Kernsatz-Nadel, Gold am Himmel, Grün für geschafft ———
   var T = 'stroke="#2b2722" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"';
-  var LEINE = '<path d="M14 34Q80 48 146 34" fill="none" stroke="#d62a26" stroke-width="2.4" stroke-linecap="round"/>';
+  var LEINE = '<path d="M14 34Q80 48 146 34" fill="none" stroke="#2b2722" stroke-width="2.4" stroke-linecap="round"/>';
   function zettel(x, y, d, txt) { return '<g transform="translate(' + x + ' ' + y + ') rotate(' + d + ')"><path d="M-14 0h28v30h-28z" fill="#fffaf0" ' + T + '/><path d="M-8 9h16M-8 15h16M-8 21h10" stroke="#8a8378" stroke-width="1.6" stroke-linecap="round"/>' + (txt || '') + '</g>'; }
   var BILD = {
     1: '<svg viewBox="0 0 160 120" aria-hidden="true">' + LEINE + zettel(80, 41, -3) +
@@ -20,19 +20,19 @@
       '<circle cx="80" cy="44" r="4.5" fill="#d62a26" stroke="#2b2722" stroke-width="1.6"/>' +
       '<g transform="translate(80 104)"><ellipse rx="24" ry="5" fill="#e3d7c3"/><path d="M0 0v-18" ' + T + '/><path d="M0 -14c-9 -2 -13 -9 -11 -15c7 1 11 7 11 15zM0 -16c8 -3 12 -10 10 -16c-7 2 -10 8 -10 16z" fill="#97ad7f" ' + T + '/></g></svg>',
     3: '<svg viewBox="0 0 160 120" aria-hidden="true"><rect x="0" y="0" width="160" height="120" rx="12" fill="#1d2445"/>' +
-      '<path d="M36 82Q80 22 124 70" fill="none" stroke="#ff7a6e" stroke-width="2.6" stroke-linecap="round"/>' +
+      '<path d="M36 82Q80 22 124 70" fill="none" stroke="#ecd193" stroke-width="2.6" stroke-linecap="round"/>' +
       '<circle cx="36" cy="82" r="11" fill="#6f9a5b" stroke="#eef0ff" stroke-width="1.6"/><circle cx="124" cy="70" r="13" fill="#4f7cac" stroke="#eef0ff" stroke-width="1.6"/>' +
-      '<path d="M80 46l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2z" fill="#fff"/><text x="80" y="28" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-style="italic" font-size="11" fill="#ffd9cf">„dein Satz“</text></svg>',
+      '<path d="M80 46l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2z" fill="#fff"/><text x="80" y="28" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-style="italic" font-size="11" fill="#f6e7c4">„dein Satz“</text></svg>',
     4: '<svg viewBox="0 0 160 120" aria-hidden="true"><rect x="22" y="20" width="116" height="80" rx="10" fill="#fffaf0" ' + T + '/>' +
       '<text x="36" y="42" font-family="Figtree, system-ui, sans-serif" font-weight="600" font-size="11" fill="#2b2722">Gelaufen?</text>' +
-      [0, 1, 2, 3, 4, 5, 6].map(function (i) { var x = 36 + i * 13.5, an = i < 4 && i !== 1; return '<rect x="' + x + '" y="56" width="10" height="10" rx="2.5" fill="' + (an ? '#6f9a5b' : '#fffaf0') + '" stroke="#2b2722" stroke-width="1.6"/>' + (an ? '<path d="M' + (x + 2.5) + ' 61l2 2 3.5 -4" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>' : ''); }).join('') +
+      [0, 1, 2, 3, 4, 5, 6].map(function (i) { var x = 36 + i * 13.5, an = i < 4 && i !== 1; return '<rect x="' + x + '" y="56" width="10" height="10" rx="2.5" fill="' + (an ? '#4f8a5b' : '#fffaf0') + '" stroke="#2b2722" stroke-width="1.6"/>' + (an ? '<path d="M' + (x + 2.5) + ' 61l2 2 3.5 -4" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>' : ''); }).join('') +
       '<path d="M36 82h60" stroke="#8a8378" stroke-width="1.6" stroke-linecap="round"/></svg>',
     5: '<svg viewBox="0 0 160 120" aria-hidden="true"><path d="M30 96h100" ' + T + '/><path d="M40 96V80h80v16" fill="#c9a46a" ' + T + '/>' +
       '<path d="M104 80V54l-14 -10" fill="none" ' + T + '/><path d="M82 40l14 -6 4 10 -14 6z" fill="#e2b93b" ' + T + '/>' +
       '<path d="M76 54l22 22" stroke="#f0d79a" stroke-width="10" stroke-linecap="round" opacity=".45"/>' + zettel(60, 52, -6) + '</svg>',
     6: '<svg viewBox="0 0 160 120" aria-hidden="true">' +
       // Carl in der Mitte, drei Wege zu drei Köpfen: die Wolke (claude.ai), der Rechner mit Terminal, der eigene Rechner mit Modell
-      '<path d="M80 72L36 40M80 72V38M80 72l44 -32" fill="none" stroke="#d62a26" stroke-width="2" stroke-linecap="round" stroke-dasharray="3 4"/>' +
+      '<path d="M80 72L36 40M80 72V38M80 72l44 -32" fill="none" stroke="#2b2722" stroke-width="2" stroke-linecap="round" stroke-dasharray="3 4"/>' +
       '<g transform="translate(80 96)"><ellipse rx="20" ry="4.5" fill="#e3d7c3"/><path d="M-12 2c0 -11 5 -15 12 -15s12 4 12 15c0 4 -5 5 -12 5s-12 -1 -12 -5z" fill="#ece4d6" ' + T + '/><path d="M0 -13v-6" stroke="#2b2722" stroke-width="2"/><path d="M0 -19c-5 -1 -8 -5 -6 -9c4 0 6 4 6 9zM0 -19c5 -1 8 -5 6 -9c-4 0 -6 4 -6 9z" fill="#97ad7f" stroke="#2b2722" stroke-width="1.4"/><circle cx="-4" cy="-3" r="2" fill="#2b2722"/><circle cx="4" cy="-3" r="2" fill="#2b2722"/></g>' +
       '<path d="M22 44c-8 0 -10 -11 -2 -13c0 -9 12 -11 16 -4c7 -4 14 3 10 9c6 1 6 8 0 8z" fill="#fffaf0" ' + T + '/>' +
       '<rect x="64" y="14" width="32" height="22" rx="3" fill="#2b2722" ' + T + '/><path d="M69 22l4 3 -4 3M76 28h8" fill="none" stroke="#cfe6c4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M72 40h16" stroke="#2b2722" stroke-width="2.2" stroke-linecap="round"/>' +
@@ -331,7 +331,7 @@
     var n = naechste();
     return { fertig: f, geschafft: f.length, alle: ST.length, naechste: n, tag: n ? station(n).tag : null, samstag: [1, 2, 3].every(fertig), sonntag: [4, 5, 6].every(fertig), stationen: ST.map(function (s) { return { id: s.id, tag: s.tag, name: s.name, fertig: fertig(s.id) }; }) };
   }
-  C6.lernweg = { oeffne: oeffne, zu: zu, stand: stand, offen: false };
+  C6.lernweg = { oeffne: oeffne, zu: zu, stand: stand, offen: false, adresse: ADRESSE };
   // schon beim Laden hören, damit auch das Tun vor dem ersten Öffnen zählt
   if (C6.bus) hoeren(); else setTimeout(hoeren, 0);
   try { if (C6.bus) C6.bus.on('raum', function () { if (offen) zu(); }); } catch (e) {}

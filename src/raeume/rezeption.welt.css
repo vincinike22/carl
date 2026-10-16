@@ -106,7 +106,7 @@
 .c6rw-schild .c6rw-nr{font-size:17px;font-weight:700}
 .c6rw-computer .c6rw-schild{grid-auto-flow:column;gap:7px;height:36px;margin:0 10px;font-size:20px}
 .c6rw-computer .c6rw-schild .c6rw-nr{font-size:23px}
-.c6rw-fach[data-heute] .c6rw-schild{background:linear-gradient(180deg,#fffaf0,#f1e6d0);color:#b2342a}
+.c6rw-fach[data-heute] .c6rw-schild{background:linear-gradient(180deg,#fffaf0,#f1e6d0);color:var(--tusche,#2b2722);font-weight:700}
 .c6rw-fach[data-heute] .c6rw-wt{text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:2px}
 /* der offene Tag: das Fach rückt ein wenig vor, das Schild bekommt einen Faden */
 .c6rw-fach[data-offen] .c6rw-fach-loch{box-shadow:inset 0 9px 7px -5px rgba(20,12,6,.55),0 0 0 3px #e2b93b}
