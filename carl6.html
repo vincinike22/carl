@@ -3880,8 +3880,10 @@ html.c6k-ruhig .c6e-funkel,html.c6k-ruhig .c6e-ufo-licht,html.c6k-ruhig .c6e-fan
 
 /* Rein am iPhone (16.10.): Solange das Blatt offen ist, schweigt Carls Blase (das Blatt spricht in seiner Kopfzeile);
    Titel und „Fertig“ in einer Zeile, der Hinweis darunter in voller Breite; „Fertig“ wird nicht mehr am Rand beschnitten */
+html.c6e-auf .c6k-sprech,html.c6e-auf .c6k-chips{opacity:0!important;pointer-events:none!important;transition:opacity .2s ease}
+/* alle Reiter erreichbar: die Reihe bricht um statt zu rollen (eine versteckte Rollleiste erreicht am Computer niemand, am Handy kaum) */
+.c6e-reihen{flex-wrap:wrap;overflow:visible}
 @media (max-width:819px){
-  html.c6e-auf .c6k-sprech,html.c6e-auf .c6k-chips{opacity:0!important;pointer-events:none!important;transition:opacity .2s ease}
   .c6e-kopf{flex-wrap:wrap;row-gap:2px}
   .c6e-titel{flex:1 1 auto}
   .c6e-hinweis{flex:1 1 100%;order:3;min-height:1.3em}
@@ -4800,6 +4802,14 @@ html.c6-ruhig .c6s-sp-innen{transition:none}
 .c6s-g-heft:hover,.c6s-g-heft:focus-visible{transform:translateY(-3px) rotate(-2deg)}
 .c6s-g-heft[hidden]{display:none}
 .c6s-g-schrank-auf .c6s-g-heft{opacity:0;pointer-events:none}
+
+/* Katalog offen in der Garage (16.10.): das Blatt liegt links wie der Schrank; was dahinter liegt, tritt zurück */
+@media (min-width:820px){
+  .c6s-garage.c6e-modus .c6s-g-tor,.c6s-garage.c6e-modus .c6s-g-tafel,.c6s-garage.c6e-modus .c6s-f-rad{opacity:.28;transition:opacity .3s}
+}
+@media (max-width:819px){
+  .c6s-garage.c6e-modus .c6s-f-rad,.c6s-garage.c6e-modus .c6s-g-heft{opacity:0;pointer-events:none;transition:opacity .3s}
+}
 
 /* Lesesaal: in der Mitte der Tisch der Funde im Licht, daneben das Regal deiner Meister */
 .c6w-ls-moebel{position:absolute;z-index:3;display:flex;justify-content:center;align-items:flex-end}
@@ -13100,7 +13110,7 @@ function esc(t) { return String(t == null ? '' : t).replace(/[&<>"]/g, function 
 function st(k, rueck) { try { var t = C6.stimme && C6.stimme.sag(k); if (t) return t; } catch (e) {} return rueck; }
 function sag(t) {
   // am iPhone spricht das offene Blatt in seiner Kopfzeile, nicht in Carls Blase (die läge sonst über Brett, Leine und Zetteln)
-  if (auf && blatt && C6.geraet !== 'computer') { hinweis(t); return; }
+  if (auf && blatt) { hinweis(t); return; }
   try { C6.sag && C6.sag(t, { merken: false }); } catch (e) {}
 }
 var T = '#2b2722', P = '#fbf7f0';

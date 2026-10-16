@@ -11,7 +11,7 @@ function esc(t) { return String(t == null ? '' : t).replace(/[&<>"]/g, function 
 function st(k, rueck) { try { var t = C6.stimme && C6.stimme.sag(k); if (t) return t; } catch (e) {} return rueck; }
 function sag(t) {
   // am iPhone spricht das offene Blatt in seiner Kopfzeile, nicht in Carls Blase (die läge sonst über Brett, Leine und Zetteln)
-  if (auf && blatt && C6.geraet !== 'computer') { hinweis(t); return; }
+  if (auf && blatt) { hinweis(t); return; }
   try { C6.sag && C6.sag(t, { merken: false }); } catch (e) {}
 }
 var T = '#2b2722', P = '#fbf7f0';

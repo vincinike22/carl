@@ -304,3 +304,11 @@ html.c6-ruhig .c6s-sp-innen{transition:none}
 .c6s-g-heft:hover,.c6s-g-heft:focus-visible{transform:translateY(-3px) rotate(-2deg)}
 .c6s-g-heft[hidden]{display:none}
 .c6s-g-schrank-auf .c6s-g-heft{opacity:0;pointer-events:none}
+
+/* Katalog offen in der Garage (16.10.): das Blatt liegt links wie der Schrank; was dahinter liegt, tritt zurück */
+@media (min-width:820px){
+  .c6s-garage.c6e-modus .c6s-g-tor,.c6s-garage.c6e-modus .c6s-g-tafel,.c6s-garage.c6e-modus .c6s-f-rad{opacity:.28;transition:opacity .3s}
+}
+@media (max-width:819px){
+  .c6s-garage.c6e-modus .c6s-f-rad,.c6s-garage.c6e-modus .c6s-g-heft{opacity:0;pointer-events:none;transition:opacity .3s}
+}
