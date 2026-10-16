@@ -69,3 +69,15 @@ html.c6k-ruhig .c6e-funkel,html.c6k-ruhig .c6e-ufo-licht,html.c6k-ruhig .c6e-fan
 .c6e-leer{margin:6px 2px;font:400 italic 15px/1.4 Fraunces,Georgia,serif;color:var(--leise,#6f6a61)}
 /* s18 · Raumlampen im Katalog */
 .c6e-karte-raumlampe .c6e-bild svg{width:76px;height:62px}
+
+/* Rein am iPhone (16.10.): Solange das Blatt offen ist, schweigt Carls Blase (das Blatt spricht in seiner Kopfzeile);
+   Titel und „Fertig“ in einer Zeile, der Hinweis darunter in voller Breite; „Fertig“ wird nicht mehr am Rand beschnitten */
+@media (max-width:819px){
+  html.c6e-auf .c6k-sprech,html.c6e-auf .c6k-chips{opacity:0!important;pointer-events:none!important;transition:opacity .2s ease}
+  .c6e-kopf{flex-wrap:wrap;row-gap:2px}
+  .c6e-titel{flex:1 1 auto}
+  .c6e-hinweis{flex:1 1 100%;order:3;min-height:1.3em}
+  .c6e-hinweis:empty{display:none}
+}
+.c6e-fertig{margin-right:4px}
+.c6e-blatt{padding-right:16px}

@@ -9,7 +9,11 @@ function aendern(fn) {
 function emit(n, d) { try { C6.bus && C6.bus.emit(n, d); } catch (e) {} }
 function esc(t) { return String(t == null ? '' : t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 function st(k, rueck) { try { var t = C6.stimme && C6.stimme.sag(k); if (t) return t; } catch (e) {} return rueck; }
-function sag(t) { try { C6.sag && C6.sag(t, { merken: false }); } catch (e) {} }
+function sag(t) {
+  // am iPhone spricht das offene Blatt in seiner Kopfzeile, nicht in Carls Blase (die läge sonst über Brett, Leine und Zetteln)
+  if (auf && blatt && C6.geraet !== 'computer') { hinweis(t); return; }
+  try { C6.sag && C6.sag(t, { merken: false }); } catch (e) {}
+}
 var T = '#2b2722', P = '#fbf7f0';
 var SW = ' stroke="' + T + '" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"';
 
@@ -758,7 +762,7 @@ function oeffne(o) {
   blatt.classList.toggle('c6e-ufo-blatt', o.ort === 'ufo');
   blatt.classList.toggle('c6e-links', o.ort === 'zuhause');
   blatt.querySelector('.c6e-titel').textContent = o.ort === 'ufo' ? 'UFO einrichten' : o.ort === 'zuhause' ? 'Katalog' : 'Einrichten';
-  var b = buehne(); b.appendChild(blatt); b.classList.add('c6e-modus');
+  var b = buehne(); b.appendChild(blatt); b.classList.add('c6e-modus'); document.documentElement.classList.add('c6e-auf');
   malReihen(); malKarten(); malGriffe();
   try { blatt.animate([{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'none' }], { duration: C6.ruhig ? 0 : 240, easing: 'cubic-bezier(.3,.7,.3,1)' }); } catch (e) {}
   sag(o.ort === 'ufo' ? st('ufo.einrichten', 'Wie soll es aussehen?') : o.ort === 'zuhause' ? (/^rl-/.test(reihe) ? 'Welche Lampe soll hier leuchten?' : reihe === 'spaces' ? st('einrichten.katalog.auf', 'Lampen und Dinge holst du für einen Space. Welchen richten wir ein?') : st('einrichten.sessel.auf', 'Welcher Sessel soll hier stehen?')) : st('einrichten.auf', 'Richte es dir ein, wie du magst.'));
@@ -771,6 +775,7 @@ function zu() {
   fangAn(false);
   if (griffe && griffe.parentNode) griffe.parentNode.removeChild(griffe);
   if (blatt && blatt.parentNode) { blatt.parentNode.classList.remove('c6e-modus'); blatt.parentNode.removeChild(blatt); }
+  document.documentElement.classList.remove('c6e-auf');
   var warUfo = key === 'ufo';
   auf = null; gewaehlt = null; gewaehltDing = null;
   if (key !== 'zuhause') sag(warUfo ? st('ufo.fertig', 'Fertig. Ich steig gleich ein.') : st('einrichten.fertig', 'Jetzt ist es deins.'));
