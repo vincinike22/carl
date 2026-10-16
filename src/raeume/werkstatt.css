@@ -93,6 +93,9 @@
 @keyframes c6w-z{0%{opacity:0;transform:translate(0,6px)}40%{opacity:1}100%{opacity:0;transform:translate(6px,-10px)}}
 html.c6k-ruhig .c6w-hf-schlaf .c6w-hf-z text{animation:none}
 .c6w-schild-klein{font-size:20px}
+/* Wand: Kopf der oberen Gruppe (die drei, die deine Zettel anders legen) */
+.c6w-wand .c6w-wand-kopf{font-size:24px;opacity:.85}
+.c6k[data-geraet=iphone] .c6w-wand .c6w-wand-kopf{font-size:28px}
 .c6w-anh .c6w-ding-innen{transform-origin:50% 0}
 .c6w-anh:hover .c6w-ding-innen{transform:rotate(-4deg)}
 

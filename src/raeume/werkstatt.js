@@ -1300,16 +1300,20 @@
       }
       function zeichneWand() {
         var dz = wS().dz || {}, sid = wandSid(), f = sid && C6.strings.hol(sid);
-        var h = '', dx = 270;
-        for (var i = 0; i < 4; i++) {
-          var r = Math.floor(i / 2), c = i % 2, x = 10 + dx * (c + 0.5), y = 34 + r * 186, sk = 1.08;
-          var g = WAND[i];
+        // zwei Gruppen an einer Wand: oben die drei, die deine Zettel anders legen (zum Ausprobieren, kein Werkzeug);
+        // unter dem Brett das Werkzeug-Bauen, darunter an der Leiste deine eigenen Werkzeuge
+        var h = '<text class="c6w-schild c6w-wand-kopf" x="280" y="40" text-anchor="middle">' + esc(satz('werkstatt.wandAnsichten', 'Deine Zettel, anders gelegt')) + '</text>';
+        WAND.forEach(function (g, i) {
+          var x = 96 + i * 184, y = 58, sk = 0.8;
           var hook = '<circle cx="' + x + '" cy="' + y + '" r="5" fill="' + T + '"/>';
-          if (!g) { h += hook + '<g transform="translate(' + x + ',' + y + ') scale(' + sk + ')" data-hx="' + x + '">' + ding({ bild: BILD.neu(), name: 'Neues Werkzeug', aria: 'Neues Werkzeug: du sagst in einem Satz, was es tun soll', hoch: 150 }, 0, 0, 'Neues Werkzeug', 124, '+neu', false) + '</g>'; continue; }
           var n = dz[g.art] || 0;
-          var aria = g.name + (f ? ' für „' + f.titel + '“' : '') + (n ? ', ' + (n === 1 ? 'einmal' : n + '-mal') + ' angesehen' : '');
+          var aria = g.name + (f ? ': deine Zettel aus „' + f.titel + '“, anders gelegt' : ': deine Zettel, anders gelegt') + (n ? ', ' + (n === 1 ? 'einmal' : n + '-mal') + ' angesehen' : '');
           h += hook + '<g transform="translate(' + x + ',' + y + ') scale(' + sk + ')" data-hx="' + x + '">' + ding({ bild: schlaufe() + g.bild(g.farbe), name: g.name, aria: aria, hoch: 172 }, 0, 0, g.name, 150, g.id, true, kerben(n)) + '</g>';
-        }
+        });
+        // das Brett zwischen den Gruppen
+        h += '<g aria-hidden="true"><rect x="10" y="206" width="540" height="9" rx="3" fill="#c99e66" stroke="' + T + '" stroke-width="2"/></g>';
+        var nx = 280, ny = 226;
+        h += '<circle cx="' + nx + '" cy="' + ny + '" r="5" fill="' + T + '"/><g transform="translate(' + nx + ',' + ny + ') scale(1.08)" data-hx="' + nx + '">' + ding({ bild: BILD.neu(), name: 'Neues Werkzeug', aria: 'Neues Werkzeug: du sagst in einem Satz, was es tun soll', hoch: 150 }, 0, 0, 'Neues Werkzeug', 124, '+neu', false) + '</g>';
         // ein Papierschild unter der Wand: für welchen Space sie gerade zeigt (antippen wechselt)
         var fuerT = f ? 'für „' + kurz(f.titel, 22) + '“' : 'noch kein Space';
         var th = hochkant ? 96 : 84;

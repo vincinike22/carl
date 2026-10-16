@@ -1,0 +1,31 @@
+[
+ {
+  "t": 27.7,
+  "ger": "iphone",
+  "lauf": "probe",
+  "schritt": "himmel",
+  "bild": "probe-iphone-01-himmel.png",
+  "carl": [],
+  "note": ""
+ },
+ {
+  "t": 32.4,
+  "ger": "iphone",
+  "lauf": "probe",
+  "schritt": "halten-dann-ziehen",
+  "bild": "probe-iphone-02-halten-dann-ziehen.png",
+  "carl": [
+   "Ein Planet ist ein Space von oben. Was unten wächst, wächst hier mit."
+  ],
+  "note": "FEHLER name 'OUT' is not defined"
+ },
+ {
+  "t": 37.7,
+  "ger": "iphone",
+  "lauf": "probe",
+  "schritt": "planet-nah",
+  "bild": "probe-iphone-03-planet-nah.png",
+  "carl": [],
+  "note": ""
+ }
+]

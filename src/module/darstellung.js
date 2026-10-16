@@ -49,6 +49,7 @@
       var n = Array.isArray(r.notizen) ? r.notizen : [];
       if (!n.length) { var f = C6.strings && C6.strings.hol ? C6.strings.hol(sp.stringId) : null; n = (f && f.perlen) || []; }
       n.forEach(function (z) {
+        if (!z || z.von === 'carl') return;
         var t = String(z.t || '').replace(UNSICHTBAR, '').trim(); if (!t) return;
         var k = sp.stringId + '|' + t; if (schon[k]) return; schon[k] = 1;
         out.push({ t: t, ts: +z.ts || 0, sid: sp.stringId, titel: sp.titel, farbe: sp.farbe || T, fund: istFund(z) });
@@ -227,7 +228,9 @@
     } else if (art === 'rueckblick') {
       d = { titel: 'Deine Woche', woche: true, punkte: [] };
       var seit = tagAnfang(Date.now()) - 6 * 864e5;
-      bezug = zettel(null).filter(function (q) { return !q.fund && q.ts >= seit; }).slice(-3);
+      var woche = zettel(null).filter(function (q) { return !q.fund && q.ts >= seit; });
+      bezug = woche.filter(function (q) { return q.sid === sid; }).slice(-3);
+      if (!bezug.length) bezug = woche.slice(-3);
     } else if (art === 'schritte') {
       var sch = z.slice(-5).map(function (q) { return { t: kurz(q.t, 60), warum: '', ts: q.ts, fertig: true }; });
       sch.push({ t: '', warum: '', offen: true });
@@ -332,7 +335,7 @@
   function leineHtml(bz, o) {
     if (!bz.length) {
       var sp = o.sid && spaceVon(o.sid), hatZ = sp && eigene(o.sid).length;
-      var t = o.bleistift ? (sp ? 'In „' + kurz(sp.titel, 30) + '“ hängt noch kein Zettel. Das hier ist ganz neu.' : 'Noch hängt nirgends ein Zettel. Das hier ist ganz neu.')
+      var t = o.bleistift ? (hatZ ? 'Gelegt aus deinen Zetteln in „' + kurz(sp.titel, 30) + '“. Keiner davon steht hier wörtlich.' : sp ? 'In „' + kurz(sp.titel, 30) + '“ hängt noch kein Zettel. Das hier ist ganz neu.' : 'Noch hängt nirgends ein Zettel. Das hier ist ganz neu.')
         : (hatZ ? 'Ohne Beleg aus deinen Zetteln. Das ist mein Vorschlag, prüf ihn.' : 'Noch hängt kein Zettel dazu. Das ist mein Vorschlag, prüf ihn.');
       return '<div class="c6d-bezug c6d-bezug-leer"><p class="c6d-bezug-kopf">Woher ich das weiß' + stimmt(o) + '</p><p class="c6d-leise">' + esc(t) + '</p></div>';
     }
@@ -522,6 +525,8 @@
     var nz = alle.filter(function (q) { return !q.fund; }).length, nf = alle.length - nz;
     var summe = (nz ? (nz === 1 ? 'Ein Zettel' : nz + ' Zettel') + ' in ' + (Object.keys(spn).length === 1 ? 'einem Space' : Object.keys(spn).length + ' Spaces') : 'Noch kein Zettel diese Woche') +
       (nf ? ', ' + (nf === 1 ? 'ein Fund' : nf + ' Funde') : '') + (wz.length ? ', ' + wz.map(function (w) { return w.n + '× „' + kurz(w.name, 22) + '“'; }).join(', ') : '') + '.';
+    var hierSp = b.o && b.o.sid ? spaceVon(b.o.sid) : null, hierN = hierSp ? alle.filter(function (q) { return !q.fund && q.sid === hierSp.stringId; }).length : 0;
+    if (hierSp && nz && Object.keys(spn).length > 1) summe = summe.replace(/\.$/, '') + (hierN ? ', davon ' + (hierN === 1 ? 'einer' : hierN) + ' in „' + kurz(hierSp.titel, 26) + '“.' : ', in „' + kurz(hierSp.titel, 26) + '“ diese Woche keiner.');
     b.zust.summe = summe;
     var zeilen = '';
     for (var i = 0; i < 7; i++) {
@@ -538,6 +543,15 @@
         (leer ? '<span class="c6d-strichlein" aria-hidden="true"></span>' : '') + '</span></li>';
     }
     return '<div class="c6d-rb"><p class="c6d-summe">' + esc(summe) + '</p><ol class="c6d-tage">' + zeilen + '</ol>' + hinweis(nz ? 'Kreis ein, was diese Woche gezählt hat.' : 'Häng einen Zettel auf, dann steht er hier mit Datum.') + '</div>';
+  }
+  // der heutige Tag steht über dem Fuß (Knöpfe), nicht darunter: das Blatt rollt nur so weit wie nötig
+  function heuteZeigen(blatt) {
+    var tu = function () {
+      var h = blatt.querySelector('.c6d-heute'), w = blatt.querySelector('.c6d-wahl'); if (!h || !w) return;
+      var zuviel = h.getBoundingClientRect().bottom - w.getBoundingClientRect().top + 6;
+      if (zuviel > 0) blatt.scrollTop += zuviel;
+    };
+    tu(); setTimeout(tu, C6.ruhig ? 0 : 280);
   }
   function rueckblickBinde(el, d, b) {
     b.zust.wichtig = [];
@@ -643,7 +657,7 @@
       if (!bl.daten) { if (!o.geruest) sag(art === 'vergleich' ? 'Für einen Vergleich brauche ich zwei Dinge, die du nebeneinander sehen willst.' : 'Dafür hängt noch zu wenig.'); return null; }
       daten = bl.daten; bz = bl.bezug || [];
       if (Array.isArray(o.bezug) && o.bezug.length) bz = echt(o.bezug).concat(bz).slice(0, 3);
-      bz = traegt(daten, bz);
+      if (art !== 'rueckblick') bz = traegt(daten, bz);
     } else {
       var p = pruef(art, daten, { zettel: o.zettel });
       if (!p) return null;
@@ -679,6 +693,7 @@
       k.onclick = function () { var q = bz[+k.getAttribute('data-bz')]; if (q) sag('Den hast du am ' + datum(q.ts) + ' in „' + kurz(q.titel, 30) + '“ aufgehängt.'); };
     });
     try { m[1](el.querySelector('.c6d-koerper'), daten, b); } catch (e) { if (window.console) console.warn('Darstellung', e); }
+    if (art === 'rueckblick') heuteZeigen(el);
     if (!C6.ruhig && el.animate) {
       [].forEach.call(el.querySelectorAll('.c6d-zettel'), function (z, i) { z.animate([{ transform: 'translateY(-14px) rotate(-6deg)', opacity: 0 }, { transform: 'rotate(var(--r))', opacity: 1 }], { duration: 420, delay: 260 + i * 90, easing: 'cubic-bezier(.3,.7,.4,1)', fill: 'backwards' }); });
     }
@@ -702,7 +717,10 @@
       var k = b.el.querySelector('[data-w=passt]'); if (k) { k.disabled = true; k.textContent = 'Hängt in „' + kurz(sp.titel, 18) + '“'; }
       b.el.classList.add('c6d-gehaengt');
       bus('darstellung', { was: 'passt', art: b.art, sid: s, id: id });
-      sag('Hängt jetzt als ' + NAME[b.art] + ' in „' + kurz(sp.titel, 30) + '“.');
+      var hier = C6.jetzt === 'space' && C6.space && C6.space.jetzt && C6.space.jetzt() === s;
+      if (!hier && C6.frag && C6.space && C6.space.oeffne) {
+        Promise.resolve(fragD('Hängt jetzt als ' + NAME[b.art] + ' in „' + kurz(sp.titel, 30) + '“.', [{ text: 'Hingehen', wert: 'hin' }], { leise: true, id: 'c6d-hin' })).then(function (w) { if (w === 'hin') { if (B === b) zu('passt'); C6.space.oeffne(s); } });
+      } else sag('Hängt jetzt als ' + NAME[b.art] + ' in „' + kurz(sp.titel, 30) + '“.');
       setTimeout(function () { if (B === b) zu('passt'); }, C6.ruhig ? 300 : 1300);
     };
     if (sid) return hinein(sid);

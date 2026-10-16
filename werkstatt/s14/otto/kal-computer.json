@@ -1,0 +1,606 @@
+[
+ {
+  "t": 0.9,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "frisch",
+  "bild": "kal-computer-01-frisch.png",
+  "carl": [
+   "Ich bin Carl, über mir hängen deine nächsten Tage. Sag mir einen Satz, ich bau dir was."
+  ],
+  "note": "Kalender-Status: {\"kalender\":\"verbunden\",\"grund\":null,\"ungelesen\":0,\"stand\":1792189321581,\"termine\":2}",
+  "konsole": []
+ },
+ {
+  "t": 3.7,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "fach-so18",
+  "bild": "kal-computer-02-fach-so18.png",
+  "carl": [],
+  "note": "",
+  "konsole": [],
+  "blatt": "Montag 19. Oktober · übermorgen 15:30 Zahnarzt aus deinem Kalender Steht noch etwas an dem Tag an? Eintragen"
+ },
+ {
+  "t": 5.7,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "fach-zu",
+  "bild": "kal-computer-03-fach-zu.png",
+  "carl": [
+   "Ich bin Carl, über mir hängen deine nächsten Tage. Sag mir einen Satz, ich bau dir was."
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 12.2,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "brief",
+  "bild": "kal-computer-04-brief.png",
+  "carl": [
+   "Ich bin Carl, über mir hängen deine nächsten Tage. Sag mir einen Satz, ich bau dir was."
+  ],
+  "note": "",
+  "konsole": [],
+  "brief": null
+ },
+ {
+  "t": 15.1,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "brief-zu",
+  "bild": "kal-computer-05-brief-zu.png",
+  "carl": [
+   "Ich bin Carl, über mir hängen deine nächsten Tage. Sag mir einen Satz, ich bau dir was."
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 19.0,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "zuhause",
+  "bild": "kal-computer-06-zuhause.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 25.4,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "satz-gitarre",
+  "bild": "kal-computer-07-satz-gitarre.png",
+  "carl": [
+   "Wohin damit?"
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 29.4,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "chip-neuer-space",
+  "bild": "kal-computer-08-chip-neuer-space.png",
+  "carl": [
+   "Ich nenn ihn „Gitarre lernen“?"
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 34.7,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "so-nennen",
+  "bild": "kal-computer-09-so-nennen.png",
+  "carl": [
+   "Der Space „Gitarre lernen“ ist da. Dein Satz ist sein Samen."
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 41.3,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "satz-portugal",
+  "bild": "kal-computer-10-satz-portugal.png",
+  "carl": [
+   "Wohin damit?"
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 46.2,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "chip-neuer-space-2",
+  "bild": "kal-computer-11-chip-neuer-space-2.png",
+  "carl": [
+   "Ich nenn ihn „Portugal reisen“?"
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 50.7,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "so-nennen-2",
+  "bild": "kal-computer-12-so-nennen-2.png",
+  "carl": [
+   "Der Space „Portugal reisen“ ist da. Dein Satz ist sein Samen."
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 57.9,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "karte-gitarre",
+  "bild": "kal-computer-13-karte-gitarre.png",
+  "carl": [
+   "Was hat dich auf „Gitarre lernen“ gebracht?"
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 66.4,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "zettel-1",
+  "bild": "kal-computer-14-zettel-1.png",
+  "carl": [
+   "„Gitarre“ stand schon auf deinem Zettel vom 17. Oktober: „Ich will Gitarre lernen“."
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 74.4,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "zettel-2",
+  "bild": "kal-computer-15-zettel-2.png",
+  "carl": [
+   "Er keimt. Ein Kernsatz, dann kommt die Knospe."
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 78.8,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "carl-antippen",
+  "bild": "kal-computer-16-carl-antippen.png",
+  "carl": [
+   "Was machen wir damit?"
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 81.4,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "wahl-machen",
+  "bild": "kal-computer-17-wahl-machen.png",
+  "carl": [
+   "Was machen wir damit?"
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 87.9,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "los",
+  "bild": "kal-computer-18-los.png",
+  "carl": [
+   "Was ist der nächste Schritt? Einer, nicht zehn."
+  ],
+  "note": "",
+  "konsole": [],
+  "karten": "Weiter­denken Machen Für dich arbeiten lassen Verbinden Ich bin dran."
+ },
+ {
+  "t": 96.0,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "schritt-schreiben",
+  "bild": "kal-computer-19-schritt-schreiben.png",
+  "carl": [
+   "Bis wann?"
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 101.6,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "morgen",
+  "bild": "kal-computer-20-morgen.png",
+  "carl": [
+   "Bis morgen. Wenn es nah ist, steht es in meinem Brief."
+  ],
+  "note": "",
+  "konsole": [],
+  "deckt": null
+ },
+ {
+  "t": 104.2,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "daneben",
+  "bild": "kal-computer-21-daneben.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 110.1,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "werkzeug-weg",
+  "bild": "kal-computer-22-werkzeug-weg.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 115.5,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "rueckblick",
+  "bild": "kal-computer-23-rueckblick.png",
+  "carl": [],
+  "note": "",
+  "konsole": [],
+  "blatt": "RÜCKBLICK Gitarre lernen Deine Woche 4 Zettel in 2 Spaces. So 11.10. Mo 12.10. Di 13.10. Mi 14.10. Do 15.10. Fr 16.10. heute 17.10. Ich will Gitarre lernen Durch Portugal reisen Im Keller steht noch eine alte Gitarre Jeden Abend zehn Minuten üben Kreis ein, was diese Woche gezählt hat. WOHER ICH DAS WEISS In „Gitarre lernen“ hängt noch kein Zettel. Das hier ist ganz neu. Mit Bleistift gelegt: nur "
+ },
+ {
+  "t": 121.9,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "rueckblick-haengen",
+  "bild": "kal-computer-24-rueckblick-haengen.png",
+  "carl": [
+   "Hängt jetzt als Rückblick in „Gitarre lernen“."
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 127.2,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "zuhause-zurueck",
+  "bild": "kal-computer-25-zuhause-zurueck.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 133.5,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "space-mit-rueckblick",
+  "bild": "kal-computer-26-space-mit-rueckblick.png",
+  "carl": [
+   "Vielleicht trägt „Ich will Gitarre lernen“ diesen Space. Tipp den Zettel an, wenn er der Kernsatz ist."
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 139.4,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "werkzeug-weg-2",
+  "bild": "kal-computer-27-werkzeug-weg-2.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 144.5,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "neues-werkzeug",
+  "bild": "kal-computer-28-neues-werkzeug.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 153.6,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "werkzeug-satz",
+  "bild": "kal-computer-29-werkzeug-satz.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 158.5,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "aufstellen",
+  "bild": "kal-computer-30-aufstellen.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 164.2,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "in-gitarre-stellen",
+  "bild": "kal-computer-31-in-gitarre-stellen.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 170.3,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "hingehen",
+  "bild": "kal-computer-32-hingehen.png",
+  "carl": [
+   "Wer sollte von „Gitarre lernen“ wissen?"
+  ],
+  "note": "",
+  "konsole": [],
+  "mitte": null
+ },
+ {
+  "t": 175.4,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "heute-abhaken",
+  "bild": "kal-computer-33-heute-abhaken.png",
+  "carl": [
+   "Wer sollte von „Gitarre lernen“ wissen?"
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 182.9,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "himmel",
+  "bild": "kal-computer-34-himmel.png",
+  "carl": [
+   "Jeder Planet hier oben ist einer deiner Spaces, mit seinem Stand darunter. Gehören zwei zusammen, zieh den einen zum anderen."
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 190.3,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "planet-tippen",
+  "bild": "kal-computer-35-planet-tippen.png",
+  "carl": [],
+  "note": "",
+  "konsole": [],
+  "blatt": "3 Zettel von dir und ein Werkzeug, noch kein Kernsatz. Nächster Schritt: „Gitarre aus dem Keller holen und stimmen“, morgen."
+ },
+ {
+  "t": 197.1,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "zurueck-zum-himmel",
+  "bild": "kal-computer-36-zurueck-zum-himmel.png",
+  "carl": [
+   "Jeder Planet hier oben ist einer deiner Spaces, mit seinem Stand darunter. Gehören zwei zusammen, zieh den einen zum anderen."
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 208.4,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "ziehen",
+  "bild": "kal-computer-37-ziehen.png",
+  "carl": [],
+  "note": "gezogen von (827,289) nach (535,463) in ~0,4 s",
+  "konsole": []
+ },
+ {
+  "t": 222.6,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "sternbild",
+  "bild": "kal-computer-38-sternbild.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 231.3,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "bibliothek",
+  "bild": "kal-computer-39-bibliothek.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 237.5,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "buch",
+  "bild": "kal-computer-40-buch.png",
+  "carl": [],
+  "note": "",
+  "konsole": [],
+  "inhalt": "WIR Du 2 2 Spaces Carl 3 Damals 4 3 Momente WAS ICH TUE Was ich kann 5 5 an · 4 brauchen Mitdenken Was ich für dich tue 6 Kalender: zuletzt vor 4 Minuten WAS ICH WEISS Was ich von dir weiß 7 3 Einträge Wer mitdenkt 8 gerade niemand WO UND WER Wo du mich erreichst 9 nur dieses Gerät Wer bei uns was darf 10 was ich sende, was ich nie tue"
+ },
+ {
+  "t": 244.2,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "was-ich-kann",
+  "bild": "kal-computer-41-was-ich-kann.png",
+  "carl": [],
+  "note": "",
+  "konsole": [],
+  "kann": "Was ich kann Was ich kann, ob es an ist, und wo es wohnt. Mitdenken an Ist es an, denkt Claude über claude.ai oder dein Rechner mit, wenn du mir etwas sagst. Wer mitdenkt: Seite 8 › Gedanken festhalten an Aus einem Satz von dir wird ein Space mit Zetteln. 2 Spaces · 4 Zettel Zuhause › Werkzeuge bauen an Ein kleines Werkzeug aus deinem Satz: abhaken, zählen, merken. 1 Werkzeug · ohne Mitdenken aus "
+ },
+ {
+  "t": 248.3,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "schalter-umlegen",
+  "bild": "kal-computer-42-schalter-umlegen.png",
+  "carl": [],
+  "note": "",
+  "konsole": [],
+  "schalter": "Mitdenken: an | Werkzeuge bauen: aus | Kalender lesen: an | Nachlesen lassen: an | Darstellungen: an | Zusammenfassen: an | Auf deinem Rechner nachsehen: an | Ein Brief am Tag: an"
+ },
+ {
+  "t": 250.6,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "neu-laden",
+  "bild": "kal-computer-43-neu-laden.png",
+  "carl": [],
+  "note": "<Response url='file:///home/claude/carl/carl6-test.html' request=<Request url='file:///home/claude/carl/carl6-test.html' method='GET'>>",
+  "konsole": []
+ },
+ {
+  "t": 256.2,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "nach-laden",
+  "bild": "kal-computer-44-nach-laden.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 261.9,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "bibliothek-2",
+  "bild": "kal-computer-45-bibliothek-2.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 268.2,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "buch-2",
+  "bild": "kal-computer-46-buch-2.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 273.6,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "was-ich-kann-2",
+  "bild": "kal-computer-47-was-ich-kann-2.png",
+  "carl": [],
+  "note": "",
+  "konsole": [],
+  "schalter": "Mitdenken: an | Werkzeuge bauen: aus | Kalender lesen: an | Nachlesen lassen: an | Darstellungen: an | Zusammenfassen: an | Auf deinem Rechner nachsehen: an | Ein Brief am Tag: an",
+  "kann": "Was ich kann Was ich kann, ob es an ist, und wo es wohnt. Mitdenken an Ist es an, denkt Claude über claude.ai oder dein Rechner mit, wenn du mir etwas sagst. Wer mitdenkt: Seite 8 › Gedanken festhalten an Aus einem Satz von dir wird ein Space mit Zetteln. 2 Spaces · 4 Zettel Zuhause › Werkzeuge bauen aus Ein kleines Werkzeug aus deinem Satz: abhaken, zählen, merken. Aus: Ich baue nur aus Vorlagen "
+ },
+ {
+  "t": 279.0,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "buch-zu",
+  "bild": "kal-computer-48-buch-zu.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 287.0,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "garage",
+  "bild": "kal-computer-49-garage.png",
+  "carl": [
+   "Dein Rad. Tipp es an."
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 290.8,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "katalog",
+  "bild": "kal-computer-50-katalog.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 293.4,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "reiter-zuhause",
+  "bild": "kal-computer-51-reiter-zuhause.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 296.7,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "probe-papierlaterne",
+  "bild": "kal-computer-52-probe-papierlaterne.png",
+  "carl": [],
+  "note": "",
+  "konsole": [],
+  "tat": "Papier­laterne Holen · 4"
+ },
+ {
+  "t": 299.8,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "holen",
+  "bild": "kal-computer-53-holen.png",
+  "carl": [],
+  "note": "Holen getippt",
+  "konsole": [],
+  "tat": "Papier­laterne steht bei dir"
+ },
+ {
+  "t": 302.8,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "katalog-zu",
+  "bild": "kal-computer-54-katalog-zu.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ }
+]

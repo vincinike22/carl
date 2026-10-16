@@ -159,6 +159,8 @@ html.c6z-proj-auf .c6k[data-geraet=iphone] .c6k-punkt-name{visibility:hidden;ani
 .c6k-hk,.c6k-fd-hoch{position:relative}
 .c6k-fd-hoch{padding:0 13px 0 4px}
 .c6k[data-licht=nacht] .c6k-hk,.c6k[data-licht=nacht] .c6k-fd-hoch{color:var(--c6k-n-text);text-shadow:none}
+/* Rückweg und Höhenknopf mit demselben Ziel: nur der Höhenknopf bleibt (kern.js setzt data-rueck-hoehe) */
+.c6k[data-rueck-hoehe] .c6k-fd,.c6k[data-rueck-hoehe] .c6k-zurueck{display:none}
 .c6k[data-licht=nacht] .c6k-hk::before,.c6k[data-licht=nacht] .c6k-fd-hoch::before{background:rgba(29,36,69,.94);border-color:var(--c6k-n-text);box-shadow:0 8px 22px -10px rgba(0,0,0,.6)}
 .c6k[data-ohne-kopf] .c6k-kopf{display:none}
 html.c6r-an .c6k-kopf,html.c6r-an .c6k-hoehe,.c6k[data-rundgang] .c6k-kopf{display:none}

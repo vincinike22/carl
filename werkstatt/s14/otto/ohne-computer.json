@@ -1,0 +1,550 @@
+[
+ {
+  "t": 0.5,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "frisch",
+  "bild": "ohne-computer-01-frisch.png",
+  "carl": [
+   "Ich bin Carl, über mir hängen deine nächsten Tage. Sag mir einen Satz, ich bau dir was."
+  ],
+  "note": "Kalender-Status: {\"kalender\":\"nicht-verbunden\",\"grund\":\"kein-mcp\",\"ungelesen\":0,\"stand\":null,\"termine\":0}",
+  "konsole": []
+ },
+ {
+  "t": 3.4,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "fach-so18",
+  "bild": "ohne-computer-02-fach-so18.png",
+  "carl": [],
+  "note": "",
+  "konsole": [],
+  "blatt": "Montag 19. Oktober · übermorgen Von hier aus komm ich an keinen Kalender heran. Was in deinen Werkzeugen steht, zeig ich trotzdem. Apple Kalender erreiche ich hier im Browser nicht. Der kommt mit Carl auf deinem Mac. Für Montag weiß ich von nichts. Vielleicht gehört der Tag ganz dir. BEISPIEL Steht „Mathe-Prüfung“ in einem Fach, frag ich dich, ob ich dir Karteikarten machen soll. Sagst du ja, lieg"
+ },
+ {
+  "t": 5.4,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "fach-zu",
+  "bild": "ohne-computer-03-fach-zu.png",
+  "carl": [
+   "Ich bin Carl, über mir hängen deine nächsten Tage. Sag mir einen Satz, ich bau dir was."
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 11.2,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "brief",
+  "bild": "ohne-computer-04-brief.png",
+  "carl": [
+   "Ich bin Carl, über mir hängen deine nächsten Tage. Sag mir einen Satz, ich bau dir was."
+  ],
+  "note": "",
+  "konsole": [],
+  "brief": null
+ },
+ {
+  "t": 13.6,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "brief-zu",
+  "bild": "ohne-computer-05-brief-zu.png",
+  "carl": [
+   "Ich bin Carl, über mir hängen deine nächsten Tage. Sag mir einen Satz, ich bau dir was."
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 17.7,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "zuhause",
+  "bild": "ohne-computer-06-zuhause.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 23.7,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "satz-gitarre",
+  "bild": "ohne-computer-07-satz-gitarre.png",
+  "carl": [
+   "Wohin damit?"
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 28.7,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "chip-neuer-space",
+  "bild": "ohne-computer-08-chip-neuer-space.png",
+  "carl": [
+   "Ich nenn ihn „Gitarre lernen“?"
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 33.7,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "so-nennen",
+  "bild": "ohne-computer-09-so-nennen.png",
+  "carl": [
+   "Der Space „Gitarre lernen“ ist da. Dein Satz ist sein Samen."
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 40.5,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "satz-portugal",
+  "bild": "ohne-computer-10-satz-portugal.png",
+  "carl": [
+   "Wohin damit?"
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 45.0,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "chip-neuer-space-2",
+  "bild": "ohne-computer-11-chip-neuer-space-2.png",
+  "carl": [
+   "Ich nenn ihn „Portugal reisen“?"
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 50.4,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "so-nennen-2",
+  "bild": "ohne-computer-12-so-nennen-2.png",
+  "carl": [
+   "Der Space „Portugal reisen“ ist da. Dein Satz ist sein Samen."
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 56.0,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "karte-gitarre",
+  "bild": "ohne-computer-13-karte-gitarre.png",
+  "carl": [
+   "Was hat dich auf „Gitarre lernen“ gebracht?"
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 63.5,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "zettel-1",
+  "bild": "ohne-computer-14-zettel-1.png",
+  "carl": [
+   "„Gitarre“ stand schon auf deinem Zettel vom 17. Oktober: „Ich will Gitarre lernen“."
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 71.5,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "zettel-2",
+  "bild": "ohne-computer-15-zettel-2.png",
+  "carl": [
+   "Er keimt. Ein Kernsatz, dann kommt die Knospe."
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 76.3,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "carl-antippen",
+  "bild": "ohne-computer-16-carl-antippen.png",
+  "carl": [
+   "Was machen wir damit?"
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 79.5,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "wahl-weiterdenken",
+  "bild": "ohne-computer-17-wahl-weiterdenken.png",
+  "carl": [
+   "Was machen wir damit?"
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 86.8,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "los",
+  "bild": "ohne-computer-18-los.png",
+  "carl": [
+   "Was folgt aus „Ich will Gitarre lernen“?"
+  ],
+  "note": "",
+  "konsole": [],
+  "karten": "Weiter­denken Machen Für dich arbeiten lassen Verbinden Ich bin dran."
+ },
+ {
+  "t": 91.6,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "weiterdenken-4s",
+  "bild": "ohne-computer-19-weiterdenken-4s.png",
+  "carl": [
+   "Was folgt aus „Ich will Gitarre lernen“?"
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 99.1,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "antwort",
+  "bild": "ohne-computer-20-antwort.png",
+  "carl": [
+   "Was folgt aus „Ich will Gitarre lernen“?"
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 101.9,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "daneben",
+  "bild": "ohne-computer-21-daneben.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 108.1,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "werkzeug-weg",
+  "bild": "ohne-computer-22-werkzeug-weg.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 112.1,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "neues-werkzeug",
+  "bild": "ohne-computer-23-neues-werkzeug.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 122.2,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "werkzeug-satz",
+  "bild": "ohne-computer-24-werkzeug-satz.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 128.0,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "aufstellen",
+  "bild": "ohne-computer-25-aufstellen.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 133.8,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "in-gitarre-stellen",
+  "bild": "ohne-computer-26-in-gitarre-stellen.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 140.5,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "hingehen",
+  "bild": "ohne-computer-27-hingehen.png",
+  "carl": [
+   "Vielleicht trägt „Ich will Gitarre lernen“ diesen Space. Tipp den Zettel an, wenn er der Kernsatz ist."
+  ],
+  "note": "",
+  "konsole": [],
+  "mitte": null
+ },
+ {
+  "t": 147.6,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "heute-abhaken",
+  "bild": "ohne-computer-28-heute-abhaken.png",
+  "carl": [
+   "Vielleicht trägt „Ich will Gitarre lernen“ diesen Space. Tipp den Zettel an, wenn er der Kernsatz ist."
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 157.4,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "himmel",
+  "bild": "ohne-computer-29-himmel.png",
+  "carl": [
+   "Jeder Planet hier oben ist einer deiner Spaces, mit seinem Stand darunter. Gehören zwei zusammen, zieh den einen zum anderen."
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 166.4,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "planet-tippen",
+  "bild": "ohne-computer-30-planet-tippen.png",
+  "carl": [],
+  "note": "",
+  "konsole": [],
+  "blatt": "4 Zettel von dir und ein Werkzeug, noch kein Kernsatz. Ein nächster Schritt fehlt."
+ },
+ {
+  "t": 173.7,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "zurueck-zum-himmel",
+  "bild": "ohne-computer-31-zurueck-zum-himmel.png",
+  "carl": [
+   "Jeder Planet hier oben ist einer deiner Spaces, mit seinem Stand darunter. Gehören zwei zusammen, zieh den einen zum anderen."
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 187.3,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "ziehen",
+  "bild": "ohne-computer-32-ziehen.png",
+  "carl": [],
+  "note": "gezogen von (831,291) nach (536,463) in ~0,4 s",
+  "konsole": []
+ },
+ {
+  "t": 202.4,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "sternbild",
+  "bild": "ohne-computer-33-sternbild.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 210.3,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "bibliothek",
+  "bild": "ohne-computer-34-bibliothek.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 215.6,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "buch",
+  "bild": "ohne-computer-35-buch.png",
+  "carl": [],
+  "note": "",
+  "konsole": [],
+  "inhalt": "WIR Du 2 2 Spaces Carl 3 Damals 4 3 Momente WAS ICH TUE Was ich kann 5 4 an · 4 brauchen Mitdenken Was ich für dich tue 6 Kalender nicht verbunden WAS ICH WEISS Was ich von dir weiß 7 3 Einträge Wer mitdenkt 8 gerade niemand WO UND WER Wo du mich erreichst 9 nur dieses Gerät Wer bei uns was darf 10 was ich sende, was ich nie tue"
+ },
+ {
+  "t": 220.0,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "was-ich-kann",
+  "bild": "ohne-computer-36-was-ich-kann.png",
+  "carl": [],
+  "note": "",
+  "konsole": [],
+  "kann": "Was ich kann Was ich kann, ob es an ist, und wo es wohnt. Mitdenken an Ist es an, denkt Claude über claude.ai oder dein Rechner mit, wenn du mir etwas sagst. Wer mitdenkt: Seite 8 › Gedanken festhalten an Aus einem Satz von dir wird ein Space mit Zetteln. 2 Spaces · 5 Zettel Zuhause › Werkzeuge bauen an Ein kleines Werkzeug aus deinem Satz: abhaken, zählen, merken. 1 Werkzeug · ohne Mitdenken aus "
+ },
+ {
+  "t": 225.3,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "schalter-umlegen",
+  "bild": "ohne-computer-37-schalter-umlegen.png",
+  "carl": [],
+  "note": "",
+  "konsole": [],
+  "schalter": "Mitdenken: an | Werkzeuge bauen: aus | Kalender lesen: an | Nachlesen lassen: an | Darstellungen: an | Zusammenfassen: an | Auf deinem Rechner nachsehen: an | Ein Brief am Tag: an"
+ },
+ {
+  "t": 229.0,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "neu-laden",
+  "bild": "ohne-computer-38-neu-laden.png",
+  "carl": [],
+  "note": "<Response url='file:///home/claude/carl/carl6-test.html' request=<Request url='file:///home/claude/carl/carl6-test.html' method='GET'>>",
+  "konsole": []
+ },
+ {
+  "t": 234.2,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "nach-laden",
+  "bild": "ohne-computer-39-nach-laden.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 240.2,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "bibliothek-2",
+  "bild": "ohne-computer-40-bibliothek-2.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 246.8,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "buch-2",
+  "bild": "ohne-computer-41-buch-2.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 251.7,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "was-ich-kann-2",
+  "bild": "ohne-computer-42-was-ich-kann-2.png",
+  "carl": [],
+  "note": "",
+  "konsole": [],
+  "schalter": "Mitdenken: an | Werkzeuge bauen: aus | Kalender lesen: an | Nachlesen lassen: an | Darstellungen: an | Zusammenfassen: an | Auf deinem Rechner nachsehen: an | Ein Brief am Tag: an",
+  "kann": "Was ich kann Was ich kann, ob es an ist, und wo es wohnt. Mitdenken an Ist es an, denkt Claude über claude.ai oder dein Rechner mit, wenn du mir etwas sagst. Wer mitdenkt: Seite 8 › Gedanken festhalten an Aus einem Satz von dir wird ein Space mit Zetteln. 2 Spaces · 5 Zettel Zuhause › Werkzeuge bauen aus Ein kleines Werkzeug aus deinem Satz: abhaken, zählen, merken. Aus: Ich baue nur aus Vorlagen "
+ },
+ {
+  "t": 257.0,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "buch-zu",
+  "bild": "ohne-computer-43-buch-zu.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 264.1,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "garage",
+  "bild": "ohne-computer-44-garage.png",
+  "carl": [
+   "Dein Rad. Tipp es an."
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 268.8,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "katalog",
+  "bild": "ohne-computer-45-katalog.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 272.7,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "reiter-zuhause",
+  "bild": "ohne-computer-46-reiter-zuhause.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 277.9,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "probe-papierlaterne",
+  "bild": "ohne-computer-47-probe-papierlaterne.png",
+  "carl": [],
+  "note": "",
+  "konsole": [],
+  "tat": "Papier­laterne Holen · 4"
+ },
+ {
+  "t": 284.0,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "holen",
+  "bild": "ohne-computer-48-holen.png",
+  "carl": [],
+  "note": "Holen getippt",
+  "konsole": [],
+  "tat": "Papier­laterne steht bei dir"
+ },
+ {
+  "t": 288.7,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "katalog-zu",
+  "bild": "ohne-computer-49-katalog-zu.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ }
+]

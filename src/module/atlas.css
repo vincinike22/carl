@@ -489,3 +489,6 @@ html.c6k-ruhig .c6r-at-schalter,html.c6k-ruhig .c6r-at-schalter-knopf{transition
 @media (min-width:820px){.c6r-at-reit::after{right:-10px}}
 @media (min-width:820px){.c6r-at-reit::after{right:-12px}}
 .c6r-at-fuss button:disabled{opacity:1;color:#c9c1b3;border-color:#c9c1b3;box-shadow:none;background:#fbf7f0}
+/* Nach-Runde: eine ehrliche Zeile für später, keine Liste */
+.c6r-at-spaeter{margin:18px 0 4px;font:italic 400 15px/1.4 Fraunces,Georgia,serif;color:#6f6a61}
+.c6r-at-modelle2{grid-template-columns:repeat(2,1fr)}

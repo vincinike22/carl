@@ -224,7 +224,27 @@ html.c6k-ruhig .c6z-sp-schein,html.c6k-ruhig .c6z-sp-lichtfleck{transition:none}
 
 /* die vier Karten: nur auf Geste. Sie liegen auf einem Blatt; am iPhone über dem Feld, die Szene bleibt stehen */
 .c6k-sp .c6vs-platz{box-sizing:border-box;padding:4px 12px 10px;border:1.5px solid var(--tusche,#2b2722);border-radius:4px;background:var(--blatt,#fffdf9);box-shadow:var(--blatt-schatten,6px 6px 0 #efe7da,6px 6px 0 1.5px #2b2722)}
-.c6k-sp:not(.c6k-sp-computer)>.c6vs-platz{position:absolute;left:16px;right:22px;bottom:10px;margin:0;z-index:9}
+/* iPhone: das Kartenblatt liegt an seinem eigenen Platz unter Werkzeug und Schild, über dem Feld – es deckt nichts zu, wovon es spricht.
+   Damit alles passt, rückt die Szene darüber etwas zusammen (Carl und Leine bleiben ganz im Bild) */
+.c6k-sp:not(.c6k-sp-computer)>.c6vs-platz{position:relative;left:auto;right:auto;bottom:auto;margin:6px 22px 0 16px;padding:2px 10px 6px;z-index:6;flex:0 0 auto}
+.c6k-sp:not(.c6k-sp-computer)>.c6z-sp-mitte,.c6k-sp:not(.c6k-sp-computer)>.c6z-sp-stueck{flex:0 0 auto}
+.c6k-sp.c6z-sp-vs-auf:not(.c6k-sp-computer):not(.c6k-sp-leer) .c6z-sp-welt{flex:0 1 auto;min-height:330px}
+.c6k-sp.c6z-sp-mit-wz.c6z-sp-vs-auf:not(.c6k-sp-computer):not(.c6k-sp-leer) .c6z-sp-welt{height:clamp(340px,47vh,410px)}
+/* solange die Karten liegen, faltet sich das Werkzeug am iPhone in seine kleine Form (bleibt da, bleibt benutzbar) */
+.c6z-sp-mitte-klein .c6z-sp-wz .c6wz-werkzeug{box-shadow:3px 3px 0 var(--sand2,#efe7da),3px 3px 0 1.5px var(--tusche,#2b2722)}
+.c6z-sp-mitte-klein .c6z-sp-ansicht-text{display:none}
+.c6z-sp-mitte-klein .c6z-sp-reiter{display:none}
+.c6z-sp-vs-frage{margin:6px 2px 0;font:600 15px/1.2 Fraunces,Georgia,serif;color:var(--tusche,#2b2722)}
+.c6k-sp-computer .c6z-sp-vs-frage{font-size:16px}
+.c6k-sp:not(.c6k-sp-computer):not(.c6k-sp-leer) .c6z-sp-welt{transition:height .3s cubic-bezier(.3,.7,.4,1)}
+.c6k-sp.c6z-sp-vs-auf:not(.c6k-sp-computer)>.c6z-sp-bauweg{display:none}
+.c6k-sp.c6z-sp-vs-auf:not(.c6k-sp-computer)>.c6z-sp-stueck{margin-top:4px;padding-bottom:2px}
+.c6k-sp.c6z-sp-vs-auf:not(.c6k-sp-computer)>.c6z-sp-stueck .c6z-sp-schritt{min-height:44px;padding:5px 10px 6px}
+.c6k-sp:not(.c6k-sp-computer)>.c6vs-platz .c6vs-reihe{padding-top:8px;gap:6px}
+.c6k-sp:not(.c6k-sp-computer)>.c6vs-platz .c6vs-karte{min-height:58px;padding:5px 4px 6px}
+.c6k-sp:not(.c6k-sp-computer)>.c6vs-platz .c6vs-karte b{font-size:12.5px;line-height:1.1}
+.c6k-sp:not(.c6k-sp-computer)>.c6vs-platz .c6vs-zeichen{width:22px;height:22px}
+@media (prefers-reduced-motion:reduce){.c6k-sp .c6z-sp-welt{transition:none!important}}
 .c6k-sp-computer .c6z-sp-welt>.c6vs-platz{z-index:7}
 .c6k-sp-computer.c6z-sp-vs-auf .c6z-sp-welt>.c6z-sp-bauweg{visibility:hidden}
 /* iPhone mit Werkzeug: Carl etwas kleiner, darüber Luft für seine Blase */
@@ -259,3 +279,12 @@ html.c6k-ruhig .c6z-sp-schein,html.c6k-ruhig .c6z-sp-lichtfleck{transition:none}
 .c6k-sp .c6z-sp-zettel.c6vs-gemeint{outline-color:var(--sp-akzent,#2b2722)}
 /* das Plus im Knopf „Aufhängen“ (Blatt „An der Leine“) war unsichtbar: Strich in Knopffarbe */
 .c6k-sp .c6k-sp-neu svg{flex:none;width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
+
+/* Nach-Runde s14 · eine fertige Ansicht (Rückblick, Zwei Wege …) steht wie ein Werkzeug in der Mitte: ihr Blatt, Titel, Text rollt in sich */
+.c6z-sp-ansicht{box-sizing:border-box;width:100%;border:1.5px solid var(--tusche,#2b2722);border-radius:4px;background:var(--blatt,#fffdf9);box-shadow:var(--blatt-schatten,6px 6px 0 #efe7da,6px 6px 0 1.5px #2b2722);padding:4px 0 10px}
+.c6z-sp-ansicht-kopf{display:block;width:100%;min-height:44px;padding:8px 14px 4px;border:0;background:none;text-align:left;cursor:pointer;color:var(--tusche,#2b2722)}
+.c6z-sp-ansicht-kopf b{font:600 18px/1.2 Fraunces,Georgia,serif}
+.c6z-sp-ansicht-kopf:focus-visible,.c6z-sp-ansicht-text:focus-visible{outline:3px solid #b4460c;outline-offset:2px}
+.c6z-sp-ansicht-text{max-height:150px;overflow-y:auto;overscroll-behavior:contain;padding:0 14px}
+.c6z-sp-ansicht-text p{margin:0 0 6px;font:400 15px/1.4 Figtree,system-ui,sans-serif;color:var(--tusche,#2b2722)}
+.c6k-sp-computer .c6z-sp-ansicht-text{max-height:220px}

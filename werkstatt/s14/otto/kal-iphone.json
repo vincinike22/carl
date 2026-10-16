@@ -1,0 +1,606 @@
+[
+ {
+  "t": 1.1,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "frisch",
+  "bild": "kal-iphone-01-frisch.png",
+  "carl": [
+   "Ich bin Carl, über mir hängen deine nächsten Tage. Sag mir einen Satz, ich bau dir was."
+  ],
+  "note": "Kalender-Status: {\"kalender\":\"verbunden\",\"grund\":null,\"ungelesen\":0,\"stand\":1792189321180,\"termine\":2}",
+  "konsole": []
+ },
+ {
+  "t": 4.7,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "fach-so18",
+  "bild": "kal-iphone-02-fach-so18.png",
+  "carl": [],
+  "note": "",
+  "konsole": [],
+  "blatt": "Montag 19. Oktober · übermorgen 15:30 Zahnarzt aus deinem Kalender Steht noch etwas an dem Tag an? Eintragen"
+ },
+ {
+  "t": 7.2,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "fach-zu",
+  "bild": "kal-iphone-03-fach-zu.png",
+  "carl": [
+   "Ich bin Carl, über mir hängen deine nächsten Tage. Sag mir einen Satz, ich bau dir was."
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 13.8,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "brief",
+  "bild": "kal-iphone-04-brief.png",
+  "carl": [
+   "Ich bin Carl, über mir hängen deine nächsten Tage. Sag mir einen Satz, ich bau dir was."
+  ],
+  "note": "",
+  "konsole": [],
+  "brief": null
+ },
+ {
+  "t": 16.7,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "brief-zu",
+  "bild": "kal-iphone-05-brief-zu.png",
+  "carl": [
+   "Ich bin Carl, über mir hängen deine nächsten Tage. Sag mir einen Satz, ich bau dir was."
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 21.9,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "zuhause",
+  "bild": "kal-iphone-06-zuhause.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 27.4,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "satz-gitarre",
+  "bild": "kal-iphone-07-satz-gitarre.png",
+  "carl": [
+   "Wohin damit?"
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 31.6,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "chip-neuer-space",
+  "bild": "kal-iphone-08-chip-neuer-space.png",
+  "carl": [
+   "Ich nenn ihn „Gitarre lernen“?"
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 36.1,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "so-nennen",
+  "bild": "kal-iphone-09-so-nennen.png",
+  "carl": [
+   "Der Space „Gitarre lernen“ ist da. Dein Satz ist sein Samen."
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 40.9,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "satz-portugal",
+  "bild": "kal-iphone-10-satz-portugal.png",
+  "carl": [
+   "Wohin damit?"
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 45.4,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "chip-neuer-space-2",
+  "bild": "kal-iphone-11-chip-neuer-space-2.png",
+  "carl": [
+   "Ich nenn ihn „Portugal reisen“?"
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 50.1,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "so-nennen-2",
+  "bild": "kal-iphone-12-so-nennen-2.png",
+  "carl": [
+   "Der Space „Portugal reisen“ ist da. Dein Satz ist sein Samen."
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 55.8,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "karte-gitarre",
+  "bild": "kal-iphone-13-karte-gitarre.png",
+  "carl": [
+   "Was hat dich auf „Gitarre lernen“ gebracht?"
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 63.9,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "zettel-1",
+  "bild": "kal-iphone-14-zettel-1.png",
+  "carl": [
+   "„Gitarre“ stand schon auf deinem Zettel vom 17. Oktober: „Ich will Gitarre lernen“."
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 71.2,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "zettel-2",
+  "bild": "kal-iphone-15-zettel-2.png",
+  "carl": [
+   "Er keimt. Ein Kernsatz, dann kommt die Knospe."
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 75.1,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "carl-antippen",
+  "bild": "kal-iphone-16-carl-antippen.png",
+  "carl": [
+   "Was machen wir damit?"
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 79.2,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "wahl-machen",
+  "bild": "kal-iphone-17-wahl-machen.png",
+  "carl": [
+   "Was machen wir damit?"
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 85.1,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "los",
+  "bild": "kal-iphone-18-los.png",
+  "carl": [
+   "Was ist der nächste Schritt? Einer, nicht zehn."
+  ],
+  "note": "",
+  "konsole": [],
+  "karten": "Weiter­denken Machen Für dich arbeiten lassen Verbinden Ich bin dran."
+ },
+ {
+  "t": 95.0,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "schritt-schreiben",
+  "bild": "kal-iphone-19-schritt-schreiben.png",
+  "carl": [
+   "Bis wann?"
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 101.8,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "morgen",
+  "bild": "kal-iphone-20-morgen.png",
+  "carl": [
+   "Bis morgen. Wenn es nah ist, steht es in meinem Brief."
+  ],
+  "note": "",
+  "konsole": [],
+  "deckt": null
+ },
+ {
+  "t": 105.4,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "daneben",
+  "bild": "kal-iphone-21-daneben.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 112.4,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "werkzeug-weg",
+  "bild": "kal-iphone-22-werkzeug-weg.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 117.1,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "rueckblick",
+  "bild": "kal-iphone-23-rueckblick.png",
+  "carl": [],
+  "note": "",
+  "konsole": [],
+  "blatt": "RÜCKBLICK Gitarre lernen Deine Woche 4 Zettel in 2 Spaces. So 11.10. Mo 12.10. Di 13.10. Mi 14.10. Do 15.10. Fr 16.10. heute 17.10. Ich will Gitarre lernen Durch Portugal reisen Im Keller steht noch eine alte Gitarre Jeden Abend zehn Minuten üben Kreis ein, was diese Woche gezählt hat. WOHER ICH DAS WEISS In „Gitarre lernen“ hängt noch kein Zettel. Das hier ist ganz neu. Mit Bleistift gelegt: nur "
+ },
+ {
+  "t": 122.2,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "rueckblick-haengen",
+  "bild": "kal-iphone-24-rueckblick-haengen.png",
+  "carl": [
+   "Hängt jetzt als Rückblick in „Gitarre lernen“."
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 126.7,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "zuhause-zurueck",
+  "bild": "kal-iphone-25-zuhause-zurueck.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 132.3,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "space-mit-rueckblick",
+  "bild": "kal-iphone-26-space-mit-rueckblick.png",
+  "carl": [
+   "Vielleicht trägt „Ich will Gitarre lernen“ diesen Space. Tipp den Zettel an, wenn er der Kernsatz ist."
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 137.9,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "werkzeug-weg-2",
+  "bild": "kal-iphone-27-werkzeug-weg-2.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 142.0,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "neues-werkzeug",
+  "bild": "kal-iphone-28-neues-werkzeug.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 152.0,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "werkzeug-satz",
+  "bild": "kal-iphone-29-werkzeug-satz.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 157.1,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "aufstellen",
+  "bild": "kal-iphone-30-aufstellen.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 162.7,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "in-gitarre-stellen",
+  "bild": "kal-iphone-31-in-gitarre-stellen.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 169.6,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "hingehen",
+  "bild": "kal-iphone-32-hingehen.png",
+  "carl": [
+   "Wer sollte von „Gitarre lernen“ wissen?"
+  ],
+  "note": "",
+  "konsole": [],
+  "mitte": null
+ },
+ {
+  "t": 173.3,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "heute-abhaken",
+  "bild": "kal-iphone-33-heute-abhaken.png",
+  "carl": [
+   "Wer sollte von „Gitarre lernen“ wissen?"
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 180.1,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "himmel",
+  "bild": "kal-iphone-34-himmel.png",
+  "carl": [
+   "Jeder Planet hier oben ist einer deiner Spaces, mit seinem Stand darunter. Gehören zwei zusammen, zieh den einen zum anderen."
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 186.9,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "planet-tippen",
+  "bild": "kal-iphone-35-planet-tippen.png",
+  "carl": [],
+  "note": "",
+  "konsole": [],
+  "blatt": "3 Zettel von dir und ein Werkzeug, noch kein Kernsatz. Nächster Schritt: „Gitarre aus dem Keller holen und stimmen“, morgen."
+ },
+ {
+  "t": 194.4,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "zurueck-zum-himmel",
+  "bild": "kal-iphone-36-zurueck-zum-himmel.png",
+  "carl": [
+   "Jeder Planet hier oben ist einer deiner Spaces, mit seinem Stand darunter. Gehören zwei zusammen, zieh den einen zum anderen."
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 204.2,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "ziehen",
+  "bild": "kal-iphone-37-ziehen.png",
+  "carl": [],
+  "note": "gezogen von (250,305) nach (115,435) in ~0,4 s",
+  "konsole": []
+ },
+ {
+  "t": 217.7,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "sternbild",
+  "bild": "kal-iphone-38-sternbild.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 227.0,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "bibliothek",
+  "bild": "kal-iphone-39-bibliothek.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 234.1,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "buch",
+  "bild": "kal-iphone-40-buch.png",
+  "carl": [],
+  "note": "",
+  "konsole": [],
+  "inhalt": "WIR Du 2 2 Spaces Carl 3 Damals 4 3 Momente WAS ICH TUE Was ich kann 5 5 an · 4 brauchen Mitdenken Was ich für dich tue 6 Kalender: zuletzt vor 4 Minuten WAS ICH WEISS Was ich von dir weiß 7 3 Einträge Wer mitdenkt 8 gerade niemand WO UND WER Wo du mich erreichst 9 nur dieses Gerät Wer bei uns was darf 10 was ich sende, was ich nie tue"
+ },
+ {
+  "t": 240.1,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "was-ich-kann",
+  "bild": "kal-iphone-41-was-ich-kann.png",
+  "carl": [],
+  "note": "",
+  "konsole": [],
+  "kann": "Was ich kann Was ich kann, ob es an ist, und wo es wohnt. Mitdenken an Ist es an, denkt Claude über claude.ai oder dein Rechner mit, wenn du mir etwas sagst. Wer mitdenkt: Seite 8 › Gedanken festhalten an Aus einem Satz von dir wird ein Space mit Zetteln. 2 Spaces · 4 Zettel Zuhause › Werkzeuge bauen an Ein kleines Werkzeug aus deinem Satz: abhaken, zählen, merken. 1 Werkzeug · ohne Mitdenken aus "
+ },
+ {
+  "t": 246.2,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "schalter-umlegen",
+  "bild": "kal-iphone-42-schalter-umlegen.png",
+  "carl": [],
+  "note": "",
+  "konsole": [],
+  "schalter": "Mitdenken: an | Werkzeuge bauen: aus | Kalender lesen: an | Nachlesen lassen: an | Darstellungen: an | Zusammenfassen: an | Auf deinem Rechner nachsehen: an"
+ },
+ {
+  "t": 250.7,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "neu-laden",
+  "bild": "kal-iphone-43-neu-laden.png",
+  "carl": [],
+  "note": "<Response url='file:///home/claude/carl/carl6-test.html' request=<Request url='file:///home/claude/carl/carl6-test.html' method='GET'>>",
+  "konsole": []
+ },
+ {
+  "t": 255.6,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "nach-laden",
+  "bild": "kal-iphone-44-nach-laden.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 262.4,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "bibliothek-2",
+  "bild": "kal-iphone-45-bibliothek-2.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 269.1,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "buch-2",
+  "bild": "kal-iphone-46-buch-2.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 274.6,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "was-ich-kann-2",
+  "bild": "kal-iphone-47-was-ich-kann-2.png",
+  "carl": [],
+  "note": "",
+  "konsole": [],
+  "schalter": "Mitdenken: an | Werkzeuge bauen: aus | Kalender lesen: an | Nachlesen lassen: an | Darstellungen: an | Zusammenfassen: an | Auf deinem Rechner nachsehen: an",
+  "kann": "Was ich kann Was ich kann, ob es an ist, und wo es wohnt. Mitdenken an Ist es an, denkt Claude über claude.ai oder dein Rechner mit, wenn du mir etwas sagst. Wer mitdenkt: Seite 8 › Gedanken festhalten an Aus einem Satz von dir wird ein Space mit Zetteln. 2 Spaces · 4 Zettel Zuhause › Werkzeuge bauen aus Ein kleines Werkzeug aus deinem Satz: abhaken, zählen, merken. Aus: Ich baue nur aus Vorlagen "
+ },
+ {
+  "t": 279.8,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "buch-zu",
+  "bild": "kal-iphone-48-buch-zu.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 286.2,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "garage",
+  "bild": "kal-iphone-49-garage.png",
+  "carl": [
+   "Dein Rad. Tipp es an."
+  ],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 289.9,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "katalog",
+  "bild": "kal-iphone-50-katalog.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 292.7,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "reiter-zuhause",
+  "bild": "kal-iphone-51-reiter-zuhause.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ },
+ {
+  "t": 296.0,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "probe-papierlaterne",
+  "bild": "kal-iphone-52-probe-papierlaterne.png",
+  "carl": [],
+  "note": "",
+  "konsole": [],
+  "tat": "Papier­laterne Holen · 4"
+ },
+ {
+  "t": 299.4,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "holen",
+  "bild": "kal-iphone-53-holen.png",
+  "carl": [],
+  "note": "Holen getippt",
+  "konsole": [],
+  "tat": "Papier­laterne steht bei dir"
+ },
+ {
+  "t": 302.7,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "katalog-zu",
+  "bild": "kal-iphone-54-katalog-zu.png",
+  "carl": [],
+  "note": "",
+  "konsole": []
+ }
+]

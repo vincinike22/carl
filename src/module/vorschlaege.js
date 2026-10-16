@@ -21,6 +21,8 @@
     return String(ersatz || '').replace(/\{(\w+)\}/g, function (m, x) { return w && w[x] != null ? w[x] : ''; });
   }
   function bus(d) { try { C6.bus && C6.bus.emit('vorschlag', d); } catch (e) {} }
+  // ist Ottos Antwort da, steht Carls Frage nicht mehr in der Blase
+  function fertigGefragt() { try { C6.schweig && C6.schweig(); } catch (e) {} }
   function sag(t) { try { if (t && C6.sag) C6.sag(t, { merken: false }); } catch (e) {} }
   function fokus() { try { C6.eingabe && C6.eingabe.fokus && C6.eingabe.fokus(); } catch (e) {} }
   // eine freie Frage: das Feld bekommt den Fokus (am iPhone kommt die Tastatur nur, wenn der Fokus schon im Tipp auf „Los“ gesetzt wurde)
@@ -61,16 +63,35 @@
   // Was die Karte hier verspricht (wechselt mit dem Zustand des Space und des Kopfs)
   function verspricht(art, q) {
     var sid = q.sid, ok = !ohneKopf(), t = kurz(q.satz || titel(sid), 40);
-    if (art === 'weiter') return ok ? stimme('weiter.was', { t: t }, 'Ich denk an „{t}“ weiter und häng dir eine Frage an die Leine.') : stimme('weiter.ohneKopf', { t: t }, 'Ich frag dich, was aus „{t}“ folgt. Deine Antwort hängt an der Leine.');
+    if (art === 'weiter') {
+      if (!ok) return stimme('weiter.ohneKopf', { t: t }, 'Ich frag dich, was aus „{t}“ folgt. Deine Antwort hängt an der Leine.');
+      if (kopfUnklar()) return stimme('weiter.wasVielleicht', { t: t }, 'Denkt jemand mit, häng ich dir eine Frage zu „{t}“ an die Leine. Sonst frag ich dich, was daraus folgt.');
+      return stimme('weiter.was', { t: t }, 'Ich denk an „{t}“ weiter und häng dir eine Frage an die Leine.');
+    }
     if (art === 'machen') {
       var s = schritt(sid);
       // steht ein Schritt, wohnt „Geschafft?“ am Schild; die Karte baut nur das Werkzeug dazu
       if (s) return ok ? stimme('machen.wasWerkzeugFuer', { s: kurz(s, 40) }, 'Ich bau dir ein Werkzeug für „{s}“. Abhaken tust du ihn am Schild.') : stimme('machen.wasWerkzeugVorlage', { s: kurz(s, 40) }, 'Ich bau dir ein Werkzeug für „{s}“, aus einer Vorlage, weil gerade keiner mitdenkt. Abhaken tust du ihn am Schild.');
       return schrittVersprechen();
     }
-    if (art === 'arbeiten') return ok ? stimme('arbeiten.was', { t: t }, 'Ich lese zu „{t}“ nach und häng dir den Fund an die Leine. Bitte selbst prüfen.') : stimme('arbeiten.ohneKopf', null, 'Nachlesen geht nur, wenn jemand mitdenkt. Hier ist gerade keiner.');
-    if (art === 'verbinden') { var p = partner(sid); return p ? stimme('verbinden.was', { b: kurz(p.titel, 30) }, 'Mit „{b}“. Du sagst in einem Satz, was die beiden verbindet.') : stimme('verbinden.allein', null, 'Das ist dein einziger Space. Zum Verbinden braucht es zwei. Du gibst dem zweiten einen Namen.'); }
+    if (art === 'arbeiten') {
+      if (!ok) return stimme('arbeiten.ohneKopf', null, 'Nachlesen geht nur, wenn jemand mitdenkt. Hier ist gerade keiner.');
+      if (kopfUnklar()) return stimme('arbeiten.wasVielleicht', { t: t }, 'Denkt jemand mit, lese ich zu „{t}“ nach und häng dir den Fund an die Leine. Sonst sag ich es dir gleich.');
+      return stimme('arbeiten.was', { t: t }, 'Ich lese zu „{t}“ nach und häng dir den Fund an die Leine. Bitte selbst prüfen.');
+    }
+    if (art === 'verbinden') { var p = partner(sid); return p ? stimme('verbinden.was', { b: kurz(p.titel, 30) }, 'Mit „{b}“. Du sagst in einem Satz, was die beiden verbindet.') : stimme('verbinden.alleinZuhause', null, 'Das ist dein einziger Space. Verbunden wird mit einem zweiten, und der fängt im Zuhause an.'); }
     return '';
+  }
+
+  // „Ich bin dran“ nur, wenn Carl wirklich still arbeitet; fragt er dich, sagt die Karte das
+  function dranSatz(art, q) {
+    var DU = stimme('duDran', null, 'Jetzt du: Carls Frage steht in seiner Blase.');
+    if (art === 'verbinden') return partner(q.sid) ? DU : '';
+    if (art === 'machen' && schritt(q.sid)) return stimme('laeuftBau', null, 'Ich bau es.');
+    if (art === 'arbeiten') return ohneKopf() ? '' : stimme('laeuftLesen', null, 'Ich lese nach. Das dauert einen Moment.');
+    if (ohneKopf()) return DU;
+    if (kopfUnklar()) return stimme('laeuftVielleicht', null, 'Ich versuch mitzudenken. Geht es nicht, frag ich dich.');
+    return stimme('laeuft', null, 'Ich bin dran.');
   }
 
   /* ---------- Die vier Handgriffe (über vorhandene Wege) ----------
@@ -96,7 +117,7 @@
       return frag(stimme('weiter.frage', { t: kurz(z, 60) }, '„{t}“. Was folgt daraus?'), [], { frei: true, id: 'vs-weiter:' + q.sid, platzhalter: stimme('weiter.platz', null, 'Dein nächster Gedanke …') }).then(function (a) {
         a = typeof a === 'string' ? a.trim() : '';
         if (!a) return { art: 'weiter', ok: false, bug: stimme('weiter.offen', null, 'Noch kein Gedanke. Tipp die Karte noch einmal, wenn dir einer kommt.') };
-        C6.space.zettel(q.sid, kurz(a, 400)); return { art: 'weiter', ok: true, hing: a, satz: stimme('weiter.deins', null, 'Dein Gedanke hängt an der Leine.') };
+        C6.space.zettel(q.sid, kurz(a, 400)); fertigGefragt(); return { art: 'weiter', ok: true, hing: a, satz: stimme('weiter.deins', null, 'Dein Gedanke hängt an der Leine.') };
       });
     });
   }
@@ -140,17 +161,17 @@
       return frag(stimme('verbinden.frage', { a: kurz(A, 30), b: kurz(bT, 30) }, 'Was verbindet „{a}“ und „{b}“?'), [], { frei: true, id: 'vs-verbinden:' + q.sid, platzhalter: stimme('verbinden.platz', null, 'Ein Satz, deiner') }).then(function (a) {
         a = typeof a === 'string' ? a.trim() : '';
         if (!a) return { art: 'verbinden', ok: false, bug: stimme('verbinden.offen', { b: kurz(bT, 30) }, 'Noch kein Satz. Im Himmel ziehst du „{b}“ jederzeit selbst heran.') };
+        fertigGefragt();
         var k = C6.strings.knoten(q.sid, b, a);
         if (o && typeof o.knoten === 'function') { try { o.knoten(q.sid, b, k); } catch (e) {} }
         return { art: 'verbinden', ok: !!k, hing: a, satz: stimme('verbinden.fertig', { a: kurz(A, 24), b: kurz(bT, 24) }, 'Sternbild: „{a}“ und „{b}“. Es liegt in beiden Spaces.') };
       });
     };
     if (p) return weiterMit(p.sid, p.titel);
-    return frag(stimme('verbinden.neuFrage', null, 'Verbinden braucht einen zweiten Gedanken. Wie heißt er?'), [], { frei: true, id: 'vs-zweiter', platzhalter: stimme('verbinden.neuPlatz', null, 'Name des zweiten Gedankens …') }).then(function (n) {
-      n = typeof n === 'string' ? n.trim() : '';
-      if (!n || !C6.space || !C6.space.neu) return { art: 'verbinden', ok: false, bug: stimme('verbinden.keinZweiter', null, 'Ohne zweiten Gedanken gibt es nichts zu verbinden.') };
-      var neu = C6.space.neu(n, { oeffnen: false });
-      return neu ? weiterMit(neu, kurz(n, 48)) : { art: 'verbinden', ok: false, bug: stimme('verbinden.keinZweiter', null, 'Ohne zweiten Gedanken gibt es nichts zu verbinden.') };
+    // ein neuer Space entsteht nur im Zuhause: die Karte sagt es und zeigt den Weg
+    return frag(stimme('verbinden.alleinZuhause', null, 'Das ist dein einziger Space. Verbunden wird mit einem zweiten, und der fängt im Zuhause an.'), [{ text: stimme('verbinden.insZuhause', null, 'Ins Zuhause'), wert: 'hin' }], { leise: true, id: 'vs-zweiter' }).then(function (a) {
+      if (a === 'hin') { try { C6.geh('zuhause', { neu: true }); } catch (e) {} }
+      return { art: 'verbinden', ok: false, bug: stimme('verbinden.keinZweiter', null, 'Verbinden geht, sobald ein zweiter Space da ist.') };
     });
   }
   var TUN = { weiter: weiter, machen: machen, arbeiten: arbeiten, verbinden: verbinden };
@@ -259,13 +280,13 @@
       var mit = gewaehlt.slice();
       if (mit.indexOf('verbinden') >= 0 || (ohneKopf() && (mit.indexOf('weiter') >= 0 || mit.indexOf('machen') >= 0))) fokus();
       zeichne();
-      setzeSatz(mit.length === 1 ? stimme('laeuft', null, 'Ich bin dran.') : stimme('mehrere', { n: mit.length }, 'Ich mach eins nach dem anderen.'));
+      setzeSatz(mit.length === 1 ? dranSatz(mit[0], q) : stimme('mehrere', { n: mit.length }, 'Ich mach eins nach dem anderen.'));
       bus({ was: 'los', sid: q.sid, arten: mit });
       if (typeof o.los === 'function') { try { o.los(mit); } catch (x) {} }
       fuehre(q, mit, {
         knoten: o.knoten,
         schritt: function (art, r) {
-          if (r === 'laeuft') zustand[art] = 'laeuft';
+          if (r === 'laeuft') { zustand[art] = 'laeuft'; setzeSatz(dranSatz(art, q)); }
           else { zustand[art] = r && r.ok ? 'fertig' : 'bug'; setzeSatz(r ? (r.ok ? r.satz : r.bug) : ''); }
           if (el.isConnected) zeichne();
         }

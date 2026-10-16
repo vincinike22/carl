@@ -162,6 +162,8 @@ html.c6z-proj-auf .c6k[data-geraet=iphone] .c6k-punkt-name{visibility:hidden;ani
 .c6k-hk,.c6k-fd-hoch{position:relative}
 .c6k-fd-hoch{padding:0 13px 0 4px}
 .c6k[data-licht=nacht] .c6k-hk,.c6k[data-licht=nacht] .c6k-fd-hoch{color:var(--c6k-n-text);text-shadow:none}
+/* Rückweg und Höhenknopf mit demselben Ziel: nur der Höhenknopf bleibt (kern.js setzt data-rueck-hoehe) */
+.c6k[data-rueck-hoehe] .c6k-fd,.c6k[data-rueck-hoehe] .c6k-zurueck{display:none}
 .c6k[data-licht=nacht] .c6k-hk::before,.c6k[data-licht=nacht] .c6k-fd-hoch::before{background:rgba(29,36,69,.94);border-color:var(--c6k-n-text);box-shadow:0 8px 22px -10px rgba(0,0,0,.6)}
 .c6k[data-ohne-kopf] .c6k-kopf{display:none}
 html.c6r-an .c6k-kopf,html.c6r-an .c6k-hoehe,.c6k[data-rundgang] .c6k-kopf{display:none}
@@ -3650,6 +3652,9 @@ html.c6k-ruhig .c6r-at-schalter,html.c6k-ruhig .c6r-at-schalter-knopf{transition
 @media (min-width:820px){.c6r-at-reit::after{right:-10px}}
 @media (min-width:820px){.c6r-at-reit::after{right:-12px}}
 .c6r-at-fuss button:disabled{opacity:1;color:#c9c1b3;border-color:#c9c1b3;box-shadow:none;background:#fbf7f0}
+/* Nach-Runde: eine ehrliche Zeile für später, keine Liste */
+.c6r-at-spaeter{margin:18px 0 4px;font:italic 400 15px/1.4 Fraunces,Georgia,serif;color:#6f6a61}
+.c6r-at-modelle2{grid-template-columns:repeat(2,1fr)}
 
 /* Carls Brief: Umschlag im Postfach der Rezeption, großes Blatt beim Öffnen */
 .c6r-a-brief{width:80px}
@@ -3779,8 +3784,10 @@ html:not(.c6k-ruhig) .c6r-a-brief:not([hidden]) .c6r-a-siegel{animation:c6r-a-at
 .c6d-tag-d{display:flex;flex-direction:column;line-height:1;padding-top:4px}
 .c6d-tag-d b{font:700 22px/1 Caveat,cursive}
 .c6d-tag-d small{margin-top:2px;font:600 12px Figtree,system-ui,sans-serif;color:#8a8378}
-.c6d-heute .c6d-tag-d b{color:#b4460c}
-.c6d-tag-leer{min-height:34px;opacity:.6}
+.c6d-heute .c6d-tag-d b{color:var(--tusche,#2b2722);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+.c6d-tag-leer{min-height:0;padding:3px 0;opacity:.6}
+.c6d-tag-leer .c6d-tag-d{flex-direction:row;align-items:baseline;gap:6px;padding-top:0}
+.c6d-tag-leer .c6d-tag-d b{font-size:19px}
 .c6d-tag-inhalt{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;min-width:0}
 .c6d-tz{position:relative;display:inline-flex;flex-direction:column;gap:2px;max-width:100%;min-height:40px;box-sizing:border-box;padding:6px 10px;border:0;border-top:4px solid var(--f,#2b2722);border-radius:2px 2px 6px 6px;background:#fffdf6;box-shadow:0 1px 0 rgba(43,39,34,.35),0 4px 10px rgba(43,39,34,.07);color:#2b2722;cursor:pointer;text-align:left;font:500 14px/1.3 Figtree,system-ui,sans-serif}
 .c6d-tz span{overflow-wrap:anywhere}
@@ -3854,7 +3861,7 @@ html:not(.c6k-ruhig) .c6r-a-brief:not([hidden]) .c6r-a-siegel{animation:c6r-a-at
 .c6d-bleistift .c6d-weg-name{font:700 23px/1.05 Caveat,cursive}
 .c6d-bleistift-note{margin:12px 0 0;font:600 17px/1.2 Caveat,cursive;color:#8a8378}
 /* Passt/Anders bleiben in Reichweite, auch wenn das Blatt rollt */
-.c6d-wahl{position:sticky;bottom:-16px;z-index:3;margin:14px -20px -16px;padding:12px 20px 14px;background:linear-gradient(rgba(251,247,240,0),#fbf7f0 34%)}
+.c6d-wahl{position:sticky;bottom:-16px;z-index:3;margin:14px -20px -16px;padding:12px 20px 14px;background:#fbf7f0;box-shadow:0 -1px 0 #e3d8c4}
 @media (max-width:819px){.c6d-wahl{margin:14px -14px -14px;padding:12px 14px 12px;bottom:-14px}}
 /* am Telefon liegt oben rechts die Nadel: das Kreuz rückt daneben */
 @media (max-width:819px){.c6d-zu{right:58px;top:4px}.c6d-kicker{margin-right:104px}.c6d-titel{margin-right:8px}}
@@ -5426,6 +5433,9 @@ html.c6-ruhig .c6s-sp-innen{transition:none}
 .c6w-himmel.c6w-h-waehlt .c6w-h-vorn{cursor:pointer}
 .c6w-himmel .c6w-feld:focus-visible,.c6w-himmel .c6w-zu.c6w-zu:focus-visible{outline:3px solid #ecd193;outline-offset:2px}
 .c6w-himmel .c6w-h-liste button:focus-visible{outline:3px solid #ecd193;outline-offset:2px}
+/* der erste Fehler steht als eigene Zeile unter dem Feld (der Platzhalter allein ist am iPhone abgeschnitten); leer, solange alles gut ist */
+.c6w-himmel .c6w-feld-satz{margin:-4px 0 10px;font:500 14px/1.38 Figtree,system-ui,sans-serif;color:#f6e7c4}
+.c6w-himmel .c6w-feld-satz:empty{display:none}
 
 /* Rezeption: Carl am Tresen, sein Satz darüber; vor dem Tresen die sieben Tage, das Tagesblatt und deine Werkzeuge.
    Die Welt (hinter allem) kommt aus einem eigenen Modul und setzt --c6rw-tresen (Tresenkante von oben); hier nur ein Ersatzmaß. */
@@ -6024,7 +6034,27 @@ html.c6k-ruhig .c6z-sp-schein,html.c6k-ruhig .c6z-sp-lichtfleck{transition:none}
 
 /* die vier Karten: nur auf Geste. Sie liegen auf einem Blatt; am iPhone über dem Feld, die Szene bleibt stehen */
 .c6k-sp .c6vs-platz{box-sizing:border-box;padding:4px 12px 10px;border:1.5px solid var(--tusche,#2b2722);border-radius:4px;background:var(--blatt,#fffdf9);box-shadow:var(--blatt-schatten,6px 6px 0 #efe7da,6px 6px 0 1.5px #2b2722)}
-.c6k-sp:not(.c6k-sp-computer)>.c6vs-platz{position:absolute;left:16px;right:22px;bottom:10px;margin:0;z-index:9}
+/* iPhone: das Kartenblatt liegt an seinem eigenen Platz unter Werkzeug und Schild, über dem Feld – es deckt nichts zu, wovon es spricht.
+   Damit alles passt, rückt die Szene darüber etwas zusammen (Carl und Leine bleiben ganz im Bild) */
+.c6k-sp:not(.c6k-sp-computer)>.c6vs-platz{position:relative;left:auto;right:auto;bottom:auto;margin:6px 22px 0 16px;padding:2px 10px 6px;z-index:6;flex:0 0 auto}
+.c6k-sp:not(.c6k-sp-computer)>.c6z-sp-mitte,.c6k-sp:not(.c6k-sp-computer)>.c6z-sp-stueck{flex:0 0 auto}
+.c6k-sp.c6z-sp-vs-auf:not(.c6k-sp-computer):not(.c6k-sp-leer) .c6z-sp-welt{flex:0 1 auto;min-height:330px}
+.c6k-sp.c6z-sp-mit-wz.c6z-sp-vs-auf:not(.c6k-sp-computer):not(.c6k-sp-leer) .c6z-sp-welt{height:clamp(340px,47vh,410px)}
+/* solange die Karten liegen, faltet sich das Werkzeug am iPhone in seine kleine Form (bleibt da, bleibt benutzbar) */
+.c6z-sp-mitte-klein .c6z-sp-wz .c6wz-werkzeug{box-shadow:3px 3px 0 var(--sand2,#efe7da),3px 3px 0 1.5px var(--tusche,#2b2722)}
+.c6z-sp-mitte-klein .c6z-sp-ansicht-text{display:none}
+.c6z-sp-mitte-klein .c6z-sp-reiter{display:none}
+.c6z-sp-vs-frage{margin:6px 2px 0;font:600 15px/1.2 Fraunces,Georgia,serif;color:var(--tusche,#2b2722)}
+.c6k-sp-computer .c6z-sp-vs-frage{font-size:16px}
+.c6k-sp:not(.c6k-sp-computer):not(.c6k-sp-leer) .c6z-sp-welt{transition:height .3s cubic-bezier(.3,.7,.4,1)}
+.c6k-sp.c6z-sp-vs-auf:not(.c6k-sp-computer)>.c6z-sp-bauweg{display:none}
+.c6k-sp.c6z-sp-vs-auf:not(.c6k-sp-computer)>.c6z-sp-stueck{margin-top:4px;padding-bottom:2px}
+.c6k-sp.c6z-sp-vs-auf:not(.c6k-sp-computer)>.c6z-sp-stueck .c6z-sp-schritt{min-height:44px;padding:5px 10px 6px}
+.c6k-sp:not(.c6k-sp-computer)>.c6vs-platz .c6vs-reihe{padding-top:8px;gap:6px}
+.c6k-sp:not(.c6k-sp-computer)>.c6vs-platz .c6vs-karte{min-height:58px;padding:5px 4px 6px}
+.c6k-sp:not(.c6k-sp-computer)>.c6vs-platz .c6vs-karte b{font-size:12.5px;line-height:1.1}
+.c6k-sp:not(.c6k-sp-computer)>.c6vs-platz .c6vs-zeichen{width:22px;height:22px}
+@media (prefers-reduced-motion:reduce){.c6k-sp .c6z-sp-welt{transition:none!important}}
 .c6k-sp-computer .c6z-sp-welt>.c6vs-platz{z-index:7}
 .c6k-sp-computer.c6z-sp-vs-auf .c6z-sp-welt>.c6z-sp-bauweg{visibility:hidden}
 /* iPhone mit Werkzeug: Carl etwas kleiner, darüber Luft für seine Blase */
@@ -6059,6 +6089,15 @@ html.c6k-ruhig .c6z-sp-schein,html.c6k-ruhig .c6z-sp-lichtfleck{transition:none}
 .c6k-sp .c6z-sp-zettel.c6vs-gemeint{outline-color:var(--sp-akzent,#2b2722)}
 /* das Plus im Knopf „Aufhängen“ (Blatt „An der Leine“) war unsichtbar: Strich in Knopffarbe */
 .c6k-sp .c6k-sp-neu svg{flex:none;width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
+
+/* Nach-Runde s14 · eine fertige Ansicht (Rückblick, Zwei Wege …) steht wie ein Werkzeug in der Mitte: ihr Blatt, Titel, Text rollt in sich */
+.c6z-sp-ansicht{box-sizing:border-box;width:100%;border:1.5px solid var(--tusche,#2b2722);border-radius:4px;background:var(--blatt,#fffdf9);box-shadow:var(--blatt-schatten,6px 6px 0 #efe7da,6px 6px 0 1.5px #2b2722);padding:4px 0 10px}
+.c6z-sp-ansicht-kopf{display:block;width:100%;min-height:44px;padding:8px 14px 4px;border:0;background:none;text-align:left;cursor:pointer;color:var(--tusche,#2b2722)}
+.c6z-sp-ansicht-kopf b{font:600 18px/1.2 Fraunces,Georgia,serif}
+.c6z-sp-ansicht-kopf:focus-visible,.c6z-sp-ansicht-text:focus-visible{outline:3px solid #b4460c;outline-offset:2px}
+.c6z-sp-ansicht-text{max-height:150px;overflow-y:auto;overscroll-behavior:contain;padding:0 14px}
+.c6z-sp-ansicht-text p{margin:0 0 6px;font:400 15px/1.4 Figtree,system-ui,sans-serif;color:var(--tusche,#2b2722)}
+.c6k-sp-computer .c6z-sp-ansicht-text{max-height:220px}
 
 /* Teleskop · Vorschau am Stern */
 .c6w-t-vorschau{position:absolute;left:0;top:0;z-index:7;width:min(280px,calc(100% - 24px));box-sizing:border-box;padding:14px 16px 14px;background:#1d2445;color:#eef0ff;border:2px solid #aab2dc;border-radius:18px;box-shadow:3px 3px 0 #0b0f22,0 14px 34px rgba(5,8,20,.45);opacity:0;transform:translateY(6px) scale(.97);transform-origin:50% 100%;transition:opacity .18s ease,transform .22s cubic-bezier(.2,.8,.2,1);pointer-events:auto}
@@ -6193,6 +6232,9 @@ html.c6k-ruhig .c6z-sp-schein,html.c6k-ruhig .c6z-sp-lichtfleck{transition:none}
 @keyframes c6w-z{0%{opacity:0;transform:translate(0,6px)}40%{opacity:1}100%{opacity:0;transform:translate(6px,-10px)}}
 html.c6k-ruhig .c6w-hf-schlaf .c6w-hf-z text{animation:none}
 .c6w-schild-klein{font-size:20px}
+/* Wand: Kopf der oberen Gruppe (die drei, die deine Zettel anders legen) */
+.c6w-wand .c6w-wand-kopf{font-size:24px;opacity:.85}
+.c6k[data-geraet=iphone] .c6w-wand .c6w-wand-kopf{font-size:28px}
 .c6w-anh .c6w-ding-innen{transform-origin:50% 0}
 .c6w-anh:hover .c6w-ding-innen{transform:rotate(-4deg)}
 
@@ -7153,6 +7195,9 @@ function chrome() {
   var hkWort = h === 'boden' ? ((raeume[letzterJe.vogel] || {}).name || HOEHE_NAME.vogel || 'Himmel') : 'Boden';
   if (hoeheKnopf.firstChild.textContent !== hkWort) hoeheKnopf.firstChild.textContent = hkWort;
   hoeheKnopf.setAttribute('data-runter', h === 'boden' ? 'nein' : 'ja');
+  // Ein Ziel, ein Knopf: führt der Rückweg („‹ Himmel“) dorthin, wohin auch der Höhenknopf führt, zeigt nur der Höhenknopf (Esc geht weiter zurück)
+  var rzi = zurueckZiel(), rueckWieHoehe = h === 'boden' && !inReihe(d) && typeof d.faden !== 'function' && !!raeume[rzi] && hoeheVon(raeume[rzi]) === 'vogel' && (!letzterJe.vogel || letzterJe.vogel === rzi);
+  wurzel.toggleAttribute('data-rueck-hoehe', rueckWieHoehe);
   hoeheKnopf.setAttribute('aria-label', h === 'boden' ? 'Hoch in den ' + hkWort : 'Hinunter auf den Boden');
   var imRundgang = !!(C6.rundgang && C6.rundgang.an) || (!inReihe(d) && hoeheVon(d) === 'boden' && d.leiste === false);
   // def.regler: false = nie; eine Funktion entscheidet je Lage (z. B. die Rezeption: kein Himmel, solange es keinen Space gibt)
@@ -8125,9 +8170,9 @@ function platzhalter() {
   else if (frage && frage.frei && !frage.zu && frage.raum === C6.jetzt && frage.platzhalter) p = frage.platzhalter;
   else if (eigenerPlatzhalter && eigenerPlatzhalter.raum === C6.jetzt) { p = eigenerPlatzhalter.t; modus = eigenerPlatzhalter.modus; }
   else {
-    // überall dieselbe Frage; nur in der Werkstatt, wo die Werkzeuge hängen, der Hinweis auf „/“
+    // überall dieselbe Frage; in der Werkstatt, wo gebaut wird, ihr Verb (die /-Abkürzung bleibt als Funktion, ohne Hinweis im Feld)
     p = 'Woran denkst du gerade?';
-    if (C6.jetzt === 'werkstatt') p = C6.geraet === 'computer' ? p + ' Oder / für ein Werkzeug' : 'Woran denkst du? / Werkzeug';
+    if (C6.jetzt === 'werkstatt') { var wp = ''; try { wp = C6.stimme && C6.stimme.fest('werkstatt.feld'); } catch (e) {} p = wp || 'Was soll ich dir bauen?'; }
   }
   if (feld.placeholder !== p) feld.placeholder = p;
   if (modus) wurzel.setAttribute('data-feld-modus', modus); else wurzel.removeAttribute('data-feld-modus');
@@ -11108,13 +11153,9 @@ function schreibt(el, t) { el.textContent = ''; var s = mk('span', 'c6r-at-handl
 
 // Mein Sprachmodell: eigene kleine Zeichen, keine Logos; die Namen stehen nur als Text da
 var MODELLE = [
-  ['claude', 'Claude', '<path d="M36 8c-12 2-20 12-22 26l-4 6" fill="none"/><path d="M36 8c-2 10-8 18-18 22" fill="none"/><path d="M14 34l8-10M20 30l6-7" fill="none"/>',
+  ['claude', 'Claude über claude.ai', '<path d="M36 8c-12 2-20 12-22 26l-4 6" fill="none"/><path d="M36 8c-2 10-8 18-18 22" fill="none"/><path d="M14 34l8-10M20 30l6-7" fill="none"/>',
     'Mit Claude denke ich in diesem Prototyp schon mit, wenn die Seite es erlaubt.'],
-  ['chatgpt', 'ChatGPT', '<path d="M8 12h32v20H22l-8 7v-7H8z"/><path d="M15 20h18M15 26h11" fill="none"/>',
-    'ChatGPT merke ich mir. Verbinden kann ich mich damit im Prototyp noch nicht.'],
-  ['gemini', 'Gemini', '<circle cx="18" cy="24" r="10"/><circle cx="30" cy="24" r="10" fill="none"/>',
-    'Gemini merke ich mir. Verbinden kann ich mich damit im Prototyp noch nicht.'],
-  ['lokal', 'Auf meinem Rechner', '<path d="M8 24L24 10l16 14v16H8z"/><path d="M20 40V30h8v10" fill="none"/>',
+  ['lokal', 'Dein Rechner', '<path d="M8 24L24 10l16 14v16H8z"/><path d="M20 40V30h8v10" fill="none"/>',
     'Ein Modell auf deinem Rechner: Dann bleibt alles bei dir.']
 ];
 function modellSvg(m, an) { return '<svg viewBox="0 0 48 48" aria-hidden="true"><g fill="' + (an ? '#f6d9a8' : '#fffaf0') + '" stroke="#2b2722" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">' + m[2] + '</g></svg>'; }
@@ -11123,7 +11164,7 @@ function modellInfo() {
   var m = MODELLE.filter(function (x) { return x[0] === du().modell; })[0];
   if (!m) return null;
   var lk = m[0] === 'lokal' ? lokalStatus() : null, lokalAn = !!(lk && lk.an && lk.modell);
-  return { id: m[0], name: m[1], verbunden: m[0] === 'claude' || lokalAn, satz: m[0] === 'claude' ? 'Ich denke mit Claude mit.' : lokalAn ? 'Ich denke mit deinem Rechner mit (' + lk.modell + ').' : m[0] === 'lokal' ? 'Dein eigenes Modell ist noch nicht eingerichtet. Ich denke hier mit Claude mit.' : 'Mit ' + m[1] + ' bin ich noch nicht verbunden. Ich denke hier mit Claude mit.' };
+  return { id: m[0], name: m[1], verbunden: m[0] === 'claude' || lokalAn, satz: m[0] === 'claude' ? 'Ich denke mit Claude mit.' : lokalAn ? 'Ich denke mit deinem Rechner mit (' + lk.modell + ').' : m[0] === 'lokal' ? 'Dein eigenes Modell ist noch nicht eingerichtet. Ich denke hier mit Claude mit.' : '' };
 }
 var denkenStand = null;
 function pruefeDenken() {
@@ -11347,7 +11388,7 @@ function wissen() {
     if (kern) w.push({ gruppe: 'space', key: kk, name: 'Kernsatz in „' + f.titel + '“', t: '„' + kern + '“', roh: kern, herkunft: kf != null ? 'fest' : 'du', gilt: g, giltImNamen: true, korr: true, sid: f.id, feld: 'kern' });
     var fz = (x.notizen || []).filter(istFund);
     if (fz.length) w.push({ gruppe: 'space', name: 'Zettel aus Funden in „' + f.titel + '“', t: fz.length === 1 ? 'ein Zettel' : fz.length + ' Zettel', herkunft: 'fund', gilt: g, giltImNamen: true });
-    var eigene = (x.notizen || []).length - fz.length + (x.dinge || []).length;
+    var eigene = (x.notizen || []).length - fz.length; // nur Zettel, wie Himmel und Space
     if (!kern && !fz.length) w.push({ gruppe: 'space', name: f.titel, t: eigene ? (eigene === 1 ? 'ein Zettel' : eigene + ' Zettel') + ', noch ohne Kernsatz' : 'noch leer', herkunft: 'du', gilt: g, giltImNamen: true });
   });
   // Funde aus dem Lesesaal; wo Carl sie eingeordnet hat, ist das seine Vermutung
@@ -11526,10 +11567,9 @@ function lokalStatus() { try { return (C6.lokal && C6.lokal.status) ? (C6.lokal.
 function werDenkt() {
   var m = null; try { m = C6.mitdenken ? C6.mitdenken() : null; } catch (e) { m = null; }
   var lk = lokalStatus(), r = { kopf: (m && m.kopf) || null, modell: (m && m.modell) || lk.modell || null, lokal: false, text: '' };
-  if (m && m.echt === true) { r.text = (m.wer || 'Claude (über claude.ai)') + ' denkt gerade mit.'; r.lokal = m.kopf === 'lokal'; }
-  else if (lk.an && lk.modell) { r.text = 'Dein Rechner denkt mit (' + lk.modell + '), sobald du mir etwas sagst.' + (lk.fehler ? ' Zuletzt hat er nicht geantwortet, dann frage ich Claude.' : ''); r.lokal = true; r.kopf = 'lokal'; }
+  if (m && m.echt === true) { r.text = (m.wer || 'Claude über claude.ai') + ' denkt gerade mit.'; r.lokal = m.kopf === 'lokal'; }
   else if (m && m.echt === false) r.text = 'Gerade denkt niemand mit. Ich lege Beispiele hin.' + (m.grund === 'nicht erlaubt' ? ' Diese Seite darf mich nicht mitdenken lassen.' : '');
-  else r.text = 'Ob jemand mitdenkt, weiß ich, sobald du mir etwas sagst. Hier ginge es mit Claude über claude.ai.';
+  else r.text = stimme('buch.mit.offen', OFFEN_SATZ);
   return r;
 }
 // die letzte Antwort, die vom eigenen Rechner kam, noch einmal von Claude prüfen lassen
@@ -11647,7 +11687,7 @@ BAU.schluessel = function (p) {
     zeileZ(ul, { id: 'helfer', name: stimme('buch.darf.helfer', 'Was meine Helfer dürfen'), satz: weg.length ? stimme('buch.darf.weg', 'Bei dir liegen die Schlüssel für: ') + weg.map(function (x) { return x.name; }).join(', ') + '.' : stimme('buch.darf.alle', 'Alle Schlüssel liegen bei mir. Jeden nimmst du mit einem Schalter zurück.'), zustand: 'still', seite: 'kann' });
     var kv = ks.filter(function (x) { return x.id === 'verbindung'; })[0];
     if (kv) zeileZ(ul, { id: 'rechner', name: stimme('buch.darf.rechner', 'Auf deinem Rechner'), satz: kv.satz, zustand: 'still', seite: 'kann' });
-    zeileZ(ul, { id: 'reden', name: stimme('buch.darf.reden', 'Wer außer dir mit mir reden darf'), satz: stimme('buch.darf.redenSatz', 'Heute nur du, hier in Carl.'), zustand: 'kommt', zuText: stimme('buch.darf.redenKommt', 'kommt mit WhatsApp') });
+    zeileZ(ul, { id: 'reden', name: stimme('buch.darf.reden', 'Wer außer dir mit mir reden darf'), satz: stimme('buch.darf.redenSatz', 'Heute nur du, hier in Carl.'), zustand: 'still' });
     mk('h3', 'c6r-at-w-gruppe', box, 'Was ich sende');
     os.sendet().forEach(function (z) { mk('p', 'c6r-at-sl-satz', box, z); });
     mk('h3', 'c6r-at-w-gruppe', box, 'Was ich nie tue');
@@ -11670,14 +11710,16 @@ var WO_NAME = { zuhause: 'Zuhause', werkstatt: 'Werkstatt', rezeption: 'Rezeptio
 function hingehen(raum, o) { zu(); setTimeout(function () { try { C6.geh(raum, o || {}); } catch (e) {} }, ruhig() ? 0 : 320); }
 function schluesselVon(id) { try { return C6.os && C6.os.schluessel ? (C6.os.schluessel().filter(function (k) { return k.id === id; })[0] || null) : null; } catch (e) { return null; } }
 function stelle(id, an) { try { if (!C6.os) return; if (an) C6.os.gib(id); else C6.os.nimm(id); } catch (e) {} }
-// fehlt das Mitdenken? 'aus' = Schlüssel genommen, 'fehlt' = niemand erreichbar (nur, wenn der Kern es schon weiß)
-function denkenFehlt() {
+// Denkt jemand mit? Eine Quelle: C6.mitdenken(). 'aus' = Schalter aus · 'an' = echt · 'fehlt' = niemand erreichbar · 'offen' = noch nie versucht
+function denkStand() {
   var k = schluesselVon('mitdenken'); if (k && !k.an) return 'aus';
   var m = null; try { m = C6.mitdenken ? C6.mitdenken() : null; } catch (e) { m = null; }
-  var lk = lokalStatus();
-  if (m && m.echt === false && !(lk.an && lk.modell)) return 'fehlt';
-  return null;
+  if (m && m.echt === true) return 'an';
+  if (m && m.echt === false) return 'fehlt';
+  return 'offen';
 }
+var OFFEN_SATZ = 'Ob jemand mitdenkt, weiß ich, sobald du mir etwas sagst.';
+function denkenFehlt() { var d = denkStand(); return d === 'aus' || d === 'fehlt' ? d : null; }
 function anz(n, eins, viele) { return n === 1 ? '1 ' + eins : n + ' ' + viele; }
 function spacesRoh() { return faedenRoh().filter(function (f) { return f.art !== 'gewohnheit'; }); }
 function zettelZahl() { var sp = S().spaces || {}, n = 0; Object.keys(sp).forEach(function (k) { n += ((sp[k] && sp[k].notizen) || []).length; }); return n; }
@@ -11688,7 +11730,7 @@ function helferFunde() { var a = S().auftrag, n = 0; if (a && a.funde && typeof 
 function sternbilder() { var fd = {}; faedenRoh().forEach(function (f) { fd[f.id] = 1; }); return (S().knoten || []).filter(function (k) { return k && fd[k.a] && fd[k.b]; }).length; }
 function kalStatus() { try { return C6.tage && C6.tage.status ? C6.tage.status() : null; } catch (e) { return null; } }
 
-var ZUSTAND = { an: 'an', aus: 'aus', braucht: 'braucht Mitdenken', kommt: 'kommt', still: '' };
+var ZUSTAND = { an: 'an', aus: 'aus', braucht: 'braucht Mitdenken', offen: 'noch offen', kommt: 'kommt', still: '' };
 // Ein Schalter, ein Ort: jeder Schalter steht genau einmal im Buch. Quelle ist ein Schlüssel des Kerns oder ein Modul-Schalter.
 function modulSchalter(m, id) {
   try { if (m && typeof m.an === 'function' && typeof m.setze === 'function') return { id: id, an: !!m.an(), setze: function (v) { try { m.setze(!!v); } catch (e) {} } }; } catch (e) {}
@@ -11705,18 +11747,20 @@ function schalterVon(z) {
 }
 // Was ich kann: die Fähigkeiten von heute, je mit Ort; was noch nicht geht, steht als „kommt“ darunter
 function faehigkeiten() {
-  var fehlt = denkenFehlt(), sp = spacesRoh().length, wz = werkzeugZahl(), kal = kalStatus();
-  function mitKopf(id) { var k = schluesselVon(id); if (k && !k.an) return 'aus'; return fehlt ? 'braucht' : 'an'; }
+  var ds = denkStand(), fehlt = ds === 'aus' || ds === 'fehlt', sp = spacesRoh().length, wz = werkzeugZahl(), kal = kalStatus();
+  // eine Fähigkeit, die Mitdenken braucht: aus · an · braucht Mitdenken · noch offen (nie „an“ oder „braucht“, solange es niemand versucht hat)
+  function mitKopf(id) { var k = id && schluesselVon(id); if (k && !k.an) return 'aus'; return ds === 'an' ? 'an' : ds === 'offen' ? 'offen' : 'braucht'; }
+  var MZU = { aus: 'aus', an: 'denkt mit', fehlt: 'gerade niemand', offen: 'noch offen' };
   var stS = [sp ? anz(sp, 'Space', 'Spaces') : '', zettelZahl() ? anz(zettelZahl(), 'Zettel', 'Zettel') : ''].filter(Boolean).join(' · ');
   var km = schluesselVon('mitdenken'), kv = schluesselVon('verbindung'), vinfo = null;
   try { vinfo = C6.verbindung && C6.verbindung.info ? C6.verbindung.info() : null; } catch (e) { vinfo = null; }
   return [
-    { id: 'mitdenken', name: 'Mitdenken', satz: stimme('buch.mit.an', 'Sagst du mir etwas, denkt Claude über claude.ai oder dein Rechner mit.'), schalter: 'mitdenken', zustand: km && !km.an ? 'aus' : 'an',
+    { id: 'mitdenken', name: 'Mitdenken', satz: stimme('buch.mit.an', 'Sagst du mir etwas, denkt Claude über claude.ai oder dein Rechner mit.'), schalter: 'mitdenken', zustand: ds === 'an' ? 'an' : ds === 'offen' ? 'offen' : 'aus', zuText: MZU[ds], stand: ds === 'offen' ? stimme('buch.mit.offen', OFFEN_SATZ) : ds === 'fehlt' ? stimme('buch.mit.fehlt', 'Gerade denkt niemand mit. Ich lege Beispiele hin.') : ds === 'an' ? werDenkt().text : '',
       ausSatz: stimme('buch.mit.aus', 'Aus: Ich lege nur Beispiele hin und schicke nichts zum Mitdenken.'), seite: 'mitdenken', seiteText: stimme('buch.kann.werDenkt', 'Wer gerade denkt: Seite') },
     { id: 'spaces', name: 'Gedanken festhalten', satz: stimme('buch.kann.spaces', 'Aus einem Satz von dir wird ein Space mit Zetteln.'), wo: ['zuhause'], zustand: 'an', stand: stS || stimme('buch.kann.spacesLeer', 'Noch kein Space.') },
     { id: 'werkzeug', name: 'Werkzeuge bauen', satz: stimme('buch.kann.werkzeug', 'Ein kleines Werkzeug aus deinem Satz: abhaken, zählen, merken.'), wo: ['werkstatt'], schalter: 'werkzeug', ausSatz: stimme('buch.kann.werkzeugAus', 'Aus: Ich baue nur aus Vorlagen und denke dabei nicht mit.'), zustand: mitKopf('werkzeug') === 'aus' ? 'aus' : 'an',
-      stand: [wz ? anz(wz, 'Werkzeug', 'Werkzeuge') : stimme('buch.kann.werkzeugLeer', 'Noch keins gebaut.'), (fehlt || mitKopf('werkzeug') === 'aus') ? stimme('buch.kann.werkzeugVorlage', 'ohne Mitdenken aus Vorlagen') : ''].filter(Boolean).join(' · ') },
-    { id: 'vorbereiten', name: 'Vorbereiten', satz: stimme('buch.kann.vorbereiten', 'Karteikarten, Packliste oder Merkzettel vor einem Termin, wenn du ja sagst.'), wo: ['rezeption'], zustand: fehlt ? 'braucht' : 'an',
+      stand: [wz ? anz(wz, 'Werkzeug', 'Werkzeuge') : stimme('buch.kann.werkzeugLeer', 'Noch keins gebaut.'), (ds === 'fehlt' && mitKopf('werkzeug') !== 'aus') ? stimme('buch.kann.werkzeugVorlage', 'ohne Mitdenken aus Vorlagen') : ''].filter(Boolean).join(' · ') },
+    { id: 'vorbereiten', name: 'Vorbereiten', satz: stimme('buch.kann.vorbereiten', 'Karteikarten, Packliste oder Merkzettel vor einem Termin, wenn du ja sagst.'), wo: ['rezeption'], zustand: mitKopf(null),
       stand: [vorbereitetZahl() ? anz(vorbereitetZahl(), 'vorbereitet', 'vorbereitet') : '', kal && kal.kalender === 'verbunden' ? stimme('buch.kann.mitKalender', 'mit deinem Kalender') : stimme('buch.kann.ohneKalender', 'ohne Kalender nur Termine aus deinen Werkzeugen')].filter(Boolean).join(' · ') },
     kalenderZeile(),
     { id: 'ferdl', name: 'Nachlesen lassen', satz: stimme('buch.kann.ferdl', 'Ferdl liest für dich nach; seine Funde hängen als Zettel im Space.'), wo: ['werkstatt'], schalter: 'ferdl', ausSatz: stimme('buch.kann.ferdlAus', 'Aus: Ferdl liest nichts nach, bis du ihn wieder anschaltest.'), zustand: mitKopf('ferdl'), stand: helferFunde() ? anz(helferFunde(), 'Fund', 'Funde') : '' },
@@ -11727,10 +11771,6 @@ function faehigkeiten() {
       ausSatz: stimme('buch.kann.rechnerAus', 'Aus: Ich sehe auf deinem Rechner nicht nach.'), stand: vinfo ? 'mit ' + vinfo.name + ' auf deinem ' + vinfo.woName : '', seite: 'erreichen', seiteText: stimme('buch.kann.verbindenSeite', 'Verbinden: Seite') }
   ];
 }
-var KOMMT_KANN = [
-  ['apple', 'Apple Kalender und Health lesen', 'buch.kommt.apple', 'Eine Seite im Browser kommt da nicht hin.'],
-  ['mac', 'Auf deinem Mac für dich arbeiten', null]
-];
 // die Zeile: Name · Zustand · Schalter; darunter ein Satz; darunter Stand und Ort
 function zeileZ(ul, z, neu) {
   var li = mk('li', 'c6r-at-z c6r-at-z-' + z.zustand, ul); li.dataset.id = z.id;
@@ -11764,11 +11804,6 @@ function zeileZ(ul, z, neu) {
   if (!f.firstChild) f.remove();
   return li;
 }
-function kommtListe(p, titel, liste) {
-  mk('h3', 'c6r-at-w-gruppe', p, titel);
-  var ul = mk('ul', 'c6r-at-zliste c6r-at-zliste-kommt', p);
-  liste.forEach(function (x) { zeileZ(ul, { id: x[0], name: x[1], satz: x[2] ? stimme(x[2], x[3] || '') || null : null, zustand: 'kommt' }); });
-}
 // die Seiten zeichnen sich neu, wenn sich ihr Zustand ändert (nur die gerade aufgeschlagenen, einmal gelauscht)
 var maler = [], gelauscht = false, malUhr = 0;
 function lausche(p, fn) {
@@ -11792,10 +11827,11 @@ function standKurz(id) {
     if (id === 'du') { var n = spacesRoh().length; return [du().name || '', n ? anz(n, 'Space', 'Spaces') : ''].filter(Boolean).join(' · '); }
     if (id === 'carl') return du().ton ? tonName(du().ton) : '';
     if (id === 'damals') { var m = momente().length; return m ? anz(m, 'Moment', 'Momente') : ''; }
-    if (id === 'kann') { var f = faehigkeiten(), a = f.filter(function (x) { return x.zustand === 'an'; }).length, o = f.filter(function (x) { var w = schalterVon(x); return !!w && !w.an; }).length, b = f.filter(function (x) { return x.zustand === 'braucht'; }).length; return [a + ' an', o ? o + ' ausgeschaltet' : '', b ? b + ' brauchen Mitdenken' : ''].filter(Boolean).join(' · '); }
+    if (id === 'kann') { var f = faehigkeiten(), zl = function (z) { return f.filter(function (x) { return x.zustand === z; }).length; }, o = f.filter(function (x) { var w = schalterVon(x); return !!w && !w.an; }).length;
+      return [anz(zl('an'), 'Fähigkeit an', 'Fähigkeiten an'), o ? o + ' ausgeschaltet' : '', zl('braucht') ? zl('braucht') + ' brauchen Mitdenken' : '', zl('offen') ? zl('offen') + ' noch offen' : ''].filter(Boolean).join(' · '); }
     if (id === 'tut') { var k = kalStatus(); return k && k.kalender === 'aus' ? stimme('buch.inhalt.kalenderAus', 'Kalender: ausgeschaltet') : k && k.kalender === 'verbunden' ? (k.stand ? 'Kalender: zuletzt ' + wann(k.stand) : 'Kalender verbunden') : 'Kalender nicht verbunden'; }
     if (id === 'wissen') { var w = wissen().length; return w ? anz(w, 'Eintrag', 'Einträge') : ''; }
-    if (id === 'mitdenken') { var d = denkenFehlt(); if (d === 'aus') return 'Mitdenken aus'; var m2 = null; try { m2 = C6.mitdenken ? C6.mitdenken() : null; } catch (e) {} var lk = lokalStatus(); return m2 && m2.echt === true ? (m2.kopf === 'lokal' ? 'dein Rechner' : 'Claude über claude.ai') : lk.an && lk.modell ? 'dein Rechner' : d === 'fehlt' ? 'gerade niemand' : ''; }
+    if (id === 'mitdenken') { var d = denkStand(), m2 = null; try { m2 = C6.mitdenken ? C6.mitdenken() : null; } catch (e) {} return d === 'aus' ? 'Mitdenken aus' : d === 'an' ? (m2.kopf === 'lokal' ? 'dein Rechner denkt mit' : 'Claude über claude.ai denkt mit') : d === 'fehlt' ? 'gerade denkt niemand mit' : 'weiß ich, sobald du mir etwas sagst'; }
     if (id === 'erreichen') { var s = syncStatus(); return s.an || s.grund === 'verbunden' ? (s.geraete > 1 ? 'auf ' + s.geraete + ' Geräten gleich' : 'Abgleich an') : 'nur dieses Gerät'; }
     if (id === 'schluessel') { if (!C6.os || !C6.os.lehren) return ''; var vs = C6.os.lehren.vorschlaege().length; return vs ? anz(vs, 'Vorschlag wartet auf dein Ja', 'Vorschläge warten auf dein Ja') : 'was ich sende, was ich nie tue'; }
   } catch (e) {}
@@ -11835,10 +11871,10 @@ BAU.kann = function (p) {
     faehigkeiten().forEach(function (z) {
       var swz = schalterVon(z);
       if (z.zustand === 'aus' && swz && !swz.an) z.aus = z.ausSatz || z.aus || stimme('buch.kann.aus', 'Aus: Das tue ich nicht, bis du es wieder anschaltest.');
+      if (z.zustand === 'offen' && z.id !== 'mitdenken') z.aus = stimme('buch.mit.offen', OFFEN_SATZ);
       if (z.zustand === 'braucht') z.aus = denkenFehlt() === 'aus' ? stimme('buch.kann.brauchtAus', 'Mitdenken ist gerade aus. Anschalten kannst du es auf „Wer mitdenkt“.') : stimme('buch.kann.brauchtFehlt', 'Gerade denkt niemand mit. Wer mitdenken kann, steht auf „Wer mitdenkt“.');
       zeileZ(ul, z, male);
     });
-    kommtListe(box, stimme('buch.kann.kommtTitel', 'Kommt mit Carl auf deinem Mac'), KOMMT_KANN);
     verweis(box, 'tut', stimme('buch.kann.verweis', 'Was ich von selbst tue'));
   }
   male();
@@ -11896,7 +11932,6 @@ BAU.tut = function (p) {
       var k = schluesselVon(l.wer);
       zeileZ(ul2, { id: 'lauf-' + l.id, name: (k && k.name) || l.wer, satz: l.was || '', zustand: 'an', zuText: stimme('buch.tut.laeuft', 'arbeitet'), tat: [stimme('buch.tut.anhalten', 'Anhalten'), function () { try { os.stopp(l.id); } catch (e) {} male(); }] }, male);
     });
-    kommtListe(box, stimme('buch.kann.kommtTitel', 'Kommt mit Carl auf deinem Mac'), [['whatsapp-brief', 'Der Brief am Morgen auf WhatsApp', null]]);
   }
   male();
   lausche(p, male);
@@ -11947,7 +11982,7 @@ BAU.erreichen = function (p) {
     }
     var lr = zeileZ(ul, rz, male);
     var tatK = lr.querySelector('.c6r-at-z-tat'); if (tatK && info) tatK.classList.add('c6r-at-leise');
-    kommtListe(box, stimme('buch.kann.kommtTitel', 'Kommt mit Carl auf deinem Mac'), [['whatsapp', 'WhatsApp', 'buch.kommt.whatsapp', 'Schreib mir dort, wie du einem Freund schreibst.'], ['macapp', 'Carl als App auf deinem Mac', 'buch.kommt.macapp', 'Ohne Terminal.']]);
+    mk('p', 'c6r-at-spaeter', box, stimme('buch.erreichen.spaeter', 'Später auch über WhatsApp und auf deinem Mac.'));
     bastler(box); // zugeklappt, ganz am Ende
   }
   male();
@@ -11964,7 +11999,8 @@ BAU.mitdenken = function (p) {
     var k = schluesselVon('mitdenken');
     if (!k) return;
     // der Schalter selbst steht einmal, auf „Was ich kann“; hier nur der Stand und der Weg dorthin
-    zeileZ(schalterBox, { id: 'mitdenken', name: 'Mitdenken', satz: k.an ? stimme('buch.mit.an', 'Sagst du mir etwas, denkt Claude über claude.ai oder dein Rechner mit.') : stimme('buch.mit.aus', 'Aus: Ich lege nur Beispiele hin und schicke nichts zum Mitdenken.'), zustand: k.an ? 'an' : 'aus', seite: 'kann', seiteText: stimme('buch.mit.schalterSeite', 'Schalter auf Seite') });
+    var ds = denkStand();
+    zeileZ(schalterBox, { id: 'mitdenken', name: 'Mitdenken', satz: k.an ? stimme('buch.mit.an', 'Sagst du mir etwas, denkt Claude über claude.ai oder dein Rechner mit.') : stimme('buch.mit.aus', 'Aus: Ich lege nur Beispiele hin und schicke nichts zum Mitdenken.'), zustand: ds === 'an' ? 'an' : ds === 'offen' ? 'offen' : 'aus', zuText: { aus: 'aus', an: 'denkt mit', fehlt: 'gerade niemand', offen: 'noch offen' }[ds], seite: 'kann', seiteText: stimme('buch.mit.schalterSeite', 'Schalter auf Seite') });
   }
   mk('h3', 'c6r-at-w-gruppe', p, 'Wer gerade denkt');
   var echt = mk('p', 'c6r-at-w-echt', p);
@@ -13387,6 +13423,7 @@ try{(function(){
       var n = Array.isArray(r.notizen) ? r.notizen : [];
       if (!n.length) { var f = C6.strings && C6.strings.hol ? C6.strings.hol(sp.stringId) : null; n = (f && f.perlen) || []; }
       n.forEach(function (z) {
+        if (!z || z.von === 'carl') return;
         var t = String(z.t || '').replace(UNSICHTBAR, '').trim(); if (!t) return;
         var k = sp.stringId + '|' + t; if (schon[k]) return; schon[k] = 1;
         out.push({ t: t, ts: +z.ts || 0, sid: sp.stringId, titel: sp.titel, farbe: sp.farbe || T, fund: istFund(z) });
@@ -13565,7 +13602,9 @@ try{(function(){
     } else if (art === 'rueckblick') {
       d = { titel: 'Deine Woche', woche: true, punkte: [] };
       var seit = tagAnfang(Date.now()) - 6 * 864e5;
-      bezug = zettel(null).filter(function (q) { return !q.fund && q.ts >= seit; }).slice(-3);
+      var woche = zettel(null).filter(function (q) { return !q.fund && q.ts >= seit; });
+      bezug = woche.filter(function (q) { return q.sid === sid; }).slice(-3);
+      if (!bezug.length) bezug = woche.slice(-3);
     } else if (art === 'schritte') {
       var sch = z.slice(-5).map(function (q) { return { t: kurz(q.t, 60), warum: '', ts: q.ts, fertig: true }; });
       sch.push({ t: '', warum: '', offen: true });
@@ -13670,7 +13709,7 @@ try{(function(){
   function leineHtml(bz, o) {
     if (!bz.length) {
       var sp = o.sid && spaceVon(o.sid), hatZ = sp && eigene(o.sid).length;
-      var t = o.bleistift ? (sp ? 'In „' + kurz(sp.titel, 30) + '“ hängt noch kein Zettel. Das hier ist ganz neu.' : 'Noch hängt nirgends ein Zettel. Das hier ist ganz neu.')
+      var t = o.bleistift ? (hatZ ? 'Gelegt aus deinen Zetteln in „' + kurz(sp.titel, 30) + '“. Keiner davon steht hier wörtlich.' : sp ? 'In „' + kurz(sp.titel, 30) + '“ hängt noch kein Zettel. Das hier ist ganz neu.' : 'Noch hängt nirgends ein Zettel. Das hier ist ganz neu.')
         : (hatZ ? 'Ohne Beleg aus deinen Zetteln. Das ist mein Vorschlag, prüf ihn.' : 'Noch hängt kein Zettel dazu. Das ist mein Vorschlag, prüf ihn.');
       return '<div class="c6d-bezug c6d-bezug-leer"><p class="c6d-bezug-kopf">Woher ich das weiß' + stimmt(o) + '</p><p class="c6d-leise">' + esc(t) + '</p></div>';
     }
@@ -13860,6 +13899,8 @@ try{(function(){
     var nz = alle.filter(function (q) { return !q.fund; }).length, nf = alle.length - nz;
     var summe = (nz ? (nz === 1 ? 'Ein Zettel' : nz + ' Zettel') + ' in ' + (Object.keys(spn).length === 1 ? 'einem Space' : Object.keys(spn).length + ' Spaces') : 'Noch kein Zettel diese Woche') +
       (nf ? ', ' + (nf === 1 ? 'ein Fund' : nf + ' Funde') : '') + (wz.length ? ', ' + wz.map(function (w) { return w.n + '× „' + kurz(w.name, 22) + '“'; }).join(', ') : '') + '.';
+    var hierSp = b.o && b.o.sid ? spaceVon(b.o.sid) : null, hierN = hierSp ? alle.filter(function (q) { return !q.fund && q.sid === hierSp.stringId; }).length : 0;
+    if (hierSp && nz && Object.keys(spn).length > 1) summe = summe.replace(/\.$/, '') + (hierN ? ', davon ' + (hierN === 1 ? 'einer' : hierN) + ' in „' + kurz(hierSp.titel, 26) + '“.' : ', in „' + kurz(hierSp.titel, 26) + '“ diese Woche keiner.');
     b.zust.summe = summe;
     var zeilen = '';
     for (var i = 0; i < 7; i++) {
@@ -13876,6 +13917,15 @@ try{(function(){
         (leer ? '<span class="c6d-strichlein" aria-hidden="true"></span>' : '') + '</span></li>';
     }
     return '<div class="c6d-rb"><p class="c6d-summe">' + esc(summe) + '</p><ol class="c6d-tage">' + zeilen + '</ol>' + hinweis(nz ? 'Kreis ein, was diese Woche gezählt hat.' : 'Häng einen Zettel auf, dann steht er hier mit Datum.') + '</div>';
+  }
+  // der heutige Tag steht über dem Fuß (Knöpfe), nicht darunter: das Blatt rollt nur so weit wie nötig
+  function heuteZeigen(blatt) {
+    var tu = function () {
+      var h = blatt.querySelector('.c6d-heute'), w = blatt.querySelector('.c6d-wahl'); if (!h || !w) return;
+      var zuviel = h.getBoundingClientRect().bottom - w.getBoundingClientRect().top + 6;
+      if (zuviel > 0) blatt.scrollTop += zuviel;
+    };
+    tu(); setTimeout(tu, C6.ruhig ? 0 : 280);
   }
   function rueckblickBinde(el, d, b) {
     b.zust.wichtig = [];
@@ -13981,7 +14031,7 @@ try{(function(){
       if (!bl.daten) { if (!o.geruest) sag(art === 'vergleich' ? 'Für einen Vergleich brauche ich zwei Dinge, die du nebeneinander sehen willst.' : 'Dafür hängt noch zu wenig.'); return null; }
       daten = bl.daten; bz = bl.bezug || [];
       if (Array.isArray(o.bezug) && o.bezug.length) bz = echt(o.bezug).concat(bz).slice(0, 3);
-      bz = traegt(daten, bz);
+      if (art !== 'rueckblick') bz = traegt(daten, bz);
     } else {
       var p = pruef(art, daten, { zettel: o.zettel });
       if (!p) return null;
@@ -14017,6 +14067,7 @@ try{(function(){
       k.onclick = function () { var q = bz[+k.getAttribute('data-bz')]; if (q) sag('Den hast du am ' + datum(q.ts) + ' in „' + kurz(q.titel, 30) + '“ aufgehängt.'); };
     });
     try { m[1](el.querySelector('.c6d-koerper'), daten, b); } catch (e) { if (window.console) console.warn('Darstellung', e); }
+    if (art === 'rueckblick') heuteZeigen(el);
     if (!C6.ruhig && el.animate) {
       [].forEach.call(el.querySelectorAll('.c6d-zettel'), function (z, i) { z.animate([{ transform: 'translateY(-14px) rotate(-6deg)', opacity: 0 }, { transform: 'rotate(var(--r))', opacity: 1 }], { duration: 420, delay: 260 + i * 90, easing: 'cubic-bezier(.3,.7,.4,1)', fill: 'backwards' }); });
     }
@@ -14040,7 +14091,10 @@ try{(function(){
       var k = b.el.querySelector('[data-w=passt]'); if (k) { k.disabled = true; k.textContent = 'Hängt in „' + kurz(sp.titel, 18) + '“'; }
       b.el.classList.add('c6d-gehaengt');
       bus('darstellung', { was: 'passt', art: b.art, sid: s, id: id });
-      sag('Hängt jetzt als ' + NAME[b.art] + ' in „' + kurz(sp.titel, 30) + '“.');
+      var hier = C6.jetzt === 'space' && C6.space && C6.space.jetzt && C6.space.jetzt() === s;
+      if (!hier && C6.frag && C6.space && C6.space.oeffne) {
+        Promise.resolve(fragD('Hängt jetzt als ' + NAME[b.art] + ' in „' + kurz(sp.titel, 30) + '“.', [{ text: 'Hingehen', wert: 'hin' }], { leise: true, id: 'c6d-hin' })).then(function (w) { if (w === 'hin') { if (B === b) zu('passt'); C6.space.oeffne(s); } });
+      } else sag('Hängt jetzt als ' + NAME[b.art] + ' in „' + kurz(sp.titel, 30) + '“.');
       setTimeout(function () { if (B === b) zu('passt'); }, C6.ruhig ? 300 : 1300);
     };
     if (sid) return hinein(sid);
@@ -22551,7 +22605,8 @@ var T = {
   'rezeption.wieder': ['Da bist du wieder. Sag mir einen Satz, ich bau dir noch eins.'],
   // erster Satz im Zuhause für jemanden ohne Rundgang, der an der Rezeption angekommen ist ({name} = das jüngste Werkzeug)
   'rezeption.erster': ['Dein Werkzeug „{name}“ steht an der Rezeption. Was soll ich dir als Nächstes bauen?'],
-  'rezeption.feld': ['Was soll ich dir bauen?'],
+  'rezeption.feld': ['Sag mir einen Satz, ich bau dir was.'],
+  'werkstatt.feld': ['Was soll ich dir bauen?'],
   'rezeption.beispiel': ['Ein Beispiel'],
   'rezeption.nimm': ['So eins für mich'],
   'rezeption.baut': ['Ich bau es dir. Schau zu.'],
@@ -25092,6 +25147,8 @@ try{(function(){
     return String(ersatz || '').replace(/\{(\w+)\}/g, function (m, x) { return w && w[x] != null ? w[x] : ''; });
   }
   function bus(d) { try { C6.bus && C6.bus.emit('vorschlag', d); } catch (e) {} }
+  // ist Ottos Antwort da, steht Carls Frage nicht mehr in der Blase
+  function fertigGefragt() { try { C6.schweig && C6.schweig(); } catch (e) {} }
   function sag(t) { try { if (t && C6.sag) C6.sag(t, { merken: false }); } catch (e) {} }
   function fokus() { try { C6.eingabe && C6.eingabe.fokus && C6.eingabe.fokus(); } catch (e) {} }
   // eine freie Frage: das Feld bekommt den Fokus (am iPhone kommt die Tastatur nur, wenn der Fokus schon im Tipp auf „Los“ gesetzt wurde)
@@ -25132,16 +25189,35 @@ try{(function(){
   // Was die Karte hier verspricht (wechselt mit dem Zustand des Space und des Kopfs)
   function verspricht(art, q) {
     var sid = q.sid, ok = !ohneKopf(), t = kurz(q.satz || titel(sid), 40);
-    if (art === 'weiter') return ok ? stimme('weiter.was', { t: t }, 'Ich denk an „{t}“ weiter und häng dir eine Frage an die Leine.') : stimme('weiter.ohneKopf', { t: t }, 'Ich frag dich, was aus „{t}“ folgt. Deine Antwort hängt an der Leine.');
+    if (art === 'weiter') {
+      if (!ok) return stimme('weiter.ohneKopf', { t: t }, 'Ich frag dich, was aus „{t}“ folgt. Deine Antwort hängt an der Leine.');
+      if (kopfUnklar()) return stimme('weiter.wasVielleicht', { t: t }, 'Denkt jemand mit, häng ich dir eine Frage zu „{t}“ an die Leine. Sonst frag ich dich, was daraus folgt.');
+      return stimme('weiter.was', { t: t }, 'Ich denk an „{t}“ weiter und häng dir eine Frage an die Leine.');
+    }
     if (art === 'machen') {
       var s = schritt(sid);
       // steht ein Schritt, wohnt „Geschafft?“ am Schild; die Karte baut nur das Werkzeug dazu
       if (s) return ok ? stimme('machen.wasWerkzeugFuer', { s: kurz(s, 40) }, 'Ich bau dir ein Werkzeug für „{s}“. Abhaken tust du ihn am Schild.') : stimme('machen.wasWerkzeugVorlage', { s: kurz(s, 40) }, 'Ich bau dir ein Werkzeug für „{s}“, aus einer Vorlage, weil gerade keiner mitdenkt. Abhaken tust du ihn am Schild.');
       return schrittVersprechen();
     }
-    if (art === 'arbeiten') return ok ? stimme('arbeiten.was', { t: t }, 'Ich lese zu „{t}“ nach und häng dir den Fund an die Leine. Bitte selbst prüfen.') : stimme('arbeiten.ohneKopf', null, 'Nachlesen geht nur, wenn jemand mitdenkt. Hier ist gerade keiner.');
-    if (art === 'verbinden') { var p = partner(sid); return p ? stimme('verbinden.was', { b: kurz(p.titel, 30) }, 'Mit „{b}“. Du sagst in einem Satz, was die beiden verbindet.') : stimme('verbinden.allein', null, 'Das ist dein einziger Space. Zum Verbinden braucht es zwei. Du gibst dem zweiten einen Namen.'); }
+    if (art === 'arbeiten') {
+      if (!ok) return stimme('arbeiten.ohneKopf', null, 'Nachlesen geht nur, wenn jemand mitdenkt. Hier ist gerade keiner.');
+      if (kopfUnklar()) return stimme('arbeiten.wasVielleicht', { t: t }, 'Denkt jemand mit, lese ich zu „{t}“ nach und häng dir den Fund an die Leine. Sonst sag ich es dir gleich.');
+      return stimme('arbeiten.was', { t: t }, 'Ich lese zu „{t}“ nach und häng dir den Fund an die Leine. Bitte selbst prüfen.');
+    }
+    if (art === 'verbinden') { var p = partner(sid); return p ? stimme('verbinden.was', { b: kurz(p.titel, 30) }, 'Mit „{b}“. Du sagst in einem Satz, was die beiden verbindet.') : stimme('verbinden.alleinZuhause', null, 'Das ist dein einziger Space. Verbunden wird mit einem zweiten, und der fängt im Zuhause an.'); }
     return '';
+  }
+
+  // „Ich bin dran“ nur, wenn Carl wirklich still arbeitet; fragt er dich, sagt die Karte das
+  function dranSatz(art, q) {
+    var DU = stimme('duDran', null, 'Jetzt du: Carls Frage steht in seiner Blase.');
+    if (art === 'verbinden') return partner(q.sid) ? DU : '';
+    if (art === 'machen' && schritt(q.sid)) return stimme('laeuftBau', null, 'Ich bau es.');
+    if (art === 'arbeiten') return ohneKopf() ? '' : stimme('laeuftLesen', null, 'Ich lese nach. Das dauert einen Moment.');
+    if (ohneKopf()) return DU;
+    if (kopfUnklar()) return stimme('laeuftVielleicht', null, 'Ich versuch mitzudenken. Geht es nicht, frag ich dich.');
+    return stimme('laeuft', null, 'Ich bin dran.');
   }
 
   /* ---------- Die vier Handgriffe (über vorhandene Wege) ----------
@@ -25167,7 +25243,7 @@ try{(function(){
       return frag(stimme('weiter.frage', { t: kurz(z, 60) }, '„{t}“. Was folgt daraus?'), [], { frei: true, id: 'vs-weiter:' + q.sid, platzhalter: stimme('weiter.platz', null, 'Dein nächster Gedanke …') }).then(function (a) {
         a = typeof a === 'string' ? a.trim() : '';
         if (!a) return { art: 'weiter', ok: false, bug: stimme('weiter.offen', null, 'Noch kein Gedanke. Tipp die Karte noch einmal, wenn dir einer kommt.') };
-        C6.space.zettel(q.sid, kurz(a, 400)); return { art: 'weiter', ok: true, hing: a, satz: stimme('weiter.deins', null, 'Dein Gedanke hängt an der Leine.') };
+        C6.space.zettel(q.sid, kurz(a, 400)); fertigGefragt(); return { art: 'weiter', ok: true, hing: a, satz: stimme('weiter.deins', null, 'Dein Gedanke hängt an der Leine.') };
       });
     });
   }
@@ -25211,17 +25287,17 @@ try{(function(){
       return frag(stimme('verbinden.frage', { a: kurz(A, 30), b: kurz(bT, 30) }, 'Was verbindet „{a}“ und „{b}“?'), [], { frei: true, id: 'vs-verbinden:' + q.sid, platzhalter: stimme('verbinden.platz', null, 'Ein Satz, deiner') }).then(function (a) {
         a = typeof a === 'string' ? a.trim() : '';
         if (!a) return { art: 'verbinden', ok: false, bug: stimme('verbinden.offen', { b: kurz(bT, 30) }, 'Noch kein Satz. Im Himmel ziehst du „{b}“ jederzeit selbst heran.') };
+        fertigGefragt();
         var k = C6.strings.knoten(q.sid, b, a);
         if (o && typeof o.knoten === 'function') { try { o.knoten(q.sid, b, k); } catch (e) {} }
         return { art: 'verbinden', ok: !!k, hing: a, satz: stimme('verbinden.fertig', { a: kurz(A, 24), b: kurz(bT, 24) }, 'Sternbild: „{a}“ und „{b}“. Es liegt in beiden Spaces.') };
       });
     };
     if (p) return weiterMit(p.sid, p.titel);
-    return frag(stimme('verbinden.neuFrage', null, 'Verbinden braucht einen zweiten Gedanken. Wie heißt er?'), [], { frei: true, id: 'vs-zweiter', platzhalter: stimme('verbinden.neuPlatz', null, 'Name des zweiten Gedankens …') }).then(function (n) {
-      n = typeof n === 'string' ? n.trim() : '';
-      if (!n || !C6.space || !C6.space.neu) return { art: 'verbinden', ok: false, bug: stimme('verbinden.keinZweiter', null, 'Ohne zweiten Gedanken gibt es nichts zu verbinden.') };
-      var neu = C6.space.neu(n, { oeffnen: false });
-      return neu ? weiterMit(neu, kurz(n, 48)) : { art: 'verbinden', ok: false, bug: stimme('verbinden.keinZweiter', null, 'Ohne zweiten Gedanken gibt es nichts zu verbinden.') };
+    // ein neuer Space entsteht nur im Zuhause: die Karte sagt es und zeigt den Weg
+    return frag(stimme('verbinden.alleinZuhause', null, 'Das ist dein einziger Space. Verbunden wird mit einem zweiten, und der fängt im Zuhause an.'), [{ text: stimme('verbinden.insZuhause', null, 'Ins Zuhause'), wert: 'hin' }], { leise: true, id: 'vs-zweiter' }).then(function (a) {
+      if (a === 'hin') { try { C6.geh('zuhause', { neu: true }); } catch (e) {} }
+      return { art: 'verbinden', ok: false, bug: stimme('verbinden.keinZweiter', null, 'Verbinden geht, sobald ein zweiter Space da ist.') };
     });
   }
   var TUN = { weiter: weiter, machen: machen, arbeiten: arbeiten, verbinden: verbinden };
@@ -25330,13 +25406,13 @@ try{(function(){
       var mit = gewaehlt.slice();
       if (mit.indexOf('verbinden') >= 0 || (ohneKopf() && (mit.indexOf('weiter') >= 0 || mit.indexOf('machen') >= 0))) fokus();
       zeichne();
-      setzeSatz(mit.length === 1 ? stimme('laeuft', null, 'Ich bin dran.') : stimme('mehrere', { n: mit.length }, 'Ich mach eins nach dem anderen.'));
+      setzeSatz(mit.length === 1 ? dranSatz(mit[0], q) : stimme('mehrere', { n: mit.length }, 'Ich mach eins nach dem anderen.'));
       bus({ was: 'los', sid: q.sid, arten: mit });
       if (typeof o.los === 'function') { try { o.los(mit); } catch (x) {} }
       fuehre(q, mit, {
         knoten: o.knoten,
         schritt: function (art, r) {
-          if (r === 'laeuft') zustand[art] = 'laeuft';
+          if (r === 'laeuft') { zustand[art] = 'laeuft'; setzeSatz(dranSatz(art, q)); }
           else { zustand[art] = r && r.ok ? 'fertig' : 'bug'; setzeSatz(r ? (r.ok ? r.satz : r.bug) : ''); }
           if (el.isConnected) zeichne();
         }
@@ -32078,7 +32154,9 @@ try{(function(){
         if (!(o.r > 0) || v[2] < o.r * 1.2 + 0.05) return null;
         var s = schirm(v);
         var R = F * o.r / Math.sqrt(Math.max(1e-4, v[2] * v[2] - o.r * o.r));
-        o.v = v; o.s = s; o.R = R;
+        // abseits der Bildmitte wird die Kugel im Bild zur Ellipse (länger zur Seite hin): das Zeichenquadrat muss sie ganz fassen
+        var seit = Math.hypot(v[0], v[1]), Rq = Math.max(R, F * (seit + o.r) / (v[2] - o.r) - F * seit / v[2]);
+        o.v = v; o.s = s; o.R = R; o.Rq = Rq;
         kugeln.push(o);
         return o;
       }
@@ -32097,8 +32175,8 @@ try{(function(){
           if (o) o.pf = pflanzeVon(p.id);
           if (o && p.kind === 3) {
             o.ring = true;
-            kugeln.push({ kind: 5, p: p.pos, r: p.r * sk, v: o.v, s: o.s, R: o.R * 1.95, farbe: mische(p.farbe, [0.93, 0.94, 1], 0.25), half: 1, al: al, ringFuer: p.id });
-            kugeln.push({ kind: 5, p: p.pos, r: p.r * sk, v: o.v, s: o.s, R: o.R * 1.95, farbe: mische(p.farbe, [0.93, 0.94, 1], 0.25), half: -1, al: al, ringFuer: p.id });
+            kugeln.push({ kind: 5, p: p.pos, r: p.r * sk, v: o.v, s: o.s, R: o.R * 1.95, Rq: (o.Rq || o.R) * 1.95, farbe: mische(p.farbe, [0.93, 0.94, 1], 0.25), half: 1, al: al, ringFuer: p.id });
+            kugeln.push({ kind: 5, p: p.pos, r: p.r * sk, v: o.v, s: o.s, R: o.R * 1.95, Rq: (o.Rq || o.R) * 1.95, farbe: mische(p.farbe, [0.93, 0.94, 1], 0.25), half: -1, al: al, ringFuer: p.id });
           }
           p.monde.forEach(function (m) { kugel({ kind: 4, p: m.pos, r: m.r, farbe: m.farbe, spin: zeit * 0.1, seed: hash(m.id), al: al, id: p.id, mond: m, pl: p }); });
         });
@@ -32310,7 +32388,7 @@ try{(function(){
         var o = 0;
         var ecken = [[-1, -1], [1, -1], [1, 1], [-1, -1], [1, 1], [-1, 1]];
         kugeln.forEach(function (k) {
-          var R = k.R * 1.12 + 2, ringN = [0, 1, 0];
+          var R = (k.Rq || k.R) * 1.08 + 2, ringN = [0, 1, 0];
           if (k.kind === 5) {
             var tilt = 0.42, nw = [Math.sin(tilt) * 0.6, Math.cos(tilt), Math.sin(tilt) * 0.8];
             nw = norm(nw);
@@ -32422,8 +32500,10 @@ try{(function(){
       function zahlen(id) {
         var x = (C6.S && C6.S.spaces && C6.S.spaces[id]) || {}, s = C6.strings.hol(id) || {};
         var no = x.notizen || [];
-        var eig = no.filter(function (n) { return n && !n.von && !/^Fund\s*·/.test(String(n.t || '')); }).length;
+        // Zettel = was an der Leine hängt (jede Notiz, Funde eingeschlossen); Dinge am Boden (z. B. Sternbild) sind keine Zettel – dieselbe Zahl wie Space und Buch
+        var zettel = no.filter(function (n) { return !!n; }).length;
         var funde = no.filter(function (n) { return n && (n.von === 'fund' || /^Fund\s*·/.test(String(n.t || ''))); }).length;
+        var eig = zettel - funde;
         var st = {}; try { st = C6.bausteine && C6.bausteine.stand ? C6.bausteine.stand(id) || {} : {}; } catch (e) { st = {}; }
         var wzl = []; try { wzl = C6.werkzeug && C6.werkzeug.alle ? C6.werkzeug.alle(id) || [] : []; } catch (e) { wzl = []; }
         var letzte = s.erstellt || 0;
@@ -32431,14 +32511,14 @@ try{(function(){
         (s.perlen || []).forEach(function (n) { if (n && n.ts > letzte) letzte = n.ts; });
         (x.dinge || []).forEach(function (d) { if (d && d.ts > letzte) letzte = d.ts; });
         wzl.forEach(function (w) { if (w && w.ts > letzte) letzte = w.ts; });
-        return { eig: eig, funde: funde, wz: wzl.length, kern: !!x.kern, schritt: st.naechster || '', tag: st.tag, letzte: letzte };
+        return { zettel: zettel, eig: eig, funde: funde, wz: wzl.length, kern: !!x.kern, schritt: st.naechster || '', tag: st.tag, letzte: letzte };
       }
       function standKurz(id) {
         var z = zahlen(id);
-        if (!z.eig && !z.funde) return satz('himmel.standKurzLeer', 'noch kein Zettel');
+        if (!z.zettel) return satz('himmel.standKurzLeer', 'noch kein Zettel');
         var tage = z.letzte ? Math.floor((Date.now() - z.letzte) / 864e5) : 0;
         if (tage >= 3) return satz('himmel.standKurzStill', 'still seit {n} Tagen').replace('{n}', tage);
-        var n = z.eig + z.funde, t = [n + ' Zettel'];
+        var t = [z.zettel + ' Zettel'];
         if (!z.schritt) t.push(satz('himmel.standKurzSchritt', 'Schritt fehlt'));
         else if (z.wz) t.push(z.wz === 1 ? '1 Werkzeug' : z.wz + ' Werkzeuge');
         else if (z.kern) t.push(satz('himmel.standKurzKern', 'Kernsatz steht'));
@@ -32662,6 +32742,16 @@ try{(function(){
           }
         }
         if (wahl) { var aw = hol(wahl.von); if (aw) ringMalen(c, aw, 0.75 + (C6.ruhig ? 0 : 0.25 * Math.sin(zeit * 3))); }
+        if (tasten) {
+          var ta = hol(tasten.a), tb = hol(tasten.b), qa = ta && proj(ta.pos), qb = tb && proj(tb.pos), tk = (performance.now() - tasten.t0) / 2600;
+          if (tk >= 1 || !qa || !qb || qa[2] < 0.2 || qb[2] < 0.2 || zieh || feier || wahl || folge || !blatt.hidden) tasten = null;
+          else {
+            var tw = (tk < 0.55 ? Math.sin(tk / 0.55 * Math.PI / 2) : Math.cos((tk - 0.55) / 0.45 * Math.PI / 2)) * 0.7;
+            var tx = qa[0] + (qb[0] - qa[0]) * tw, ty = qa[1] + (qb[1] - qa[1]) * tw, tal = Math.min(1, tk * 6, (1 - tk) * 6);
+            fadenZug(c, qa[0], qa[1], tx, ty, 0.85 * tal);
+            c.globalAlpha = tal; stern4(c, tx, ty, 7, 'rgba(236,209,147,0.9)', '#ffffff'); c.globalAlpha = 1;
+          }
+        }
         // die Frage nach dem Satz: der Faden hält zwischen beiden, bis du antwortest oder daneben tippst
         if (knotenFrage) { var fa = hol(knotenFrage.a), fb = hol(knotenFrage.b), qa = fa && proj(fa.pos), qb = fb && proj(fb.pos); if (qa && qb && qa[2] > 0.2 && qb[2] > 0.2) { ringMalen(c, fa, 0.8); ringMalen(c, fb, 0.8); fadenZug(c, qa[0], qa[1], qb[0], qb[1], 1); } }
         if (schnurr) {
@@ -33375,8 +33465,8 @@ try{(function(){
         if (spielDarf(now)) spielStart(now);
         schnuppeSchritt(now);
         var dtc = Math.min(0.05, (now - (tCarl || now)) / 1000); tCarl = now;
-        var lebt = carlLebt(now) || leuchtenLaeuft() || !!schnurr || !!spiel || spur.length > 0 || !!feier || rauch.length > 0 || !!carl.traegt || Object.keys(pulse).length > 0 || schnuppen.length > 0 || !!glitzer;
-        var ruht = !geste && !zieh && !tauchen && !schnuppen.length && !Object.keys(neuWachsen).length && Math.abs(schwung) < 0.0005 && Math.abs(soll.dist - cam.dist) < 0.01 && Math.abs(soll.tx - cam.tx) < 0.01 && Math.abs(soll.tz - cam.tz) < 0.01 && vers.x === versSoll.x && vers.y === versSoll.y && !(wahl && !C6.ruhig);
+        var lebt = carlLebt(now) || leuchtenLaeuft() || !!schnurr || !!tasten || !!spiel || spur.length > 0 || !!feier || rauch.length > 0 || !!carl.traegt || Object.keys(pulse).length > 0 || schnuppen.length > 0 || !!glitzer;
+        var ruht = !geste && !zieh && !tauchen && !tasten && !schnuppen.length && !Object.keys(neuWachsen).length && Math.abs(schwung) < 0.0005 && Math.abs(soll.dist - cam.dist) < 0.01 && Math.abs(soll.tx - cam.tx) < 0.01 && Math.abs(soll.tz - cam.tz) < 0.01 && vers.x === versSoll.x && vers.y === versSoll.y && !(wahl && !C6.ruhig);
         if (tRaf) takt = takt * 0.9 + Math.min(300, now - tRaf) * 0.1; tRaf = now;
         // schwaches Gerät: in Ruhe seltener malen, damit alles andere flüssig bleibt
         var pause = takt > 40 ? 160 : 34;
@@ -33532,6 +33622,8 @@ try{(function(){
           var z = d.z + prio + a * 0.001;
           if (z < bz) { bz = z; best = d; }
         });
+        // ein Sternbild-Stern über dem Kern eines näheren Planeten stiehlt ihm den Finger nicht
+        if (best && best.art === 'knoten') dinge.forEach(function (d) { if (d.art === 'planet' && Math.hypot(x - d.x, y - d.y) <= d.Rv * 0.7 && d.z <= best.z + 1) best = d; });
         // ein Mond stiehlt seinem Planeten nie den Finger: liegt der Punkt auf der sichtbaren Kugel, gilt der Planet
         if (best && best.art === 'mond') dinge.forEach(function (d) { if (d.art === 'planet' && Math.hypot(x - d.x, y - d.y) <= d.Rv && d.z <= best.z + 2) best = d; });
         return best;
@@ -33544,9 +33636,9 @@ try{(function(){
         if (ids.length === 1) {
           var d = treffer(p[0], p[1]);
           geste = { art: 'dreh', start: p, last: p, ding: d, weg: 0, t: performance.now(), ts: e.timeStamp };
-          // langes Halten fragt „Wie geht das?“: es fliegt nicht, öffnet nichts, zieht nichts.
-          // Erst im nächsten Bild entscheiden: ein schon losgelassener Finger (im Takt noch nicht verarbeitet) kommt vorher an.
-          if (d) { var gh = geste; gh.uhr = setTimeout(function () { requestAnimationFrame(function () { if (geste === gh && !gh.gehalten && gh.weg <= 8 && Object.keys(zeiger).length === 1) halte(gh); }); }, 600); }
+          // langes Halten fragt „Wie geht das?“ – aber erst beim Loslassen und nur, wenn der Finger still lag.
+          // Wer hält und dann zieht, zieht: Bewegung macht aus dem Halten ein Ziehen.
+          if (d) { var gh = geste; gh.uhr = setTimeout(function () { if (geste === gh && gh.weg <= 8) gh.reif = true; }, 600); }
           // Carl schaut zum Finger
           carlWach();
           if (!carl.flug && !carl.unterwegs) carlSchau(p[0], p[1], 2400);
@@ -33570,7 +33662,7 @@ try{(function(){
         } else {
           geste.weg = Math.max(geste.weg, Math.hypot(p[0] - geste.start[0], p[1] - geste.start[1]));
           if (geste.gehalten) { geste.last = p; return; }
-          if (geste.uhr && geste.weg > 8) { clearTimeout(geste.uhr); geste.uhr = 0; }
+          if (geste.weg > 8) { if (geste.uhr) { clearTimeout(geste.uhr); geste.uhr = 0; } geste.reif = false; }
           if (zieh && geste.weg > 12) {
             zieh.weit = true; zieh.x = p[0]; zieh.y = p[1];
             var t = treffer(p[0], p[1]); zieh.ziel = t && t.art === 'planet' && t.id !== zieh.von ? t.id : null;
@@ -33594,7 +33686,7 @@ try{(function(){
         geste = null;
         if (g.uhr) clearTimeout(g.uhr);
         // ein ausgebremster Takt darf das Halten nicht in einen Tipp verwandeln: die Zeit des Fingers zählt
-        if (!g.gehalten && g.ding && g.art === 'dreh' && g.weg <= 8 && e.type !== 'pointercancel' && g.ts != null && e.timeStamp - g.ts >= 600) halte(g);
+        if (!g.gehalten && g.ding && g.art === 'dreh' && g.weg <= 8 && e.type !== 'pointercancel' && (g.reif || (g.ts != null && e.timeStamp - g.ts >= 600))) halte(g);
         var z = zieh; zieh = null;
         if (g.gehalten) { schwung = 0; weiter(); return; }
         if (g.weg < 10 && e.type !== 'pointercancel') {
@@ -33649,14 +33741,38 @@ try{(function(){
         if (wahl && hol(wahl.von)) return satz('himmel.wahl', 'Tipp den Planeten an, der zu „{t}“ gehört.').replace('{t}', kuerze(hol(wahl.von).d.titel, 40));
         if (!n) return satz('himmel.leerTat', 'Hier oben stehen später deine Spaces, jeder als Planet. Anfangen tust du unten im Zuhause: Sag mir dort, woran du denkst.');
         if (n === 1) return satz('himmel.tatEins', 'Hier oben siehst du, wie es um „{t}“ steht. Verbinden geht erst mit zwei Spaces, den nächsten fängst du im Zuhause an.').replace('{t}', kuerze(welt.planeten[0].d.titel, 40));
+        // steht das erste Sternbild, hat der Himmel die Geste gelernt: dann schweigt der Satz, die Dinge sprechen
+        if (welt.knoten.some(function (kk) { return hol(kk.k.a) && hol(kk.k.b); })) return satz('himmel.tatDanach', '');
         return satz('himmel.tat', 'Hier oben siehst du, wie es um jeden deiner Spaces steht. Gehören zwei zusammen, zieh den einen zum anderen.');
       }
       function grund() {
         if (stimmeTemp) return;
         if (imRundgang || (C6.rundgang && C6.rundgang.an)) { stimmeEl.classList.remove('c6w-an'); return; }
         var an = !feier && blatt.hidden && (ueberblick || !!wahl) && aktiv;
-        if (an) { var t = grundSatz(); if (stimmeEl.textContent !== t) stimmeEl.textContent = t; }
+        var t = an ? grundSatz() : '';
+        if (an && t && stimmeEl.textContent !== t) stimmeEl.textContent = t;
+        an = an && !!t;
         stimmeEl.classList.toggle('c6w-an', an);
+        tastenPlanen();
+      }
+      // Vor dem ersten Sternbild tastet einmal ein goldener Faden von einem Planeten zum anderen vor und zieht sich zurück
+      // (zeigt die Geste, ohne sie zu erklären); nie bei reduzierter Bewegung, nie während einer Geste oder eines Blatts
+      var tasten = null, tastGetan = false, tastUhr = 0;
+      function tastDarf() {
+        return aktiv && !tastGetan && !C6.ruhig && !imRundgang && welt.planeten.length >= 2 && ueberblick && !folge && blatt.hidden && !wahl && !feier && !zieh && !geste &&
+          !welt.knoten.some(function (kk) { return hol(kk.k.a) && hol(kk.k.b); });
+      }
+      function tastenPlanen() {
+        if (tastUhr || !tastDarf()) return;
+        tastUhr = setTimeout(function () {
+          tastUhr = 0;
+          // erst wenn die Kamera ruht (beim Hinaufkommen sähe man ihn nicht)
+          if (performance.now() < hinaufBis + 900 || Math.abs(soll.dist - cam.dist) > soll.dist * 0.02 || Math.abs(soll.pitch - cam.pitch) > 0.02 || Math.abs(soll.yaw - cam.yaw) > 0.02) { tastenPlanen(); return; }
+          if (!tastDarf()) return;
+          tastGetan = true;
+          tasten = { a: welt.planeten[1].id, b: welt.planeten[0].id, t0: performance.now() };
+          weiter();
+        }, 2200);
       }
       function heimZeigen() { heimKnopf.hidden = !!welt.planeten.length || imRundgang; }
 
@@ -33772,10 +33888,9 @@ try{(function(){
       // Der Stand als Satz: nur gezählt, nichts erfunden
       function standSatz(id) {
         var z = zahlen(id);
-        if (!z.eig && !z.funde && !z.kern && !z.schritt) return satz('himmel.standLeer', 'Noch leer. Der erste Zettel ist der Samen.');
+        if (!z.zettel && !z.kern && !z.schritt) return satz('himmel.standLeer', 'Noch leer. Der erste Zettel ist der Samen.');
         var t = [];
-        t.push(z.eig === 1 ? 'Ein Zettel von dir' : (z.eig ? z.eig + ' Zettel von dir' : 'Noch kein Zettel von dir'));
-        if (z.funde) t.push(z.funde === 1 ? 'ein Fund' : z.funde + ' Funde');
+        t.push((z.zettel === 1 ? 'Ein Zettel' : (z.zettel ? z.zettel + ' Zettel' : 'Noch kein Zettel')) + (z.funde ? ' (davon ' + (z.funde === 1 ? 'ein Fund' : z.funde + ' Funde') + ')' : ''));
         if (z.wz) t.push(z.wz === 1 ? 'ein Werkzeug' : z.wz + ' Werkzeuge');
         var s1 = t.length > 1 ? t.slice(0, -1).join(', ') + ' und ' + t[t.length - 1] : t[0];
         var s2 = z.kern ? 'der Kernsatz steht' : 'noch kein Kernsatz';
@@ -33799,7 +33914,7 @@ try{(function(){
         var zul = !zz || zz.art === 'anfang' ? '' : (zz.art === 'knoten' ? 'Sternbild mit „' + esc(kuerze(zz.mit, 30)) + '“: ' : zz.art === 'nadel' ? 'Kernsatz: ' : '') + '„' + esc(kuerze(zz.t, 90)) + '“';
         var v = vorschlagFuer(id), vs = '';
         if (v && v.art === 'zettel') vs = '<form class="c6w-perle-form c6w-oben-vs1"><label class="c6w-oben-vs-name" for="c6w-perle-in">' + esc(v.name) + '</label>' +
-          '<input id="c6w-perle-in" class="c6w-feld" autocomplete="off" maxlength="200" placeholder="Ein Zettel, ein Satz reicht"><button class="c6w-knopf c6w-tun" type="submit">An die Leine</button></form>';
+          '<input id="c6w-perle-in" class="c6w-feld" autocomplete="off" maxlength="200" aria-describedby="c6w-perle-satz" placeholder="Ein Zettel, ein Satz reicht"><p id="c6w-perle-satz" class="c6w-feld-satz" role="status" aria-live="polite"></p><button class="c6w-knopf c6w-tun" type="submit">An die Leine</button></form>';
         else if (v) vs = '<div class="c6w-oben-vs1"><button type="button" class="c6w-knopf c6w-tun" data-vs="' + v.art + '">' + esc(v.name) + '</button>' + (v.was && !o.satz ? '<p class="c6w-oben-vs-satz">' + esc(v.was) + '</p>' : '') + '</div>';
         var mehr = welt.planeten.length > 1;
         oeffne('<p class="c6w-kicker"><i style="background:' + s.farbe + '"></i>' + esc(pf.name) + ' · seit ' + C6.strings.datum(s.erstellt) + '</p>' +
@@ -33828,10 +33943,11 @@ try{(function(){
           Promise.resolve(C6.vorschlaege.tu(id, tun.getAttribute('data-vs'))).then(function (r) { fertig(r ? [r] : null); }, function () { fertig(null); });
         };
         var fo = blatt.querySelector('.c6w-perle-form');
+        if (fo) blatt.querySelector('#c6w-perle-in').oninput = function () { var x = blatt.querySelector('#c6w-perle-satz'); if (x) x.textContent = ''; };
         if (fo) fo.onsubmit = function (ev) {
           ev.preventDefault();
           var fi = blatt.querySelector('#c6w-perle-in'), t = fi.value.trim();
-          if (!t) { fi.placeholder = satz('himmel.zettelLeer', 'Ein Satz reicht, deiner.'); fi.classList.remove('c6w-feld-frage'); void fi.offsetWidth; fi.classList.add('c6w-feld-frage'); fi.focus(); return; }
+          if (!t) { var ps = blatt.querySelector('#c6w-perle-satz'); if (ps) ps.textContent = satz('himmel.zettelLeer', 'Noch leer. Ein Satz reicht, deiner.'); fi.classList.remove('c6w-feld-frage'); void fi.offsetWidth; fi.classList.add('c6w-feld-frage'); fi.focus(); return; }
           if (C6.space && C6.space.zettel) C6.space.zettel(id, t); else C6.strings.perle(id, t);
           lesen(); vonOben(id, { satz: satz('himmel.zettelHaengt', 'Hängt jetzt als Zettel in „{t}“.').replace('{t}', s.titel) });
         };
@@ -33894,14 +34010,16 @@ try{(function(){
         oeffne('<p class="c6w-kicker"><i class="c6w-knoten c6w-h-sternzeichen"></i>' + esc(satz('himmel.sternbild.neu', 'Neues Sternbild')) + '</p>' +
           '<h2 class="c6w-titel c6w-carl">' + esc(satz('himmel.sternbild.frage', 'Was verbindet „{a}“ und „{b}“?').replace('{a}', A.titel).replace('{b}', B.titel)) + '</h2>' +
           '<form><label class="c6w-nur-lesbar" for="c6w-knoten-in">' + esc(satz('himmel.sternbild.label', 'Was die beiden verbindet')) + '</label>' +
-          '<input id="c6w-knoten-in" class="c6w-feld" autocomplete="off" maxlength="200" placeholder="' + esc(satz('himmel.sternbild.platz', 'Ein Satz, deiner')) + '">' +
+          '<input id="c6w-knoten-in" class="c6w-feld" autocomplete="off" maxlength="200" aria-describedby="c6w-knoten-satz" placeholder="' + esc(satz('himmel.sternbild.platz', 'Ein Satz, deiner')) + '">' +
+          '<p id="c6w-knoten-satz" class="c6w-feld-satz" role="status" aria-live="polite"></p>' +
           '<button class="c6w-knopf c6w-tun" type="submit">' + esc(satz('himmel.sternbild.los', 'Verbinden')) + '</button></form>', '#c6w-knoten-in', { art: 'frage', titel: A.titel + ' und ' + B.titel });
         knotenFrage = { a: a, b: b };
+        blatt.querySelector('#c6w-knoten-in').oninput = function () { var x = blatt.querySelector('#c6w-knoten-satz'); if (x) x.textContent = ''; };
         blatt.querySelector('form').onsubmit = function (ev) {
           ev.preventDefault();
           var fi = blatt.querySelector('#c6w-knoten-in'), v = fi.value.trim();
           if (!v) {
-            fi.placeholder = satz('himmel.sternbild.leer', 'Was haben die beiden gemeinsam? Ein Satz reicht.');
+            var fs = blatt.querySelector('#c6w-knoten-satz'); if (fs) fs.textContent = satz('himmel.sternbild.leer', 'Was haben die beiden gemeinsam? Ein Satz reicht.');
             fi.classList.remove('c6w-feld-frage'); void fi.offsetWidth; fi.classList.add('c6w-feld-frage');
             fi.focus(); return;
           }
@@ -34092,7 +34210,7 @@ try{(function(){
           zeichne(); weiter();
         },
         verlassen: function () {
-          aktiv = false; taktAb(); zieh = null; geste = null; zeiger = {}; schwung = 0;
+          aktiv = false; taktAb(); zieh = null; geste = null; zeiger = {}; schwung = 0; clearTimeout(tastUhr); tastUhr = 0; tasten = null;
           tauchen = null; tauchFeder = null; schnuppen.length = 0; glitzer = null;
           boten = []; wartet = {}; pulse = {}; carl.flug = null; carl.unterwegs = false; carl.traegt = null; carlFlieg(false); rauch.length = 0; fahrt.x = null;
           spiel = null; spur = []; couchAn = false; couchEl.hidden = true; carl.ort = { art: 'du' }; carl.w = null;
@@ -35772,6 +35890,10 @@ function dingName(d) {
   var n = dort && dort.titel ? dort.titel : String(d.titel || '').replace(/^(Faden zu|Sternbild mit)\s*„/, '').replace(/“\s*$/, '');
   return 'Sternbild mit „' + kurz(n, 40) + '“';
 }
+// Eine fertige Ansicht (Rückblick, Zwei Wege, Skizze … aus der Werkstatt aufgehängt) gehört wie ein Werkzeug in die Mitte;
+// Sternbilder und Funde bleiben Dinge am Boden
+function istAnsicht(d) { return !!d && !istSternbild(d) && /^(karte|ergebnis|geruest)$/.test(String(d.art || '')) && !/^Fund\b/.test(String(d.titel || '')); }
+function ansichtName(d) { var t = String((d && d.titel) || ''); var i = t.indexOf(':'); return kurz(i > 0 ? t.slice(0, i) : t, 22) || 'Ansicht'; }
 function istFund(n) { return !!n && (n.von === 'fund' || /^Fund\s*·\s*/.test(String(n.t || ''))); }
 // Carls Zettel (eine Antwort, die Otto an die Leine gehängt hat): sichtbar als Carls, zählt nicht als Ottos
 function istCarl(n) { return !!n && n.von === 'carl'; }
@@ -36850,7 +36972,7 @@ var DEF = {
         var box = o.querySelector('.c6z-sp-dinge');
         if (!box) box = mach('div', 'c6z-sp-dinge', o);
         box.textContent = '';
-        dl.filter(function (d) { return d.place === pid; }).slice(-4).forEach(function (d, j) {
+        dl.filter(function (d) { return d.place === pid && !istAnsicht(d); }).slice(-4).forEach(function (d, j) {
           var b = mach('button', 'c6z-sp-ding' + (d.art === 'faden' ? ' c6z-sp-ding-faden' : ''), box); b.type = 'button';
           b.innerHTML = dingBild(d);
           mach('i', 'c6z-sp-kontakt', b);
@@ -36953,9 +37075,14 @@ var DEF = {
     function werkzeugeZeichnen(neu) {
       var l = [];
       try { l = (sid && C6.werkzeug && C6.werkzeug.alle) ? (C6.werkzeug.alle(sid) || []) : []; } catch (e) { l = []; }
-      l = l.slice().reverse();
-      var x = r() || {}, vorn = l.filter(function (w) { return w.id === x.vorn; })[0] || l[0] || null;
-      var schl = (sid || '') + '|' + l.map(function (w) { return w.id + ':' + (w.name || ''); }).join(',') + '|' + (vorn ? vorn.id : '');
+      var x = r() || {};
+      // was Otto hier benutzt: seine Werkzeuge und die fertigen Ansichten, die er hergehängt hat – das Jüngste zuerst
+      l = l.map(function (w) { return { id: w.id, name: w.name || 'Werkzeug', farbe: w.farbe, ts: w.ts || 0, w: w }; })
+        .concat(((x.dinge || []).filter(istAnsicht)).map(function (d) { return { id: d.id, name: ansichtName(d), farbe: '#2b2722', ts: d.ts || 0, d: d }; }))
+        .sort(function (a, b) { return (b.ts || 0) - (a.ts || 0); });
+      var vorn = l.filter(function (w) { return w.id === x.vorn; })[0] || l[0] || null;
+      var klein = !comp() && !vsPlatz.hidden;
+      var schl = (sid || '') + '|' + l.map(function (w) { return w.id + ':' + w.name; }).join(',') + '|' + (vorn ? vorn.id : '') + '|' + klein;
       var war = !pfosten.hidden;
       pfosten.hidden = !l.length;
       wurzel.classList.toggle('c6z-sp-mit-wz', !!l.length);
@@ -36969,10 +37096,12 @@ var DEF = {
       if (!vorn) return;
       var h = mach('div', 'c6z-sp-wz', pfostenListe);
       h.setAttribute('role', 'tabpanel');
-      try { C6.werkzeug.male(h, vorn, { sid: sid }); } catch (e) { h.remove(); }
+      if (vorn.w) { try { C6.werkzeug.male(h, vorn.w, { sid: sid, klein: klein }); } catch (e) { h.remove(); } }
+      else ansichtMalen(h, vorn.d);
+      pfosten.classList.toggle('c6z-sp-mitte-klein', klein);
       if (l.length < 2) return;
       l.forEach(function (w) {
-        var k = mach('button', 'c6z-sp-reiter-k', reiter, w.name || 'Werkzeug'); k.type = 'button';
+        var k = mach('button', 'c6z-sp-reiter-k', reiter, w.name); k.type = 'button';
         k.setAttribute('role', 'tab');
         k.setAttribute('aria-selected', w === vorn ? 'true' : 'false');
         k.style.setProperty('--wz', w.farbe || '#2b2722');
@@ -36984,6 +37113,19 @@ var DEF = {
           if (neuEl && !C6.ruhig && neuEl.animate) neuEl.animate([{ transform: 'translateY(10px)', opacity: 0.4 }, { transform: 'none', opacity: 1 }], { duration: 260, easing: 'cubic-bezier(.3,.7,.4,1)' });
         });
       });
+    }
+    // Eine fertige Ansicht in der Mitte: ihr Blatt mit Titel und Text (rollt in sich), antippen liest sie groß
+    function ansichtMalen(h, d) {
+      var b = mach('div', 'c6z-sp-ansicht', h);
+      var kp = mach('button', 'c6z-sp-ansicht-kopf', b); kp.type = 'button';
+      mach('b', null, kp, String(d.titel || ansichtName(d)));
+      kp.setAttribute('aria-label', String(d.titel || ansichtName(d)) + ' · groß lesen');
+      kp.addEventListener('click', function () { aufstehen(); dingZeigen(d, kp); });
+      var tx = mach('div', 'c6z-sp-ansicht-text', b); tx.tabIndex = 0;
+      var z = String(d.text || '').split(/\n+/).filter(Boolean);
+      // die erste Zeile wiederholt oft nur den Titel
+      if (z.length > 1 && d.titel && String(d.titel).indexOf(z[0]) >= 0) z.shift();
+      (z.length ? z : ['Noch leer.']).slice(0, 40).forEach(function (abs) { mach('p', null, tx, abs); });
     }
     // Ohne Werkzeug: ein gestrichelter Umriss an seinem Platz, ein Satz, ein Weg in die Werkstatt
     function bauwegZeichnen(an) {
@@ -37239,11 +37381,13 @@ var DEF = {
       var lauf = !!(vs && vs.laeuft && vs.laeuft());
       vsPlatz.hidden = !(vsOffen || lauf);
       // die Karten liegen als Blatt über dem Boden (iPhone: über dem Feld); die Szene selbst bewegt sich dabei nicht
-      wurzel.classList.toggle('c6z-sp-vs-auf', !vsPlatz.hidden);
+      if (wurzel.classList.contains('c6z-sp-vs-auf') === vsPlatz.hidden) { wurzel.classList.toggle('c6z-sp-vs-auf', !vsPlatz.hidden); if (!comp()) { werkzeugeZeichnen(true); spaeter(groesse, C6.ruhig ? 20 : 340); } }
       if (vsPlatz.hidden) return;
       if (!vs || vsSid !== sid) {
         vsSid = sid; gemeint = null;
         vs = C6.vorschlaege.male(vsPlatz, { quelle: { sid: sid }, los: function () { aufstehen(); projektorZu(); }, bei: function () { meinen(null); auffrischen(); } });
+        var vf = mach('p', 'c6z-sp-vs-frage', null, stimme('vorschlag.frage', null, 'Was machen wir damit?'));
+        vsPlatz.insertBefore(vf, vsPlatz.firstChild);
       }
       if (gemeint) { var gz = haken.querySelector('.c6z-sp-zettel[data-ts="' + gemeint.ts + '"]'); if (gz) gz.classList.add('c6vs-gemeint'); }
       spaeter(vsLage, 60);
@@ -37273,9 +37417,10 @@ var DEF = {
       e.stopPropagation();
       aufstehen();
       if (vsOffen && !gemeint) { vsZu(); return; }
+      if (lageWartet && !andererSpricht()) { sagLage(); return; }
       if (vsAuf(null)) {
         try { ctl.stimmung('froh'); spaeter(function () { ctl && ctl.stimmungJetzt === 'froh' && ctl.stimmung('ruhig'); }, 1200); } catch (x) {}
-        if (C6.sag) C6.sag(stimme('vorschlag.frage', null, 'Was machen wir damit?'), { merken: false });
+        if (C6.schweig) { try { C6.schweig(); } catch (x) {} }
         return;
       }
       var f = faden(sid) || {};
@@ -37782,8 +37927,11 @@ var DEF = {
       }, C6.ruhig ? 60 : 900);
     }
     C6.bus.on('space', function (d) {
+      if (d && d.was === 'ding' && d.stringId) { var y0 = roh(d.stringId), dn = y0 && (y0.dinge || []).filter(function (q) { return q.id === d.id; })[0]; if (istAnsicht(dn)) aendern(function (s) { var y = s.spaces[d.stringId]; if (y) y.vorn = d.id; }); }
       if (!d || !hier || d.stringId !== sid) return;
       if (d.was === 'ding') {
+        var xa = r(), da = ((xa && xa.dinge) || []).filter(function (q) { return q.id === d.id; })[0];
+        if (istAnsicht(da)) { auffrischen(); werkzeugeZeichnen(true); var m0 = pfostenListe.firstChild; if (m0 && !C6.ruhig && m0.animate) m0.animate([{ transform: 'translateY(-24px) rotate(-3deg)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 420, easing: 'cubic-bezier(.3,.7,.4,1)' }); return; }
         auffrischen();
         mitEl.hidden = true;
         var x = r(), dd = ((x && x.dinge) || []).filter(function (q) { return q.id === d.id; })[0];
@@ -37809,7 +37957,7 @@ var DEF = {
       var ps = placesJetzt();
       var ziel = o.place && ps.indexOf(o.place) >= 0 ? o.place : (anderer || !place || ps.indexOf(place) < 0 ? ((x && x.jetzt && ps.indexOf(x.jetzt) >= 0) ? x.jetzt : ps[0]) : place);
       // ein anderer Space: was Carl im vorigen fragte (Blase, offene Wahl) gilt hier nicht mehr; die Karten liegen wieder weg
-      if (anderer) { if (war && C6.schweig) { try { C6.schweig(); } catch (e) {} } place = null; modus = null; vsOffen = false; schliesseBlatt(); leineSchl = ''; dingSchl = ''; bodenWeg(true); }
+      if (anderer) { lageWartet = false; if (war && C6.schweig) { try { C6.schweig(); } catch (e) {} } place = null; modus = null; vsOffen = false; schliesseBlatt(); leineSchl = ''; dingSchl = ''; bodenWeg(true); }
       kopfZeichnen();
       if (!sid) { stueck.hidden = topf.hidden = true; pfosten.hidden = true; bauweg.hidden = true; vsOffen = false; vsPlatz.hidden = true; wurzel.classList.remove('c6z-sp-mit-wz', 'c6z-sp-vs-auf'); }
       orteZeichnen();
@@ -37966,9 +38114,13 @@ var DEF = {
         C6.sag(stimme('naehren.kernDeiner', { satz: kurz(v, 90) }, 'Vielleicht trägt „' + kurz(v, 90) + '“ diesen Space. Tipp den Zettel an, wenn er der Kernsatz ist.'), { merken: false });
       });
     }
+    function heuteSchl() { var d = new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
+    var lageWartet = false;
     function sagLage() {
       if (andererSpricht()) return;
       var s0 = sid, l = lage();
+      lageWartet = false;
+      aendern(function (s) { var y = s.spaces[s0]; if (y) y.gefragt = heuteSchl(); });
       if (l.fund) fundGezeigt[s0] = Date.now();
       if (l.ortFrage) aendern(function (s) { var y = s.spaces[s0]; if (y) y.ortGefragt = Date.now(); });
       letzteLage[s0] = { ts: Date.now(), satz: l.satz };
@@ -37994,7 +38146,9 @@ var DEF = {
       // vom Katalog in der Garage („Für deine Spaces“) hergeschickt: gleich das Einrichten dieses Ortes aufschlagen, sonst nichts sagen
       if (o.einrichten) { var s1 = sid; spaeter(function () { if (hier && sid === s1) einrichtenOeffnen(); }, C6.ruhig ? 60 : 650); return; }
       gesagt[sid + ':' + place] = 1;
-      if (!neu && letzteLage[sid] && Date.now() - letzteLage[sid].ts < 90000 && letzteLage[sid].satz === lage().satz) return;
+      if (!neu && letzteLage[sid] && Date.now() - letzteLage[sid].ts < 90000 && letzteLage[sid].satz === lage().satz) { lageWartet = true; return; }
+      // von selbst fragt Carl höchstens einmal je Space und Tag; sonst wartet seine Frage, bis du ihn antippst
+      if (!neu && (r() || {}).gefragt === heuteSchl()) { lageWartet = true; return; }
       var s0 = sid;
       // der Ort wird still gewählt (nach dem Namen); ändern geht über den Titel → „Ort wechseln“
       spaeter(function () { if (hier && sid === s0) sagLage(); }, 520);
@@ -39894,16 +40048,20 @@ try{(function(){
       }
       function zeichneWand() {
         var dz = wS().dz || {}, sid = wandSid(), f = sid && C6.strings.hol(sid);
-        var h = '', dx = 270;
-        for (var i = 0; i < 4; i++) {
-          var r = Math.floor(i / 2), c = i % 2, x = 10 + dx * (c + 0.5), y = 34 + r * 186, sk = 1.08;
-          var g = WAND[i];
+        // zwei Gruppen an einer Wand: oben die drei, die deine Zettel anders legen (zum Ausprobieren, kein Werkzeug);
+        // unter dem Brett das Werkzeug-Bauen, darunter an der Leiste deine eigenen Werkzeuge
+        var h = '<text class="c6w-schild c6w-wand-kopf" x="280" y="40" text-anchor="middle">' + esc(satz('werkstatt.wandAnsichten', 'Deine Zettel, anders gelegt')) + '</text>';
+        WAND.forEach(function (g, i) {
+          var x = 96 + i * 184, y = 58, sk = 0.8;
           var hook = '<circle cx="' + x + '" cy="' + y + '" r="5" fill="' + T + '"/>';
-          if (!g) { h += hook + '<g transform="translate(' + x + ',' + y + ') scale(' + sk + ')" data-hx="' + x + '">' + ding({ bild: BILD.neu(), name: 'Neues Werkzeug', aria: 'Neues Werkzeug: du sagst in einem Satz, was es tun soll', hoch: 150 }, 0, 0, 'Neues Werkzeug', 124, '+neu', false) + '</g>'; continue; }
           var n = dz[g.art] || 0;
-          var aria = g.name + (f ? ' für „' + f.titel + '“' : '') + (n ? ', ' + (n === 1 ? 'einmal' : n + '-mal') + ' angesehen' : '');
+          var aria = g.name + (f ? ': deine Zettel aus „' + f.titel + '“, anders gelegt' : ': deine Zettel, anders gelegt') + (n ? ', ' + (n === 1 ? 'einmal' : n + '-mal') + ' angesehen' : '');
           h += hook + '<g transform="translate(' + x + ',' + y + ') scale(' + sk + ')" data-hx="' + x + '">' + ding({ bild: schlaufe() + g.bild(g.farbe), name: g.name, aria: aria, hoch: 172 }, 0, 0, g.name, 150, g.id, true, kerben(n)) + '</g>';
-        }
+        });
+        // das Brett zwischen den Gruppen
+        h += '<g aria-hidden="true"><rect x="10" y="206" width="540" height="9" rx="3" fill="#c99e66" stroke="' + T + '" stroke-width="2"/></g>';
+        var nx = 280, ny = 226;
+        h += '<circle cx="' + nx + '" cy="' + ny + '" r="5" fill="' + T + '"/><g transform="translate(' + nx + ',' + ny + ') scale(1.08)" data-hx="' + nx + '">' + ding({ bild: BILD.neu(), name: 'Neues Werkzeug', aria: 'Neues Werkzeug: du sagst in einem Satz, was es tun soll', hoch: 150 }, 0, 0, 'Neues Werkzeug', 124, '+neu', false) + '</g>';
         // ein Papierschild unter der Wand: für welchen Space sie gerade zeigt (antippen wechselt)
         var fuerT = f ? 'für „' + kurz(f.titel, 22) + '“' : 'noch kein Space';
         var th = hochkant ? 96 : 84;

@@ -158,6 +158,10 @@ function dingName(d) {
   var n = dort && dort.titel ? dort.titel : String(d.titel || '').replace(/^(Faden zu|Sternbild mit)\s*„/, '').replace(/“\s*$/, '');
   return 'Sternbild mit „' + kurz(n, 40) + '“';
 }
+// Eine fertige Ansicht (Rückblick, Zwei Wege, Skizze … aus der Werkstatt aufgehängt) gehört wie ein Werkzeug in die Mitte;
+// Sternbilder und Funde bleiben Dinge am Boden
+function istAnsicht(d) { return !!d && !istSternbild(d) && /^(karte|ergebnis|geruest)$/.test(String(d.art || '')) && !/^Fund\b/.test(String(d.titel || '')); }
+function ansichtName(d) { var t = String((d && d.titel) || ''); var i = t.indexOf(':'); return kurz(i > 0 ? t.slice(0, i) : t, 22) || 'Ansicht'; }
 function istFund(n) { return !!n && (n.von === 'fund' || /^Fund\s*·\s*/.test(String(n.t || ''))); }
 // Carls Zettel (eine Antwort, die Otto an die Leine gehängt hat): sichtbar als Carls, zählt nicht als Ottos
 function istCarl(n) { return !!n && n.von === 'carl'; }
@@ -1236,7 +1240,7 @@ var DEF = {
         var box = o.querySelector('.c6z-sp-dinge');
         if (!box) box = mach('div', 'c6z-sp-dinge', o);
         box.textContent = '';
-        dl.filter(function (d) { return d.place === pid; }).slice(-4).forEach(function (d, j) {
+        dl.filter(function (d) { return d.place === pid && !istAnsicht(d); }).slice(-4).forEach(function (d, j) {
           var b = mach('button', 'c6z-sp-ding' + (d.art === 'faden' ? ' c6z-sp-ding-faden' : ''), box); b.type = 'button';
           b.innerHTML = dingBild(d);
           mach('i', 'c6z-sp-kontakt', b);
@@ -1339,9 +1343,14 @@ var DEF = {
     function werkzeugeZeichnen(neu) {
       var l = [];
       try { l = (sid && C6.werkzeug && C6.werkzeug.alle) ? (C6.werkzeug.alle(sid) || []) : []; } catch (e) { l = []; }
-      l = l.slice().reverse();
-      var x = r() || {}, vorn = l.filter(function (w) { return w.id === x.vorn; })[0] || l[0] || null;
-      var schl = (sid || '') + '|' + l.map(function (w) { return w.id + ':' + (w.name || ''); }).join(',') + '|' + (vorn ? vorn.id : '');
+      var x = r() || {};
+      // was Otto hier benutzt: seine Werkzeuge und die fertigen Ansichten, die er hergehängt hat – das Jüngste zuerst
+      l = l.map(function (w) { return { id: w.id, name: w.name || 'Werkzeug', farbe: w.farbe, ts: w.ts || 0, w: w }; })
+        .concat(((x.dinge || []).filter(istAnsicht)).map(function (d) { return { id: d.id, name: ansichtName(d), farbe: '#2b2722', ts: d.ts || 0, d: d }; }))
+        .sort(function (a, b) { return (b.ts || 0) - (a.ts || 0); });
+      var vorn = l.filter(function (w) { return w.id === x.vorn; })[0] || l[0] || null;
+      var klein = !comp() && !vsPlatz.hidden;
+      var schl = (sid || '') + '|' + l.map(function (w) { return w.id + ':' + w.name; }).join(',') + '|' + (vorn ? vorn.id : '') + '|' + klein;
       var war = !pfosten.hidden;
       pfosten.hidden = !l.length;
       wurzel.classList.toggle('c6z-sp-mit-wz', !!l.length);
@@ -1355,10 +1364,12 @@ var DEF = {
       if (!vorn) return;
       var h = mach('div', 'c6z-sp-wz', pfostenListe);
       h.setAttribute('role', 'tabpanel');
-      try { C6.werkzeug.male(h, vorn, { sid: sid }); } catch (e) { h.remove(); }
+      if (vorn.w) { try { C6.werkzeug.male(h, vorn.w, { sid: sid, klein: klein }); } catch (e) { h.remove(); } }
+      else ansichtMalen(h, vorn.d);
+      pfosten.classList.toggle('c6z-sp-mitte-klein', klein);
       if (l.length < 2) return;
       l.forEach(function (w) {
-        var k = mach('button', 'c6z-sp-reiter-k', reiter, w.name || 'Werkzeug'); k.type = 'button';
+        var k = mach('button', 'c6z-sp-reiter-k', reiter, w.name); k.type = 'button';
         k.setAttribute('role', 'tab');
         k.setAttribute('aria-selected', w === vorn ? 'true' : 'false');
         k.style.setProperty('--wz', w.farbe || '#2b2722');
@@ -1370,6 +1381,19 @@ var DEF = {
           if (neuEl && !C6.ruhig && neuEl.animate) neuEl.animate([{ transform: 'translateY(10px)', opacity: 0.4 }, { transform: 'none', opacity: 1 }], { duration: 260, easing: 'cubic-bezier(.3,.7,.4,1)' });
         });
       });
+    }
+    // Eine fertige Ansicht in der Mitte: ihr Blatt mit Titel und Text (rollt in sich), antippen liest sie groß
+    function ansichtMalen(h, d) {
+      var b = mach('div', 'c6z-sp-ansicht', h);
+      var kp = mach('button', 'c6z-sp-ansicht-kopf', b); kp.type = 'button';
+      mach('b', null, kp, String(d.titel || ansichtName(d)));
+      kp.setAttribute('aria-label', String(d.titel || ansichtName(d)) + ' · groß lesen');
+      kp.addEventListener('click', function () { aufstehen(); dingZeigen(d, kp); });
+      var tx = mach('div', 'c6z-sp-ansicht-text', b); tx.tabIndex = 0;
+      var z = String(d.text || '').split(/\n+/).filter(Boolean);
+      // die erste Zeile wiederholt oft nur den Titel
+      if (z.length > 1 && d.titel && String(d.titel).indexOf(z[0]) >= 0) z.shift();
+      (z.length ? z : ['Noch leer.']).slice(0, 40).forEach(function (abs) { mach('p', null, tx, abs); });
     }
     // Ohne Werkzeug: ein gestrichelter Umriss an seinem Platz, ein Satz, ein Weg in die Werkstatt
     function bauwegZeichnen(an) {
@@ -1625,11 +1649,13 @@ var DEF = {
       var lauf = !!(vs && vs.laeuft && vs.laeuft());
       vsPlatz.hidden = !(vsOffen || lauf);
       // die Karten liegen als Blatt über dem Boden (iPhone: über dem Feld); die Szene selbst bewegt sich dabei nicht
-      wurzel.classList.toggle('c6z-sp-vs-auf', !vsPlatz.hidden);
+      if (wurzel.classList.contains('c6z-sp-vs-auf') === vsPlatz.hidden) { wurzel.classList.toggle('c6z-sp-vs-auf', !vsPlatz.hidden); if (!comp()) { werkzeugeZeichnen(true); spaeter(groesse, C6.ruhig ? 20 : 340); } }
       if (vsPlatz.hidden) return;
       if (!vs || vsSid !== sid) {
         vsSid = sid; gemeint = null;
         vs = C6.vorschlaege.male(vsPlatz, { quelle: { sid: sid }, los: function () { aufstehen(); projektorZu(); }, bei: function () { meinen(null); auffrischen(); } });
+        var vf = mach('p', 'c6z-sp-vs-frage', null, stimme('vorschlag.frage', null, 'Was machen wir damit?'));
+        vsPlatz.insertBefore(vf, vsPlatz.firstChild);
       }
       if (gemeint) { var gz = haken.querySelector('.c6z-sp-zettel[data-ts="' + gemeint.ts + '"]'); if (gz) gz.classList.add('c6vs-gemeint'); }
       spaeter(vsLage, 60);
@@ -1659,9 +1685,10 @@ var DEF = {
       e.stopPropagation();
       aufstehen();
       if (vsOffen && !gemeint) { vsZu(); return; }
+      if (lageWartet && !andererSpricht()) { sagLage(); return; }
       if (vsAuf(null)) {
         try { ctl.stimmung('froh'); spaeter(function () { ctl && ctl.stimmungJetzt === 'froh' && ctl.stimmung('ruhig'); }, 1200); } catch (x) {}
-        if (C6.sag) C6.sag(stimme('vorschlag.frage', null, 'Was machen wir damit?'), { merken: false });
+        if (C6.schweig) { try { C6.schweig(); } catch (x) {} }
         return;
       }
       var f = faden(sid) || {};
@@ -2168,8 +2195,11 @@ var DEF = {
       }, C6.ruhig ? 60 : 900);
     }
     C6.bus.on('space', function (d) {
+      if (d && d.was === 'ding' && d.stringId) { var y0 = roh(d.stringId), dn = y0 && (y0.dinge || []).filter(function (q) { return q.id === d.id; })[0]; if (istAnsicht(dn)) aendern(function (s) { var y = s.spaces[d.stringId]; if (y) y.vorn = d.id; }); }
       if (!d || !hier || d.stringId !== sid) return;
       if (d.was === 'ding') {
+        var xa = r(), da = ((xa && xa.dinge) || []).filter(function (q) { return q.id === d.id; })[0];
+        if (istAnsicht(da)) { auffrischen(); werkzeugeZeichnen(true); var m0 = pfostenListe.firstChild; if (m0 && !C6.ruhig && m0.animate) m0.animate([{ transform: 'translateY(-24px) rotate(-3deg)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 420, easing: 'cubic-bezier(.3,.7,.4,1)' }); return; }
         auffrischen();
         mitEl.hidden = true;
         var x = r(), dd = ((x && x.dinge) || []).filter(function (q) { return q.id === d.id; })[0];
@@ -2195,7 +2225,7 @@ var DEF = {
       var ps = placesJetzt();
       var ziel = o.place && ps.indexOf(o.place) >= 0 ? o.place : (anderer || !place || ps.indexOf(place) < 0 ? ((x && x.jetzt && ps.indexOf(x.jetzt) >= 0) ? x.jetzt : ps[0]) : place);
       // ein anderer Space: was Carl im vorigen fragte (Blase, offene Wahl) gilt hier nicht mehr; die Karten liegen wieder weg
-      if (anderer) { if (war && C6.schweig) { try { C6.schweig(); } catch (e) {} } place = null; modus = null; vsOffen = false; schliesseBlatt(); leineSchl = ''; dingSchl = ''; bodenWeg(true); }
+      if (anderer) { lageWartet = false; if (war && C6.schweig) { try { C6.schweig(); } catch (e) {} } place = null; modus = null; vsOffen = false; schliesseBlatt(); leineSchl = ''; dingSchl = ''; bodenWeg(true); }
       kopfZeichnen();
       if (!sid) { stueck.hidden = topf.hidden = true; pfosten.hidden = true; bauweg.hidden = true; vsOffen = false; vsPlatz.hidden = true; wurzel.classList.remove('c6z-sp-mit-wz', 'c6z-sp-vs-auf'); }
       orteZeichnen();
@@ -2352,9 +2382,13 @@ var DEF = {
         C6.sag(stimme('naehren.kernDeiner', { satz: kurz(v, 90) }, 'Vielleicht trägt „' + kurz(v, 90) + '“ diesen Space. Tipp den Zettel an, wenn er der Kernsatz ist.'), { merken: false });
       });
     }
+    function heuteSchl() { var d = new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
+    var lageWartet = false;
     function sagLage() {
       if (andererSpricht()) return;
       var s0 = sid, l = lage();
+      lageWartet = false;
+      aendern(function (s) { var y = s.spaces[s0]; if (y) y.gefragt = heuteSchl(); });
       if (l.fund) fundGezeigt[s0] = Date.now();
       if (l.ortFrage) aendern(function (s) { var y = s.spaces[s0]; if (y) y.ortGefragt = Date.now(); });
       letzteLage[s0] = { ts: Date.now(), satz: l.satz };
@@ -2380,7 +2414,9 @@ var DEF = {
       // vom Katalog in der Garage („Für deine Spaces“) hergeschickt: gleich das Einrichten dieses Ortes aufschlagen, sonst nichts sagen
       if (o.einrichten) { var s1 = sid; spaeter(function () { if (hier && sid === s1) einrichtenOeffnen(); }, C6.ruhig ? 60 : 650); return; }
       gesagt[sid + ':' + place] = 1;
-      if (!neu && letzteLage[sid] && Date.now() - letzteLage[sid].ts < 90000 && letzteLage[sid].satz === lage().satz) return;
+      if (!neu && letzteLage[sid] && Date.now() - letzteLage[sid].ts < 90000 && letzteLage[sid].satz === lage().satz) { lageWartet = true; return; }
+      // von selbst fragt Carl höchstens einmal je Space und Tag; sonst wartet seine Frage, bis du ihn antippst
+      if (!neu && (r() || {}).gefragt === heuteSchl()) { lageWartet = true; return; }
       var s0 = sid;
       // der Ort wird still gewählt (nach dem Namen); ändern geht über den Titel → „Ort wechseln“
       spaeter(function () { if (hier && sid === s0) sagLage(); }, 520);

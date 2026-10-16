@@ -691,6 +691,9 @@ function chrome() {
   var hkWort = h === 'boden' ? ((raeume[letzterJe.vogel] || {}).name || HOEHE_NAME.vogel || 'Himmel') : 'Boden';
   if (hoeheKnopf.firstChild.textContent !== hkWort) hoeheKnopf.firstChild.textContent = hkWort;
   hoeheKnopf.setAttribute('data-runter', h === 'boden' ? 'nein' : 'ja');
+  // Ein Ziel, ein Knopf: führt der Rückweg („‹ Himmel“) dorthin, wohin auch der Höhenknopf führt, zeigt nur der Höhenknopf (Esc geht weiter zurück)
+  var rzi = zurueckZiel(), rueckWieHoehe = h === 'boden' && !inReihe(d) && typeof d.faden !== 'function' && !!raeume[rzi] && hoeheVon(raeume[rzi]) === 'vogel' && (!letzterJe.vogel || letzterJe.vogel === rzi);
+  wurzel.toggleAttribute('data-rueck-hoehe', rueckWieHoehe);
   hoeheKnopf.setAttribute('aria-label', h === 'boden' ? 'Hoch in den ' + hkWort : 'Hinunter auf den Boden');
   var imRundgang = !!(C6.rundgang && C6.rundgang.an) || (!inReihe(d) && hoeheVon(d) === 'boden' && d.leiste === false);
   // def.regler: false = nie; eine Funktion entscheidet je Lage (z. B. die Rezeption: kein Himmel, solange es keinen Space gibt)
@@ -1663,9 +1666,9 @@ function platzhalter() {
   else if (frage && frage.frei && !frage.zu && frage.raum === C6.jetzt && frage.platzhalter) p = frage.platzhalter;
   else if (eigenerPlatzhalter && eigenerPlatzhalter.raum === C6.jetzt) { p = eigenerPlatzhalter.t; modus = eigenerPlatzhalter.modus; }
   else {
-    // überall dieselbe Frage; nur in der Werkstatt, wo die Werkzeuge hängen, der Hinweis auf „/“
+    // überall dieselbe Frage; in der Werkstatt, wo gebaut wird, ihr Verb (die /-Abkürzung bleibt als Funktion, ohne Hinweis im Feld)
     p = 'Woran denkst du gerade?';
-    if (C6.jetzt === 'werkstatt') p = C6.geraet === 'computer' ? p + ' Oder / für ein Werkzeug' : 'Woran denkst du? / Werkzeug';
+    if (C6.jetzt === 'werkstatt') { var wp = ''; try { wp = C6.stimme && C6.stimme.fest('werkstatt.feld'); } catch (e) {} p = wp || 'Was soll ich dir bauen?'; }
   }
   if (feld.placeholder !== p) feld.placeholder = p;
   if (modus) wurzel.setAttribute('data-feld-modus', modus); else wurzel.removeAttribute('data-feld-modus');

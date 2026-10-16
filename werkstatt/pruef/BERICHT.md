@@ -1,6 +1,6 @@
 # Prüfbericht Carl 6
 
-16.10.2026 15:40
+17.10.2026 01:32
 
 **Gesamt: nicht grün**
 
@@ -13,15 +13,15 @@ Start: `rezeption`
 | Raum | Fehler | Überlauf | Tippziele < 44 | Überdeckt | Kontrast | Blase/Chips | Scroll | Bild |
 |---|---|---|---|---|---|---|---|---|
 | rezeption | – | – | – | – | – | – | – | `pruef/iphone-rezeption.png` |
-| zuhause | – | – | button.c6k-hk „Hoch in den Himmel“ 101×38 | – | – | Blase ← button.c6z-ding.c6z-fenster „Fenster“ (30 %)<br>Chips ← button.c6z-ding.c6z-knaeuel „Knäuel“ (29 %) | – | `pruef/iphone-zuhause.png` |
-| werkstatt | – | – | button.c6k-hk „Hoch in den Himmel“ 101×38 | – | – | Blase ← g.c6w-ding.c6w-fenster-ding „Fenster: draußen ist Mit“ (40 %)<br>Chips ← g.c6w-ding.c6w-saege „Sägebock mit Brett. Anti“ (45 %)<br>Chips ← g.c6w-ding.c6w-kiste „Werkzeugkiste, zu. Antip“ (47 %) | – | `pruef/iphone-werkstatt.png` |
-| bibliothek | – | – | button.c6k-hk „Hoch in den Himmel“ 101×38 | – | – | – | – | `pruef/iphone-bibliothek.png` |
-| fahrrad | – | – | button.c6k-hk „Hoch in den Himmel“ 101×38 | button.c6s-f-pkt „Rahmen. Ändern“ ← path<br>button.c6s-f-pkt „Hinterrad. Ändern“ ← circle<br>button.c6s-f-pkt „Vorderrad. Ändern“ ← circle<br>button.c6s-f-pkt „Sattel. Ändern“ ← path<br>button.c6s-f-pkt „Lenker. Ändern“ ← path<br>button.c6s-f-pkt „Klingel. Ändern“ ← path<br>… +4 | – | – | – | `pruef/iphone-fahrrad.png` |
-| laden | – | – | button.c6k-hk „Hoch in den Himmel“ 101×38 | – | – | – | – | `pruef/iphone-laden.png` |
-| lesesaal | – | – | g „Die Kerze. Tipp sie an“ 36×69<br>button.c6k-hk „Hoch in den Himmel“ 101×38 | – | – | – | – | `pruef/iphone-lesesaal.png` |
-| netz | – | – | button.c6w-knopf.c6w-haupt „Neuer Planet“ 1×48<br>button.c6k-hk „Hinunter auf den Boden“ 92×38 | button.c6w-knopf.c6w-haupt „Neuer Planet“ ← canvas.c6w-h-vorn „Dein Himmel. Du in der Mitte“ | – | – | – | `pruef/iphone-netz.png` |
-| space | – | – | button.c6k-hk „Hoch in den Himmel“ 101×38 | – | – | – | – | `pruef/iphone-space.png` |
-| teleskop | – | – | button.c6k-hk „Hinunter auf den Boden“ 92×38 | – | – | – | – | `pruef/iphone-teleskop.png` |
+| zuhause | – | – | – | – | – | Chips ← button.c6z-ding.c6z-knaeuel „Knäuel“ (29 %) | – | `pruef/iphone-zuhause.png` |
+| werkstatt | – | – | – | – | – | Blase ← g.c6w-ding.c6w-fenster-ding „Fenster: draußen ist Nac“ (40 %)<br>Chips ← g.c6w-ding.c6w-saege „Sägebock mit Brett. Anti“ (45 %)<br>Chips ← g.c6w-ding.c6w-kiste „Werkzeugkiste, zu. Antip“ (47 %) | – | `pruef/iphone-werkstatt.png` |
+| bibliothek | – | – | – | – | – | – | – | `pruef/iphone-bibliothek.png` |
+| fahrrad | – | – | – | button.c6s-f-pkt „Rahmen. Ändern“ ← path<br>button.c6s-f-pkt „Hinterrad. Ändern“ ← circle<br>button.c6s-f-pkt „Vorderrad. Ändern“ ← circle<br>button.c6s-f-pkt „Sattel. Ändern“ ← path<br>button.c6s-f-pkt „Lenker. Ändern“ ← path<br>button.c6s-f-pkt „Klingel. Ändern“ ← path<br>… +4 | – | – | – | `pruef/iphone-fahrrad.png` |
+| laden | – | – | – | – | – | – | – | `pruef/iphone-laden.png` |
+| lesesaal | – | – | g „Die Kerze. Tipp sie an“ 36×69 | – | – | – | – | `pruef/iphone-lesesaal.png` |
+| netz | – | – | – | – | – | – | – | `pruef/iphone-netz.png` |
+| space | – | – | – | – | – | – | – | `pruef/iphone-space.png` |
+| teleskop | – | – | – | – | – | – | – | `pruef/iphone-teleskop.png` |
 | rundgang | – | – | – | – | – | – | – | `pruef/iphone-rundgang.png` |
 
 | Test | Ergebnis | Messung |
@@ -47,15 +47,15 @@ Start: `rezeption`
 | Raum | Fehler | Überlauf | Tippziele < 44 | Überdeckt | Kontrast | Blase/Chips | Scroll | Bild |
 |---|---|---|---|---|---|---|---|---|
 | rezeption | – | – | – | – | – | – | – | `pruef/computer-rezeption.png` |
-| zuhause | – | – | button.c6k-hk „Hoch in den Himmel“ 101×38 | button.c6z-ding.c6z-bild „Zum Fahrrad“ ← rect | – | – | – | `pruef/computer-zuhause.png` |
-| werkstatt | – | – | button.c6k-hk „Hoch in den Himmel“ 101×38 | – | – | – | – | `pruef/computer-werkstatt.png` |
-| bibliothek | – | – | button.c6k-hk „Hoch in den Himmel“ 101×38 | – | – | – | – | `pruef/computer-bibliothek.png` |
-| fahrrad | – | – | button.c6k-hk „Hoch in den Himmel“ 101×38 | button.c6s-f-pkt „Rahmen. Ändern“ ← path<br>button.c6s-f-pkt „Hinterrad. Ändern“ ← circle<br>button.c6s-f-pkt „Vorderrad. Ändern“ ← circle<br>button.c6s-f-pkt „Sattel. Ändern“ ← path<br>button.c6s-f-pkt „Lenker. Ändern“ ← path<br>button.c6s-f-pkt „Klingel. Ändern“ ← path<br>… +4 | – | – | – | `pruef/computer-fahrrad.png` |
-| laden | – | – | button.c6k-hk „Hoch in den Himmel“ 101×38 | button.c6s-g-tor.c6k-haltbar „Tor zum Kieselpark: fahren u“ ← svg<br>button.c6s-g-tafel.c6k-haltbar „Quest-Tafel: 0 von 9 abgehak“ ← ellipse<br>button.c6s-f-pkt „Rahmen. Ändern“ ← div.c6s-g-moebel „Kieselpark z 0 Katalog Quest“<br>button.c6s-f-pkt „Hinterrad. Ändern“ ← div.c6s-g-moebel „Kieselpark z 0 Katalog Quest“<br>button.c6s-f-pkt „Vorderrad. Ändern“ ← div.c6s-g-moebel „Kieselpark z 0 Katalog Quest“<br>button.c6s-f-pkt „Sattel. Ändern“ ← div.c6s-f-blatt.c6s-g-kleid „Carls Schrank“<br>… +6 | – | – | – | `pruef/computer-laden.png` |
-| lesesaal | – | – | button.c6k-hk „Hoch in den Himmel“ 101×38 | – | – | Chips ← g.c6w-ding.c6w-ls-tisch „Der Tisch der Funde. Noc“ (100 %) | – | `pruef/computer-lesesaal.png` |
-| netz | – | – | button.c6k-hk „Hinunter auf den Boden“ 92×38 | – | – | – | – | `pruef/computer-netz.png` |
-| space | – | – | button.c6k-hk „Hoch in den Himmel“ 101×38 | – | – | – | – | `pruef/computer-space.png` |
-| teleskop | – | – | button.c6k-hk „Hinunter auf den Boden“ 92×38 | – | – | – | – | `pruef/computer-teleskop.png` |
+| zuhause | – | – | – | – | – | – | – | `pruef/computer-zuhause.png` |
+| werkstatt | – | – | – | – | – | – | – | `pruef/computer-werkstatt.png` |
+| bibliothek | – | – | – | – | – | – | – | `pruef/computer-bibliothek.png` |
+| fahrrad | – | – | – | button.c6s-f-pkt „Rahmen. Ändern“ ← path<br>button.c6s-f-pkt „Hinterrad. Ändern“ ← circle<br>button.c6s-f-pkt „Vorderrad. Ändern“ ← circle<br>button.c6s-f-pkt „Sattel. Ändern“ ← path<br>button.c6s-f-pkt „Lenker. Ändern“ ← path<br>button.c6s-f-pkt „Klingel. Ändern“ ← path<br>… +4 | – | – | – | `pruef/computer-fahrrad.png` |
+| laden | – | – | – | button.c6s-g-tor.c6k-haltbar „Tor zum Kieselpark: fahren u“ ← svg<br>button.c6s-g-tafel.c6k-haltbar „Quest-Tafel: 0 von 9 abgehak“ ← ellipse<br>button.c6s-f-pkt „Rahmen. Ändern“ ← div.c6s-g-moebel „Kieselpark z 0 Katalog Quest“<br>button.c6s-f-pkt „Hinterrad. Ändern“ ← div.c6s-g-moebel „Kieselpark z 0 Katalog Quest“<br>button.c6s-f-pkt „Vorderrad. Ändern“ ← div.c6s-g-moebel „Kieselpark z 0 Katalog Quest“<br>button.c6s-f-pkt „Sattel. Ändern“ ← div.c6s-f-blatt.c6s-g-kleid „Carls Schrank“<br>… +6 | b „Kieselpark“ 1.64 (soll 4.5) | – | – | `pruef/computer-laden.png` |
+| lesesaal | – | – | – | – | – | Chips ← g.c6w-ding.c6w-ls-tisch „Der Tisch der Funde. Noc“ (100 %) | – | `pruef/computer-lesesaal.png` |
+| netz | – | – | – | – | – | – | – | `pruef/computer-netz.png` |
+| space | – | – | – | – | – | – | – | `pruef/computer-space.png` |
+| teleskop | – | – | – | – | – | – | – | `pruef/computer-teleskop.png` |
 | rundgang | – | – | – | – | – | – | – | `pruef/computer-rundgang.png` |
 
 | Test | Ergebnis | Messung |

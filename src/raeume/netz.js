@@ -288,7 +288,9 @@
         if (!(o.r > 0) || v[2] < o.r * 1.2 + 0.05) return null;
         var s = schirm(v);
         var R = F * o.r / Math.sqrt(Math.max(1e-4, v[2] * v[2] - o.r * o.r));
-        o.v = v; o.s = s; o.R = R;
+        // abseits der Bildmitte wird die Kugel im Bild zur Ellipse (länger zur Seite hin): das Zeichenquadrat muss sie ganz fassen
+        var seit = Math.hypot(v[0], v[1]), Rq = Math.max(R, F * (seit + o.r) / (v[2] - o.r) - F * seit / v[2]);
+        o.v = v; o.s = s; o.R = R; o.Rq = Rq;
         kugeln.push(o);
         return o;
       }
@@ -307,8 +309,8 @@
           if (o) o.pf = pflanzeVon(p.id);
           if (o && p.kind === 3) {
             o.ring = true;
-            kugeln.push({ kind: 5, p: p.pos, r: p.r * sk, v: o.v, s: o.s, R: o.R * 1.95, farbe: mische(p.farbe, [0.93, 0.94, 1], 0.25), half: 1, al: al, ringFuer: p.id });
-            kugeln.push({ kind: 5, p: p.pos, r: p.r * sk, v: o.v, s: o.s, R: o.R * 1.95, farbe: mische(p.farbe, [0.93, 0.94, 1], 0.25), half: -1, al: al, ringFuer: p.id });
+            kugeln.push({ kind: 5, p: p.pos, r: p.r * sk, v: o.v, s: o.s, R: o.R * 1.95, Rq: (o.Rq || o.R) * 1.95, farbe: mische(p.farbe, [0.93, 0.94, 1], 0.25), half: 1, al: al, ringFuer: p.id });
+            kugeln.push({ kind: 5, p: p.pos, r: p.r * sk, v: o.v, s: o.s, R: o.R * 1.95, Rq: (o.Rq || o.R) * 1.95, farbe: mische(p.farbe, [0.93, 0.94, 1], 0.25), half: -1, al: al, ringFuer: p.id });
           }
           p.monde.forEach(function (m) { kugel({ kind: 4, p: m.pos, r: m.r, farbe: m.farbe, spin: zeit * 0.1, seed: hash(m.id), al: al, id: p.id, mond: m, pl: p }); });
         });
@@ -520,7 +522,7 @@
         var o = 0;
         var ecken = [[-1, -1], [1, -1], [1, 1], [-1, -1], [1, 1], [-1, 1]];
         kugeln.forEach(function (k) {
-          var R = k.R * 1.12 + 2, ringN = [0, 1, 0];
+          var R = (k.Rq || k.R) * 1.08 + 2, ringN = [0, 1, 0];
           if (k.kind === 5) {
             var tilt = 0.42, nw = [Math.sin(tilt) * 0.6, Math.cos(tilt), Math.sin(tilt) * 0.8];
             nw = norm(nw);
@@ -632,8 +634,10 @@
       function zahlen(id) {
         var x = (C6.S && C6.S.spaces && C6.S.spaces[id]) || {}, s = C6.strings.hol(id) || {};
         var no = x.notizen || [];
-        var eig = no.filter(function (n) { return n && !n.von && !/^Fund\s*·/.test(String(n.t || '')); }).length;
+        // Zettel = was an der Leine hängt (jede Notiz, Funde eingeschlossen); Dinge am Boden (z. B. Sternbild) sind keine Zettel – dieselbe Zahl wie Space und Buch
+        var zettel = no.filter(function (n) { return !!n; }).length;
         var funde = no.filter(function (n) { return n && (n.von === 'fund' || /^Fund\s*·/.test(String(n.t || ''))); }).length;
+        var eig = zettel - funde;
         var st = {}; try { st = C6.bausteine && C6.bausteine.stand ? C6.bausteine.stand(id) || {} : {}; } catch (e) { st = {}; }
         var wzl = []; try { wzl = C6.werkzeug && C6.werkzeug.alle ? C6.werkzeug.alle(id) || [] : []; } catch (e) { wzl = []; }
         var letzte = s.erstellt || 0;
@@ -641,14 +645,14 @@
         (s.perlen || []).forEach(function (n) { if (n && n.ts > letzte) letzte = n.ts; });
         (x.dinge || []).forEach(function (d) { if (d && d.ts > letzte) letzte = d.ts; });
         wzl.forEach(function (w) { if (w && w.ts > letzte) letzte = w.ts; });
-        return { eig: eig, funde: funde, wz: wzl.length, kern: !!x.kern, schritt: st.naechster || '', tag: st.tag, letzte: letzte };
+        return { zettel: zettel, eig: eig, funde: funde, wz: wzl.length, kern: !!x.kern, schritt: st.naechster || '', tag: st.tag, letzte: letzte };
       }
       function standKurz(id) {
         var z = zahlen(id);
-        if (!z.eig && !z.funde) return satz('himmel.standKurzLeer', 'noch kein Zettel');
+        if (!z.zettel) return satz('himmel.standKurzLeer', 'noch kein Zettel');
         var tage = z.letzte ? Math.floor((Date.now() - z.letzte) / 864e5) : 0;
         if (tage >= 3) return satz('himmel.standKurzStill', 'still seit {n} Tagen').replace('{n}', tage);
-        var n = z.eig + z.funde, t = [n + ' Zettel'];
+        var t = [z.zettel + ' Zettel'];
         if (!z.schritt) t.push(satz('himmel.standKurzSchritt', 'Schritt fehlt'));
         else if (z.wz) t.push(z.wz === 1 ? '1 Werkzeug' : z.wz + ' Werkzeuge');
         else if (z.kern) t.push(satz('himmel.standKurzKern', 'Kernsatz steht'));
@@ -872,6 +876,16 @@
           }
         }
         if (wahl) { var aw = hol(wahl.von); if (aw) ringMalen(c, aw, 0.75 + (C6.ruhig ? 0 : 0.25 * Math.sin(zeit * 3))); }
+        if (tasten) {
+          var ta = hol(tasten.a), tb = hol(tasten.b), qa = ta && proj(ta.pos), qb = tb && proj(tb.pos), tk = (performance.now() - tasten.t0) / 2600;
+          if (tk >= 1 || !qa || !qb || qa[2] < 0.2 || qb[2] < 0.2 || zieh || feier || wahl || folge || !blatt.hidden) tasten = null;
+          else {
+            var tw = (tk < 0.55 ? Math.sin(tk / 0.55 * Math.PI / 2) : Math.cos((tk - 0.55) / 0.45 * Math.PI / 2)) * 0.7;
+            var tx = qa[0] + (qb[0] - qa[0]) * tw, ty = qa[1] + (qb[1] - qa[1]) * tw, tal = Math.min(1, tk * 6, (1 - tk) * 6);
+            fadenZug(c, qa[0], qa[1], tx, ty, 0.85 * tal);
+            c.globalAlpha = tal; stern4(c, tx, ty, 7, 'rgba(236,209,147,0.9)', '#ffffff'); c.globalAlpha = 1;
+          }
+        }
         // die Frage nach dem Satz: der Faden hält zwischen beiden, bis du antwortest oder daneben tippst
         if (knotenFrage) { var fa = hol(knotenFrage.a), fb = hol(knotenFrage.b), qa = fa && proj(fa.pos), qb = fb && proj(fb.pos); if (qa && qb && qa[2] > 0.2 && qb[2] > 0.2) { ringMalen(c, fa, 0.8); ringMalen(c, fb, 0.8); fadenZug(c, qa[0], qa[1], qb[0], qb[1], 1); } }
         if (schnurr) {
@@ -1585,8 +1599,8 @@
         if (spielDarf(now)) spielStart(now);
         schnuppeSchritt(now);
         var dtc = Math.min(0.05, (now - (tCarl || now)) / 1000); tCarl = now;
-        var lebt = carlLebt(now) || leuchtenLaeuft() || !!schnurr || !!spiel || spur.length > 0 || !!feier || rauch.length > 0 || !!carl.traegt || Object.keys(pulse).length > 0 || schnuppen.length > 0 || !!glitzer;
-        var ruht = !geste && !zieh && !tauchen && !schnuppen.length && !Object.keys(neuWachsen).length && Math.abs(schwung) < 0.0005 && Math.abs(soll.dist - cam.dist) < 0.01 && Math.abs(soll.tx - cam.tx) < 0.01 && Math.abs(soll.tz - cam.tz) < 0.01 && vers.x === versSoll.x && vers.y === versSoll.y && !(wahl && !C6.ruhig);
+        var lebt = carlLebt(now) || leuchtenLaeuft() || !!schnurr || !!tasten || !!spiel || spur.length > 0 || !!feier || rauch.length > 0 || !!carl.traegt || Object.keys(pulse).length > 0 || schnuppen.length > 0 || !!glitzer;
+        var ruht = !geste && !zieh && !tauchen && !tasten && !schnuppen.length && !Object.keys(neuWachsen).length && Math.abs(schwung) < 0.0005 && Math.abs(soll.dist - cam.dist) < 0.01 && Math.abs(soll.tx - cam.tx) < 0.01 && Math.abs(soll.tz - cam.tz) < 0.01 && vers.x === versSoll.x && vers.y === versSoll.y && !(wahl && !C6.ruhig);
         if (tRaf) takt = takt * 0.9 + Math.min(300, now - tRaf) * 0.1; tRaf = now;
         // schwaches Gerät: in Ruhe seltener malen, damit alles andere flüssig bleibt
         var pause = takt > 40 ? 160 : 34;
@@ -1742,6 +1756,8 @@
           var z = d.z + prio + a * 0.001;
           if (z < bz) { bz = z; best = d; }
         });
+        // ein Sternbild-Stern über dem Kern eines näheren Planeten stiehlt ihm den Finger nicht
+        if (best && best.art === 'knoten') dinge.forEach(function (d) { if (d.art === 'planet' && Math.hypot(x - d.x, y - d.y) <= d.Rv * 0.7 && d.z <= best.z + 1) best = d; });
         // ein Mond stiehlt seinem Planeten nie den Finger: liegt der Punkt auf der sichtbaren Kugel, gilt der Planet
         if (best && best.art === 'mond') dinge.forEach(function (d) { if (d.art === 'planet' && Math.hypot(x - d.x, y - d.y) <= d.Rv && d.z <= best.z + 2) best = d; });
         return best;
@@ -1754,9 +1770,9 @@
         if (ids.length === 1) {
           var d = treffer(p[0], p[1]);
           geste = { art: 'dreh', start: p, last: p, ding: d, weg: 0, t: performance.now(), ts: e.timeStamp };
-          // langes Halten fragt „Wie geht das?“: es fliegt nicht, öffnet nichts, zieht nichts.
-          // Erst im nächsten Bild entscheiden: ein schon losgelassener Finger (im Takt noch nicht verarbeitet) kommt vorher an.
-          if (d) { var gh = geste; gh.uhr = setTimeout(function () { requestAnimationFrame(function () { if (geste === gh && !gh.gehalten && gh.weg <= 8 && Object.keys(zeiger).length === 1) halte(gh); }); }, 600); }
+          // langes Halten fragt „Wie geht das?“ – aber erst beim Loslassen und nur, wenn der Finger still lag.
+          // Wer hält und dann zieht, zieht: Bewegung macht aus dem Halten ein Ziehen.
+          if (d) { var gh = geste; gh.uhr = setTimeout(function () { if (geste === gh && gh.weg <= 8) gh.reif = true; }, 600); }
           // Carl schaut zum Finger
           carlWach();
           if (!carl.flug && !carl.unterwegs) carlSchau(p[0], p[1], 2400);
@@ -1780,7 +1796,7 @@
         } else {
           geste.weg = Math.max(geste.weg, Math.hypot(p[0] - geste.start[0], p[1] - geste.start[1]));
           if (geste.gehalten) { geste.last = p; return; }
-          if (geste.uhr && geste.weg > 8) { clearTimeout(geste.uhr); geste.uhr = 0; }
+          if (geste.weg > 8) { if (geste.uhr) { clearTimeout(geste.uhr); geste.uhr = 0; } geste.reif = false; }
           if (zieh && geste.weg > 12) {
             zieh.weit = true; zieh.x = p[0]; zieh.y = p[1];
             var t = treffer(p[0], p[1]); zieh.ziel = t && t.art === 'planet' && t.id !== zieh.von ? t.id : null;
@@ -1804,7 +1820,7 @@
         geste = null;
         if (g.uhr) clearTimeout(g.uhr);
         // ein ausgebremster Takt darf das Halten nicht in einen Tipp verwandeln: die Zeit des Fingers zählt
-        if (!g.gehalten && g.ding && g.art === 'dreh' && g.weg <= 8 && e.type !== 'pointercancel' && g.ts != null && e.timeStamp - g.ts >= 600) halte(g);
+        if (!g.gehalten && g.ding && g.art === 'dreh' && g.weg <= 8 && e.type !== 'pointercancel' && (g.reif || (g.ts != null && e.timeStamp - g.ts >= 600))) halte(g);
         var z = zieh; zieh = null;
         if (g.gehalten) { schwung = 0; weiter(); return; }
         if (g.weg < 10 && e.type !== 'pointercancel') {
@@ -1859,14 +1875,38 @@
         if (wahl && hol(wahl.von)) return satz('himmel.wahl', 'Tipp den Planeten an, der zu „{t}“ gehört.').replace('{t}', kuerze(hol(wahl.von).d.titel, 40));
         if (!n) return satz('himmel.leerTat', 'Hier oben stehen später deine Spaces, jeder als Planet. Anfangen tust du unten im Zuhause: Sag mir dort, woran du denkst.');
         if (n === 1) return satz('himmel.tatEins', 'Hier oben siehst du, wie es um „{t}“ steht. Verbinden geht erst mit zwei Spaces, den nächsten fängst du im Zuhause an.').replace('{t}', kuerze(welt.planeten[0].d.titel, 40));
+        // steht das erste Sternbild, hat der Himmel die Geste gelernt: dann schweigt der Satz, die Dinge sprechen
+        if (welt.knoten.some(function (kk) { return hol(kk.k.a) && hol(kk.k.b); })) return satz('himmel.tatDanach', '');
         return satz('himmel.tat', 'Hier oben siehst du, wie es um jeden deiner Spaces steht. Gehören zwei zusammen, zieh den einen zum anderen.');
       }
       function grund() {
         if (stimmeTemp) return;
         if (imRundgang || (C6.rundgang && C6.rundgang.an)) { stimmeEl.classList.remove('c6w-an'); return; }
         var an = !feier && blatt.hidden && (ueberblick || !!wahl) && aktiv;
-        if (an) { var t = grundSatz(); if (stimmeEl.textContent !== t) stimmeEl.textContent = t; }
+        var t = an ? grundSatz() : '';
+        if (an && t && stimmeEl.textContent !== t) stimmeEl.textContent = t;
+        an = an && !!t;
         stimmeEl.classList.toggle('c6w-an', an);
+        tastenPlanen();
+      }
+      // Vor dem ersten Sternbild tastet einmal ein goldener Faden von einem Planeten zum anderen vor und zieht sich zurück
+      // (zeigt die Geste, ohne sie zu erklären); nie bei reduzierter Bewegung, nie während einer Geste oder eines Blatts
+      var tasten = null, tastGetan = false, tastUhr = 0;
+      function tastDarf() {
+        return aktiv && !tastGetan && !C6.ruhig && !imRundgang && welt.planeten.length >= 2 && ueberblick && !folge && blatt.hidden && !wahl && !feier && !zieh && !geste &&
+          !welt.knoten.some(function (kk) { return hol(kk.k.a) && hol(kk.k.b); });
+      }
+      function tastenPlanen() {
+        if (tastUhr || !tastDarf()) return;
+        tastUhr = setTimeout(function () {
+          tastUhr = 0;
+          // erst wenn die Kamera ruht (beim Hinaufkommen sähe man ihn nicht)
+          if (performance.now() < hinaufBis + 900 || Math.abs(soll.dist - cam.dist) > soll.dist * 0.02 || Math.abs(soll.pitch - cam.pitch) > 0.02 || Math.abs(soll.yaw - cam.yaw) > 0.02) { tastenPlanen(); return; }
+          if (!tastDarf()) return;
+          tastGetan = true;
+          tasten = { a: welt.planeten[1].id, b: welt.planeten[0].id, t0: performance.now() };
+          weiter();
+        }, 2200);
       }
       function heimZeigen() { heimKnopf.hidden = !!welt.planeten.length || imRundgang; }
 
@@ -1982,10 +2022,9 @@
       // Der Stand als Satz: nur gezählt, nichts erfunden
       function standSatz(id) {
         var z = zahlen(id);
-        if (!z.eig && !z.funde && !z.kern && !z.schritt) return satz('himmel.standLeer', 'Noch leer. Der erste Zettel ist der Samen.');
+        if (!z.zettel && !z.kern && !z.schritt) return satz('himmel.standLeer', 'Noch leer. Der erste Zettel ist der Samen.');
         var t = [];
-        t.push(z.eig === 1 ? 'Ein Zettel von dir' : (z.eig ? z.eig + ' Zettel von dir' : 'Noch kein Zettel von dir'));
-        if (z.funde) t.push(z.funde === 1 ? 'ein Fund' : z.funde + ' Funde');
+        t.push((z.zettel === 1 ? 'Ein Zettel' : (z.zettel ? z.zettel + ' Zettel' : 'Noch kein Zettel')) + (z.funde ? ' (davon ' + (z.funde === 1 ? 'ein Fund' : z.funde + ' Funde') + ')' : ''));
         if (z.wz) t.push(z.wz === 1 ? 'ein Werkzeug' : z.wz + ' Werkzeuge');
         var s1 = t.length > 1 ? t.slice(0, -1).join(', ') + ' und ' + t[t.length - 1] : t[0];
         var s2 = z.kern ? 'der Kernsatz steht' : 'noch kein Kernsatz';
@@ -2009,7 +2048,7 @@
         var zul = !zz || zz.art === 'anfang' ? '' : (zz.art === 'knoten' ? 'Sternbild mit „' + esc(kuerze(zz.mit, 30)) + '“: ' : zz.art === 'nadel' ? 'Kernsatz: ' : '') + '„' + esc(kuerze(zz.t, 90)) + '“';
         var v = vorschlagFuer(id), vs = '';
         if (v && v.art === 'zettel') vs = '<form class="c6w-perle-form c6w-oben-vs1"><label class="c6w-oben-vs-name" for="c6w-perle-in">' + esc(v.name) + '</label>' +
-          '<input id="c6w-perle-in" class="c6w-feld" autocomplete="off" maxlength="200" placeholder="Ein Zettel, ein Satz reicht"><button class="c6w-knopf c6w-tun" type="submit">An die Leine</button></form>';
+          '<input id="c6w-perle-in" class="c6w-feld" autocomplete="off" maxlength="200" aria-describedby="c6w-perle-satz" placeholder="Ein Zettel, ein Satz reicht"><p id="c6w-perle-satz" class="c6w-feld-satz" role="status" aria-live="polite"></p><button class="c6w-knopf c6w-tun" type="submit">An die Leine</button></form>';
         else if (v) vs = '<div class="c6w-oben-vs1"><button type="button" class="c6w-knopf c6w-tun" data-vs="' + v.art + '">' + esc(v.name) + '</button>' + (v.was && !o.satz ? '<p class="c6w-oben-vs-satz">' + esc(v.was) + '</p>' : '') + '</div>';
         var mehr = welt.planeten.length > 1;
         oeffne('<p class="c6w-kicker"><i style="background:' + s.farbe + '"></i>' + esc(pf.name) + ' · seit ' + C6.strings.datum(s.erstellt) + '</p>' +
@@ -2038,10 +2077,11 @@
           Promise.resolve(C6.vorschlaege.tu(id, tun.getAttribute('data-vs'))).then(function (r) { fertig(r ? [r] : null); }, function () { fertig(null); });
         };
         var fo = blatt.querySelector('.c6w-perle-form');
+        if (fo) blatt.querySelector('#c6w-perle-in').oninput = function () { var x = blatt.querySelector('#c6w-perle-satz'); if (x) x.textContent = ''; };
         if (fo) fo.onsubmit = function (ev) {
           ev.preventDefault();
           var fi = blatt.querySelector('#c6w-perle-in'), t = fi.value.trim();
-          if (!t) { fi.placeholder = satz('himmel.zettelLeer', 'Ein Satz reicht, deiner.'); fi.classList.remove('c6w-feld-frage'); void fi.offsetWidth; fi.classList.add('c6w-feld-frage'); fi.focus(); return; }
+          if (!t) { var ps = blatt.querySelector('#c6w-perle-satz'); if (ps) ps.textContent = satz('himmel.zettelLeer', 'Noch leer. Ein Satz reicht, deiner.'); fi.classList.remove('c6w-feld-frage'); void fi.offsetWidth; fi.classList.add('c6w-feld-frage'); fi.focus(); return; }
           if (C6.space && C6.space.zettel) C6.space.zettel(id, t); else C6.strings.perle(id, t);
           lesen(); vonOben(id, { satz: satz('himmel.zettelHaengt', 'Hängt jetzt als Zettel in „{t}“.').replace('{t}', s.titel) });
         };
@@ -2104,14 +2144,16 @@
         oeffne('<p class="c6w-kicker"><i class="c6w-knoten c6w-h-sternzeichen"></i>' + esc(satz('himmel.sternbild.neu', 'Neues Sternbild')) + '</p>' +
           '<h2 class="c6w-titel c6w-carl">' + esc(satz('himmel.sternbild.frage', 'Was verbindet „{a}“ und „{b}“?').replace('{a}', A.titel).replace('{b}', B.titel)) + '</h2>' +
           '<form><label class="c6w-nur-lesbar" for="c6w-knoten-in">' + esc(satz('himmel.sternbild.label', 'Was die beiden verbindet')) + '</label>' +
-          '<input id="c6w-knoten-in" class="c6w-feld" autocomplete="off" maxlength="200" placeholder="' + esc(satz('himmel.sternbild.platz', 'Ein Satz, deiner')) + '">' +
+          '<input id="c6w-knoten-in" class="c6w-feld" autocomplete="off" maxlength="200" aria-describedby="c6w-knoten-satz" placeholder="' + esc(satz('himmel.sternbild.platz', 'Ein Satz, deiner')) + '">' +
+          '<p id="c6w-knoten-satz" class="c6w-feld-satz" role="status" aria-live="polite"></p>' +
           '<button class="c6w-knopf c6w-tun" type="submit">' + esc(satz('himmel.sternbild.los', 'Verbinden')) + '</button></form>', '#c6w-knoten-in', { art: 'frage', titel: A.titel + ' und ' + B.titel });
         knotenFrage = { a: a, b: b };
+        blatt.querySelector('#c6w-knoten-in').oninput = function () { var x = blatt.querySelector('#c6w-knoten-satz'); if (x) x.textContent = ''; };
         blatt.querySelector('form').onsubmit = function (ev) {
           ev.preventDefault();
           var fi = blatt.querySelector('#c6w-knoten-in'), v = fi.value.trim();
           if (!v) {
-            fi.placeholder = satz('himmel.sternbild.leer', 'Was haben die beiden gemeinsam? Ein Satz reicht.');
+            var fs = blatt.querySelector('#c6w-knoten-satz'); if (fs) fs.textContent = satz('himmel.sternbild.leer', 'Was haben die beiden gemeinsam? Ein Satz reicht.');
             fi.classList.remove('c6w-feld-frage'); void fi.offsetWidth; fi.classList.add('c6w-feld-frage');
             fi.focus(); return;
           }
@@ -2302,7 +2344,7 @@
           zeichne(); weiter();
         },
         verlassen: function () {
-          aktiv = false; taktAb(); zieh = null; geste = null; zeiger = {}; schwung = 0;
+          aktiv = false; taktAb(); zieh = null; geste = null; zeiger = {}; schwung = 0; clearTimeout(tastUhr); tastUhr = 0; tasten = null;
           tauchen = null; tauchFeder = null; schnuppen.length = 0; glitzer = null;
           boten = []; wartet = {}; pulse = {}; carl.flug = null; carl.unterwegs = false; carl.traegt = null; carlFlieg(false); rauch.length = 0; fahrt.x = null;
           spiel = null; spur = []; couchAn = false; couchEl.hidden = true; carl.ort = { art: 'du' }; carl.w = null;

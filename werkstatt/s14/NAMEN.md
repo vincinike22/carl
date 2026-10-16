@@ -96,3 +96,15 @@ Neue Schlüssel: `buch.seite`, `buch.kann.{kalenderAus,rechner,rechnerAus,nichtV
 ## s14 · Rune (Prüfung „ein Wort, das nie wandert“)
 Neue Schlüssel: `brief.ablageAus` (Postfach, Brief aus) · `kalender.aus` (Tagesblatt, Kalender aus) · `kalender.zumSchalter` „Zum Schalter im Buch“. Zahlform in stimme.js: `{n|eins|# viele}`.
 Gesetz (Raum = Buch = Carls Stimme): **Space** überall, **Planet** nur im Himmel · **Katalog** nur in der Garage · **unser Buch** (nie „Freundschaftsbuch“) · **Schalter** an/aus · **Karten** = die vier im Space (nicht „Vorschläge unten“) · **zweiter Space** (nicht „zweiter Gedanke“) · **neu verbinden** (nicht „neu anmelden“). Offene Widersprüche in fremden Dateien: KREUZUNG „s14 · Rune“.
+- s14 · friedrich (Nach-Runde): `himmel.tatDanach` (Rückfall leer = Carl schweigt oben, sobald ein Sternbild steht) · `himmel.sternbild.leer` steht jetzt als eigene Zeile unter dem Feld · `himmel.zettelLeer` Rückfall „Noch leer. Ein Satz reicht, deiner.“ (Zeile unter dem Feld).
+
+## s14 · papert+rams (Nach-Runde) · neue Sätze (Rückfall im Code)
+| Schlüssel | Rückfall | wann |
+|---|---|---|
+| `werkstatt.wandAnsichten` | Deine Zettel, anders gelegt | Überschrift der oberen Wandgruppe (Zwei Wege, Wochenrückblick, Skizze) |
+| `vorschlag.weiter.wasVielleicht` {t} | Denkt jemand mit, häng ich dir eine Frage zu „{t}“ an die Leine. Sonst frag ich dich, was daraus folgt. | Weiterdenken, Mitdenken noch unklar |
+| `vorschlag.arbeiten.wasVielleicht` {t} | Denkt jemand mit, lese ich zu „{t}“ nach und häng dir den Fund an die Leine. Sonst sag ich es dir gleich. | Für dich arbeiten lassen, unklar |
+| `vorschlag.verbinden.alleinZuhause` · `.insZuhause` | Das ist dein einziger Space. Verbunden wird mit einem zweiten, und der fängt im Zuhause an. · Ins Zuhause | Verbinden ohne zweiten Space |
+| `vorschlag.duDran` | Jetzt du: Carls Frage steht in seiner Blase. | Kartensatz, während Carl dich fragt |
+| `vorschlag.laeuftVielleicht` · `.laeuftBau` · `.laeuftLesen` | Ich versuch mitzudenken. Geht es nicht, frag ich dich. · Ich bau es. · Ich lese nach. Das dauert einen Moment. | Kartensatz während des Laufs |
+Wörter: „anders gelegt“ = dasselbe Wort wie der Knopf „Anders legen“ im Blatt; „Werkzeug“ heißt an der Wand nur noch „Neues Werkzeug“ und „Deine Werkzeuge“.

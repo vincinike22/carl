@@ -136,13 +136,9 @@ function schreibt(el, t) { el.textContent = ''; var s = mk('span', 'c6r-at-handl
 
 // Mein Sprachmodell: eigene kleine Zeichen, keine Logos; die Namen stehen nur als Text da
 var MODELLE = [
-  ['claude', 'Claude', '<path d="M36 8c-12 2-20 12-22 26l-4 6" fill="none"/><path d="M36 8c-2 10-8 18-18 22" fill="none"/><path d="M14 34l8-10M20 30l6-7" fill="none"/>',
+  ['claude', 'Claude über claude.ai', '<path d="M36 8c-12 2-20 12-22 26l-4 6" fill="none"/><path d="M36 8c-2 10-8 18-18 22" fill="none"/><path d="M14 34l8-10M20 30l6-7" fill="none"/>',
     'Mit Claude denke ich in diesem Prototyp schon mit, wenn die Seite es erlaubt.'],
-  ['chatgpt', 'ChatGPT', '<path d="M8 12h32v20H22l-8 7v-7H8z"/><path d="M15 20h18M15 26h11" fill="none"/>',
-    'ChatGPT merke ich mir. Verbinden kann ich mich damit im Prototyp noch nicht.'],
-  ['gemini', 'Gemini', '<circle cx="18" cy="24" r="10"/><circle cx="30" cy="24" r="10" fill="none"/>',
-    'Gemini merke ich mir. Verbinden kann ich mich damit im Prototyp noch nicht.'],
-  ['lokal', 'Auf meinem Rechner', '<path d="M8 24L24 10l16 14v16H8z"/><path d="M20 40V30h8v10" fill="none"/>',
+  ['lokal', 'Dein Rechner', '<path d="M8 24L24 10l16 14v16H8z"/><path d="M20 40V30h8v10" fill="none"/>',
     'Ein Modell auf deinem Rechner: Dann bleibt alles bei dir.']
 ];
 function modellSvg(m, an) { return '<svg viewBox="0 0 48 48" aria-hidden="true"><g fill="' + (an ? '#f6d9a8' : '#fffaf0') + '" stroke="#2b2722" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">' + m[2] + '</g></svg>'; }
@@ -151,7 +147,7 @@ function modellInfo() {
   var m = MODELLE.filter(function (x) { return x[0] === du().modell; })[0];
   if (!m) return null;
   var lk = m[0] === 'lokal' ? lokalStatus() : null, lokalAn = !!(lk && lk.an && lk.modell);
-  return { id: m[0], name: m[1], verbunden: m[0] === 'claude' || lokalAn, satz: m[0] === 'claude' ? 'Ich denke mit Claude mit.' : lokalAn ? 'Ich denke mit deinem Rechner mit (' + lk.modell + ').' : m[0] === 'lokal' ? 'Dein eigenes Modell ist noch nicht eingerichtet. Ich denke hier mit Claude mit.' : 'Mit ' + m[1] + ' bin ich noch nicht verbunden. Ich denke hier mit Claude mit.' };
+  return { id: m[0], name: m[1], verbunden: m[0] === 'claude' || lokalAn, satz: m[0] === 'claude' ? 'Ich denke mit Claude mit.' : lokalAn ? 'Ich denke mit deinem Rechner mit (' + lk.modell + ').' : m[0] === 'lokal' ? 'Dein eigenes Modell ist noch nicht eingerichtet. Ich denke hier mit Claude mit.' : '' };
 }
 var denkenStand = null;
 function pruefeDenken() {
@@ -375,7 +371,7 @@ function wissen() {
     if (kern) w.push({ gruppe: 'space', key: kk, name: 'Kernsatz in „' + f.titel + '“', t: '„' + kern + '“', roh: kern, herkunft: kf != null ? 'fest' : 'du', gilt: g, giltImNamen: true, korr: true, sid: f.id, feld: 'kern' });
     var fz = (x.notizen || []).filter(istFund);
     if (fz.length) w.push({ gruppe: 'space', name: 'Zettel aus Funden in „' + f.titel + '“', t: fz.length === 1 ? 'ein Zettel' : fz.length + ' Zettel', herkunft: 'fund', gilt: g, giltImNamen: true });
-    var eigene = (x.notizen || []).length - fz.length + (x.dinge || []).length;
+    var eigene = (x.notizen || []).length - fz.length; // nur Zettel, wie Himmel und Space
     if (!kern && !fz.length) w.push({ gruppe: 'space', name: f.titel, t: eigene ? (eigene === 1 ? 'ein Zettel' : eigene + ' Zettel') + ', noch ohne Kernsatz' : 'noch leer', herkunft: 'du', gilt: g, giltImNamen: true });
   });
   // Funde aus dem Lesesaal; wo Carl sie eingeordnet hat, ist das seine Vermutung
@@ -554,10 +550,9 @@ function lokalStatus() { try { return (C6.lokal && C6.lokal.status) ? (C6.lokal.
 function werDenkt() {
   var m = null; try { m = C6.mitdenken ? C6.mitdenken() : null; } catch (e) { m = null; }
   var lk = lokalStatus(), r = { kopf: (m && m.kopf) || null, modell: (m && m.modell) || lk.modell || null, lokal: false, text: '' };
-  if (m && m.echt === true) { r.text = (m.wer || 'Claude (über claude.ai)') + ' denkt gerade mit.'; r.lokal = m.kopf === 'lokal'; }
-  else if (lk.an && lk.modell) { r.text = 'Dein Rechner denkt mit (' + lk.modell + '), sobald du mir etwas sagst.' + (lk.fehler ? ' Zuletzt hat er nicht geantwortet, dann frage ich Claude.' : ''); r.lokal = true; r.kopf = 'lokal'; }
+  if (m && m.echt === true) { r.text = (m.wer || 'Claude über claude.ai') + ' denkt gerade mit.'; r.lokal = m.kopf === 'lokal'; }
   else if (m && m.echt === false) r.text = 'Gerade denkt niemand mit. Ich lege Beispiele hin.' + (m.grund === 'nicht erlaubt' ? ' Diese Seite darf mich nicht mitdenken lassen.' : '');
-  else r.text = 'Ob jemand mitdenkt, weiß ich, sobald du mir etwas sagst. Hier ginge es mit Claude über claude.ai.';
+  else r.text = stimme('buch.mit.offen', OFFEN_SATZ);
   return r;
 }
 // die letzte Antwort, die vom eigenen Rechner kam, noch einmal von Claude prüfen lassen
@@ -675,7 +670,7 @@ BAU.schluessel = function (p) {
     zeileZ(ul, { id: 'helfer', name: stimme('buch.darf.helfer', 'Was meine Helfer dürfen'), satz: weg.length ? stimme('buch.darf.weg', 'Bei dir liegen die Schlüssel für: ') + weg.map(function (x) { return x.name; }).join(', ') + '.' : stimme('buch.darf.alle', 'Alle Schlüssel liegen bei mir. Jeden nimmst du mit einem Schalter zurück.'), zustand: 'still', seite: 'kann' });
     var kv = ks.filter(function (x) { return x.id === 'verbindung'; })[0];
     if (kv) zeileZ(ul, { id: 'rechner', name: stimme('buch.darf.rechner', 'Auf deinem Rechner'), satz: kv.satz, zustand: 'still', seite: 'kann' });
-    zeileZ(ul, { id: 'reden', name: stimme('buch.darf.reden', 'Wer außer dir mit mir reden darf'), satz: stimme('buch.darf.redenSatz', 'Heute nur du, hier in Carl.'), zustand: 'kommt', zuText: stimme('buch.darf.redenKommt', 'kommt mit WhatsApp') });
+    zeileZ(ul, { id: 'reden', name: stimme('buch.darf.reden', 'Wer außer dir mit mir reden darf'), satz: stimme('buch.darf.redenSatz', 'Heute nur du, hier in Carl.'), zustand: 'still' });
     mk('h3', 'c6r-at-w-gruppe', box, 'Was ich sende');
     os.sendet().forEach(function (z) { mk('p', 'c6r-at-sl-satz', box, z); });
     mk('h3', 'c6r-at-w-gruppe', box, 'Was ich nie tue');
@@ -698,14 +693,16 @@ var WO_NAME = { zuhause: 'Zuhause', werkstatt: 'Werkstatt', rezeption: 'Rezeptio
 function hingehen(raum, o) { zu(); setTimeout(function () { try { C6.geh(raum, o || {}); } catch (e) {} }, ruhig() ? 0 : 320); }
 function schluesselVon(id) { try { return C6.os && C6.os.schluessel ? (C6.os.schluessel().filter(function (k) { return k.id === id; })[0] || null) : null; } catch (e) { return null; } }
 function stelle(id, an) { try { if (!C6.os) return; if (an) C6.os.gib(id); else C6.os.nimm(id); } catch (e) {} }
-// fehlt das Mitdenken? 'aus' = Schlüssel genommen, 'fehlt' = niemand erreichbar (nur, wenn der Kern es schon weiß)
-function denkenFehlt() {
+// Denkt jemand mit? Eine Quelle: C6.mitdenken(). 'aus' = Schalter aus · 'an' = echt · 'fehlt' = niemand erreichbar · 'offen' = noch nie versucht
+function denkStand() {
   var k = schluesselVon('mitdenken'); if (k && !k.an) return 'aus';
   var m = null; try { m = C6.mitdenken ? C6.mitdenken() : null; } catch (e) { m = null; }
-  var lk = lokalStatus();
-  if (m && m.echt === false && !(lk.an && lk.modell)) return 'fehlt';
-  return null;
+  if (m && m.echt === true) return 'an';
+  if (m && m.echt === false) return 'fehlt';
+  return 'offen';
 }
+var OFFEN_SATZ = 'Ob jemand mitdenkt, weiß ich, sobald du mir etwas sagst.';
+function denkenFehlt() { var d = denkStand(); return d === 'aus' || d === 'fehlt' ? d : null; }
 function anz(n, eins, viele) { return n === 1 ? '1 ' + eins : n + ' ' + viele; }
 function spacesRoh() { return faedenRoh().filter(function (f) { return f.art !== 'gewohnheit'; }); }
 function zettelZahl() { var sp = S().spaces || {}, n = 0; Object.keys(sp).forEach(function (k) { n += ((sp[k] && sp[k].notizen) || []).length; }); return n; }
@@ -716,7 +713,7 @@ function helferFunde() { var a = S().auftrag, n = 0; if (a && a.funde && typeof 
 function sternbilder() { var fd = {}; faedenRoh().forEach(function (f) { fd[f.id] = 1; }); return (S().knoten || []).filter(function (k) { return k && fd[k.a] && fd[k.b]; }).length; }
 function kalStatus() { try { return C6.tage && C6.tage.status ? C6.tage.status() : null; } catch (e) { return null; } }
 
-var ZUSTAND = { an: 'an', aus: 'aus', braucht: 'braucht Mitdenken', kommt: 'kommt', still: '' };
+var ZUSTAND = { an: 'an', aus: 'aus', braucht: 'braucht Mitdenken', offen: 'noch offen', kommt: 'kommt', still: '' };
 // Ein Schalter, ein Ort: jeder Schalter steht genau einmal im Buch. Quelle ist ein Schlüssel des Kerns oder ein Modul-Schalter.
 function modulSchalter(m, id) {
   try { if (m && typeof m.an === 'function' && typeof m.setze === 'function') return { id: id, an: !!m.an(), setze: function (v) { try { m.setze(!!v); } catch (e) {} } }; } catch (e) {}
@@ -733,18 +730,20 @@ function schalterVon(z) {
 }
 // Was ich kann: die Fähigkeiten von heute, je mit Ort; was noch nicht geht, steht als „kommt“ darunter
 function faehigkeiten() {
-  var fehlt = denkenFehlt(), sp = spacesRoh().length, wz = werkzeugZahl(), kal = kalStatus();
-  function mitKopf(id) { var k = schluesselVon(id); if (k && !k.an) return 'aus'; return fehlt ? 'braucht' : 'an'; }
+  var ds = denkStand(), fehlt = ds === 'aus' || ds === 'fehlt', sp = spacesRoh().length, wz = werkzeugZahl(), kal = kalStatus();
+  // eine Fähigkeit, die Mitdenken braucht: aus · an · braucht Mitdenken · noch offen (nie „an“ oder „braucht“, solange es niemand versucht hat)
+  function mitKopf(id) { var k = id && schluesselVon(id); if (k && !k.an) return 'aus'; return ds === 'an' ? 'an' : ds === 'offen' ? 'offen' : 'braucht'; }
+  var MZU = { aus: 'aus', an: 'denkt mit', fehlt: 'gerade niemand', offen: 'noch offen' };
   var stS = [sp ? anz(sp, 'Space', 'Spaces') : '', zettelZahl() ? anz(zettelZahl(), 'Zettel', 'Zettel') : ''].filter(Boolean).join(' · ');
   var km = schluesselVon('mitdenken'), kv = schluesselVon('verbindung'), vinfo = null;
   try { vinfo = C6.verbindung && C6.verbindung.info ? C6.verbindung.info() : null; } catch (e) { vinfo = null; }
   return [
-    { id: 'mitdenken', name: 'Mitdenken', satz: stimme('buch.mit.an', 'Sagst du mir etwas, denkt Claude über claude.ai oder dein Rechner mit.'), schalter: 'mitdenken', zustand: km && !km.an ? 'aus' : 'an',
+    { id: 'mitdenken', name: 'Mitdenken', satz: stimme('buch.mit.an', 'Sagst du mir etwas, denkt Claude über claude.ai oder dein Rechner mit.'), schalter: 'mitdenken', zustand: ds === 'an' ? 'an' : ds === 'offen' ? 'offen' : 'aus', zuText: MZU[ds], stand: ds === 'offen' ? stimme('buch.mit.offen', OFFEN_SATZ) : ds === 'fehlt' ? stimme('buch.mit.fehlt', 'Gerade denkt niemand mit. Ich lege Beispiele hin.') : ds === 'an' ? werDenkt().text : '',
       ausSatz: stimme('buch.mit.aus', 'Aus: Ich lege nur Beispiele hin und schicke nichts zum Mitdenken.'), seite: 'mitdenken', seiteText: stimme('buch.kann.werDenkt', 'Wer gerade denkt: Seite') },
     { id: 'spaces', name: 'Gedanken festhalten', satz: stimme('buch.kann.spaces', 'Aus einem Satz von dir wird ein Space mit Zetteln.'), wo: ['zuhause'], zustand: 'an', stand: stS || stimme('buch.kann.spacesLeer', 'Noch kein Space.') },
     { id: 'werkzeug', name: 'Werkzeuge bauen', satz: stimme('buch.kann.werkzeug', 'Ein kleines Werkzeug aus deinem Satz: abhaken, zählen, merken.'), wo: ['werkstatt'], schalter: 'werkzeug', ausSatz: stimme('buch.kann.werkzeugAus', 'Aus: Ich baue nur aus Vorlagen und denke dabei nicht mit.'), zustand: mitKopf('werkzeug') === 'aus' ? 'aus' : 'an',
-      stand: [wz ? anz(wz, 'Werkzeug', 'Werkzeuge') : stimme('buch.kann.werkzeugLeer', 'Noch keins gebaut.'), (fehlt || mitKopf('werkzeug') === 'aus') ? stimme('buch.kann.werkzeugVorlage', 'ohne Mitdenken aus Vorlagen') : ''].filter(Boolean).join(' · ') },
-    { id: 'vorbereiten', name: 'Vorbereiten', satz: stimme('buch.kann.vorbereiten', 'Karteikarten, Packliste oder Merkzettel vor einem Termin, wenn du ja sagst.'), wo: ['rezeption'], zustand: fehlt ? 'braucht' : 'an',
+      stand: [wz ? anz(wz, 'Werkzeug', 'Werkzeuge') : stimme('buch.kann.werkzeugLeer', 'Noch keins gebaut.'), (ds === 'fehlt' && mitKopf('werkzeug') !== 'aus') ? stimme('buch.kann.werkzeugVorlage', 'ohne Mitdenken aus Vorlagen') : ''].filter(Boolean).join(' · ') },
+    { id: 'vorbereiten', name: 'Vorbereiten', satz: stimme('buch.kann.vorbereiten', 'Karteikarten, Packliste oder Merkzettel vor einem Termin, wenn du ja sagst.'), wo: ['rezeption'], zustand: mitKopf(null),
       stand: [vorbereitetZahl() ? anz(vorbereitetZahl(), 'vorbereitet', 'vorbereitet') : '', kal && kal.kalender === 'verbunden' ? stimme('buch.kann.mitKalender', 'mit deinem Kalender') : stimme('buch.kann.ohneKalender', 'ohne Kalender nur Termine aus deinen Werkzeugen')].filter(Boolean).join(' · ') },
     kalenderZeile(),
     { id: 'ferdl', name: 'Nachlesen lassen', satz: stimme('buch.kann.ferdl', 'Ferdl liest für dich nach; seine Funde hängen als Zettel im Space.'), wo: ['werkstatt'], schalter: 'ferdl', ausSatz: stimme('buch.kann.ferdlAus', 'Aus: Ferdl liest nichts nach, bis du ihn wieder anschaltest.'), zustand: mitKopf('ferdl'), stand: helferFunde() ? anz(helferFunde(), 'Fund', 'Funde') : '' },
@@ -755,10 +754,6 @@ function faehigkeiten() {
       ausSatz: stimme('buch.kann.rechnerAus', 'Aus: Ich sehe auf deinem Rechner nicht nach.'), stand: vinfo ? 'mit ' + vinfo.name + ' auf deinem ' + vinfo.woName : '', seite: 'erreichen', seiteText: stimme('buch.kann.verbindenSeite', 'Verbinden: Seite') }
   ];
 }
-var KOMMT_KANN = [
-  ['apple', 'Apple Kalender und Health lesen', 'buch.kommt.apple', 'Eine Seite im Browser kommt da nicht hin.'],
-  ['mac', 'Auf deinem Mac für dich arbeiten', null]
-];
 // die Zeile: Name · Zustand · Schalter; darunter ein Satz; darunter Stand und Ort
 function zeileZ(ul, z, neu) {
   var li = mk('li', 'c6r-at-z c6r-at-z-' + z.zustand, ul); li.dataset.id = z.id;
@@ -792,11 +787,6 @@ function zeileZ(ul, z, neu) {
   if (!f.firstChild) f.remove();
   return li;
 }
-function kommtListe(p, titel, liste) {
-  mk('h3', 'c6r-at-w-gruppe', p, titel);
-  var ul = mk('ul', 'c6r-at-zliste c6r-at-zliste-kommt', p);
-  liste.forEach(function (x) { zeileZ(ul, { id: x[0], name: x[1], satz: x[2] ? stimme(x[2], x[3] || '') || null : null, zustand: 'kommt' }); });
-}
 // die Seiten zeichnen sich neu, wenn sich ihr Zustand ändert (nur die gerade aufgeschlagenen, einmal gelauscht)
 var maler = [], gelauscht = false, malUhr = 0;
 function lausche(p, fn) {
@@ -820,10 +810,11 @@ function standKurz(id) {
     if (id === 'du') { var n = spacesRoh().length; return [du().name || '', n ? anz(n, 'Space', 'Spaces') : ''].filter(Boolean).join(' · '); }
     if (id === 'carl') return du().ton ? tonName(du().ton) : '';
     if (id === 'damals') { var m = momente().length; return m ? anz(m, 'Moment', 'Momente') : ''; }
-    if (id === 'kann') { var f = faehigkeiten(), a = f.filter(function (x) { return x.zustand === 'an'; }).length, o = f.filter(function (x) { var w = schalterVon(x); return !!w && !w.an; }).length, b = f.filter(function (x) { return x.zustand === 'braucht'; }).length; return [a + ' an', o ? o + ' ausgeschaltet' : '', b ? b + ' brauchen Mitdenken' : ''].filter(Boolean).join(' · '); }
+    if (id === 'kann') { var f = faehigkeiten(), zl = function (z) { return f.filter(function (x) { return x.zustand === z; }).length; }, o = f.filter(function (x) { var w = schalterVon(x); return !!w && !w.an; }).length;
+      return [anz(zl('an'), 'Fähigkeit an', 'Fähigkeiten an'), o ? o + ' ausgeschaltet' : '', zl('braucht') ? zl('braucht') + ' brauchen Mitdenken' : '', zl('offen') ? zl('offen') + ' noch offen' : ''].filter(Boolean).join(' · '); }
     if (id === 'tut') { var k = kalStatus(); return k && k.kalender === 'aus' ? stimme('buch.inhalt.kalenderAus', 'Kalender: ausgeschaltet') : k && k.kalender === 'verbunden' ? (k.stand ? 'Kalender: zuletzt ' + wann(k.stand) : 'Kalender verbunden') : 'Kalender nicht verbunden'; }
     if (id === 'wissen') { var w = wissen().length; return w ? anz(w, 'Eintrag', 'Einträge') : ''; }
-    if (id === 'mitdenken') { var d = denkenFehlt(); if (d === 'aus') return 'Mitdenken aus'; var m2 = null; try { m2 = C6.mitdenken ? C6.mitdenken() : null; } catch (e) {} var lk = lokalStatus(); return m2 && m2.echt === true ? (m2.kopf === 'lokal' ? 'dein Rechner' : 'Claude über claude.ai') : lk.an && lk.modell ? 'dein Rechner' : d === 'fehlt' ? 'gerade niemand' : ''; }
+    if (id === 'mitdenken') { var d = denkStand(), m2 = null; try { m2 = C6.mitdenken ? C6.mitdenken() : null; } catch (e) {} return d === 'aus' ? 'Mitdenken aus' : d === 'an' ? (m2.kopf === 'lokal' ? 'dein Rechner denkt mit' : 'Claude über claude.ai denkt mit') : d === 'fehlt' ? 'gerade denkt niemand mit' : 'weiß ich, sobald du mir etwas sagst'; }
     if (id === 'erreichen') { var s = syncStatus(); return s.an || s.grund === 'verbunden' ? (s.geraete > 1 ? 'auf ' + s.geraete + ' Geräten gleich' : 'Abgleich an') : 'nur dieses Gerät'; }
     if (id === 'schluessel') { if (!C6.os || !C6.os.lehren) return ''; var vs = C6.os.lehren.vorschlaege().length; return vs ? anz(vs, 'Vorschlag wartet auf dein Ja', 'Vorschläge warten auf dein Ja') : 'was ich sende, was ich nie tue'; }
   } catch (e) {}
@@ -863,10 +854,10 @@ BAU.kann = function (p) {
     faehigkeiten().forEach(function (z) {
       var swz = schalterVon(z);
       if (z.zustand === 'aus' && swz && !swz.an) z.aus = z.ausSatz || z.aus || stimme('buch.kann.aus', 'Aus: Das tue ich nicht, bis du es wieder anschaltest.');
+      if (z.zustand === 'offen' && z.id !== 'mitdenken') z.aus = stimme('buch.mit.offen', OFFEN_SATZ);
       if (z.zustand === 'braucht') z.aus = denkenFehlt() === 'aus' ? stimme('buch.kann.brauchtAus', 'Mitdenken ist gerade aus. Anschalten kannst du es auf „Wer mitdenkt“.') : stimme('buch.kann.brauchtFehlt', 'Gerade denkt niemand mit. Wer mitdenken kann, steht auf „Wer mitdenkt“.');
       zeileZ(ul, z, male);
     });
-    kommtListe(box, stimme('buch.kann.kommtTitel', 'Kommt mit Carl auf deinem Mac'), KOMMT_KANN);
     verweis(box, 'tut', stimme('buch.kann.verweis', 'Was ich von selbst tue'));
   }
   male();
@@ -924,7 +915,6 @@ BAU.tut = function (p) {
       var k = schluesselVon(l.wer);
       zeileZ(ul2, { id: 'lauf-' + l.id, name: (k && k.name) || l.wer, satz: l.was || '', zustand: 'an', zuText: stimme('buch.tut.laeuft', 'arbeitet'), tat: [stimme('buch.tut.anhalten', 'Anhalten'), function () { try { os.stopp(l.id); } catch (e) {} male(); }] }, male);
     });
-    kommtListe(box, stimme('buch.kann.kommtTitel', 'Kommt mit Carl auf deinem Mac'), [['whatsapp-brief', 'Der Brief am Morgen auf WhatsApp', null]]);
   }
   male();
   lausche(p, male);
@@ -975,7 +965,7 @@ BAU.erreichen = function (p) {
     }
     var lr = zeileZ(ul, rz, male);
     var tatK = lr.querySelector('.c6r-at-z-tat'); if (tatK && info) tatK.classList.add('c6r-at-leise');
-    kommtListe(box, stimme('buch.kann.kommtTitel', 'Kommt mit Carl auf deinem Mac'), [['whatsapp', 'WhatsApp', 'buch.kommt.whatsapp', 'Schreib mir dort, wie du einem Freund schreibst.'], ['macapp', 'Carl als App auf deinem Mac', 'buch.kommt.macapp', 'Ohne Terminal.']]);
+    mk('p', 'c6r-at-spaeter', box, stimme('buch.erreichen.spaeter', 'Später auch über WhatsApp und auf deinem Mac.'));
     bastler(box); // zugeklappt, ganz am Ende
   }
   male();
@@ -992,7 +982,8 @@ BAU.mitdenken = function (p) {
     var k = schluesselVon('mitdenken');
     if (!k) return;
     // der Schalter selbst steht einmal, auf „Was ich kann“; hier nur der Stand und der Weg dorthin
-    zeileZ(schalterBox, { id: 'mitdenken', name: 'Mitdenken', satz: k.an ? stimme('buch.mit.an', 'Sagst du mir etwas, denkt Claude über claude.ai oder dein Rechner mit.') : stimme('buch.mit.aus', 'Aus: Ich lege nur Beispiele hin und schicke nichts zum Mitdenken.'), zustand: k.an ? 'an' : 'aus', seite: 'kann', seiteText: stimme('buch.mit.schalterSeite', 'Schalter auf Seite') });
+    var ds = denkStand();
+    zeileZ(schalterBox, { id: 'mitdenken', name: 'Mitdenken', satz: k.an ? stimme('buch.mit.an', 'Sagst du mir etwas, denkt Claude über claude.ai oder dein Rechner mit.') : stimme('buch.mit.aus', 'Aus: Ich lege nur Beispiele hin und schicke nichts zum Mitdenken.'), zustand: ds === 'an' ? 'an' : ds === 'offen' ? 'offen' : 'aus', zuText: { aus: 'aus', an: 'denkt mit', fehlt: 'gerade niemand', offen: 'noch offen' }[ds], seite: 'kann', seiteText: stimme('buch.mit.schalterSeite', 'Schalter auf Seite') });
   }
   mk('h3', 'c6r-at-w-gruppe', p, 'Wer gerade denkt');
   var echt = mk('p', 'c6r-at-w-echt', p);

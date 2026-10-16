@@ -97,7 +97,8 @@ var T = {
   'rezeption.wieder': ['Da bist du wieder. Sag mir einen Satz, ich bau dir noch eins.'],
   // erster Satz im Zuhause für jemanden ohne Rundgang, der an der Rezeption angekommen ist ({name} = das jüngste Werkzeug)
   'rezeption.erster': ['Dein Werkzeug „{name}“ steht an der Rezeption. Was soll ich dir als Nächstes bauen?'],
-  'rezeption.feld': ['Was soll ich dir bauen?'],
+  'rezeption.feld': ['Sag mir einen Satz, ich bau dir was.'],
+  'werkstatt.feld': ['Was soll ich dir bauen?'],
   'rezeption.beispiel': ['Ein Beispiel'],
   'rezeption.nimm': ['So eins für mich'],
   'rezeption.baut': ['Ich bau es dir. Schau zu.'],
