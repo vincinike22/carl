@@ -3687,8 +3687,11 @@ function messeUnten() {
   var h = (dock.offsetHeight && !wurzel.hasAttribute('data-ohne-dock') ? dock.offsetHeight + 10 : 0) + (leiste.offsetHeight && !wurzel.hasAttribute('data-ohne-leiste-raum') ? leiste.offsetHeight : 0) + 16;
   // Antwort-Chips liegen in einer eigenen Zeile über dem Dock: solange sie offen sind, wächst das untere Maß
   if (wurzel.hasAttribute('data-chips')) h += Math.max(64, chipsEl.offsetHeight || 0);
+  var vorher = parseFloat(wurzel.style.getPropertyValue('--c6-unten')) || 0;
   wurzel.style.setProperty('--c6-unten', h + 'px');
   vlMass();
+  // rückt das Bild durch Chips höher oder tiefer, folgt der Grund darunter (sonst bleibt eine Fuge)
+  if (vorher && Math.abs(vorher - h) > 4 && C6.jetzt) { try { weiterBald(C6.jetzt, 520); } catch (e) {} }
 }
 var groesseUhr = null;
 W.addEventListener('resize', function () {
