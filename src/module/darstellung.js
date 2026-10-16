@@ -1,6 +1,6 @@
 // Darstellungen: Carls Antwort als Blatt mit Tinte und Bleistift statt als Textblase.
 // Fünf Arten (zwei Wege, Skizze, Rückblick, Schritte, Vergleich), jede zeigt, auf welche echten Zettel sie sich stützt,
-// und jede hat eine Stelle, an der Otto selbst etwas verändert. „Passt“ hängt sie als Ding in den Space, „Anders“ fragt nach.
+// und jede hat eine Stelle, an der Otto selbst etwas verändert. Ein Knopf hängt sie in einen Space (er nennt ihn), „Anders legen“ fragt nach.
 (function () {
   var C6 = window.C6; if (!C6) return;
   var D = document;
@@ -343,7 +343,7 @@
           '<i class="c6d-klammer" aria-hidden="true"></i><small>' + esc(datumK(q.ts)) + (o.sid && q.sid !== o.sid ? ' · ' + esc(kurz(q.titel, 14)) : '') + '</small><span>' + esc(kurz(q.t, 70)) + '</span></button>';
       }).join('') + '</div></div>';
   }
-  // dieselbe Quelle in einer Zeile über Passt/Anders, damit sie nie unter der Leiste verschwindet
+  // dieselbe Quelle in einer Zeile über den Knöpfen, damit sie nie unter der Leiste verschwindet
   function quelleKurz(bz, o) {
     var t = bz.length ? 'Weil du geschrieben hast: ' + datumK(bz[0].ts) + ' „' + kurz(bz[0].t, 38) + '“' + (bz.length > 1 ? ' · +' + (bz.length - 1) : '')
       : (o.bleistift ? 'Aus deinen Zetteln, mit Bleistift' : 'Ohne Beleg aus deinen Zetteln');
@@ -666,7 +666,7 @@
     el.innerHTML = '<button type="button" class="c6d-zu" aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' +
       '<div class="c6d-papier">' + kopf(art, o, daten) + (o.geruest ? '<p class="c6d-denkt" aria-live="polite">Ich denke noch nach. Das hier ist erst der Bleistift.</p>' : '') + '<div class="c6d-koerper">' + m[0](daten, b) + '</div>' + leineHtml(bz, o) +
       (o.bleistift ? '<p class="c6d-bleistift-note">Mit Bleistift gelegt: nur aus deinen Zetteln, ohne Mitdenken.</p>' : '') +
-      '<div class="c6d-wahl">' + quelleKurz(bz, o) + '<button type="button" class="c6d-knopf c6d-haupt" data-w="passt">Passt</button><button type="button" class="c6d-knopf" data-w="anders">Anders</button></div></div>';
+      '<div class="c6d-wahl">' + quelleKurz(bz, o) + '<button type="button" class="c6d-knopf c6d-haupt" data-w="passt">' + esc(haengenText(o)) + '</button><button type="button" class="c6d-knopf" data-w="anders">Anders legen</button></div></div>';
     (D.getElementById('c6') || D.body).appendChild(el);
     B = b; geoeffnet = Date.now();
     try { D.documentElement.classList.add('c6d-offen'); } catch (e) {}
@@ -689,7 +689,9 @@
   }
   function zaehle(art) { try { C6.aendern(function (s) { s.werkstatt = s.werkstatt || {}; s.werkstatt.dz = s.werkstatt.dz || {}; s.werkstatt.dz[art] = (s.werkstatt.dz[art] || 0) + 1; }); } catch (e) {} }
 
-  // „Passt“: als Ding in den Space hängen (nur mit Ottos Tipp)
+  // Der Knopf sagt, was er tut: in welchen Space die Darstellung kommt (kein bloßes „Passt“)
+  function haengenText(o) { var sp = o && o.sid ? spaceVon(o.sid) : null; return sp ? 'In „' + kurz(sp.titel, 18) + '“ hängen' : 'In einen Space hängen'; }
+  // Aufhängen: als Ding in den Space (nur mit Ottos Tipp)
   function passt(b) {
     if (B !== b) return;
     var sid = b.o.sid && spaceVon(b.o.sid) ? b.o.sid : null;
@@ -826,10 +828,13 @@
     if (einmalJeBesuch) return;
     setTimeout(function () {
       if (B || !C6.frag || einmalJeBesuch) return;
+      // Fragen der Vorschläge (und jede andere offene Frage) haben Vorrang; der Leinen-Satz kommt dann nicht
+      try { if (C6.vorschlaege && C6.vorschlaege.laeuft && C6.vorschlaege.laeuft()) return; } catch (e) {}
+      try { var fo = C6.frag.offen && C6.frag.offen(); if (fo && fo.text) return; } catch (e) {}
       var feld = D.querySelector('.c6k-feld'); if (feld && String(feld.value || '').trim()) return; // nie, während Otto schreibt
       einmalJeBesuch = true;
       var wo = h.q.sid === sid ? '' : ' in „' + kurz(h.q.titel, 24) + '“';
-      Promise.resolve(fragD('„' + kurz(h.w, 20) + '“ stand schon auf deinem Zettel vom ' + datum(h.q.ts) + wo + ': „' + kurz(h.q.t, 50) + '“.', [{ text: 'Zusammen ansehen', wert: 'sk', hinweis: 'Als Skizze, mit Datum' }], { frei: false, leise: true, id: 'c6d-verknuepft' })).then(function (a) {
+      Promise.resolve(fragD('„' + kurz(h.w, 20) + '“ stand schon auf deinem Zettel vom ' + datum(h.q.ts) + wo + ': „' + kurz(h.q.t, 50).replace(/[\s.!?:;,]+$/, '') + '“.', [{ text: 'Zusammen ansehen', wert: 'sk', hinweis: 'Als Skizze, mit Datum' }], { frei: false, leise: true, id: 'c6d-verknuepft' })).then(function (a) {
         if (a !== 'sk') return;
         var mitte = { id: 'n', t: kurz(t, 44), mitte: true };
         var begr = [mitte].concat(treffer.map(function (x, i) { return { id: 'q' + i, t: kurz(x.q.t, 44) }; }));

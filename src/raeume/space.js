@@ -622,6 +622,9 @@ var DEF = {
     var schildOben = mach('span', 'c6z-sp-schritt-oben', schild, 'Nächster Schritt');
     var schildText = mach('span', 'c6z-sp-schritt-text', schild);
     var schildTag = mach('span', 'c6z-sp-schritt-tag', schild);
+    // die vier Karten am Boden (Weiterdenken · Machen · Für dich arbeiten lassen · Verbinden)
+    var vsPlatz = mach('div', 'c6vs-platz', welt); vsPlatz.hidden = true; vsPlatz.setAttribute('data-c6-bild', ''); vsPlatz.setAttribute('data-c6-kein-wisch', '');
+    var vs = null, vsSid = null, gemeint = null;
     // Ottos eigene Werkzeuge: am Pfosten neben Carl (höchstens drei)
     var pfosten = mach('div', 'c6z-sp-pfosten', welt); pfosten.hidden = true;
     pfosten.setAttribute('role', 'group'); pfosten.setAttribute('aria-label', 'Deine Werkzeuge');
@@ -1069,8 +1072,8 @@ var DEF = {
       // die Pflanze steht immer rechts neben Carl: am Computer im Stück, am iPhone in der Szene
       if (c) { if (topf.parentNode !== stueck) stueck.insertBefore(topf, schild); }
       else if (topf.parentNode !== welt) welt.insertBefore(topf, carlPlatz);
-      if (c) { if (stueck.parentNode !== welt) welt.insertBefore(stueck, carlPlatz); if (pfosten.parentNode !== welt) welt.insertBefore(pfosten, carlPlatz); }
-      else { if (pfosten.parentNode !== wurzel || pfosten.nextSibling !== pult) wurzel.insertBefore(pfosten, pult); if (stueck.parentNode !== wurzel || stueck.nextSibling !== pfosten) wurzel.insertBefore(stueck, pfosten); }
+      if (c) { if (stueck.parentNode !== welt) welt.insertBefore(stueck, carlPlatz); if (pfosten.parentNode !== welt) welt.insertBefore(pfosten, carlPlatz); if (vsPlatz.parentNode !== welt) welt.insertBefore(vsPlatz, carlPlatz); }
+      else { if (vsPlatz.parentNode !== wurzel || vsPlatz.nextSibling !== pult) wurzel.insertBefore(vsPlatz, pult); if (pfosten.parentNode !== wurzel || pfosten.nextSibling !== vsPlatz) wurzel.insertBefore(pfosten, vsPlatz); if (stueck.parentNode !== wurzel || stueck.nextSibling !== pfosten) wurzel.insertBefore(stueck, pfosten); }
       spaeter(schattenLegen, 80);
       var h = welt.clientHeight || 300, w = welt.clientWidth || 390;
       // Carl steht auf dem Boden der Zeichnung: Höhe des Bildes = Breite × 300/480
@@ -1086,6 +1089,7 @@ var DEF = {
       if (i >= 0 && orte.clientWidth) orte.scrollLeft = i * orte.clientWidth;
       leineSchl = '';
       leineZeichnen();
+      spaeter(vsLage, 80);
     }
 
     // am Computer füllt jede Zeichnung die Bühne (keine Ränder in anderer Farbe); am iPhone wie gezeichnet
@@ -1433,6 +1437,7 @@ var DEF = {
       if (weich && !C6.ruhig) { try { orte.scrollTo({ left: i * w, behavior: 'smooth' }); } catch (e) { orte.scrollLeft = i * w; } }
       else orte.scrollLeft = i * w;
       setzePlace(pid, true);
+      spaeter(vsLage, weich && !C6.ruhig ? 600 : 60);
     }
     function setzePlace(pid, vomMenschen) {
       if (!pid || pid === place) { markiere(); return; }
@@ -1575,7 +1580,37 @@ var DEF = {
       });
     }
     // nach jedem Wort kann der Ort sich ändern (Pflanze, Licht)
-    function auffrischen() { if (!sid) return; lichtSetzen(); leineZeichnen(); pflanzeZeichnen(); werkzeugeZeichnen(); dingeZeichnen(); einrZeichnen(); lichtQuelleSetzen(); }
+    function auffrischen() { if (!sid) return; lichtSetzen(); leineZeichnen(); pflanzeZeichnen(); werkzeugeZeichnen(); dingeZeichnen(); einrZeichnen(); lichtQuelleSetzen(); vsZeichnen(); }
+    // Die Karten liegen da, sobald an der Leine etwas von dir hängt; sie meinen den ganzen Space oder den Zettel, den du angetippt hast
+    function vsZeichnen() {
+      var n = sid ? ((r() || {}).notizen || []).filter(eigen).length : 0;
+      vsPlatz.hidden = !n || !C6.vorschlaege;
+      // am iPhone macht die Szene den Karten Platz (sie liegen über dem Feld, nie darunter)
+      if (wurzel.classList.contains('c6vs-mit') === vsPlatz.hidden) { wurzel.classList.toggle('c6vs-mit', !vsPlatz.hidden); if (!comp()) spaeter(groesse, 30); }
+      if (vsPlatz.hidden) return;
+      if (!vs || vsSid !== sid) {
+        vsSid = sid; gemeint = null;
+        vs = C6.vorschlaege.male(vsPlatz, { quelle: { sid: sid }, los: function () { aufstehen(); projektorZu(); }, bei: function () { meinen(null); auffrischen(); } });
+      }
+      if (gemeint) { var gz = haken.querySelector('.c6z-sp-zettel[data-ts="' + gemeint.ts + '"]'); if (gz) gz.classList.add('c6vs-gemeint'); }
+      spaeter(vsLage, 60);
+    }
+    // am Computer liegen links unten auch die Dinge (Sternbilder, Ergebnisse): die Karten rücken dann über sie, nie auf sie
+    function vsLage() {
+      vsPlatz.style.bottom = '';
+      if (!comp() || vsPlatz.hidden) return;
+      var o = ortNodes.filter(function (n) { return n.getAttribute('data-place') === place; })[0], box = o && o.querySelector('.c6z-sp-dinge');
+      var br = box && box.children.length ? box.getBoundingClientRect() : null, vr = vsPlatz.getBoundingClientRect(), wr = welt.getBoundingClientRect();
+      if (!br || !br.width || br.right < vr.left || br.left > vr.right) return;
+      vsPlatz.style.bottom = Math.round(wr.bottom - br.top + 4) + 'px';
+    }
+    function meinen(n) {
+      gemeint = n || null;
+      Array.prototype.forEach.call(haken.querySelectorAll('.c6vs-gemeint'), function (z) { z.classList.remove('c6vs-gemeint'); });
+      if (gemeint) { var z = haken.querySelector('.c6z-sp-zettel[data-ts="' + gemeint.ts + '"]'); if (z) z.classList.add('c6vs-gemeint'); }
+      if (vs && !vs.laeuft()) vs.quelle(gemeint ? { satz: istFund(gemeint) ? ohneFund(gemeint.t) : gemeint.t } : {});
+    }
+    C6.bus.on('leer', function () { if (hier && gemeint && vs && !vs.laeuft()) meinen(null); });
 
     /* ----- Einrichten: Dinge aus dem Katalog, gespeichert je Space; Leine, Kernsatz, Schritt und Carl bleiben frei ----- */
     function freiZonen() {
@@ -1584,7 +1619,7 @@ var DEF = {
         return { x: (r.left - wr.left - pad) / wr.width, y: (r.top - wr.top - pad) / wr.height, w: (r.width + pad * 2) / wr.width, h: (r.height + pad * 2) / wr.height }; }
       var lb = leine.getBoundingClientRect(), lh = 0;
       Array.prototype.forEach.call(haken.children, function (c) { var r = c.getBoundingClientRect(); lh = Math.max(lh, r.bottom - wr.top); });
-      return [{ x: 0, y: 0, w: 1, h: Math.max(0.12, (lh + 10) / wr.height), was: 'leine' }, rel(carlPlatz, 12), rel(schild, 8), rel(topf, 6)].filter(Boolean);
+      return [{ x: 0, y: 0, w: 1, h: Math.max(0.12, (lh + 10) / wr.height), was: 'leine' }, rel(carlPlatz, 12), rel(schild, 8), rel(topf, 6), comp() ? rel(vsPlatz, 6) : null].filter(Boolean);
     }
     function einrDinge() {
       var E = C6.einrichten, l = [];
@@ -1769,11 +1804,16 @@ var DEF = {
       var satzN = pfN.art === 'samen' ? pflanzeSatz(pfN, xN) : pfN.art === 'keim' && pfVorher === 'samen' ? 'Er keimt. Ein Kernsatz, dann kommt die Knospe.' : 'Hängt an der Leine.';
       if (C6.sag) C6.sag(erst ? stimme('samen.erst', null, 'Dein erster Zettel ist der Samen. Ich helf ihm wachsen.') + ' ' + pflanzeSatz(pfN, xN) : satzN, { merken: false });
     }
+    // Einen Zettel antippen: die vier Karten meinen jetzt ihn; dazu die zwei Handgriffe, die nur ein Zettel kann.
+    // „Hängen lassen“ gibt es nicht mehr: wer nichts tun will, tippt daneben, und der Zettel hängt einfach weiter.
     function zettelFrage(n) {
       if (!C6.frag) return;
-      C6.frag('„' + kurz(n.t, 60) + '“. Was machen wir damit?', [{ text: 'Hängen lassen', wert: 'b' }, { text: 'Wird der Kernsatz', wert: 'k' }, { text: 'Abnehmen', wert: 'w' }]).then(function (a) {
-        if (a === 'w') abnehmen(n);
-        else if (a === 'k') { schliesseBlatt(); setzeKern(n.t); }
+      meinen(n);
+      if (blattArt === 'zettel') schliesseBlatt();
+      var sat = istFund(n) ? ohneFund(n.t) : n.t;
+      C6.frag(stimme('zettel.gemeint', { t: kurz(sat, 60) }, '„' + kurz(sat, 60) + '“. Die Karten unten meinen jetzt diesen Zettel.'), [{ text: 'Wird der Kernsatz', wert: 'k' }, { text: 'Abnehmen', wert: 'w' }], { leise: true, id: 'zettel-wahl' }).then(function (a) {
+        if (a === 'w') { meinen(null); abnehmen(n); }
+        else if (a === 'k') { meinen(null); schliesseBlatt(); setzeKern(sat); }
       });
     }
     /* Abnehmen mit Rückweg: der Zettel ist unten und oben weg (auch seine Perle am Planeten).
@@ -2204,51 +2244,47 @@ var DEF = {
       if (x.ortAuto && !x.ortGefragt && nz <= 1) return { satz: 'Erst mal sitzen wir ' + P().bei + ', das hab ich nur geraten. Wo denkst du am liebsten darüber nach?', chip: 'Ort wählen', ortFrage: true, tun: function () { oeffneBlatt('places'); } };
       // 3. Carl nährt den Samen: fragen, Kernsatz vorschlagen, nächsten Schritt vorschlagen. Entscheiden tust du.
       if (!nz) return { satz: 'Was fällt dir zu „' + titel + '“ ein? Ich häng es an die Leine.', zettel: true };
-      if (!x.kern && nz >= 3) return { satz: '', direkt: naehreKern };
-      if (x.kern && !st.naechster) return { satz: '', direkt: naehreSchritt };
+      if (!x.kern && nz >= 3 && !x.kernVorschlag) return { satz: '', direkt: naehreKern };
+      if (x.kern && !st.naechster && vs && !vsPlatz.hidden) return { satz: stimme('vorschlag.lage', { titel: titel }, 'Der Kernsatz steht. Was mache ich als Nächstes?'), direkt: function () { C6.sag(stimme('vorschlag.lage', { titel: titel }, 'Der Kernsatz steht. Was mache ich als Nächstes?'), { merken: false }); spaeter(function () { if (vs) vs.wippe(); }, 400); } };
       // einmal: Carl zeigt auf den Katalog (wenn Kernsatz und Schritt stehen und Münzen da sind)
       var ES = (C6.S && C6.S.einrichten) || {};
       if (!ES.katalogGesagt && !ES.katalogAuf && katalogStand() >= 1 && C6.einrichten) return { satz: 'Die Kiste neben mir ist der Katalog. Mit deinen Münzen holst du dir Lampen und Dinge für diesen Ort.', chip: 'Ansehen', katalog: true, tun: function () { einrichtenOeffnen(); } };
       var fr = stimme('naehren.frage', { titel: titel }, 'Was hat dich auf „' + titel + '“ gebracht?');
       return { satz: fr, zettel: true };
     }
-    // Vorschlag (mitdenken, wenn es geht; sonst aus deinen eigenen Zetteln) → Passt / Anders
+    // Vorschlag (mitdenken, wenn es geht; sonst aus deinen eigenen Zetteln). Kein Passt/Anders: der Vorschlag hängt als Zettel,
+    // und wer ihn antippt, macht ihn zum Kernsatz – oder nimmt ihn ab. Einmal je Space.
     function vorschlagHolen(auftrag, rueck) {
       var x = r() || {}, zeilen = (x.notizen || []).filter(eigen).slice(-10).map(function (n) { return n.t; });
       if (x.kern) zeilen.unshift('Kernsatz: ' + x.kern);
       var s0 = sid;
       return Promise.resolve(C6.denk ? C6.denk(auftrag + '\n\n' + zeilen.join('\n'), { stumm: true, kontext: kontext(), daten: daten() }) : '').catch(function () { return ''; }).then(function (v) {
-        if (sid !== s0) return '';
+        if (sid !== s0) return { v: '' };
         v = String(v || '').split('\n')[0].replace(/^[-–•\s„"]+|[“"]+$/g, '').trim();
-        return v || rueck();
+        return v ? { v: v, carl: true } : { v: rueck(), carl: false };
       });
     }
     function naehreKern() {
       var s0 = sid;
+      aendern(function (s) { var y = s.spaces[s0]; if (y) y.kernVorschlag = Date.now(); });
       vorschlagHolen('Schlage in genau einem kurzen Satz (höchstens 14 Wörter, Ich-Form des Menschen, ohne Anführungszeichen) vor, worum es in diesem Space im Kern geht. Nur der Satz.', function () {
         var z = ((r() || {}).notizen || []).filter(eigen).map(function (n) { return n.t.replace(/^Geschafft:\s*/, ''); }).filter(function (t) { return t.split(/\s+/).length >= 4; });
         return z.length ? z.sort(function (a, b) { return a.length - b.length; })[0] : '';
-      }).then(function (v) {
+      }).then(function (o) {
+        var v = o.v;
         if (!hier || sid !== s0 || andererSpricht()) return;
         if (!v) { C6.sag(stimme('pflanze.keim', null, 'Er keimt. Welcher Satz ist der wahrste?'), { merken: false }); return; }
-        C6.frag(stimme('naehren.kernsatz', { satz: kurz(v, 110) }, 'Vielleicht ist das dein Kernsatz: „' + kurz(v, 110) + '“. Du entscheidest.'), [{ text: stimme('naehren.ja', null, 'Passt'), wert: 'ja' }, { text: stimme('naehren.anders', null, 'Anders'), wert: 'anders' }], { leise: true }).then(function (a) {
-          if (sid !== s0) return;
-          if (a === 'ja') setzeKern(v); else if (a === 'anders') kernFrage();
-        });
-      });
-    }
-    function naehreSchritt() {
-      var s0 = sid;
-      vorschlagHolen('Schlage genau einen kleinen, konkreten nächsten Schritt vor (höchstens 10 Wörter, Befehlsform, ohne Anführungszeichen). Nur der Schritt.', function () { return ''; }).then(function (v) {
-        if (!hier || sid !== s0 || andererSpricht()) return;
-        if (!v) {
-          C6.frag(stimme('pflanze.knospe', null, 'Eine Knospe. Was ist der nächste Schritt?'), [{ text: 'Aufschreiben', wert: 'ja' }], { leise: true }).then(function (a) { if (a === 'ja' && sid === s0) C6.bausteine.anlegen(sid); });
+        if (o.carl) {
+          api.zettel(s0, kurz(v, 200), { von: 'carl' });
+          auffrischen();
+          C6.sag(stimme('naehren.kernAufgehaengt', null, 'Ich hab dir einen Kernsatz vorgeschlagen, er hängt an der Leine. Tipp ihn an, wenn er trägt.'), { merken: false });
           return;
         }
-        C6.frag(stimme('naehren.schritt', { satz: kurz(v, 90) }, 'Ein nächster Schritt könnte sein: „' + kurz(v, 90) + '“. Passt das?'), [{ text: stimme('naehren.ja', null, 'Passt'), wert: 'ja' }, { text: stimme('naehren.anders', null, 'Anders'), wert: 'anders' }], { leise: true }).then(function (a) {
-          if (sid !== s0) return;
-          if (a === 'ja') C6.bausteine.mitText(sid, v); else if (a === 'anders') C6.bausteine.anlegen(sid);
-        });
+        // ohne Mitdenken: einer deiner eigenen Sätze; er zuckt an der Leine, damit du ihn findest
+        var nz = ((r() || {}).notizen || []).filter(function (n) { return eigen(n) && n.t.replace(/^Geschafft:\s*/, '') === v; })[0];
+        var el = nz ? haken.querySelector('.c6z-sp-zettel[data-ts="' + nz.ts + '"]') : null;
+        if (el && !C6.ruhig && el.animate) el.animate([{ transform: 'rotate(var(--r))' }, { transform: 'translateY(5px) rotate(calc(var(--r) - 6deg))', offset: 0.35 }, { transform: 'rotate(var(--r))' }], { duration: 700, iterations: 2 });
+        C6.sag(stimme('naehren.kernDeiner', { satz: kurz(v, 90) }, 'Vielleicht trägt „' + kurz(v, 90) + '“ diesen Space. Tipp den Zettel an, wenn er der Kernsatz ist.'), { merken: false });
       });
     }
     function sagLage() {

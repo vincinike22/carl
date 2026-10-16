@@ -1,0 +1,979 @@
+[
+ {
+  "t": 0.3,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "frisch",
+  "bild": "kal-iphone-01-frisch.png",
+  "carl": [
+   "Ich bin Carl, über mir hängen deine nächsten Tage. Sag mir einen Satz, ich bau dir was."
+  ],
+  "note": "{\"kalender\":\"verbunden\",\"grund\":null,\"ungelesen\":0,\"stand\":1792155661001,\"termine\":2}"
+ },
+ {
+  "t": 2.3,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "fach",
+  "bild": "kal-iphone-02-fach.png",
+  "carl": [
+   "Ich bin Carl, über mir hängen deine nächsten Tage. Sag mir einen Satz, ich bau dir was."
+  ],
+  "note": "",
+  "mess": {
+   "blatt": [
+    508,
+    692
+   ],
+   "abgeschnitten": [
+    "Ja, bitte ragt 11px",
+    "Nicht nötig ragt 59px"
+   ],
+   "blaseDecktFaecher": 0
+  }
+ },
+ {
+  "t": 5.5,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "ja-bitte",
+  "bild": "kal-iphone-03-ja-bitte.png",
+  "carl": [
+   "Mitdenken geht hier gerade nicht, darum schreib ich dir keine Fragen."
+  ],
+  "note": "",
+  "mess": {
+   "blatt": [
+    508,
+    692
+   ],
+   "abgeschnitten": [
+    "Zu den Karten ragt 22px"
+   ],
+   "blaseDecktFaecher": 0
+  }
+ },
+ {
+  "t": 7.4,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "zu-den-karten",
+  "bild": "kal-iphone-04-zu-den-karten.png",
+  "carl": [
+   "Mitdenken geht hier gerade nicht, darum schreib ich dir keine Fragen."
+  ],
+  "note": ""
+ },
+ {
+  "t": 9.9,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "erste-karte",
+  "bild": "kal-iphone-05-erste-karte.png",
+  "carl": [
+   "Mitdenken geht hier gerade nicht, darum schreib ich dir keine Fragen."
+  ],
+  "note": "",
+  "mess": {
+   "karte": [
+    315,
+    465
+   ],
+   "sichtbar": false
+  }
+ },
+ {
+  "t": 11.3,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "umdrehen",
+  "bild": "kal-iphone-06-umdrehen.png",
+  "carl": [
+   "Mitdenken geht hier gerade nicht, darum schreib ich dir keine Fragen."
+  ],
+  "note": ""
+ },
+ {
+  "t": 13.0,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "gewusst",
+  "bild": "kal-iphone-07-gewusst.png",
+  "carl": [
+   "Mitdenken geht hier gerade nicht, darum schreib ich dir keine Fragen."
+  ],
+  "note": ""
+ },
+ {
+  "t": 14.3,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "zuklappen",
+  "bild": "kal-iphone-08-zuklappen.png",
+  "carl": [
+   "Mitdenken geht hier gerade nicht, darum schreib ich dir keine Fragen."
+  ],
+  "note": ""
+ },
+ {
+  "t": 17.5,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "neu-geladen",
+  "bild": "kal-iphone-09-neu-geladen.png",
+  "carl": [
+   "Da bist du wieder. Sag mir einen Satz, ich bau dir noch eins."
+  ],
+  "note": "[\"Karteikarten · Mathe-Prüfung:{\\\"vb\\\":{\\\"reihe\\\":[],\\\"gewusst\\\":{\\\"0\\\":1792155675353},\\\"wackelt\\\":{},\\\"eigene\\\":[{\\\"vorne\\\":\\\"Was ist die Ableitung von x²?\\\",\\\"hinten\\\"\"]"
+ },
+ {
+  "t": 19.4,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "fach-nach-laden",
+  "bild": "kal-iphone-10-fach-nach-laden.png",
+  "carl": [
+   "Da bist du wieder. Sag mir einen Satz, ich bau dir noch eins."
+  ],
+  "note": ""
+ },
+ {
+  "t": 23.0,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "brief",
+  "bild": "kal-iphone-11-brief.png",
+  "carl": [
+   "Da bist du wieder. Sag mir einen Satz, ich bau dir noch eins."
+  ],
+  "note": "",
+  "brief": [
+   "16. Oktober\n\nHallo.\n\nHeute steht bei mir nichts an.\n\nNeu für die nächsten Tage: So 18. 15:30 Zahnarzt · Di 20. 09:00 Mathe-Prüfung.\n\nVorbereitet hab ich: Karteikarten für „Mathe-Prüfung“. Alles liegt im Fach bei seinem Tag.\n\nWas davon ist dir am wichtigsten?\n\nWoher ich das weiß: dein Kalender.\n\nBis bald. Carl"
+  ]
+ },
+ {
+  "t": 24.3,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "brief-zu",
+  "bild": "kal-iphone-12-brief-zu.png",
+  "carl": [
+   "Da bist du wieder. Sag mir einen Satz, ich bau dir noch eins."
+  ],
+  "note": ""
+ },
+ {
+  "t": 26.8,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "garage",
+  "bild": "kal-iphone-13-garage.png",
+  "carl": [
+   "Dein Rad. Tipp es an."
+  ],
+  "note": ""
+ },
+ {
+  "t": 29.2,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "katalog",
+  "bild": "kal-iphone-14-katalog.png",
+  "carl": [],
+  "note": ""
+ },
+ {
+  "t": 30.9,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "blaettern",
+  "bild": "kal-iphone-15-blaettern.png",
+  "carl": [],
+  "note": ""
+ },
+ {
+  "t": 32.9,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "katalog-zu",
+  "bild": "kal-iphone-16-katalog-zu.png",
+  "carl": [],
+  "note": ""
+ },
+ {
+  "t": 49.1,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "space-zettel",
+  "bild": "kal-iphone-17-space-zettel.png",
+  "carl": [
+   "Noch ein Zettel, dann keimt er."
+  ],
+  "note": ""
+ },
+ {
+  "t": 50.9,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "zwei-gewaehlt",
+  "bild": "kal-iphone-18-zwei-gewaehlt.png",
+  "carl": [
+   "Noch ein Zettel, dann keimt er."
+  ],
+  "note": ""
+ },
+ {
+  "t": 54.0,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "los",
+  "bild": "kal-iphone-19-los.png",
+  "carl": [
+   "Was folgt aus „Ich will im Frühling mit dem Rad nach Krems fahren.“?"
+  ],
+  "note": ""
+ },
+ {
+  "t": 57.8,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "antwort-weiterdenken",
+  "bild": "kal-iphone-20-antwort-weiterdenken.png",
+  "carl": [
+   "„Schlauch“ stand schon auf deinem Zettel vom 16. Oktober: „Der Schlauch vom Hinterrad ist kaputt.“."
+  ],
+  "note": "",
+  "fokus": "Am Schreibtisch …"
+ },
+ {
+  "t": 61.5,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "antwort-machen",
+  "bild": "kal-iphone-21-antwort-machen.png",
+  "carl": [
+   "Hängt an der Leine."
+  ],
+  "note": "",
+  "schild": [
+   "Nächster Schritt\nWas ist der nächste Schritt?",
+   "Nächster Schritt"
+  ]
+ },
+ {
+  "t": 65.4,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "himmel",
+  "bild": "kal-iphone-22-himmel.png",
+  "carl": [],
+  "note": ""
+ },
+ {
+  "t": 69.6,
+  "ger": "iphone",
+  "lauf": "kal",
+  "schritt": "planet",
+  "bild": "kal-iphone-23-planet.png",
+  "carl": [],
+  "note": ""
+ },
+ {
+  "konsole": []
+ },
+ {
+  "t": 0.4,
+  "ger": "iphone",
+  "lauf": "ohne",
+  "schritt": "frisch",
+  "bild": "ohne-iphone-01-frisch.png",
+  "carl": [
+   "Ich bin Carl, über mir hängen deine nächsten Tage. Sag mir einen Satz, ich bau dir was."
+  ],
+  "note": "{\"kalender\":\"nicht-verbunden\",\"grund\":\"kein-mcp\",\"ungelesen\":0,\"stand\":null,\"termine\":0}"
+ },
+ {
+  "t": 2.3,
+  "ger": "iphone",
+  "lauf": "ohne",
+  "schritt": "fach",
+  "bild": "ohne-iphone-02-fach.png",
+  "carl": [
+   "Ich bin Carl, über mir hängen deine nächsten Tage. Sag mir einen Satz, ich bau dir was."
+  ],
+  "note": "",
+  "mess": {
+   "blatt": [
+    508,
+    692
+   ],
+   "abgeschnitten": [],
+   "blaseDecktFaecher": 0
+  }
+ },
+ {
+  "t": 4.2,
+  "ger": "iphone",
+  "lauf": "ohne",
+  "schritt": "beispiel",
+  "bild": "ohne-iphone-03-beispiel.png",
+  "carl": [
+   "Ich bin Carl, über mir hängen deine nächsten Tage. Sag mir einen Satz, ich bau dir was."
+  ],
+  "note": "Fach heute"
+ },
+ {
+  "t": 5.4,
+  "ger": "iphone",
+  "lauf": "ohne",
+  "schritt": "zuklappen",
+  "bild": "ohne-iphone-04-zuklappen.png",
+  "carl": [
+   "Ich bin Carl, über mir hängen deine nächsten Tage. Sag mir einen Satz, ich bau dir was."
+  ],
+  "note": ""
+ },
+ {
+  "t": 8.5,
+  "ger": "iphone",
+  "lauf": "ohne",
+  "schritt": "neu-geladen",
+  "bild": "ohne-iphone-05-neu-geladen.png",
+  "carl": [
+   "Ich bin Carl, über mir hängen deine nächsten Tage. Sag mir einen Satz, ich bau dir was."
+  ],
+  "note": "[]"
+ },
+ {
+  "t": 11.3,
+  "ger": "iphone",
+  "lauf": "ohne",
+  "schritt": "brief",
+  "bild": "ohne-iphone-06-brief.png",
+  "carl": [
+   "Ich bin Carl, über mir hängen deine nächsten Tage. Sag mir einen Satz, ich bau dir was."
+  ],
+  "note": "",
+  "brief": [
+   "16. Oktober\n\nHallo.\n\nDas ist dein Postfach. An jedem Tag, an dem etwas ansteht, liegt hier ein Brief von mir.\n\nNoch seh ich keinen Kalender und keinen Termin von dir. Erfinden mag ich keinen.\n\nGibt es etwas, das ich wissen sollte?\n\nBis bald. Carl"
+  ]
+ },
+ {
+  "t": 12.7,
+  "ger": "iphone",
+  "lauf": "ohne",
+  "schritt": "brief-zu",
+  "bild": "ohne-iphone-07-brief-zu.png",
+  "carl": [
+   "Ich bin Carl, über mir hängen deine nächsten Tage. Sag mir einen Satz, ich bau dir was."
+  ],
+  "note": ""
+ },
+ {
+  "t": 15.0,
+  "ger": "iphone",
+  "lauf": "ohne",
+  "schritt": "garage",
+  "bild": "ohne-iphone-08-garage.png",
+  "carl": [
+   "Dein Rad. Tipp es an."
+  ],
+  "note": ""
+ },
+ {
+  "t": 17.4,
+  "ger": "iphone",
+  "lauf": "ohne",
+  "schritt": "katalog",
+  "bild": "ohne-iphone-09-katalog.png",
+  "carl": [],
+  "note": ""
+ },
+ {
+  "t": 19.2,
+  "ger": "iphone",
+  "lauf": "ohne",
+  "schritt": "blaettern",
+  "bild": "ohne-iphone-10-blaettern.png",
+  "carl": [],
+  "note": ""
+ },
+ {
+  "t": 21.2,
+  "ger": "iphone",
+  "lauf": "ohne",
+  "schritt": "katalog-zu",
+  "bild": "ohne-iphone-11-katalog-zu.png",
+  "carl": [],
+  "note": ""
+ },
+ {
+  "t": 37.2,
+  "ger": "iphone",
+  "lauf": "ohne",
+  "schritt": "space-zettel",
+  "bild": "ohne-iphone-12-space-zettel.png",
+  "carl": [
+   "Noch ein Zettel, dann keimt er."
+  ],
+  "note": ""
+ },
+ {
+  "t": 39.1,
+  "ger": "iphone",
+  "lauf": "ohne",
+  "schritt": "zwei-gewaehlt",
+  "bild": "ohne-iphone-13-zwei-gewaehlt.png",
+  "carl": [
+   "Noch ein Zettel, dann keimt er."
+  ],
+  "note": ""
+ },
+ {
+  "t": 42.2,
+  "ger": "iphone",
+  "lauf": "ohne",
+  "schritt": "los",
+  "bild": "ohne-iphone-14-los.png",
+  "carl": [
+   "Was folgt aus „Ich will im Frühling mit dem Rad nach Krems fahren.“?"
+  ],
+  "note": ""
+ },
+ {
+  "t": 46.1,
+  "ger": "iphone",
+  "lauf": "ohne",
+  "schritt": "antwort-weiterdenken",
+  "bild": "ohne-iphone-15-antwort-weiterdenken.png",
+  "carl": [
+   "„Schlauch“ stand schon auf deinem Zettel vom 16. Oktober: „Der Schlauch vom Hinterrad ist kaputt.“."
+  ],
+  "note": "",
+  "fokus": "Am Schreibtisch …"
+ },
+ {
+  "t": 49.7,
+  "ger": "iphone",
+  "lauf": "ohne",
+  "schritt": "antwort-machen",
+  "bild": "ohne-iphone-16-antwort-machen.png",
+  "carl": [
+   "Hängt an der Leine."
+  ],
+  "note": "",
+  "schild": [
+   "Nächster Schritt\nWas ist der nächste Schritt?",
+   "Nächster Schritt"
+  ]
+ },
+ {
+  "t": 53.7,
+  "ger": "iphone",
+  "lauf": "ohne",
+  "schritt": "himmel",
+  "bild": "ohne-iphone-17-himmel.png",
+  "carl": [],
+  "note": ""
+ },
+ {
+  "t": 58.0,
+  "ger": "iphone",
+  "lauf": "ohne",
+  "schritt": "planet",
+  "bild": "ohne-iphone-18-planet.png",
+  "carl": [],
+  "note": ""
+ },
+ {
+  "konsole": []
+ },
+ {
+  "t": 0.2,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "frisch",
+  "bild": "kal-computer-01-frisch.png",
+  "carl": [
+   "Ich bin Carl, über mir hängen deine nächsten Tage. Sag mir einen Satz, ich bau dir was."
+  ],
+  "note": "{\"kalender\":\"verbunden\",\"grund\":null,\"ungelesen\":0,\"stand\":1792155797974,\"termine\":2}"
+ },
+ {
+  "t": 2.0,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "fach",
+  "bild": "kal-computer-02-fach.png",
+  "carl": [
+   "Ich bin Carl, über mir hängen deine nächsten Tage. Sag mir einen Satz, ich bau dir was."
+  ],
+  "note": "",
+  "mess": {
+   "blatt": [
+    638,
+    740
+   ],
+   "abgeschnitten": [],
+   "blaseDecktFaecher": 0
+  }
+ },
+ {
+  "t": 5.1,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "ja-bitte",
+  "bild": "kal-computer-03-ja-bitte.png",
+  "carl": [
+   "Mitdenken geht hier gerade nicht, darum schreib ich dir keine Fragen."
+  ],
+  "note": "",
+  "mess": {
+   "blatt": [
+    637,
+    740
+   ],
+   "abgeschnitten": [],
+   "blaseDecktFaecher": 0
+  }
+ },
+ {
+  "t": 7.0,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "zu-den-karten",
+  "bild": "kal-computer-04-zu-den-karten.png",
+  "carl": [
+   "Mitdenken geht hier gerade nicht, darum schreib ich dir keine Fragen."
+  ],
+  "note": ""
+ },
+ {
+  "t": 9.2,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "erste-karte",
+  "bild": "kal-computer-05-erste-karte.png",
+  "carl": [
+   "Mitdenken geht hier gerade nicht, darum schreib ich dir keine Fragen."
+  ],
+  "note": "",
+  "mess": {
+   "karte": [
+    329,
+    533
+   ],
+   "sichtbar": false
+  }
+ },
+ {
+  "t": 10.5,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "umdrehen",
+  "bild": "kal-computer-06-umdrehen.png",
+  "carl": [
+   "Mitdenken geht hier gerade nicht, darum schreib ich dir keine Fragen."
+  ],
+  "note": ""
+ },
+ {
+  "t": 12.1,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "gewusst",
+  "bild": "kal-computer-07-gewusst.png",
+  "carl": [
+   "Mitdenken geht hier gerade nicht, darum schreib ich dir keine Fragen."
+  ],
+  "note": ""
+ },
+ {
+  "t": 13.2,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "zuklappen",
+  "bild": "kal-computer-08-zuklappen.png",
+  "carl": [
+   "Mitdenken geht hier gerade nicht, darum schreib ich dir keine Fragen."
+  ],
+  "note": ""
+ },
+ {
+  "t": 16.2,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "neu-geladen",
+  "bild": "kal-computer-09-neu-geladen.png",
+  "carl": [
+   "Da bist du wieder. Sag mir einen Satz, ich bau dir noch eins."
+  ],
+  "note": "[\"Karteikarten · Mathe-Prüfung:{\\\"vb\\\":{\\\"reihe\\\":[],\\\"gewusst\\\":{\\\"0\\\":1792155811514},\\\"wackelt\\\":{},\\\"eigene\\\":[{\\\"vorne\\\":\\\"Was ist die Ableitung von x²?\\\",\\\"hinten\\\"\"]"
+ },
+ {
+  "t": 18.0,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "fach-nach-laden",
+  "bild": "kal-computer-10-fach-nach-laden.png",
+  "carl": [
+   "Da bist du wieder. Sag mir einen Satz, ich bau dir noch eins."
+  ],
+  "note": ""
+ },
+ {
+  "t": 21.4,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "brief",
+  "bild": "kal-computer-11-brief.png",
+  "carl": [
+   "Da bist du wieder. Sag mir einen Satz, ich bau dir noch eins."
+  ],
+  "note": "",
+  "brief": [
+   "16. Oktober\n\nHallo.\n\nHeute steht bei mir nichts an.\n\nNeu für die nächsten Tage: So 18. 15:30 Zahnarzt · Di 20. 09:00 Mathe-Prüfung.\n\nVorbereitet hab ich: Karteikarten für „Mathe-Prüfung“. Alles liegt im Fach bei seinem Tag.\n\nWas davon ist dir am wichtigsten?\n\nWoher ich das weiß: dein Kalender.\n\nBis bald. Carl"
+  ]
+ },
+ {
+  "t": 22.6,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "brief-zu",
+  "bild": "kal-computer-12-brief-zu.png",
+  "carl": [
+   "Da bist du wieder. Sag mir einen Satz, ich bau dir noch eins."
+  ],
+  "note": ""
+ },
+ {
+  "t": 24.8,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "garage",
+  "bild": "kal-computer-13-garage.png",
+  "carl": [
+   "Dein Rad. Tipp es an."
+  ],
+  "note": ""
+ },
+ {
+  "t": 27.1,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "katalog",
+  "bild": "kal-computer-14-katalog.png",
+  "carl": [],
+  "note": ""
+ },
+ {
+  "t": 29.0,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "blaettern",
+  "bild": "kal-computer-15-blaettern.png",
+  "carl": [],
+  "note": ""
+ },
+ {
+  "t": 30.8,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "katalog-zu",
+  "bild": "kal-computer-16-katalog-zu.png",
+  "carl": [
+   "Dein Rad. Tipp es an."
+  ],
+  "note": ""
+ },
+ {
+  "t": 46.9,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "space-zettel",
+  "bild": "kal-computer-17-space-zettel.png",
+  "carl": [
+   "Noch ein Zettel, dann keimt er."
+  ],
+  "note": ""
+ },
+ {
+  "t": 48.6,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "zwei-gewaehlt",
+  "bild": "kal-computer-18-zwei-gewaehlt.png",
+  "carl": [
+   "Noch ein Zettel, dann keimt er."
+  ],
+  "note": ""
+ },
+ {
+  "t": 51.7,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "los",
+  "bild": "kal-computer-19-los.png",
+  "carl": [
+   "Was folgt aus „Ich will im Frühling mit dem Rad nach Krems fahren.“?"
+  ],
+  "note": ""
+ },
+ {
+  "t": 55.4,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "antwort-weiterdenken",
+  "bild": "kal-computer-20-antwort-weiterdenken.png",
+  "carl": [
+   "„Schlauch“ stand schon auf deinem Zettel vom 16. Oktober: „Der Schlauch vom Hinterrad ist kaputt.“."
+  ],
+  "note": "",
+  "fokus": "Am Schreibtisch …"
+ },
+ {
+  "t": 58.8,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "antwort-machen",
+  "bild": "kal-computer-21-antwort-machen.png",
+  "carl": [
+   "Hängt an der Leine."
+  ],
+  "note": "",
+  "schild": [
+   "Nächster Schritt\nWas ist der nächste Schritt?",
+   "Nächster Schritt"
+  ]
+ },
+ {
+  "t": 62.8,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "himmel",
+  "bild": "kal-computer-22-himmel.png",
+  "carl": [],
+  "note": ""
+ },
+ {
+  "t": 66.9,
+  "ger": "computer",
+  "lauf": "kal",
+  "schritt": "planet",
+  "bild": "kal-computer-23-planet.png",
+  "carl": [],
+  "note": ""
+ },
+ {
+  "konsole": []
+ },
+ {
+  "t": 0.2,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "frisch",
+  "bild": "ohne-computer-01-frisch.png",
+  "carl": [
+   "Ich bin Carl, über mir hängen deine nächsten Tage. Sag mir einen Satz, ich bau dir was."
+  ],
+  "note": "{\"kalender\":\"nicht-verbunden\",\"grund\":\"kein-mcp\",\"ungelesen\":0,\"stand\":null,\"termine\":0}"
+ },
+ {
+  "t": 2.0,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "fach",
+  "bild": "ohne-computer-02-fach.png",
+  "carl": [
+   "Ich bin Carl, über mir hängen deine nächsten Tage. Sag mir einen Satz, ich bau dir was."
+  ],
+  "note": "",
+  "mess": {
+   "blatt": [
+    582,
+    740
+   ],
+   "abgeschnitten": [],
+   "blaseDecktFaecher": 0
+  }
+ },
+ {
+  "t": 3.8,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "beispiel",
+  "bild": "ohne-computer-03-beispiel.png",
+  "carl": [
+   "Ich bin Carl, über mir hängen deine nächsten Tage. Sag mir einen Satz, ich bau dir was."
+  ],
+  "note": "Fach heute"
+ },
+ {
+  "t": 4.9,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "zuklappen",
+  "bild": "ohne-computer-04-zuklappen.png",
+  "carl": [
+   "Ich bin Carl, über mir hängen deine nächsten Tage. Sag mir einen Satz, ich bau dir was."
+  ],
+  "note": ""
+ },
+ {
+  "t": 7.8,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "neu-geladen",
+  "bild": "ohne-computer-05-neu-geladen.png",
+  "carl": [
+   "Ich bin Carl, über mir hängen deine nächsten Tage. Sag mir einen Satz, ich bau dir was."
+  ],
+  "note": "[]"
+ },
+ {
+  "t": 10.6,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "brief",
+  "bild": "ohne-computer-06-brief.png",
+  "carl": [
+   "Ich bin Carl, über mir hängen deine nächsten Tage. Sag mir einen Satz, ich bau dir was."
+  ],
+  "note": "",
+  "brief": [
+   "16. Oktober\n\nHallo.\n\nDas ist dein Postfach. An jedem Tag, an dem etwas ansteht, liegt hier ein Brief von mir.\n\nNoch seh ich keinen Kalender und keinen Termin von dir. Erfinden mag ich keinen.\n\nGibt es etwas, das ich wissen sollte?\n\nBis bald. Carl"
+  ]
+ },
+ {
+  "t": 11.7,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "brief-zu",
+  "bild": "ohne-computer-07-brief-zu.png",
+  "carl": [
+   "Ich bin Carl, über mir hängen deine nächsten Tage. Sag mir einen Satz, ich bau dir was."
+  ],
+  "note": ""
+ },
+ {
+  "t": 14.0,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "garage",
+  "bild": "ohne-computer-08-garage.png",
+  "carl": [
+   "Dein Rad. Tipp es an."
+  ],
+  "note": ""
+ },
+ {
+  "t": 16.3,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "katalog",
+  "bild": "ohne-computer-09-katalog.png",
+  "carl": [],
+  "note": ""
+ },
+ {
+  "t": 18.0,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "blaettern",
+  "bild": "ohne-computer-10-blaettern.png",
+  "carl": [],
+  "note": ""
+ },
+ {
+  "t": 19.9,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "katalog-zu",
+  "bild": "ohne-computer-11-katalog-zu.png",
+  "carl": [
+   "Dein Rad. Tipp es an."
+  ],
+  "note": ""
+ },
+ {
+  "t": 35.8,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "space-zettel",
+  "bild": "ohne-computer-12-space-zettel.png",
+  "carl": [
+   "Noch ein Zettel, dann keimt er."
+  ],
+  "note": ""
+ },
+ {
+  "t": 37.6,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "zwei-gewaehlt",
+  "bild": "ohne-computer-13-zwei-gewaehlt.png",
+  "carl": [
+   "Noch ein Zettel, dann keimt er."
+  ],
+  "note": ""
+ },
+ {
+  "t": 40.6,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "los",
+  "bild": "ohne-computer-14-los.png",
+  "carl": [
+   "Was folgt aus „Ich will im Frühling mit dem Rad nach Krems fahren.“?"
+  ],
+  "note": ""
+ },
+ {
+  "t": 44.3,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "antwort-weiterdenken",
+  "bild": "ohne-computer-15-antwort-weiterdenken.png",
+  "carl": [
+   "„Schlauch“ stand schon auf deinem Zettel vom 16. Oktober: „Der Schlauch vom Hinterrad ist kaputt.“."
+  ],
+  "note": "",
+  "fokus": "Am Schreibtisch …"
+ },
+ {
+  "t": 47.7,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "antwort-machen",
+  "bild": "ohne-computer-16-antwort-machen.png",
+  "carl": [
+   "Hängt an der Leine."
+  ],
+  "note": "",
+  "schild": [
+   "Nächster Schritt\nWas ist der nächste Schritt?",
+   "Nächster Schritt"
+  ]
+ },
+ {
+  "t": 51.7,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "himmel",
+  "bild": "ohne-computer-17-himmel.png",
+  "carl": [],
+  "note": ""
+ },
+ {
+  "t": 55.7,
+  "ger": "computer",
+  "lauf": "ohne",
+  "schritt": "planet",
+  "bild": "ohne-computer-18-planet.png",
+  "carl": [],
+  "note": ""
+ },
+ {
+  "konsole": []
+ }
+]

@@ -12,7 +12,7 @@ var SCHRITTE = [
   { id: 'wecken', raum: 'zuhause', teile: 0 },
   { id: 'name', raum: 'zuhause', teile: 1, art: 'feld', feld: 'Dein Name', chips: ['Lieber ohne Namen'] },
   { id: 'gedanke', raum: 'zuhause', teile: 2, art: 'feld', feld: 'Ein Satz reicht', chips: ['Später'] },
-  { id: 'space', raum: 'space', teile: 4, art: 'feld', feld: 'Ein anderer Name', chips: ['Passt'] },
+  { id: 'space', raum: 'space', teile: 4, art: 'feld', feld: 'Ein anderer Name', chips: ['So heißt er'] },
   { id: 'vogel', raum: 'netz', teile: 4, art: 'knopf', knopf: 'Boden ↓' },
   { id: 'socken', raum: 'zuhause', teile: 4, art: 'farbe' }
 ];

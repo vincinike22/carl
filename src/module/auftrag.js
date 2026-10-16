@@ -1,4 +1,5 @@
-// Brief von Carl: höchstens eine kleine Aufgabe am Tag, aus einem deiner Fäden. Und Funde zu dem, was du suchst.
+// Brief von Carl, im Postfach der Rezeption: einer am Tag. Was heute und in den nächsten Tagen ansteht, was Carl schon
+// vorbereitet hat, und eine Frage (eine Vorbereitung oder eine kleine Aufgabe aus einem deiner Fäden). Dazu Funde zu dem, was du suchst.
 // Nichts zählt mit, nichts mahnt. Wer nicht antwortet, dem passiert nichts.
 var C6 = window.C6 = window.C6 || {};
 var D = document;
@@ -24,7 +25,36 @@ var RUECK = {
   'fund.herkunft.du': ['Aus deinen eigenen Sätzen'],
   'fund.herkunft.carl': ['Carls Gedanke, nicht nachgeprüft'],
   'fund.herkunft.recherche': ['Aus der Recherche, bitte selbst prüfen'],
-  'fund.bringt': ['Ich hab dir was dazu gesammelt. Es liegt hier am Boden.']
+  'fund.bringt': ['Ich hab dir was dazu gesammelt. Es liegt hier am Boden.'],
+  'brief.titel': ['Brief von Carl'],
+  'brief.heute': ['Heute: {liste}.'],
+  'brief.heuteLeer': ['Heute steht nichts an.'],
+  'brief.naechste': ['Danach: {liste}.'],
+  'brief.vorbereitet': ['Schon vorbereitet: {liste}.'],
+  'brief.frageVorb': ['{titel}, {wann}. Soll ich dir {was} machen?'],
+  'brief.ja': ['Ja, mach das'],
+  'brief.gruss': ['Bis bald. Carl'],
+  'brief.bringt': ['Im Postfach liegt ein Brief. Was ansteht, steht drin.'],
+  'vorb.laeuft': ['Ich mach mich dran. Einen Moment.'],
+  'vorb.fertig': ['Fertig. Es liegt im Fach bei „{titel}“.'],
+  'vorb.keinKopf': ['Dafür brauche ich jemanden, der mitdenkt. Hier denkt gerade keiner mit.'],
+  'vorb.leer': ['Daraus ist nichts Brauchbares geworden. Ich lass es lieber, als dir Unsinn hinzulegen.'],
+  'vorb.keinKopf.karteikarten': ['Mitdenken geht hier gerade nicht, also schreib ich dir keine Fragen. Ich leg dir einen leeren Stapel hin.'],
+  'vorb.keinKopf.packliste': ['Mitdenken geht hier gerade nicht, darum rate ich dir keine Packliste. Ich leg dir eine leere hin.'],
+  'vorb.keinKopf.merkzettel': ['In deinen Zetteln stand noch nichts dazu. Ich leg dir einen leeren Merkzettel hin.'],
+  'vorb.fertig.karteikarten': ['Fertig. {n} Karten für „{titel}“ liegen im Fach.'],
+  'vorb.schon': ['Dafür hab ich schon was vorbereitet. Es liegt im Fach.'],
+  'vorb.nein': ['Nicht nötig'],
+  'vorb.neinGut': ['Gut. Dazu frag ich nicht nochmal.'],
+  'brief.naechsteLeer': ['In den nächsten Tagen steht bei mir nichts.'],
+  'brief.woher': ['Woher ich das weiß: {quellen}.'],
+  'brief.erster': ['Das ist dein Postfach. Hier liegt an jedem Tag, an dem etwas ansteht, ein Brief von mir: was kommt und was ich dafür schon vorbereitet habe.'],
+  'brief.nichtsVerbunden': ['Noch seh ich keinen Kalender und keinen Termin von dir. Erfinden mag ich keinen.'],
+  'brief.frageLeer': ['Gibt es etwas, das ich wissen sollte?'],
+  'brief.frageWichtig': ['Was davon ist dir am wichtigsten?'],
+  'brief.spaceName': ['Was ansteht'],
+  'brief.zettel': ['Hängt als Zettel in „{titel}“.'],
+  'brief.zettelNeu': ['Hängt als erster Zettel in einem neuen Space, „{titel}“. Du findest ihn im Zuhause am Brett.']
 };
 var NIX = { der: 1, die: 1, das: 1, und: 1, oder: 1, aber: 1, eine: 1, einen: 1, einem: 1, einer: 1, eines: 1, nicht: 1, noch: 1, auch: 1, schon: 1, dann: 1, wenn: 1, weil: 1, dass: 1, mich: 1, mir: 1, dich: 1, dir: 1, sich: 1, sein: 1, seine: 1, mein: 1, meine: 1, dein: 1, deine: 1, ich: 1, wir: 1, ihr: 1, sie: 1, ist: 1, sind: 1, war: 1, hat: 1, habe: 1, haben: 1, wird: 1, werden: 1, kann: 1, soll: 1, will: 1, muss: 1, mit: 1, von: 1, für: 1, fuer: 1, auf: 1, aus: 1, bei: 1, nach: 1, über: 1, unter: 1, zum: 1, zur: 1, den: 1, dem: 1, des: 1, wie: 1, was: 1, wer: 1, wo: 1, warum: 1, welche: 1, welcher: 1, welches: 1, heute: 1, gerade: 1, immer: 1, mal: 1, sehr: 1, viel: 1, etwas: 1, nur: 1, man: 1, hier: 1, jetzt: 1, also: 1, doch: 1, eben: 1 };
 
@@ -253,15 +283,28 @@ function erledigt(antwort) {
 
 // Carl stellt die Aufgabe: freies Feld, ein leiser Chip „Später“
 var fragt = false;
+function tageBrief() { try { return C6.tage && C6.tage.brief ? C6.tage.brief() : null; } catch (e) { return null; } }
+var WAS = { karteikarten: 'Karteikarten', packliste: 'eine Packliste', merkzettel: 'einen Merkzettel' };
+function wannVon(n) { return n === 0 ? 'heute' : n === 1 ? 'morgen' : n === 2 ? 'übermorgen' : 'in ' + n + ' Tagen'; }
+function frageVorbText(f) { return satz('brief.frageVorb', { titel: f.termin.titel, wann: wannVon(f.termin.abstand), was: WAS[f.vorb] || f.vorb }, true); }
 function oeffne(o) {
   o = o || {};
+  if (fragt) return Promise.resolve(null);
+  // das Briefing (an der Rezeption): ohne Aufgabe, oder mit der Frage nach einer Vorbereitung
+  var b = o.still || o.aufgabe ? null : tageBrief();
+  if (b) {
+    briefGelesen(b);
+    if (b.frage && b.frage.art === 'vorbereiten') return vorbFrage(b);
+    if (b.frage && (b.frage.art === 'wichtig' || b.frage.art === 'leer')) return freieFrage(b);
+    if (!(b.frage && b.frage.art === 'aufgabe')) { blattAuf(null, b); return Promise.resolve(null); }
+  }
   var a = heute();
-  if (!a || fragt) return Promise.resolve(null);
+  if (!a) return Promise.resolve(null);
   if (a.erledigt) { try { C6.sag && C6.sag(satz('auftrag.schon', { t: kurz(a.erledigt.t, 80) })); } catch (e) {} return Promise.resolve(null); }
   if (!C6.frag) return Promise.resolve(null);
   fragt = true;
   try { C6.carl && C6.carl.stimmung && C6.carl.stimmung('froh'); } catch (e) {}
-  var blatt = o.still ? null : blattAuf(a);
+  var blatt = o.still ? null : blattAuf(a, b);
   return Promise.resolve(C6.frag(blatt ? '' : a.text, [{ text: 'Später', wert: '__spaeter' }], { frei: true, id: 'auftrag', platzhalter: satz('auftrag.platzhalter', null, true) })).then(function (x) {
     fragt = false;
     var w0 = x && typeof x === 'object' ? (x.wert != null ? x.wert : x.text) : x;
@@ -275,15 +318,109 @@ function oeffne(o) {
   }, function () { fragt = false; blattZu(); return null; });
 }
 
+function vorbFrage(b) {
+  var f = b.frage;
+  if (!C6.frag || !C6.tage) { blattAuf(null, b); return Promise.resolve(null); }
+  fragt = true;
+  try { C6.carl && C6.carl.stimmung && C6.carl.stimmung('froh'); } catch (e) {}
+  blattAuf(null, b);
+  return Promise.resolve(C6.frag('', [{ text: satz('brief.ja', null, true), wert: '__ja' }, { text: 'Später', wert: '__spaeter' }], { id: 'brief' })).then(function (x) {
+    fragt = false;
+    var w = x && typeof x === 'object' ? (x.wert != null ? x.wert : x.text) : x;
+    if (w == null) return null;
+    blattZu();
+    if (w === '__nein') { try { C6.tage.ablehnen(f.termin.id); C6.sag && C6.sag(satz('vorb.neinGut', null, true)); } catch (e) {} postBrief(); return null; }
+    if (w !== '__ja') { try { C6.sag && C6.sag(satz('auftrag.spaeter')); } catch (e) {} return null; }
+    try { C6.sag && C6.sag(satz('vorb.laeuft', null, true), { merken: false }); } catch (e) {}
+    try { C6.carl && C6.carl.stimmung && C6.carl.stimmung('arbeitet'); } catch (e) {}
+    return C6.tage.vorbereiten(f.termin, f.vorb).then(function (r) {
+      try { C6.carl && C6.carl.stimmung && C6.carl.stimmung(r && r.ok ? 'froh' : 'ruhig'); } catch (e) {}
+      var ti = kurz(f.termin.titel, 40);
+      var t = r && r.ok && r.leer ? satz('vorb.keinKopf.' + f.vorb, null, true)
+        : r && r.ok ? (f.vorb === 'karteikarten' && r.n > 1 ? satz('vorb.fertig.karteikarten', { n: r.n, titel: ti }, true) : satz('vorb.fertig', { titel: ti }, true))
+        : r && r.grund === 'schon' ? satz('vorb.schon', null, true)
+        : (r && r.satz) || satz(r && r.grund === 'kein-kopf' ? 'vorb.keinKopf' : 'vorb.leer', null, true);
+      try { C6.sag && C6.sag(t); } catch (e) {}
+      if (r && r.ok) carlFreut();
+      postBrief();
+      return null;
+    });
+  }, function () { fragt = false; blattZu(); return null; });
+}
+function freieFrage(b) {
+  if (!C6.frag) { blattAuf(null, b); return Promise.resolve(null); }
+  fragt = true;
+  blattAuf(null, b);
+  return Promise.resolve(C6.frag('', [{ text: 'Später', wert: '__spaeter' }], { frei: true, id: 'brief', platzhalter: satz('auftrag.platzhalter', null, true) })).then(function (x) {
+    fragt = false;
+    var w = x && typeof x === 'object' ? (x.wert != null ? x.wert : x.text) : x;
+    if (w == null) return null;
+    blattZu();
+    if (w === '__spaeter') { try { C6.sag && C6.sag(satz('auftrag.spaeter')); } catch (e) {} return null; }
+    var t = String(w).trim(); if (!t) return null;
+    var f = waehleFaden(), neu = false;
+    if (!f) { try { f = C6.strings && C6.strings.neu ? C6.strings.neu({ titel: satz('brief.spaceName', null, true), art: 'idee' }) : null; neu = !!f; } catch (e) { f = null; } }
+    var sid = f && (f.id || f);
+    if (sid) { try { if (C6.space && typeof C6.space.zettel === 'function') C6.space.zettel(sid, t); else if (C6.strings && C6.strings.perle) C6.strings.perle(sid, t); } catch (e) {} }
+    var k = tag();
+    aendern(function (st) { st.antwort = st.antwort || {}; st.antwort[k] = { t: kurz(t, 240), ts: Date.now(), sid: sid || null }; });
+    var ft = sid ? (faden(sid) || {}).titel || satz('brief.spaceName', null, true) : '';
+    try { C6.sag && C6.sag(sid ? satz(neu ? 'brief.zettelNeu' : 'brief.zettel', { titel: kurz(ft, 30) }, true) : satz('auftrag.danke')); } catch (e) {}
+    carlFreut();
+    postBrief();
+    return t;
+  }, function () { fragt = false; blattZu(); return null; });
+}
+function briefGelesen(b) {
+  var k = tag();
+  try { C6.tage && C6.tage.nenne && C6.tage.nenne(b); } catch (e) {}
+  if (A().gelesen === k) return;
+  aendern(function (st) { st.gelesen = k; });
+  if (briefEl) briefEl.classList.add('c6r-a-ist-gelesen');
+  emit('brief', { da: !!(briefEl && !briefEl.hidden), gelesen: true });
+}
+
 // Das Blatt: Der Umschlag öffnet sich, das Siegel bricht, das Papier gleitet heraus und faltet sich auf.
 // Handschrift, Datum, Gruß. Antworten geht unten im Feld (oder „Später“); ✕/Esc legt den Brief zurück.
 var blattEl = null;
-function blattAuf(a) {
-  if (!a || !D.body) return null;
+function terminText(t, mitTag) {
+  var vor = mitTag ? t.wochentag + ' ' + (+t.tag.slice(8)) + '.' : '';
+  return t.termine.map(function (x) { return (vor ? vor + ' ' : '') + (x.zeit ? x.zeit + ' ' : '') + x.titel; }).join(' · ');
+}
+var VNAME = { karteikarten: 'Karteikarten', packliste: 'Packliste', merkzettel: 'Merkzettel' };
+function briefing(papier, b) {
+  if (b.erster) {
+    mk('p', 'c6r-a-text c6r-a-heute', papier, satz('brief.erster', null, true));
+    var st = null; try { st = C6.tage.status(); } catch (e) {}
+    if (st && st.kalender !== 'verbunden') mk('p', 'c6r-a-text', papier, satz('brief.nichtsVerbunden', null, true));
+    if (b.frage) mk('p', 'c6r-a-text c6r-a-frage', papier, satz('brief.frageLeer', null, true));
+    return;
+  }
+  var h = b.heute.map(function (x) { return (x.zeit ? x.zeit + ' ' : '') + x.titel; }).join(' · ');
+  mk('p', 'c6r-a-text c6r-a-heute', papier, h ? satz('brief.heute', { liste: h }, true) : satz('brief.heuteLeer', null, true));
+  if (b.naechste.length) mk('p', 'c6r-a-text c6r-a-naechste', papier, satz('brief.naechste', { liste: b.naechste.map(function (d) { return terminText(d, true); }).join(' · ') }, true));
+  else if (h) mk('p', 'c6r-a-text c6r-a-naechste', papier, satz('brief.naechsteLeer', null, true));
+  if (b.vorbereitet.length) mk('p', 'c6r-a-text c6r-a-vorb', papier, satz('brief.vorbereitet', { liste: b.vorbereitet.map(function (v) { return (VNAME[v.art] || v.art) + ' für „' + kurz(v.titel, 40) + '“'; }).join(' · ') }, true));
+  if (b.frage && b.frage.art === 'vorbereiten') mk('p', 'c6r-a-text c6r-a-frage', papier, frageVorbText(b.frage));
+  if (b.frage && (b.frage.art === 'wichtig' || b.frage.art === 'leer')) mk('p', 'c6r-a-text c6r-a-frage', papier, satz(b.frage.art === 'wichtig' ? 'brief.frageWichtig' : 'brief.frageLeer', null, true));
+  // woher Carl es weiß: nur die Quellen, die wirklich im Brief stehen
+  var q = {}, alle = b.heute.slice(); b.naechste.forEach(function (d) { alle = alle.concat(d.termine); });
+  alle.forEach(function (x) { if (x.quelle === 'kalender') q['dein Kalender'] = 1; else if (x.werkzeugId) { var w = C6.werkzeug && C6.werkzeug.hol ? C6.werkzeug.hol(x.werkzeugId) : null; q[w ? 'dein Werkzeug „' + kurz(w.name, 24) + '“' : 'deine Werkzeuge'] = 1; } });
+  var ql = Object.keys(q);
+  if (ql.length) mk('p', 'c6r-a-woher', papier, satz('brief.woher', { quellen: ql.join(', ') }, true));
+}
+function anrede(name) {
+  var z = 'tag'; try { z = ({ morgen: 'morgen', mittag: 'tag', abend: 'abend', nacht: 'nacht' })[C6.tageszeit ? C6.tageszeit() : ''] || 'tag'; } catch (e) {}
+  var t = ''; try { t = C6.stimme && C6.stimme.fest ? C6.stimme.fest('brief.anrede.' + z, {}) : ''; } catch (e) { t = ''; }
+  if (t && !/\{/.test(t)) return t;
+  return name ? 'Hallo ' + name + ',' : 'Hallo,';
+}
+function blattAuf(a, b) {
+  if ((!a && !b) || !D.body) return null;
   blattZu(true);
-  var f = faden(a.sid) || {}, du = (C6.S && C6.S.du) || {}, farbe = f.farbe || '#b7852a';
-  var d = new Date(a.ts || Date.now());
-  var w = mk('div', 'c6r-a-lage'); w.setAttribute('role', 'dialog'); w.setAttribute('aria-label', satz('auftrag.titel', null, true));
+  var f = (a && faden(a.sid)) || {}, du = (C6.S && C6.S.du) || {}, farbe = f.farbe || '#b7852a';
+  var d = new Date((a && a.ts) || Date.now());
+  var w = mk('div', 'c6r-a-lage'); w.setAttribute('role', 'dialog'); w.setAttribute('aria-label', satz(b ? 'brief.titel' : 'auftrag.titel', null, true));
   var um = mk('div', 'c6r-a-gross', w);
   um.innerHTML = '<svg class="c6r-a-gross-hinten" viewBox="0 0 320 210" aria-hidden="true"><rect x="4" y="4" width="312" height="202" rx="8" fill="#e6cfa7" stroke="#2b2722" stroke-width="3"/>' +
     '<path d="M6,204 L130,110 M314,204 L190,110" stroke="#2b2722" stroke-opacity=".25" stroke-width="2" fill="none"/></svg>';
@@ -293,12 +430,14 @@ function blattAuf(a) {
   var zu = mk('button', 'c6r-a-zu', kopf); zu.type = 'button'; zu.setAttribute('aria-label', 'Brief zurücklegen');
   zu.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
   zu.addEventListener('click', function () { try { C6.schweig && C6.schweig(); } catch (e) {} blattZu(); });
-  mk('p', 'c6r-a-anrede', papier, (du.name ? 'Hallo ' + du.name + ',' : 'Hallo,'));
-  mk('p', 'c6r-a-text', papier, a.text);
-  var gr = mk('p', 'c6r-a-gruss', papier, satz('auftrag.gruss', null, true));
+  mk('p', 'c6r-a-anrede', papier, b ? anrede(du.name) : (du.name ? 'Hallo ' + du.name + ',' : 'Hallo,'));
+  if (b) briefing(papier, b);
+  if (a && !a.erledigt) mk('p', 'c6r-a-text c6r-a-aufgabe', papier, a.text);
+  var gr = mk('p', 'c6r-a-gruss', papier, satz(b ? 'brief.gruss' : 'auftrag.gruss', null, true));
   var bl = mk('span', 'c6r-a-blatt-zeichen', gr); bl.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20v-7M12 13c-4 0-6-3-6-6 4 0 6 2.5 6 6zM12 13c4 0 6-3 6-6-4 0-6 2.5-6 6z" fill="#8ea37a" stroke="#2b2722" stroke-width="1.4" stroke-linejoin="round"/></svg>';
-  if (f.titel) mk('p', 'c6r-a-zu-space', papier, 'zu „' + kurz(f.titel, 30) + '“');
+  if (f.titel && a && !a.erledigt) mk('p', 'c6r-a-zu-space', papier, 'zu „' + kurz(f.titel, 30) + '“');
   var ant = mk('button', 'c6r-a-antwort', papier, 'Antworten'); ant.type = 'button'; ant.hidden = true;
+  if (!a || a.erledigt) ant.remove();
   ant.addEventListener('click', function () { if (!fragt) { blattZu(true); oeffne(); } });
   var vorn = mk('div', 'c6r-a-gross-vorn', um);
   vorn.innerHTML = '<svg viewBox="0 0 320 210" aria-hidden="true"><path d="M4,96 L160,150 L316,96 V200 a6,6 0 0 1 -6,6 H10 a6,6 0 0 1 -6,-6 Z" fill="#efdcb8" stroke="#2b2722" stroke-width="3" stroke-linejoin="round"/>' +
@@ -430,10 +569,11 @@ function hoeren() {
     var a = heute();
     if (a && !a.erledigt && d.id && d.id === a.ding) { d.genommen = true; oeffne(); }
   });
-  C6.bus.on('rundgang', function () { setTimeout(zuhauseBrief, 60); });
-  C6.bus.on('raum', function () { setTimeout(zuhauseBrief, 80); });
-  C6.bus.on('strings', function () { if (C6.jetzt === 'zuhause') setTimeout(zuhauseBrief, 80); });
-  C6.bus.on('geraet', function () { setTimeout(lageBrief, 120); });
+  C6.bus.on('rundgang', function () { setTimeout(postBrief, 60); });
+  C6.bus.on('raum', function () { setTimeout(postBrief, 80); });
+  C6.bus.on('strings', function () { setTimeout(postBrief, 80); });
+  C6.bus.on('tage', function (d) { if (d && (d.was === 'stand' || d.was === 'vorbereitet')) setTimeout(postBrief, 0); });
+  C6.bus.on('rezeption-welt', function (d) { if (d && d.was === 'gebaut') setTimeout(postBrief, 0); });
 }
 D.addEventListener('click', function (e) {
   var b = e.target && e.target.closest && e.target.closest('.c6z-sp-ding');
@@ -447,7 +587,7 @@ D.addEventListener('click', function (e) {
   oeffne();
 }, true);
 
-// ---------- Der Brief im Zuhause ----------
+// ---------- Der Brief im Postfach der Rezeption ----------
 // Der Umschlag: Packpapier, Lasche, Wachssiegel mit Carls zwei Keimblättern, eine Briefmarke mit Stempel
 function wachs(farbe, cx, cy, r) {
   return '<g class="c6r-a-siegel">' +
@@ -479,100 +619,89 @@ var BRIEF = function (farbe, an) {
     '</svg>';
 };
 var briefEl = null, briefTag = '', briefSchon = {};
-function buehneZuhause() { try { return C6.gebaut ? C6.gebaut('zuhause') : null; } catch (e) { return null; } }
+function postfach() { try { return C6.rezeption && typeof C6.rezeption.postfach === 'function' ? C6.rezeption.postfach() : null; } catch (e) { return null; } }
 function briefBauen() {
-  var b = buehneZuhause();
+  var b = postfach();
   if (!b) return null;
-  // das Zuhause darf den Brief in seine Ablage legen: dann bleibt es derselbe Brief (nie ein zweiter mit gleicher id)
-  if (briefEl && b.contains(briefEl)) return briefEl;
-  var alt = D.getElementById('c6r-a-brief'); if (alt && alt !== briefEl && alt.parentNode) alt.parentNode.removeChild(alt);
-  briefEl = D.createElement('button');
-  briefEl.type = 'button';
-  briefEl.id = 'c6r-a-brief';
-  briefEl.className = 'c6r-a-brief';
-  briefEl.hidden = true;
-  briefEl.innerHTML = '<span class="c6r-a-umschlag"></span><span class="c6r-a-fuer"></span>';
-  briefEl.addEventListener('click', function (e) {
-    e.stopPropagation();
-    try { var c = C6.carl; if (c && c.schau) { var r = briefEl.getBoundingClientRect(); c.schau(r.left + r.width / 2, r.top + r.height / 2); } } catch (x) {}
-    oeffne();
-  });
+  if (briefEl && briefEl.parentNode === b) return briefEl;
+  if (!briefEl) {
+    var alt = D.getElementById('c6r-a-brief'); if (alt && alt.parentNode) alt.parentNode.removeChild(alt);
+    briefEl = D.createElement('button');
+    briefEl.type = 'button';
+    briefEl.id = 'c6r-a-brief';
+    briefEl.className = 'c6r-a-brief';
+    briefEl.hidden = true;
+    briefEl.innerHTML = '<span class="c6r-a-umschlag"></span>';
+    briefEl.addEventListener('click', function (e) {
+      e.stopPropagation();
+      try { var c = C6.carl; if (c && c.schau) { var r = briefEl.getBoundingClientRect(); c.schau(r.left + r.width / 2, r.top + r.height / 2); } } catch (x) {}
+      oeffne();
+    });
+  }
+  // derselbe Brief zieht um, wenn das Postfach der Welt nach dem Ersatz kommt (nie ein zweiter mit gleicher id)
   b.appendChild(briefEl);
   return briefEl;
 }
-function lageBrief() {
-  if (!briefEl || briefEl.hidden) return;
-  if (briefEl.parentNode && briefEl.parentNode.hasAttribute && briefEl.parentNode.hasAttribute('data-c6-ablage')) { briefEl.style.left = ''; briefEl.style.top = ''; return; }
-  var b = buehneZuhause(); if (!b) return;
-  var br = b.getBoundingClientRect(); if (!br.width) return;
-  var comp = C6.geraet === 'computer';
-  var w = comp ? 84 : 72, h = briefEl.offsetHeight || (comp ? 86 : 78);
-  var tp = b.querySelector('.c6z-teppich'), tr = tp ? tp.getBoundingClientRect() : null;
-  var c = b.querySelector('.c6z-carl'), cr = c ? c.getBoundingClientRect() : null;
-  var x, y;
-  // am rechten Rand des Teppichs, neben Carls Füßen
-  if (tr && tr.width) { x = tr.right - br.left - w * (comp ? 1.35 : 1.05); y = tr.top - br.top + tr.height * 0.5 - h * 0.62; }
-  else if (cr && cr.width) { x = cr.right - br.left; y = cr.bottom - br.top - h; }
-  else { x = br.width * 0.7; y = br.height * 0.7; }
-  // nie aufs Dock
-  try { var ue = D.querySelector('.c6k-unten'); if (ue) { var ur = ue.getBoundingClientRect(); if (ur.height > 0) y = Math.min(y, ur.top - br.top - h - 10); } } catch (e) {}
-  x = Math.max(8, Math.min(br.width - w - 10, x));
-  y = Math.max(80, Math.min(br.height - 120, y));
-  briefEl.style.left = Math.round(x) + 'px';
-  briefEl.style.top = Math.round(y) + 'px';
+// Was heute im Brief steht: das Briefing (C6.tage) oder, ohne es, die Aufgabe des Tages
+function briefStand() {
+  if (C6.rundgang && C6.rundgang.an) return null;
+  var b = tageBrief(), a = null;
+  try { a = heute(); } catch (e) { a = null; }
+  if (b) return { schl: b.tag + '|' + JSON.stringify([b.heute.length, b.naechste.length, b.vorbereitet.length, b.frage && (b.frage.art + (b.frage.termin ? b.frage.termin.id : ''))]) + '|' + (a && !a.erledigt ? a.id : ''), b: b, a: a && !a.erledigt ? a : null, farbe: (a && faden(a.sid) || {}).farbe };
+  if (a && !a.erledigt) return { schl: a.id, b: null, a: a, farbe: (faden(a.sid) || {}).farbe };
+  return null;
 }
-function zuhauseBrief() {
-  var a = null;
-  try { a = (C6.jetzt === 'zuhause' || buehneZuhause()) ? heute() : null; } catch (e) { a = null; }
+function postBrief() {
   var el = briefBauen();
   if (!el) return;
-  var zeigen = !!(a && !a.erledigt && !(C6.rundgang && C6.rundgang.an));
-  if (!zeigen) { el.hidden = true; return; }
-  var f = faden(a.sid) || {};
-  if (briefTag !== a.id) {
-    briefTag = a.id;
+  var x = briefStand();
+  if (!x) { el.hidden = true; briefMelden(); return; }
+  if (briefTag !== x.schl) {
+    briefTag = x.schl;
     var du0 = (C6.S && C6.S.du) || {};
-    el.querySelector('.c6r-a-umschlag').innerHTML = BRIEF(f.farbe || '#b7852a', kurz(du0.name || '', 10).replace(/[<&]/g, ''));
-    el.querySelector('.c6r-a-fuer').textContent = kurz(f.titel || '', 18);
-    el.setAttribute('aria-label', satz('auftrag.titel', null, true) + ': ' + a.text);
+    el.querySelector('.c6r-a-umschlag').innerHTML = BRIEF(x.farbe || '#b7852a', kurz(du0.name || '', 10).replace(/[<&]/g, ''));
+    var n = x.b ? x.b.heute.length : 0;
+    el.setAttribute('aria-label', satz(x.b ? 'brief.titel' : 'auftrag.titel', null, true) + (x.b ? (n ? ', heute ' + (n === 1 ? 'ein Termin' : n + ' Termine') : '') + (x.b.frage ? ', mit einer Frage' : '') : ': ' + x.a.text));
   }
+  el.classList.toggle('c6r-a-ist-gelesen', A().gelesen === tag());
   var neu = el.hidden;
   el.hidden = false;
-  lageBrief();
-  if (C6.jetzt !== 'zuhause' || !neu) return;
-  // beim ersten Sehen am Tag schwebt der Brief herunter: Carl hat ihn von oben mitgebracht
-  var k = a.tag;
+  briefMelden();
+  if (C6.jetzt !== 'rezeption' || !neu) return;
+  // beim ersten Sehen am Tag fällt der Brief ins Postfach: Carl hat ihn mitgebracht
+  var k = tag();
   if (A().gesehen[k]) return;
   aendern(function (st) { st.gesehen = {}; st.gesehen[k] = Date.now(); });
   if (!ruhig() && el.animate) {
     el.classList.add('c6r-a-fliegt');
-    setTimeout(function () { el.classList.remove('c6r-a-fliegt'); }, 1500);
+    setTimeout(function () { el.classList.remove('c6r-a-fliegt'); }, 1300);
     el.animate([
-      { transform: 'translate(-40px,-340px) rotate(-18deg)', opacity: 0 },
-      { transform: 'translate(20px,-200px) rotate(10deg)', opacity: 1, offset: 0.35 },
-      { transform: 'translate(-12px,-70px) rotate(-7deg)', opacity: 1, offset: 0.7 },
+      { transform: 'translate(-30px,-160px) rotate(-14deg)', opacity: 0 },
+      { transform: 'translate(12px,-90px) rotate(8deg)', opacity: 1, offset: 0.4 },
+      { transform: 'translate(-6px,-24px) rotate(-5deg)', opacity: 1, offset: 0.75 },
       { transform: 'translate(0,0) rotate(-3deg)', opacity: 1 }
-    ], { duration: 1800, easing: 'cubic-bezier(.35,.1,.3,1)' });
+    ], { duration: 1200, easing: 'cubic-bezier(.35,.1,.3,1)' });
   }
   setTimeout(function () {
     try { var c = C6.carl; if (c && c.schau) { var r = el.getBoundingClientRect(); c.schau(r.left + r.width / 2, r.top + r.height / 2); } } catch (e) {}
-    carlFreut();
-  }, ruhig() ? 0 : 1500);
+  }, ruhig() ? 0 : 1200);
   // ein Satz, nur wenn gerade niemand redet
   if (!briefSchon[k]) {
     briefSchon[k] = 1;
     setTimeout(function () {
-      if (C6.jetzt !== 'zuhause' || el.hidden || fragt) return;
+      if (C6.jetzt !== 'rezeption' || el.hidden || fragt) return;
       if (C6.denktGerade && C6.denktGerade()) return;
       var g = S().gespraech || [], l = g[g.length - 1];
       if (l && Date.now() - (l.ts || 0) < 5000) return;
-      try { C6.sag && C6.sag(satz('auftrag.bringt'), { merken: false }); } catch (e) {}
-    }, ruhig() ? 600 : 2600);
+      try { if (C6.rezeption && C6.rezeption.sag) C6.rezeption.sag(satz(x.b ? 'brief.bringt' : 'auftrag.bringt', null, true)); } catch (e) {}
+    }, ruhig() ? 600 : 1800);
   }
 }
 // Erledigt: der Brief steigt auf, zum Himmel
 function briefWeg() {
   if (!briefEl || briefEl.hidden) return;
+  // steht noch etwas an, bleibt der Brief im Postfach (ohne Frage); nur ein leerer Brief steigt auf
+  if (briefStand()) { briefTag = ''; postBrief(); return; }
   var el = briefEl;
   if (ruhig() || !el.animate) { el.hidden = true; return; }
   el.classList.add('c6r-a-fliegt');
@@ -584,6 +713,10 @@ function briefWeg() {
   an.onfinish = function () { el.hidden = true; };
 }
 
+// das Postfach fragt: liegt ein Brief da? (Bus 'brief' bei jeder Änderung)
+var briefDa = null;
+function briefMelden() { var da = !!(briefEl && !briefEl.hidden); if (da !== briefDa) { briefDa = da; emit('brief', { da: da, gelesen: A().gelesen === tag() }); } }
+C6.brief = { beantwortet: function () { var a = A().antwort; return !!(a && a[tag()]); }, da: function () { return !!(briefEl && !briefEl.hidden); }, gelesen: function () { return A().gelesen === tag(); }, oeffne: function () { return oeffne(); } };
 C6.auftrag = {
   heute: heute,
   offen: offen,
@@ -592,7 +725,8 @@ C6.auftrag = {
   funde: funde,
   legeFund: legeFund,
   herkunft: herkunft,
-  _sammle: sammle
+  _sammle: sammle,
+  beantwortet: function () { var a = A().antwort; return !!(a && a[tag()]); }
 };
 // Rückgabe von oeffne geht durch die öffentliche Hülle, damit der Brief immer aufsteigt
 var _oeffne = oeffne;
@@ -600,5 +734,4 @@ oeffne = function (o) { return _oeffne(o).then(function (x) { if (x) briefWeg();
 
 if (C6.bus) hoeren();
 else setTimeout(hoeren, 0);
-setTimeout(zuhauseBrief, 400);
-window.addEventListener('resize', function () { setTimeout(lageBrief, 120); });
+setTimeout(postBrief, 400);

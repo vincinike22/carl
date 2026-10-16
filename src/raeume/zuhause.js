@@ -194,7 +194,6 @@ C6.raum({
       '<div class="c6z-sofa" data-tiefe="mitte" aria-hidden="true"><i class="c6m-schatten" data-sw=".9" data-sh=".1"></i>' + SOFA + '</div>' +
       '<div class="c6z-carl"></div>' +
       '<button type="button" class="c6z-ding c6z-knaeuel" data-tiefe="nah" aria-label="Knäuel"><i class="c6m-schatten" data-sw=".5" data-sh=".2" data-sx="-.25"></i>' + KNAEUEL + '<i class="c6z-kn-spur" aria-hidden="true"></i></button>' +
-      '<div class="c6z-ablage" data-tiefe="nah" data-c6-ablage></div>' +
       '<div class="c6z-meine" data-tiefe="nah" role="group" aria-label="Deine Werkzeuge, die noch an der Rezeption stehen" hidden></div>' +
       '<div class="c6z-sb-brett" role="group" aria-label="Deine Spaces" lang="de"><i class="c6z-sb-brett-holz" aria-hidden="true"></i><div class="c6z-sb-haken"></div></div>' +
       '<button type="button" class="c6z-verlauf" aria-label="Unser Gespräch zeigen"></button>' +
@@ -242,17 +241,6 @@ C6.raum({
       } catch (e) {}
     }
 
-    // Ablage am Boden rechts vom Teppich (Gegenstück zum Knäuel): dort legt Carl Mitgebrachtes hin, z. B. einen Brief
-    var ablage = q('.c6z-ablage');
-    C6.zuhause = C6.zuhause || {};
-    C6.zuhause.ablage = function (ding) {
-      if (ding && ding.nodeType === 1 && ding.parentNode !== ablage) { ding.style.left = ''; ding.style.top = ''; ablage.appendChild(ding); }
-      return ablage;
-    };
-    // der Brief von Carl (Aufgabe des Tages) liegt in der Ablage, sobald er da ist
-    function nimmBrief() { var b = st.ownerDocument.getElementById('c6r-a-brief'); if (b && b.parentNode !== ablage) C6.zuhause.ablage(b); }
-    C6.bus.on('auftrag', function () { setTimeout(nimmBrief, 0); });
-    C6.bus.on('raum', function (r) { if (r === 'zuhause') setTimeout(nimmBrief, 60); });
     var ctl = null;
     try { ctl = C6.figur.male(el.carl, { groesse: 260 }); } catch (e) { ctl = null; }
     if (ctl && C6.setzeCarl) C6.setzeCarl(ctl, 'zuhause');
@@ -487,6 +475,7 @@ C6.raum({
       }
     }
     // Prüfhilfe: eine Stunde fest setzen; die Tageszeit setzt dann die gemeinsame Uhr (C6.tageszeit.setze)
+    C6.zuhause = C6.zuhause || {};
     C6.zuhause.stunde = function (h) {
       stundeFest = (h == null ? null : Math.max(0, Math.min(23.99, +h)));
       try { if (C6.tageszeit && typeof C6.tageszeit.setze === 'function') C6.tageszeit.setze(stundeFest == null ? null : (typeof C6.tageszeit.aus === 'function' ? C6.tageszeit.aus(Math.floor(stundeFest)) : null)); } catch (e) { }
@@ -825,7 +814,7 @@ C6.raum({
       try { vor = C6.space && typeof C6.space.kurzname === 'function' ? C6.space.kurzname(satz) : ''; } catch (e) { vor = ''; }
       // findet sich kein guter Name, fragt Carl ehrlich, statt drei Wörter abzuschneiden
       if (!vor) return C6.frag('Wie soll er heißen?', [], { frei: true, id: 'knaeuel-name-frei', platzhalter: 'Ein kurzer Name …' }).then(function (e) { return (typeof e === 'string' && e.trim()) ? e.trim() : null; });
-      return C6.frag('Ich nenn ihn „' + vor + '“?', [{ text: 'Passt', wert: 'ja' }, { text: 'Anders', wert: 'anders' }], { leise: true, id: 'knaeuel-name' }).then(function (n) {
+      return C6.frag('Ich nenn ihn „' + vor + '“?', [{ text: 'So nennen', wert: 'ja' }, { text: 'Anderer Name', wert: 'anders' }], { leise: true, id: 'knaeuel-name' }).then(function (n) {
         if (n === 'ja') return vor;
         if (n !== 'anders') return null;
         return C6.frag('Wie soll er heißen?', [], { frei: true, id: 'knaeuel-name-frei', platzhalter: 'Ein kurzer Name …' }).then(function (e) { return (typeof e === 'string' && e.trim()) ? e.trim() : null; });
@@ -953,7 +942,7 @@ C6.raum({
 
     return {
       betreten: function (o) {
-        nimmBrief(); kalenderZeichnen(); meineAn();
+        kalenderZeichnen(); meineAn();
         o = o || {};
         hier = true; letzteRegung = Date.now(); st.classList.remove('c6m-still');
         st.classList.toggle('c6z-im-rundgang', !!(o.rundgang || (C6.rundgang && C6.rundgang.an)));

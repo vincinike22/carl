@@ -1,30 +1,39 @@
-/* Rezeption: Carl am Tresen, sein Satz darüber, deine Werkzeuge und die Beispiele auf dem Boden davor.
+/* Rezeption: Carl am Tresen, sein Satz darüber; vor dem Tresen die sieben Tage, das Tagesblatt und deine Werkzeuge.
    Die Welt (hinter allem) kommt aus einem eigenen Modul und setzt --c6rw-tresen (Tresenkante von oben); hier nur ein Ersatzmaß. */
-.c6rz{position:absolute;inset:0;overflow:hidden;--c6rw-tresen:calc(var(--c6-oben,54px) + 250px);--c6rz-tresen-hoch:92px}
-/* am Computer liegt die Tresenkante höher als in der Welt vorgesehen (50 %), damit der Boden davor Platz für Werkzeug und Beispiele hat */
-.c6k[data-geraet=computer] .c6-buehne .c6rz{--c6rw-tresen:38%;--c6rz-tresen-hoch:118px}
-.c6rz-welt{position:absolute;inset:0;z-index:0}
+.c6rz{position:absolute;inset:0;overflow:hidden;--c6rw-tresen:max(calc(var(--c6-oben,54px) + 340px),60%);--c6rz-tresen-hoch:96px;--c6rz-carl:176px;--c6rz-carl-x:14px;--c6rz-blatt-oben:calc(var(--c6rw-tresen) + 2px)}
+/* Lage (Welt): Carl steht HINTER dem Tresen, die Kante verdeckt Beine und Bauchband; er schaut darüber.
+   Am Computer liegt die Tresenkante bei 54 %, darunter die Halle mit Platz für Werkzeug und Tagesblatt */
+.c6k[data-geraet=computer] .c6-buehne .c6rz{--c6rw-tresen:max(calc(var(--c6-oben,54px) + 420px),61%);--c6rz-tresen-hoch:116px;--c6rz-carl:290px;--c6rz-blatt-oben:calc(var(--c6rw-tresen) + 2px)}
+.c6rz-welt{position:absolute;inset:0;z-index:auto}
 
-/* Carl steht links der Mitte auf der Tresenkante; rechts von ihm bleibt Platz für Tasse und Glocke der Welt */
-.c6rz-carl{position:absolute;z-index:2;left:calc(50% - 60px);top:var(--c6rw-tresen);width:120px;height:120px;transform:translateY(-100%);pointer-events:none}
-.c6rz-carl .c6z-figur{width:100%;pointer-events:auto}
+/* Carl links hinter dem Tresen (rechts von ihm stehen Postablage, Tasse und Glocke); Ebene 1: unter dem Tresen, über der Wand */
+.c6rz-carl{position:absolute;z-index:1;left:var(--c6rz-carl-x,14px);top:calc(var(--c6rw-tresen) + var(--c6rz-carl) * .32 - var(--c6rz-carl));width:calc(var(--c6rz-carl) * .889);height:var(--c6rz-carl);pointer-events:none;display:flex;align-items:flex-end;justify-content:center;
+ transform-origin:50% 100%;transition:transform .42s cubic-bezier(.3,.7,.3,1),top .42s cubic-bezier(.3,.7,.3,1);
+ /* offen: wohin Carl tritt (Fußpunkt auf dem Regalkranz, kleiner), Maße je Gerät unten */
+ --c6rz-k:.46;--c6rz-zu-x:192px;--c6rz-kranz:calc(var(--c6-oben,54px) + 106px)}
+/* Ist ein Tag offen, liegt das Blatt über dem Tresen: Carl schwebt hinauf auf den Kranz des Regals, klein, und schaut hinunter aufs Blatt.
+   Beim Schließen kommt er zurück. Bei reduzierter Bewegung springt er ohne Weg. */
+/* (die Höhe über top, weil Prozente in translate sich auf Carl selbst bezögen) */
+.c6rz-buehne[data-tag-offen] .c6rz-carl{top:calc(var(--c6rz-kranz) + var(--c6rz-carl) * var(--c6rz-k) * .04 - var(--c6rz-carl));transform:translateX(var(--c6rz-zu-x)) scale(var(--c6rz-k))}
+.c6rz-buehne[data-tag-offen] .c6rz-satz{opacity:0}
+html.c6k-ruhig .c6rz-carl{transition:none}
+@media (prefers-reduced-motion:reduce){.c6rz-carl{transition:none}}
+/* Carl steht unten im Kasten, egal wie groß er gerade gezeichnet ist: die Füße bleiben immer hinter dem Tresen */
+.c6rz-carl .c6z-figur{pointer-events:auto;flex:none}
 
-/* Carls Satz: eine Blase wie die im Kern, fest über seinem Kopf, nach rechts offen */
-.c6rz-satz{position:absolute;z-index:3;left:calc(50% - 56px);right:16px;top:calc(var(--c6-oben,54px) + 10px);margin:0;padding:11px 14px 12px;box-sizing:border-box;pointer-events:none;
+/* Carls Satz: eine Blase rechts neben seinem Kopf, über den Dingen auf dem Tresen; wächst nach oben, nie über das Regal */
+.c6rz-satz{position:absolute;z-index:3;left:calc(var(--c6rz-carl-x,14px) + var(--c6rz-carl) * .86);right:14px;top:auto;bottom:calc(100% - var(--c6rw-tresen) + 58px);margin:0;padding:11px 14px 12px;box-sizing:border-box;pointer-events:none;
  background:var(--karte,#fbf7f0);border:1.5px solid var(--tusche,#2b2722);border-radius:16px;box-shadow:var(--c6k-schwebt);
- font:400 17px/1.42 Fraunces,Georgia,serif;font-variation-settings:'opsz' 24;color:var(--tusche,#2b2722);overflow-wrap:break-word}
-.c6rz-zipfel{position:absolute;left:18px;top:calc(100% - 2px);width:22px;height:14px}
+ font:400 16.5px/1.4 Fraunces,Georgia,serif;font-variation-settings:'opsz' 24;color:var(--tusche,#2b2722);overflow-wrap:break-word}
+.c6rz-zipfel{position:absolute;left:-15px;top:auto;bottom:16px;width:22px;height:14px;transform:rotate(90deg)}
 .c6rz-satz.c6rz-still{opacity:0;transition:opacity .25s ease}
 .c6rz-satz{transition:opacity .25s ease}
-.c6rz-satz.c6rz-lang{left:16px}
-.c6rz-satz.c6rz-lang .c6rz-zipfel{left:calc(50% - 54px)}
-.c6rz-computer .c6rz-satz.c6rz-lang{left:calc(50% - 10px)}
-.c6rz-computer .c6rz-satz.c6rz-lang .c6rz-zipfel{left:-15px}
+.c6rz-satz.c6rz-lang{font-size:15.5px}
 .c6rz-zipfel svg{display:block;width:22px;height:14px;overflow:visible}
 
 /* Der Boden vor dem Tresen rollt senkrecht; das Feld unten bleibt frei */
-.c6rz-boden{position:absolute;z-index:1;left:0;right:0;top:calc(var(--c6rw-tresen) + var(--c6rz-tresen-hoch) + 10px);bottom:var(--c6-unten,140px);box-sizing:border-box;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
- padding:0 16px 12px;display:grid;gap:14px;align-content:start}
+.c6rz-boden{position:absolute;z-index:1;left:0;right:0;top:calc(var(--c6rw-tresen) + var(--c6rz-tresen-hoch) + 16px);bottom:var(--c6-unten,140px);box-sizing:border-box;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+ padding:0 16px 18px;display:grid;gap:14px;align-content:start}
 
 /* Deine Werkzeuge (ohne Space) stehen klein vor dem Tresen; das neueste kommt sichtbar an */
 .c6rz-meins{display:grid;gap:12px}
@@ -54,18 +63,97 @@
 .c6rz-link{min-height:44px;padding:0 4px;border:0;background:none;font:600 14px Figtree,system-ui,sans-serif;color:var(--tusche,#2b2722);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .c6rz-korr:focus-visible,.c6rz-knopf:focus-visible,.c6rz-link:focus-visible{outline:3px solid var(--fokus,#b4460c);outline-offset:2px}
 
-/* Beispiele: Platz für ein anderes Modul */
-#c6rz-beispiele{min-width:0}
-#c6rz-beispiele:empty{display:none}
+/* Postfach (Ersatz, solange die Welt keins hat): ein Schlitz vorn im Tresen, der Brief steckt darin */
+.c6rz-postfach{position:absolute;z-index:2;left:16px;top:calc(var(--c6rw-tresen) + 12px);width:80px;min-height:20px;display:flex;align-items:flex-start;justify-content:center}
+.c6rz-postfach[hidden]{display:none}
+.c6rz-postfach::before{content:"";position:absolute;left:4px;right:4px;top:30px;height:6px;border-radius:3px;background:var(--tusche,#2b2722);opacity:.55}
+.c6rz-postfach:empty::before{top:8px;opacity:.35}
+.c6rz-computer .c6rz-postfach{left:max(24px,calc(50% - 520px));top:calc(var(--c6rw-tresen) + 16px);width:96px}
+.c6rz-postfach .c6r-a-brief,[data-c6rw-postfach] .c6r-a-brief{position:relative;display:block;min-width:44px;min-height:44px;padding:0;border:0;background:none;cursor:pointer;transform:rotate(-3deg)}
+.c6rz-postfach .c6r-a-brief[hidden],[data-c6rw-postfach] .c6r-a-brief[hidden]{display:none}
+.c6r-a-brief:focus-visible{outline:3px solid var(--fokus,#b4460c);outline-offset:3px;border-radius:6px}
+.c6r-a-brief.c6r-a-ist-gelesen .c6r-a-siegel{opacity:.35}
 
-/* Computer: Carl größer, die Blase breiter, der Boden eine ruhige Spalte */
-/* Computer: Carl links der Mitte, die Blase rechts neben seinem Kopf (Zipfel zeigt nach links auf ihn) */
-.c6rz-computer .c6rz-carl{left:calc(50% - 210px);width:200px;height:200px}
-.c6rz-computer .c6rz-satz{left:calc(50% - 10px);right:auto;width:min(560px,calc(50% - 6px));top:auto;bottom:calc(100% - var(--c6rw-tresen) + 100px);font-size:19px;padding:13px 18px 14px}
-.c6rz-computer .c6rz-zipfel{left:-15px;top:auto;bottom:18px;transform:rotate(90deg)}
-/* der Boden am Computer ist so breit wie der Tresen (≥ 990 px ab 1040 px Fenster): drei Beispiele nebeneinander, ohne Rollen ganz zu sehen */
+/* Die sieben Fächer (Ersatzreihe, solange die Welt ihr Regal noch nicht zeigt) */
+.c6rz-faecher{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.c6rz-faecher[hidden]{display:none}
+.c6rz-fach{position:relative;min-height:64px;padding:6px 2px 8px;border:1.5px solid var(--tusche,#2b2722);border-radius:10px 10px 6px 6px;background:var(--feld,#fffdf9);color:var(--tusche,#2b2722);cursor:pointer;display:grid;justify-items:center;align-content:start;gap:2px;box-shadow:inset 0 -10px 0 rgba(43,39,34,.06);-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.c6rz-fach-wt{font:600 11.5px/1.1 Figtree,system-ui,sans-serif;letter-spacing:.02em;color:var(--leise,#6f6a61)}
+.c6rz-fach-nr{font:400 19px/1.1 Fraunces,Georgia,serif}
+.c6rz-fach-drin{display:flex;gap:3px;align-items:center;min-height:10px}
+.c6rz-fach-drin i{width:7px;height:7px;border-radius:50%;background:#b4460c}
+.c6rz-fach-drin b{width:12px;height:9px;border-radius:2px;background:#2c7a6e;box-shadow:2px -2px 0 #e9dfcf,2px -2px 0 1px #2b2722}
+.c6rz-fach-heute{background:var(--karte,#fbf7f0);border-width:2px}
+.c6rz-fach-heute .c6rz-fach-wt{color:var(--tusche,#2b2722)}
+.c6rz-fach[aria-expanded=true]{background:var(--tusche,#2b2722);color:var(--karte,#fbf7f0)}
+.c6rz-fach[aria-expanded=true] .c6rz-fach-wt{color:var(--karte,#fbf7f0)}
+.c6rz-fach:focus-visible{outline:3px solid var(--fokus,#b4460c);outline-offset:2px}
+
+/* Das Tagesblatt liegt am Tresen: der Tag, seine Termine, was Carl tun kann */
+.c6rz-tagesblatt{position:absolute;z-index:4;left:12px;right:12px;bottom:calc(var(--c6-unten,140px) + 8px);max-height:calc(100% - var(--c6-unten,140px) - 8px - var(--c6rz-blatt-oben,calc(var(--c6rw-tresen) - 8px)));box-sizing:border-box;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:12px 14px 12px;background:var(--karte,#fbf7f0);border:1.5px solid var(--tusche,#2b2722);border-radius:12px;box-shadow:2px 3px 0 rgba(43,39,34,.12);outline:0}
+.c6rz-tagesblatt[hidden]{display:none}
+.c6rz-tb-kopf{display:flex;align-items:baseline;gap:10px;padding-right:40px;margin:0 0 6px}
+.c6rz-tb-tag{margin:0;font:600 20px/1.2 Fraunces,Georgia,serif;color:var(--tusche,#2b2722)}
+.c6rz-tb-datum{margin:0;font:500 18px/1.1 Caveat,cursive;color:var(--leise,#6f6a61)}
+.c6rz-tb-zu{position:absolute;right:4px;top:4px;width:44px;height:44px;border:0;background:none;cursor:pointer;display:grid;place-items:center;border-radius:50%}
+.c6rz-tb-zu svg{width:18px;height:18px;fill:none;stroke:var(--tusche,#2b2722);stroke-width:2.2;stroke-linecap:round}
+.c6rz-tb-zu:focus-visible{outline:3px solid var(--fokus,#b4460c);outline-offset:-2px}
+.c6rz-tb-termine{list-style:none;margin:0;padding:0;display:grid}
+.c6rz-tb-termin{padding:8px 0 10px;border-top:1px dashed var(--linie,#d8cfc0);display:grid;gap:4px}
+.c6rz-tb-termin:first-child{border-top:0;padding-top:2px}
+.c6rz-tb-zeile{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:baseline}
+.c6rz-tb-zeit{font:600 13px/1.3 Figtree,system-ui,sans-serif;color:var(--leise,#6f6a61);font-variant-numeric:tabular-nums;min-width:52px}
+.c6rz-tb-titel{font:400 17px/1.35 Fraunces,Georgia,serif;color:var(--tusche,#2b2722);overflow-wrap:break-word}
+.c6rz-tb-quelle{padding-left:62px;font:500 12.5px/1.2 Figtree,system-ui,sans-serif;color:var(--leise,#6f6a61)}
+.c6rz-tb-angebot{margin:4px 0 0 62px;font:500 18px/1.25 Caveat,cursive;color:var(--tusche,#2b2722)}
+.c6rz-tb-ja,.c6rz-tb-auf{justify-self:start;margin-left:62px}
+.c6rz-tb-nein{justify-self:start;margin-left:58px}
+.c6rz-knopf:disabled{opacity:.6;cursor:default}
+.c6rz-tb-leer{margin:2px 0 0;font:400 16px/1.4 Fraunces,Georgia,serif;color:var(--leise,#6f6a61)}
+.c6rz-tb-beispiel{margin:10px 0 0;padding:10px 12px;border:1.5px dashed var(--linie,#d8cfc0);border-radius:10px;font:400 15px/1.4 Fraunces,Georgia,serif;color:var(--tusche,#2b2722)}
+.c6rz-tb-beispiel b{display:inline-block;margin-right:4px;font:600 11.5px/1 Figtree,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--leise,#6f6a61)}
+.c6rz-tb-kalender{margin:10px 0 0;padding-top:8px;border-top:1px solid var(--linie,#d8cfc0);font:500 13.5px/1.45 Figtree,system-ui,sans-serif;color:var(--leise,#6f6a61)}
+.c6rz-tb-kalender .c6rz-link{min-height:44px;margin-left:4px}
+.c6tg-vb{margin:6px 0 0;min-width:0}
+.c6rz-tb-kalender-oben{margin:0 0 8px;padding:0 0 8px;border-top:0;border-bottom:1px solid var(--linie,#d8cfc0)}
+.c6tg-eintrag{margin:10px 0 0}
+/* rollt das Blatt, steht die Eintrag-Zeile fest am unteren Rand (ganz sichtbar); während ein Ding offen ist, tritt sie zurück */
+.c6rz-tb-rollt .c6tg-eintrag{position:sticky;bottom:-12px;z-index:1;margin:10px -14px -12px;padding:8px 14px 12px;background:var(--karte,#fbf7f0);border-top:1px solid var(--linie,#d8cfc0)}
+.c6rz-computer .c6rz-tb-rollt .c6tg-eintrag{bottom:-8px;margin:6px -18px -8px;padding:6px 18px 8px}
+.c6rz-tb-vb-aktiv .c6tg-eintrag,.c6rz-tb-vb-aktiv .c6rz-tb-kalender,.c6rz-tb-vb-aktiv .c6rz-tb-termin:not(.c6rz-tb-vb-offen),.c6rz-tb-vb-aktiv .c6rz-tb-vb-offen>.c6rz-tb-quelle,.c6rz-tb-vb-aktiv .c6rz-tb-vb-offen>.c6rz-tb-angebot,.c6rz-tb-vb-aktiv .c6rz-tb-vb-offen>.c6rz-tb-auf{display:none}
+.c6rz-tb-vb-aktiv .c6tg-vb{margin-top:2px}
+.c6rz-tb-eintrag{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:end}
+.c6rz-tb-eintrag label{display:grid;gap:4px;min-width:0}
+.c6rz-tb-eintrag-frage{font:500 18px/1.2 Caveat,cursive;color:var(--tusche,#2b2722)}
+.c6rz-tb-eintrag input{min-height:44px;box-sizing:border-box;width:100%;padding:0 10px;border:1.5px solid var(--tusche,#2b2722);border-radius:10px;background:#fff;font:500 16px Figtree,system-ui,sans-serif;color:var(--tusche,#2b2722)}
+.c6rz-tb-eintrag input:focus-visible{outline:3px solid var(--fokus,#b4460c);outline-offset:1px}
+
+/* Computer: Carl links der Mitte hinter dem Tresen, die Blase rechts neben seinem Kopf (Zipfel zeigt nach links auf ihn) */
+.c6rz-computer .c6rz-carl{left:calc(50% - 330px);--c6rz-k:.38;--c6rz-zu-x:-40px;--c6rz-kranz:calc(var(--c6-oben,54px) + 62px)}
+.c6rz-computer .c6rz-satz{left:calc(50% - 60px);right:auto;width:min(540px,calc(50% - 30px));bottom:calc(100% - var(--c6rw-tresen) + 110px);font-size:19px;padding:13px 18px 14px}
+.c6rz-computer .c6rz-satz.c6rz-lang{font-size:18px}
+/* der Boden am Computer ist so breit wie der Tresen (≥ 990 px ab 1040 px Fenster) */
 .c6rz-computer .c6rz-boden{padding-left:max(24px,calc(50% - 510px));padding-right:max(24px,calc(50% - 510px));gap:18px}
 .c6rz-computer .c6rz-reihe{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
 .c6rz-computer .c6rz-karte{padding:14px 18px 12px}
+.c6rz-computer .c6rz-fach{min-height:76px}
+.c6rz-computer .c6rz-tagesblatt{padding:10px 18px 8px;left:max(24px,calc(50% - 510px));right:max(24px,calc(50% - 510px))}
+/* rollt das Blatt, steht der Kopf fest und der Fuß zeigt die Kante: das Ende ist sichtbar, kein Knopf liegt unter einem Verlauf */
+.c6rz-tb-rollt .c6rz-tb-kopf{position:sticky;top:-12px;z-index:1;margin:-12px -14px 6px;padding:12px 54px 6px 14px;background:var(--karte,#fbf7f0);border-bottom:1px solid var(--linie,#d8cfc0)}
+.c6rz-computer .c6rz-tb-rollt .c6rz-tb-kopf{top:-10px;margin:-10px -18px 2px;padding:10px 54px 4px 18px}
+.c6rz-tb-rollt .c6rz-tb-zu{position:absolute;right:4px;top:2px}
+/* am Computer ist vor dem Tresen wenig Höhe: ein Termin ist eine Zeile (Zeit und Titel · Carls Angebot · Handgriff) */
+.c6rz-computer .c6rz-tb-kopf{margin:0 0 2px}
+.c6rz-computer .c6rz-tb-zu{top:0}
+.c6rz-computer .c6rz-tb-termin{grid-template-columns:minmax(0,1fr) minmax(0,1.2fr) auto;column-gap:18px;align-items:center;padding:6px 0}
+.c6rz-computer .c6rz-tb-zeile{grid-column:1}
+.c6rz-computer .c6rz-tb-quelle{grid-column:1;padding-left:62px;margin-top:-4px}
+.c6rz-computer .c6rz-tb-angebot{grid-column:2;grid-row:1 / span 2;margin:0}
+.c6rz-computer .c6rz-tb-ja,.c6rz-computer .c6rz-tb-auf{grid-column:3;grid-row:1 / span 2;margin:0}
+.c6rz-computer .c6rz-tb-nein{grid-column:4;grid-row:1 / span 2;margin:0}
+.c6rz-computer .c6rz-tb-termin{grid-template-columns:minmax(0,1fr) minmax(0,1.2fr) auto auto}
+.c6rz-computer .c6tg-vb{grid-column:1 / -1}
+.c6rz-computer .c6rz-tb-kalender{margin-top:4px;padding-top:4px}
+.c6rz-computer .c6rz-tb-beispiel{margin-top:6px;padding:6px 12px}
 
 @media (prefers-reduced-motion:reduce){.c6rz-wz.c6rz-neu .c6wz-werkzeug{animation:none}}

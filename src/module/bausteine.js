@@ -131,7 +131,7 @@ function erledige(sid) {
 function tippe(sid) {
   var b = schritt(sid); if (!b) return anlegen(sid);
   var d = b.daten || {};
-  return frag('Nächster Schritt: „' + kurz(d.t, 80) + '“' + (d.tag ? ', bis ' + wann(d.tag) : '') + '.', [{ text: 'Geschafft', wert: 'ok' }, { text: 'Anders', wert: 'neu' }, { text: 'Abnehmen', wert: 'weg' }], { leise: true }).then(function (a) {
+  return frag('Nächster Schritt: „' + kurz(d.t, 80) + '“' + (d.tag ? ', bis ' + wann(d.tag) : '') + '.', [{ text: 'Geschafft', wert: 'ok' }, { text: 'Neu schreiben', wert: 'neu' }, { text: 'Abnehmen', wert: 'weg' }], { leise: true }).then(function (a) {
     if (a === 'ok') return erledige(sid);
     if (a === 'neu') return anlegen(sid);
     if (a === 'weg') { weg(sid); sag('Abgenommen.'); }

@@ -337,7 +337,8 @@ function malRaumlampen(box, raum) {
     var b = document.createElement('button'); b.type = 'button'; b.className = 'c6e-karte c6e-karte-raumlampe' + (jetzt === x.id ? ' c6e-gewaehlt' : '');
     b.dataset.id = x.id; b.setAttribute('data-licht', ''); b.setAttribute('aria-pressed', jetzt === x.id ? 'true' : 'false');
     b.setAttribute('aria-label', x.name + (hat0 ? '' : ', ' + x.preis + ' Münzen') + (jetzt === x.id ? ', leuchtet schon' : ''));
-    b.innerHTML = '<span class="c6e-bild c6e-bild-licht" style="--c6e-licht:' + x.licht + '">' + x.svgFertig.replace(/opacity="0"/g, 'opacity=".85"') + '</span><span class="c6e-name">' + esc(x.name) + '</span><span class="c6e-preis">' + (jetzt === x.id ? 'leuchtet' : preisHtml(x.preis, hat0)) + '</span>';
+    if (heftAn()) { b.className = 'c6e-ware c6e-ware-lampe' + (jetzt === x.id ? ' c6e-steht' : ''); b.innerHTML = wareHtml({ id: 'rl-' + x.id, bild: lampeHeft(x), licht: x.licht, name: x.name, preis: x.preis, besitzt: hat0, stempel: jetzt === x.id ? 'leuchtet' : '' }); }
+    else b.innerHTML = '<span class="c6e-bild c6e-bild-licht" style="--c6e-licht:' + x.licht + '">' + x.svgFertig.replace(/opacity="0"/g, 'opacity=".85"') + '</span><span class="c6e-name">' + esc(x.name) + '</span><span class="c6e-preis">' + (jetzt === x.id ? 'leuchtet' : preisHtml(x.preis, hat0)) + '</span>';
     karteStand(b, x.preis, hat0 || jetzt === x.id);
     b.onclick = function () {
       if (jetzt === x.id) return;
@@ -346,7 +347,7 @@ function malRaumlampen(box, raum) {
         var lp = raumlampeJetzt(raum);
         emit('raumlampe', { raum: raum, id: x.id, lampe: lp });
         geaendert(raum === 'zuhause' ? 'zuhause' : 'raum:' + raum, { raumlampe: raum });
-        malKarten();
+        landung('rl-' + x.id); malKarten();
         sag(raum === 'zuhause' ? 'Neues Licht in der Stube.' : raum === 'werkstatt' ? 'Die Werkstatt hat jetzt ihr neues Licht.' : 'Die Bibliothek hat jetzt ihr neues Licht.');
       };
       if (hat0) { stell(); return; }
@@ -474,14 +475,14 @@ function flaeche() {
   var b = buehne(); return (b && b.querySelector('.c6z-sp-einr')) || null;
 }
 function baue() {
-  blatt = document.createElement('div');
-  blatt.className = 'c6e-blatt'; blatt.setAttribute('role', 'dialog'); blatt.setAttribute('aria-label', 'Einrichten');
-  blatt.setAttribute('data-c6-kein-wisch', ''); blatt.setAttribute('data-c6-bild', '');
+  if (!blatt) blatt = document.createElement('div');
+  blatt.className = 'c6e-blatt'; blatt.setAttribute('role', 'dialog'); blatt.setAttribute('aria-label', 'Einrichten'); blatt.removeAttribute('tabindex');
+  blatt.setAttribute('data-c6-kein-wisch', ''); blatt.setAttribute('data-c6-bild', ''); blatt._art = 'blatt';
   blatt.innerHTML = '<div class="c6e-kopf"><b class="c6e-titel">Einrichten</b><span class="c6e-hinweis" aria-live="polite"></span><button type="button" class="c6e-fertig">Fertig</button></div>' +
     '<div class="c6e-reihen" role="tablist"></div><div class="c6e-karten" role="list"></div><div class="c6e-tun" hidden></div>';
   blatt.querySelector('.c6e-fertig').onclick = function () { if (gewaehlt) { gewaehlt = null; fangAn(false); malKarten(); return; } zu(); };
 }
-function hinweis(t) { if (blatt) blatt.querySelector('.c6e-hinweis').textContent = t || ''; }
+function hinweis(t) { if (stillHinweis || !blatt) return; var h = blatt.querySelector('.c6e-hinweis'); if (h) h.textContent = t || ''; }
 function reihenListe() {
   if (auf.ort === 'ufo') return UFO_REIHEN.map(function (r) { return { id: r.id, name: r.name }; });
   if (auf.ort === 'zuhause') return [{ id: 'spaces', name: 'Für deine Spaces' }, { id: 'rl-zuhause', name: RAUM_NAME.zuhause }, { id: 'rl-werkstatt', name: RAUM_NAME.werkstatt }, { id: 'rl-bibliothek', name: RAUM_NAME.bibliothek }, { id: 'sessel', name: 'Sessel' }];
@@ -498,6 +499,7 @@ function ortName(pid) {
   return P[pid].name;
 }
 function malReihen() {
+  if (heftAn()) return;
   var box = blatt.querySelector('.c6e-reihen'); box.innerHTML = '';
   reihenListe().forEach(function (r) {
     var b = document.createElement('button'); b.type = 'button'; b.className = 'c6e-reihe' + (r.id === reihe ? ' c6e-an' : '');
@@ -520,6 +522,7 @@ function karteStand(b, preis, besitzt) {
   else b.removeAttribute('title');
 }
 function malKarten() {
+  if (heftAn()) return malHeft();
   var box = blatt.querySelector('.c6e-karten'); box.innerHTML = '';
   blatt.classList.remove('c6e-klein'); blatt.querySelector('.c6e-fertig').textContent = 'Fertig';
   if (auf.ort === 'ufo') return malUfoKarten(box);
@@ -550,13 +553,14 @@ function malSessel(box) {
     var b = document.createElement('button'); b.type = 'button'; b.className = 'c6e-karte c6e-karte-sessel' + (jetzt === x.id ? ' c6e-gewaehlt' : '');
     b.dataset.id = x.id; b.setAttribute('aria-pressed', jetzt === x.id ? 'true' : 'false');
     b.setAttribute('aria-label', x.name + (hatSessel(x.id) ? '' : ', ' + x.preis + ' Münzen') + (jetzt === x.id ? ', steht da' : ''));
-    b.innerHTML = '<span class="c6e-bild">' + x.svg + '</span><span class="c6e-name">' + esc(x.name) + '</span><span class="c6e-preis">' + (jetzt === x.id ? 'steht da' : preisHtml(x.preis, hatSessel(x.id))) + '</span>';
+    if (heftAn()) { b.className = 'c6e-ware c6e-ware-sessel' + (jetzt === x.id ? ' c6e-steht' : ''); b.innerHTML = wareHtml({ id: 'se-' + x.id, bild: x.svg, name: x.name, preis: x.preis, besitzt: hatSessel(x.id), stempel: jetzt === x.id ? 'steht da' : '' }); }
+    else b.innerHTML = '<span class="c6e-bild">' + x.svg + '</span><span class="c6e-name">' + esc(x.name) + '</span><span class="c6e-preis">' + (jetzt === x.id ? 'steht da' : preisHtml(x.preis, hatSessel(x.id))) + '</span>';
     karteStand(b, x.preis, hatSessel(x.id) || jetzt === x.id);
     b.onclick = function () {
       if (jetzt === x.id) return;
       var stell = function () {
         aendern(function () { var e = E(); e.zuhause = e.zuhause || {}; e.zuhause.sessel = x.id; });
-        geaendert('zuhause', { sessel: x.id }); malKarten();
+        geaendert('zuhause', { sessel: x.id }); landung('se-' + x.id); malKarten();
         sag(st('einrichten.sessel', 'Neuer Sessel. Ich probier ihn später aus.'));
       };
       if (hatSessel(x.id)) { stell(); return; }
@@ -582,7 +586,8 @@ function malSpaces(box) {
     var bild = ''; try { bild = C6.space.bild ? C6.space.bild(pid, true) : ''; } catch (e) { bild = ''; }
     var pn = ''; try { pn = (C6.space.places[pid] || {}).name || ''; } catch (e) { pn = ''; }
     b.setAttribute('aria-label', 'Katalog für „' + x.titel + '“ aufschlagen' + (pn ? ', Ort ' + pn : ''));
-    b.innerHTML = '<span class="c6e-bild c6e-bild-ort">' + bild + '</span><span class="c6e-name">' + esc(x.titel) + '</span><span class="c6e-preis">' + (n ? n + ' Dinge' + (pn ? ' · ' + esc(pn) : '') : esc(pn)) + '</span>';
+    if (heftAn()) { b.className = 'c6e-ware c6e-ware-space'; b.innerHTML = '<span class="c6e-rahmen c6e-rahmen-foto">' + bild + '</span><span class="c6e-name">' + esc(x.titel) + '</span><span class="c6e-unter">' + (pn ? esc(pn) : '') + (n ? (pn ? ' · ' : '') + n + ' Dinge' : '') + '</span>'; }
+    else b.innerHTML = '<span class="c6e-bild c6e-bild-ort">' + bild + '</span><span class="c6e-name">' + esc(x.titel) + '</span><span class="c6e-preis">' + (n ? n + ' Dinge' + (pn ? ' · ' + esc(pn) : '') : esc(pn)) + '</span>';
     b.onclick = function () { zu(true); try { C6.space.oeffne(x.stringId, { einrichten: true }); } catch (e) { } };
     box.appendChild(b);
   });
@@ -748,6 +753,160 @@ function griffZieh(e, d, g) {
   };
 }
 
+/* ---------- Das Heft „Katalog“: ein gedrucktes Heft, das man aufschlägt ----------
+   Jede Seite ein Sortiment im festen Raster aus sechs Feldern (fünf Dinge und ein Satz).
+   Am Computer liegen zwei Seiten offen, am iPhone eine. Register am Rand, Blättern mit Wischen, Pfeil oder Tastatur. */
+var HEFT_TEIL = [
+  { id: 'spaces', kurz: 'Spaces', name: 'Für deine Spaces', art: 'Lampen, Dinge', farbe: '#a9bf8f' },
+  { id: 'rl-zuhause', kurz: 'Zuhause', name: RAUM_NAME.zuhause, art: 'Lampen', farbe: '#e8c26e' },
+  { id: 'rl-werkstatt', kurz: 'Werkstatt', name: RAUM_NAME.werkstatt, art: 'Lampen', farbe: '#9db5aa' },
+  { id: 'rl-bibliothek', kurz: 'Bibliothek', name: RAUM_NAME.bibliothek, art: 'Lampen', farbe: '#d39a7c' },
+  { id: 'sessel', kurz: 'Sessel', name: 'Sessel', art: 'für die Stube', farbe: '#bfa9d8' }
+];
+var HEFT_SATZ = {
+  'rl-zuhause': 'Die Lampe neben dem Sessel. Tipp eine an.',
+  'rl-werkstatt': 'Die Lampe über der Werkbank. Tipp eine an.',
+  'rl-bibliothek': 'Die Lampe auf dem Lesetisch. Tipp eine an.'
+};
+var vorFokus = null, seite = 0, landet = null, stillHinweis = false, heftZu = 0, wisch = null, gewischt = false, heftDoppel = null;
+function heftAn() { return !!(auf && auf.ort === 'zuhause'); }
+function doppel() { try { return window.matchMedia('(min-width:1200px)').matches; } catch (e) { return false; } }
+function landung(id) { landet = { id: id, t: Date.now() }; }
+function teilVon(id) { var t = null; HEFT_TEIL.forEach(function (x) { if (x.id === id) t = x; }); return t; }
+// Lampe für das Heft: brennt, mit ihrem eigenen Schein hinter dem Schirm (bleibt im Rahmen)
+function lampeHeft(x) {
+  var vb = x.vb.split(' ').map(Number), w = vb[2], h = vb[3], gid = 'c6e-hg-' + x.raum + '-' + x.id;
+  var r = Math.max(w, h * .34);
+  return '<svg viewBox="' + x.vb + '" aria-hidden="true" focusable="false"><defs><radialGradient id="' + gid + '"><stop offset="0" stop-color="' + x.licht + '" stop-opacity=".9"/><stop offset=".45" stop-color="' + x.licht + '" stop-opacity=".38"/><stop offset="1" stop-color="' + x.licht + '" stop-opacity="0"/></radialGradient></defs>' +
+    '<ellipse class="c6e-glut" cx="' + x.glut[0] + '" cy="' + x.glut[1] + '" rx="' + r.toFixed(0) + '" ry="' + (r * .86).toFixed(0) + '" fill="url(#' + gid + ')"/>' +
+    x.svg.replace(/opacity="0"/g, 'opacity=".92"') + '</svg>';
+}
+// lange Namen dürfen an der Fuge brechen (Messing-laterne), nie mitten im Wort
+function trenn(t) { return esc(t).replace(/([a-zäöüß]{4,})(laterne|lampe|leuchte|birne|sessel|stuhl|krone|lampion)/gi, '$1&shy;$2'); }
+function muenzeHtml(n) { try { return C6.muenzen && C6.muenzen.muenze ? C6.muenzen.muenze(n || 18) : ''; } catch (e) { return ''; } }
+// eine Ware: gerahmte Abbildung, Name, Preis als Plakette von Hand, „steht da“ als Stempel
+function wareHtml(o) {
+  var plak = o.stempel ? '' : o.besitzt ? '<span class="c6e-plakette c6e-plakette-deins">' + (o.preis ? 'deins' : 'frei') + '</span>' :
+    '<span class="c6e-plakette">' + muenzeHtml(18) + '<b>' + o.preis + '</b></span>';
+  var neu = landet && landet.id === o.id && Date.now() - landet.t < 900;
+  return '<span class="c6e-rahmen' + (o.licht ? ' c6e-rahmen-licht' : '') + '"' + (o.licht ? ' style="--c6e-licht:' + o.licht + '"' : '') + '><span class="c6e-abb">' + String(o.bild).replace('<svg ', '<svg preserveAspectRatio="xMidYMax meet" ') + '</span>' +
+    '</span><span class="c6e-name">' + trenn(o.name) + '</span><span class="c6e-preiszeile">' +
+    (o.stempel ? '<span class="c6e-stempel' + (neu ? ' c6e-landet' : '') + '">' + esc(o.stempel) + '</span>' : plak) + '</span>';
+}
+// die Seiten des Hefts: Innendeckel, dann je Sortiment so viele Seiten, wie es braucht (fünf Dinge je Seite)
+function heftSeiten() {
+  var l = [{ art: 'inhalt' }];
+  HEFT_TEIL.forEach(function (t) {
+    var box = document.createElement('div'); stillHinweis = true;
+    try { if (t.id === 'spaces') malSpaces(box); else if (t.id === 'sessel') malSessel(box); else malRaumlampen(box, t.id.slice(3)); } finally { stillHinweis = false; }
+    var dinge = Array.prototype.slice.call(box.children);
+    var leer = dinge.length === 1 && dinge[0].classList.contains('c6e-leer');
+    if (leer || !dinge.length) { l.push({ art: 'teil', teil: t, dinge: [], leer: leer ? dinge[0].textContent : '' }); return; }
+    for (var i = 0; i < dinge.length; i += 5) l.push({ art: 'teil', teil: t, dinge: dinge.slice(i, i + 5), nr: i / 5 });
+  });
+  if (doppel() && l.length % 2) l.push({ art: 'ende' });
+  return l;
+}
+function ersteSeite(l, id) { for (var i = 0; i < l.length; i++) if (l[i].teil && l[i].teil.id === id) return i; return 1; }
+function seiteBauen(p, i, l) {
+  var s = document.createElement('section'); s.className = 'c6e-seite';
+  s.setAttribute('aria-label', p.art === 'inhalt' ? 'Inhalt' : p.art === 'ende' ? 'Rückseite' : p.teil.name + ', Seite ' + i);
+  if (p.art === 'inhalt') {
+    s.classList.add('c6e-seite-inhalt');
+    var h = '<h2 class="c6e-titelblatt">Katalog</h2><p class="c6e-unterzeile">Lampen, Sessel und Dinge für deine Räume</p><ol class="c6e-inhalt">';
+    HEFT_TEIL.forEach(function (t) { h += '<li><button type="button" class="c6e-inhalt-zeile" data-teil="' + t.id + '" style="--c6e-farbe:' + t.farbe + '"><span>' + esc(t.name) + '</span><i></i><b>' + ersteSeite(l, t.id) + '</b></button></li>'; });
+    h += '</ol><p class="c6e-tasche">Du hast ' + muenzeHtml(20) + '<b>' + muenzStand() + '</b> ' + (muenzStand() === 1 ? 'Münze' : 'Münzen') + '.</p>';
+    s.innerHTML = h;
+    Array.prototype.forEach.call(s.querySelectorAll('.c6e-inhalt-zeile'), function (b) { b.onclick = function () { blaettern(ersteSeite(heftSeiten(), b.getAttribute('data-teil'))); }; });
+    return s;
+  }
+  if (p.art === 'ende') { s.classList.add('c6e-seite-ende'); s.innerHTML = '<p class="c6e-ende">' + esc(st('einrichten.heft.ende', 'Münzen gibt es im Kieselpark.')) + '</p>'; return s; }
+  s.style.setProperty('--c6e-farbe', p.teil.farbe); s.setAttribute('data-teil', p.teil.id);
+  s.innerHTML = '<header class="c6e-kolumne"><b>' + esc(p.teil.name) + '</b><span>' + esc(p.teil.art) + (p.nr ? ' · weiter' : '') + '</span></header><div class="c6e-raster"></div><footer class="c6e-folio">' + i + '</footer>';
+  var r = s.querySelector('.c6e-raster');
+  if (!p.dinge.length) { var e = document.createElement('p'); e.className = 'c6e-leer c6e-leer-heft'; e.textContent = p.leer || ''; r.appendChild(e); return s; }
+  p.dinge.forEach(function (d) { r.appendChild(d); });
+  // das sechste Feld: ein Satz von Hand und was in der Tasche ist
+  var satz = p.teil.id === 'spaces' ? st('einrichten.spaces.hinweis', 'Lampen und Dinge stehen in deinen Spaces. Such dir einen aus.') : p.teil.id === 'sessel' ? st('einrichten.sessel.hinweis', 'Such dir einen aus. Einer steht immer da.') : HEFT_SATZ[p.teil.id];
+  var f = document.createElement('p'); f.className = 'c6e-feld-satz';
+  f.innerHTML = '<span>' + esc(satz) + '</span>' + (p.teil.id === 'spaces' ? '' : '<small>Du hast ' + muenzeHtml(16) + '<b>' + muenzStand() + '</b></small>');
+  r.appendChild(f);
+  return s;
+}
+function baueHeft() {
+  blatt.className = 'c6e-blatt c6e-heft'; blatt.setAttribute('aria-label', 'Katalog'); blatt.setAttribute('tabindex', '-1');
+  blatt.innerHTML = '<div class="c6e-buch"><div class="c6e-seiten"></div>' +
+    '<div class="c6e-deckel" aria-hidden="true"><span class="c6e-deckel-ruecken"></span><span class="c6e-deckel-titel">Katalog</span><svg viewBox="0 0 40 24" aria-hidden="true"><path d="M2 22l10-12 8 7 9-12 9 17z" fill="#8ea37a" stroke="#2b2722" stroke-width="1.6" stroke-linejoin="round"/><circle cx="31" cy="6" r="3" fill="#e2b93b" stroke="#2b2722" stroke-width="1.2"/></svg></div>' +
+    '<button type="button" class="c6e-blaettern c6e-zurueck" aria-label="Zurückblättern"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
+    '<button type="button" class="c6e-blaettern c6e-vor" aria-label="Weiterblättern"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
+    '<p class="c6e-hinweis" aria-live="polite"></p></div>' +
+    '<div class="c6e-register" role="tablist" aria-label="Register"></div>' +
+    '<button type="button" class="c6e-fertig c6e-zuklappen" aria-label="Katalog zuklappen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button>';
+  blatt.querySelector('.c6e-zuklappen').onclick = function () { zu(); };
+  blatt.querySelector('.c6e-zurueck').onclick = function () { blaettern(seite - (doppel() ? 2 : 1)); };
+  blatt.querySelector('.c6e-vor').onclick = function () { blaettern(seite + (doppel() ? 2 : 1)); };
+  var sb = blatt.querySelector('.c6e-seiten');
+  // Wischen blättert; ein Wisch löst keinen Kauf aus
+  sb.addEventListener('pointerdown', function (e) { if (e.pointerType === 'mouse' && e.button !== 0) return; wisch = { x: e.clientX, y: e.clientY }; gewischt = false; });
+  sb.addEventListener('pointerup', function (e) {
+    if (!wisch) return; var dx = e.clientX - wisch.x, dy = e.clientY - wisch.y; wisch = null;
+    if (Math.abs(dx) > 44 && Math.abs(dx) > Math.abs(dy) * 1.3) { gewischt = true; blaettern(seite + (dx < 0 ? 1 : -1) * (doppel() ? 2 : 1)); setTimeout(function () { gewischt = false; }, 60); }
+  });
+  sb.addEventListener('pointercancel', function () { wisch = null; });
+  sb.addEventListener('click', function (e) { if (gewischt) { e.stopPropagation(); e.preventDefault(); gewischt = false; } }, true);
+  blatt._art = 'heft';
+}
+function malHeft(richtung) {
+  if (!blatt || blatt._art !== 'heft') return;
+  var l = heftSeiten(), d = doppel(); heftDoppel = d;
+  seite = Math.max(0, Math.min(l.length - 1, seite)); if (d) seite -= seite % 2;
+  var sb = blatt.querySelector('.c6e-seiten'); sb.innerHTML = '';
+  sb.classList.toggle('c6e-doppel', d); blatt.classList.toggle('c6e-heft-doppel', d);
+  var zeig = d ? [seite, seite + 1] : [seite];
+  zeig.forEach(function (i, k) { if (!l[i]) return; var s = seiteBauen(l[i], i, l); s.classList.add(k ? 'c6e-seite-r' : d ? 'c6e-seite-l' : 'c6e-seite-r'); sb.appendChild(s); });
+  // welches Sortiment liegt offen? (am Computer zählt die erste Seite mit Ware)
+  var offen = null; zeig.forEach(function (i) { if (!offen && l[i] && l[i].teil) offen = l[i].teil.id; });
+  if (offen) reihe = offen;
+  var reg = blatt.querySelector('.c6e-register'); reg.innerHTML = '';
+  HEFT_TEIL.forEach(function (t) {
+    var an = zeig.some(function (i) { return l[i] && l[i].teil && l[i].teil.id === t.id; });
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'c6e-reiter' + (an ? ' c6e-an' : '');
+    b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', an ? 'true' : 'false'); b.setAttribute('aria-label', t.name);
+    b.style.setProperty('--c6e-farbe', t.farbe); b.innerHTML = '<span>' + esc(t.kurz) + '</span>';
+    b.onclick = function () { blaettern(ersteSeite(heftSeiten(), t.id)); };
+    reg.appendChild(b);
+  });
+  var z = blatt.querySelector('.c6e-zurueck'), v = blatt.querySelector('.c6e-vor');
+  z.hidden = seite <= 0; v.hidden = seite + (d ? 2 : 1) >= l.length;
+  if (richtung && !C6.ruhig) {
+    try { sb.animate([{ opacity: .35, transform: 'translateX(' + (richtung > 0 ? 18 : -18) + 'px)' }, { opacity: 1, transform: 'none' }], { duration: 220, easing: 'cubic-bezier(.3,.7,.3,1)' }); } catch (e) {}
+  }
+}
+function blaettern(n) {
+  if (!heftAn()) return;
+  var l = heftSeiten(), alt = seite;
+  n = Math.max(0, Math.min(l.length - 1, n)); if (doppel()) n -= n % 2;
+  if (n === alt) return;
+  seite = n; hinweis(''); malHeft(n > alt ? 1 : -1);
+}
+function heftAuf() {
+  if (C6.ruhig) return;
+  var deck = blatt.querySelector('.c6e-deckel'), d = doppel();
+  try {
+    blatt.animate([{ opacity: 0, transform: 'translateY(10px) scale(.97)' }, { opacity: 1, transform: 'none', offset: .3 }, { opacity: 1, transform: 'none' }], { duration: 420, easing: 'cubic-bezier(.3,.7,.3,1)' });
+    deck.animate([{ transform: 'rotateY(0deg)', opacity: 1 }, { transform: 'rotateY(' + (d ? -178 : -110) + 'deg)', opacity: d ? 1 : 0 }], { duration: 400, delay: 30, easing: 'cubic-bezier(.45,.05,.35,1)', fill: 'backwards' });
+  } catch (e) {}
+}
+function heftZuklappen(fertig) {
+  if (C6.ruhig || !blatt) { fertig(); return; }
+  var deck = blatt.querySelector('.c6e-deckel'), d = doppel();
+  try {
+    deck.animate([{ transform: 'rotateY(' + (d ? -178 : -110) + 'deg)', opacity: d ? 1 : 0 }, { transform: 'rotateY(0deg)', opacity: 1 }], { duration: 280, easing: 'cubic-bezier(.45,.05,.35,1)', fill: 'forwards' });
+    blatt.animate([{ opacity: 1, transform: 'none' }, { opacity: 1, transform: 'none', offset: .75 }, { opacity: 0, transform: 'translateY(8px) scale(.97)' }], { duration: 360, easing: 'ease-in', fill: 'forwards' });
+  } catch (e) { fertig(); return; }
+  heftZu = setTimeout(fertig, 360);
+}
+
 /* ---------- auf / zu ---------- */
 function oeffne(o) {
   o = o || {};
@@ -756,33 +915,56 @@ function oeffne(o) {
   o = o || {};
   if (o.ort === 'ufo' && C6.verbindung && !C6.verbindung.verbunden()) { if (C6.verbindung.oeffne) { C6.verbindung.oeffne(); return false; } sag(st('ufo.zu', 'Das UFO schläft noch. Es wacht auf, wenn du mich mit deinem Rechner verbindest.')); return false; }
   if (o.ort === 'space' && !o.sid) return false;
-  if (!blatt) baue();
+  if (heftZu) { clearTimeout(heftZu); heftZu = 0; abbau(); }
   auf = o; gewaehlt = null; gewaehltDing = null;
+  if (o.ort === 'zuhause') { if (!blatt) blatt = document.createElement('div'); baueHeft(); blatt.setAttribute('role', 'dialog'); blatt.setAttribute('data-c6-kein-wisch', ''); blatt.setAttribute('data-c6-bild', ''); }
+  else if (!blatt || blatt._art !== 'blatt') baue();
   reihe = o.ort === 'ufo' ? 'farbe' : o.ort === 'zuhause' ? (o.reiheRaum || (o.platz === 'sessel' ? 'sessel' : !spacesListe().length ? 'rl-zuhause' : 'spaces')) : (o.reihe || (ortName(o.place) ? 'hier' : 'moebel'));
   blatt.classList.toggle('c6e-ufo-blatt', o.ort === 'ufo');
   blatt.classList.toggle('c6e-links', o.ort === 'zuhause');
-  blatt.querySelector('.c6e-titel').textContent = o.ort === 'ufo' ? 'UFO einrichten' : o.ort === 'zuhause' ? 'Katalog' : 'Einrichten';
-  var b = buehne(); b.appendChild(blatt); b.classList.add('c6e-modus'); document.documentElement.classList.add('c6e-auf');
+  var b = buehne();
+  if (o.ort === 'zuhause') {
+    seite = ersteSeite(heftSeiten(), reihe); landet = null; vorFokus = document.activeElement;
+    b.appendChild(blatt); b.classList.add('c6e-modus', 'c6e-modus-heft'); document.documentElement.classList.add('c6e-auf');
+    malHeft(); heftAuf();
+    try { blatt.focus({ preventScroll: true }); } catch (e) {}
+    emit('einrichten', { ort: ortSchl(o), sid: o.sid, modus: true });
+    return true;
+  }
+  blatt.querySelector('.c6e-titel').textContent = o.ort === 'ufo' ? 'UFO einrichten' : 'Einrichten';
+  b.appendChild(blatt); b.classList.add('c6e-modus'); document.documentElement.classList.add('c6e-auf');
   malReihen(); malKarten(); malGriffe();
   try { blatt.animate([{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'none' }], { duration: C6.ruhig ? 0 : 240, easing: 'cubic-bezier(.3,.7,.3,1)' }); } catch (e) {}
   sag(o.ort === 'ufo' ? st('ufo.einrichten', 'Wie soll es aussehen?') : o.ort === 'zuhause' ? (/^rl-/.test(reihe) ? 'Welche Lampe soll hier leuchten?' : reihe === 'spaces' ? st('einrichten.katalog.auf', 'Lampen und Dinge holst du für einen Space. Welchen richten wir ein?') : st('einrichten.sessel.auf', 'Welcher Sessel soll hier stehen?')) : st('einrichten.auf', 'Richte es dir ein, wie du magst.'));
   emit('einrichten', { ort: ortSchl(o), sid: o.sid, modus: true });
   return true;
 }
-function zu() {
+// das Blatt (oder Heft) aus dem Raum nehmen
+function abbau() {
+  if (heftZu) { clearTimeout(heftZu); heftZu = 0; }
+  if (blatt) { try { blatt.getAnimations().forEach(function (a) { a.cancel(); }); var dk = blatt.querySelector('.c6e-deckel'); if (dk) dk.getAnimations().forEach(function (a) { a.cancel(); }); } catch (e) {} }
+  var hatteFokus = false; try { hatteFokus = !!(blatt && blatt.contains(document.activeElement)); } catch (e) {}
+  if (blatt && blatt.parentNode) { blatt.parentNode.classList.remove('c6e-modus', 'c6e-modus-heft'); blatt.parentNode.removeChild(blatt); }
+  document.documentElement.classList.remove('c6e-auf');
+  // wer das Heft aufgeschlagen hat, bekommt den Fokus zurück (Tastatur)
+  if (hatteFokus && vorFokus && vorFokus.isConnected) { try { vorFokus.focus({ preventScroll: true }); } catch (e) {} }
+  vorFokus = null;
+}
+function zu(sofort) {
   if (!auf) return;
   var key = ortSchl(auf);
   fangAn(false);
   if (griffe && griffe.parentNode) griffe.parentNode.removeChild(griffe);
-  if (blatt && blatt.parentNode) { blatt.parentNode.classList.remove('c6e-modus'); blatt.parentNode.removeChild(blatt); }
-  document.documentElement.classList.remove('c6e-auf');
+  // das Heft klappt zu (am Computer schwingt der Deckel zurück); im Space und beim UFO geht das Blatt einfach
+  if (key === 'zuhause' && sofort !== true && blatt && blatt.parentNode) heftZuklappen(function () { heftZu = 0; abbau(); });
+  else abbau();
   var warUfo = key === 'ufo';
   auf = null; gewaehlt = null; gewaehltDing = null;
   if (key !== 'zuhause') sag(warUfo ? st('ufo.fertig', 'Fertig. Ich steig gleich ein.') : st('einrichten.fertig', 'Jetzt ist es deins.'));
   emit('einrichten', { ort: key, sid: /^space:/.test(key) ? key.slice(6) : undefined, modus: false });
 }
 if (C6.bus) {
-  C6.bus.on('raum', function () { if (auf) zu(); });
+  C6.bus.on('raum', function () { if (auf) zu(true); });
   // Münzen ändern sich (Kieselpark, Quest, Kasse): die Karten zeigen sofort den neuen Stand; eine gewählte Karte bleibt gewählt
   var malBald = 0;
   ['muenzen', 'gekauft', 'quest'].forEach(function (n) { C6.bus.on(n, function () { if (!auf) return; clearTimeout(malBald); malBald = setTimeout(function () { if (auf && blatt && !zug) { var sl = (blatt.querySelector('.c6e-karten') || {}).scrollLeft || 0; malKarten(); var kk = blatt.querySelector('.c6e-karten'); if (kk) kk.scrollLeft = sl; } }, 30); }); });
@@ -796,8 +978,19 @@ if (C6.bus) {
     zu();
   });
 }
-window.addEventListener('resize', function () { if (auf) { malGriffe(); if (wahl && wahl.parentNode) { var f = flaeche(); if (f) legeUeber(wahl, f); } } });
-document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && auf) { e.stopPropagation(); zu(); } }, true);
+window.addEventListener('resize', function () { if (heftAn() && heftDoppel !== doppel()) malHeft(); if (auf) { malGriffe(); if (wahl && wahl.parentNode) { var f = flaeche(); if (f) legeUeber(wahl, f); } } });
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape' && auf) { e.stopPropagation(); zu(); return; }
+  // im Heft blättern die Pfeiltasten (nicht, solange man irgendwo schreibt)
+  if (!heftAn() || e.altKey || e.ctrlKey || e.metaKey) return;
+  var t = e.target, tag = t && t.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA' || (t && t.isContentEditable)) return;
+  var w = doppel() ? 2 : 1;
+  if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); e.stopPropagation(); blaettern(seite + w); }
+  else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); e.stopPropagation(); blaettern(seite - w); }
+  else if (e.key === 'Home') { e.preventDefault(); blaettern(0); }
+  else if (e.key === 'End') { e.preventDefault(); blaettern(999); }
+}, true);
 
 C6.einrichten = {
   katalog: KATALOG, reihen: REIHEN,

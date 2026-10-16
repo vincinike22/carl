@@ -1293,7 +1293,7 @@
         }
         function neuer(titel) { var s = null; try { s = C6.strings.neu({ titel: titel }); } catch (e) { s = null; } if (s && s.id) haeng(s.id, s.titel); }
         if (!sp.length) {
-          C6.frag('Du hast noch keinen Space. Soll ich einen anlegen: „Gemessene Zeiten“?', [{ text: 'Passt', wert: 'ja' }, { text: 'Anders', wert: 'anders' }]).then(function (a) {
+          C6.frag('Du hast noch keinen Space. Soll ich einen anlegen: „Gemessene Zeiten“?', [{ text: '„Gemessene Zeiten“ anlegen', wert: 'ja' }, { text: 'Anderer Name', wert: 'anders' }]).then(function (a) {
             if (a === 'ja') neuer('Gemessene Zeiten');
             else if (a === 'anders') C6.frag('Wie soll der Space heißen?', [], { frei: true, id: 'sanduhr-space', platzhalter: 'Ein Name …' }).then(function (n) { if (typeof n === 'string' && n.trim()) neuer(n.trim()); });
           });

@@ -1,0 +1,84 @@
+/* Vorbereitungen: Stapel, Packliste, Merkzettel – Papier auf dem Tresen, keine Formulare */
+.c6vb{--vb-t:var(--tusche,#2b2722);--vb-p:#fbf7f0;--vb-f:#2c7a6e;color:var(--vb-t);font-family:Figtree,system-ui,sans-serif}
+.c6vb[data-art="packliste"]{--vb-f:#a95f33}
+.c6vb[data-art="merkzettel"]{--vb-f:#b0476a}
+.c6vb p{margin:0}
+.c6vb-kopf{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;font:500 14px/1.3 Figtree,system-ui,sans-serif;margin-bottom:10px!important}
+.c6vb-kopf b{font-weight:700}
+.c6vb-kopf span{font-size:12px;color:#5f5a52;font-weight:600}
+/* der Tisch: links „Nochmal“, Mitte der Stapel, rechts „Gewusst“ */
+.c6vb-tisch{display:grid;grid-template-columns:48px minmax(0,1fr) 48px;align-items:end;gap:10px;margin:4px 0 8px;perspective:1100px}
+.c6vb-tisch-leer{grid-template-columns:1fr;justify-items:center}
+.c6vb-stapel{position:relative;width:100%;max-width:340px;justify-self:center;aspect-ratio:5/3;min-height:150px}
+.c6vb-unten{position:absolute;inset:0;border:2px solid var(--vb-t);border-radius:6px;background:var(--vb-p);transform:translate(calc(var(--i) * 3px),calc(var(--i) * 4px)) rotate(calc(var(--i) * .8deg));box-shadow:1px 2px 0 rgba(43,39,34,.15)}
+.c6vb .c6vb-karte{position:absolute;inset:0;margin:0;padding:0;border:0;background:none;color:var(--vb-t);font:inherit;cursor:pointer;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.3,.7,.3,1);-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.c6vb .c6vb-karte[data-seite="hinten"]{transform:rotateY(180deg)}
+.c6vb-seite{position:absolute;inset:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:6px;padding:14px 16px 12px;border:2px solid var(--vb-t);border-radius:6px;box-sizing:border-box;text-align:left;
+  background:repeating-linear-gradient(180deg,transparent 0 25px,rgba(70,110,170,.16) 25px 26px),var(--vb-p);box-shadow:2px 3px 0 rgba(43,39,34,.22);-webkit-backface-visibility:hidden;backface-visibility:hidden;overflow:hidden}
+.c6vb-seite::before{content:"";position:absolute;left:0;right:0;top:30px;height:2px;background:color-mix(in srgb,var(--vb-f) 70%,transparent)}
+.c6vb-hinten{transform:rotateY(180deg);background:repeating-linear-gradient(180deg,transparent 0 25px,rgba(70,110,170,.12) 25px 26px),#fffaf0}
+.c6vb-seite small{position:absolute;top:8px;left:16px;font:700 11px/1 Figtree,system-ui,sans-serif;letter-spacing:.04em;text-transform:uppercase;color:#5f5a52}
+.c6vb-seite em{font:600 21px/1.2 Caveat,cursive;font-style:normal;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden;margin-top:14px}
+.c6vb-hinten em{font:500 16px/1.32 Fraunces,Georgia,serif}
+.c6vb-von{position:absolute;right:12px;bottom:8px;left:16px;font:600 11px/1.2 Figtree,system-ui,sans-serif;font-style:normal;color:#5f5a52;text-align:right}
+.c6vb-karte:focus-visible{outline:3px solid #b4460c;outline-offset:4px;border-radius:8px}
+.c6vb-karte-leer{position:relative;width:min(300px,100%);aspect-ratio:5/3;border:2px dashed #8a8378;border-radius:6px;display:flex;align-items:center;justify-content:center;background:rgba(251,247,240,.7);cursor:default}
+.c6vb-karte-leer span{font:600 20px/1 Caveat,cursive;color:#8a8378}
+/* die zwei Ablagen: kleine Kartenstapel, die wachsen */
+.c6vb-ablage{position:relative;height:64px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end}
+.c6vb-ablage i{position:absolute;left:6px;right:6px;bottom:calc(16px + var(--i) * 4px);height:26px;border:1.5px solid var(--vb-t);border-radius:3px;background:var(--vb-p);transform:rotate(calc((var(--i) - 2) * 3deg))}
+.c6vb-ablage-gewusst i{background:color-mix(in srgb,var(--vb-f) 18%,var(--vb-p))}
+.c6vb-ablage b{position:absolute;top:2px;font:700 13px/1 Figtree,system-ui,sans-serif}
+.c6vb-ablage small{font:600 10.5px/1 Figtree,system-ui,sans-serif;color:#5f5a52}
+.c6vb-zaehler{text-align:center;font:500 12px/1.2 Figtree,system-ui,sans-serif;color:#5f5a52;margin-bottom:8px!important}
+.c6vb-knoepfe{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:6px 0 10px}
+.c6vb-knoepfe[hidden]{display:none}
+.c6vb .c6vb-knopf{min-height:44px;min-width:110px;padding:0 18px;border:2px solid var(--vb-t);border-radius:22px;background:var(--vb-p);color:var(--vb-t);font:700 15px/1 Figtree,system-ui,sans-serif;box-shadow:2px 2px 0 rgba(43,39,34,.25);cursor:pointer;touch-action:manipulation}
+.c6vb .c6vb-haupt{background:var(--vb-t);color:var(--vb-p)}
+.c6vb .c6vb-link{display:block;margin:6px auto 0;min-height:44px;padding:0 10px;border:0;background:none;color:var(--vb-t);font:600 14px/1 Figtree,system-ui,sans-serif;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.c6vb-satz{font:500 15px/1.35 Fraunces,Georgia,serif;margin:6px 0 8px!important}
+.c6vb-unter{font:700 12px/1.2 Figtree,system-ui,sans-serif;color:#5f5a52;margin-top:8px!important}
+.c6vb-wackelt{margin:4px 0 6px;padding-left:18px;font:600 18px/1.25 Caveat,cursive}
+.c6vb-form{display:grid;gap:8px;margin-top:6px}
+.c6vb-form label{display:grid;gap:3px}
+.c6vb-form small{font:700 11px/1 Figtree,system-ui,sans-serif;letter-spacing:.04em;text-transform:uppercase;color:#5f5a52}
+.c6vb input{min-height:44px;padding:0 12px;border:2px solid var(--vb-t);border-radius:10px;background:#fff;color:var(--vb-t);font:400 16px/1.2 Figtree,system-ui,sans-serif;box-sizing:border-box;width:100%}
+.c6vb-bug{font:600 13px/1.3 Figtree,system-ui,sans-serif;color:#8a4b12}
+.c6vb-bug[hidden]{display:none}
+/* Packliste / Merkzettel: liniertes Blatt, Kästchen zum Abhaken */
+.c6vb-blatt{position:relative;padding:10px 12px 12px;border:2px solid var(--vb-t);border-radius:4px;background:repeating-linear-gradient(180deg,transparent 0 31px,rgba(70,110,170,.14) 31px 32px),var(--vb-p);box-shadow:2px 3px 0 rgba(43,39,34,.2)}
+.c6vb-blatt ul{list-style:none;margin:0;padding:0}
+.c6vb .c6vb-punkt{display:flex;align-items:flex-start;gap:10px;width:100%;min-height:44px;padding:6px 2px;border:0;background:none;color:var(--vb-t);text-align:left;font:600 19px/1.15 Caveat,cursive;cursor:pointer;touch-action:manipulation}
+.c6vb-punkt span{display:flex;flex-direction:column;gap:2px;padding-top:3px;min-width:0;overflow-wrap:anywhere}
+.c6vb-kasten{flex:none;position:relative;width:22px;height:22px;margin-top:3px;border:2px solid var(--vb-t);border-radius:3px;background:#fff}
+.c6vb-punkt[aria-pressed="true"] .c6vb-kasten::after{content:"";position:absolute;left:5px;top:0;width:7px;height:13px;border:solid var(--vb-f);border-width:0 3.5px 3.5px 0;transform:rotate(40deg)}
+.c6vb-punkt[aria-pressed="true"] span{text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:color-mix(in srgb,var(--vb-t) 55%,transparent);color:#6f685e}
+.c6vb-her{font:500 11.5px/1.25 Figtree,system-ui,sans-serif;color:#5f5a52;text-decoration:none!important;display:inline-block}
+.c6vb-punkt:focus-visible{outline:3px solid #b4460c;outline-offset:2px;border-radius:4px}
+.c6vb-dazu{display:flex;gap:8px;margin-top:6px}
+.c6vb-dazu .c6vb-knopf{min-width:44px;padding:0;font-size:20px}
+@media (prefers-reduced-motion:reduce){.c6vb .c6vb-karte{transition:none}}
+/* als Werkzeug-Blatt: nur das Ding und Wegräumen; Verlauf, Wunschsatz und „Anders“ gehören zu selbstgebauten Werkzeugen */
+.c6wz-blatt-vb .c6wz-wunschsatz,.c6wz-blatt-vb .c6wz-verlauf,.c6wz-blatt-vb .c6wz-carl,.c6wz-blatt-vb .c6wz-wahl,.c6wz-blatt-vb .c6wz-bezug{display:none!important}
+.c6wz-blatt-vb .c6vb{margin-bottom:6px}
+.c6vb-tisch-ende{grid-template-columns:56px 56px;justify-content:center;gap:48px}
+/* Zeile im Tagesblatt: eine Linie, auf die man schreibt */
+.c6vb-zeile{margin:0}
+.c6vb-zeile label{display:grid;gap:4px}
+.c6vb-zeile-frage{font:600 13px/1.25 Figtree,system-ui,sans-serif;color:#5f5a52}
+.c6vb-zeile-linie{display:flex;align-items:flex-end;gap:8px;border-bottom:2px solid var(--tusche,#2b2722)}
+.c6vb-zeile .c6vb-zeile-linie input{flex:1;min-width:0;min-height:44px;padding:0 2px;border:0;border-radius:0;background:transparent;color:var(--tusche,#2b2722);font:600 22px/1.1 Caveat,cursive;outline:none}
+.c6vb-zeile input::placeholder{color:#9a9184;font-weight:500}
+.c6vb-zeile .c6vb-zeile-stift{flex:none;display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 12px;margin-bottom:4px;border:2px solid var(--tusche,#2b2722);border-radius:22px;background:var(--tusche,#2b2722);color:#fbf7f0;font:700 14px/1 Figtree,system-ui,sans-serif;cursor:pointer}
+.c6vb-zeile-stift svg{width:16px;height:16px}
+.c6vb-zeile:focus-within .c6vb-zeile-linie{border-bottom-color:#b4460c}
+.c6vb-zeile-steht .c6vb-zeile-linie{border-bottom-style:dashed}
+.c6vb-zeile .c6vb-bug{margin-top:4px}
+.c6vb-zeile .c6vb-zeile-satz{font:500 14px/1.3 Fraunces,Georgia,serif;color:var(--tusche,#2b2722)}
+/* die Karte zum Beschreiben: Papier mit Strich, zwei Zeilen, keine Kästen */
+.c6vb-form-karte{display:grid;gap:0;padding:8px 14px 4px;border:2px dashed #8a8378;border-radius:6px;background:repeating-linear-gradient(180deg,transparent 0 25px,rgba(70,110,170,.12) 25px 26px),#fffaf0}
+.c6vb-form-karte label{display:grid;gap:0;padding:2px 0}
+.c6vb-form-karte label+label{border-top:2px solid color-mix(in srgb,var(--vb-f) 70%,transparent)}
+.c6vb .c6vb-form-karte input{min-height:40px;border:0;border-radius:0;background:transparent;padding:0;font:600 20px/1.1 Caveat,cursive}
+.c6vb .c6vb-form-karte input:focus{outline:none;box-shadow:inset 0 -2px 0 #b4460c}
+.c6vb .c6vb-form-karte input::placeholder{color:#9a9184}

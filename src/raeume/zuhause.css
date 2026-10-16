@@ -18,7 +18,6 @@
 
 /* das Fadenknäuel liegt rechts auf dem Teppich, die Notizen links bleiben frei; die Ablage rückt daneben */
 .c6z-stube.c6z-computer .c6z-knaeuel{left:calc(50% + var(--c6z-carl) * .5);bottom:calc(var(--c6z-fuss) - 18px);width:110px}
-.c6z-stube.c6z-computer .c6z-ablage{left:calc(50% + var(--c6z-carl) * .5 + 128px)}
 
 /* Zimmerpflanze */
 .c6m-gruen{display:none;pointer-events:none;bottom:calc(100% - var(--c6z-boden) - 34px);width:92px;z-index:1}
@@ -131,7 +130,7 @@
 .c6z-stube:not(.c6z-computer) .c6z-sessel{left:58px;width:86px}
 @media (max-height:740px){.c6z-stube:not(.c6z-computer) .c6z-sessel{left:56px;width:74px}}
 
-/* s12 · deine Werkzeuge ohne Space: eine kleine, stille Reihe am Boden (leiser als Brett und Brief); leer → nichts */
+/* s12 · deine Werkzeuge ohne Space: eine kleine, stille Reihe am Boden (leiser als das Brett); leer → nichts */
 .c6z-meine{position:absolute;z-index:4;right:10px;bottom:calc(var(--c6z-fuss) - 40px);width:280px;height:0;overflow:visible;display:grid;gap:8px;pointer-events:none}
 .c6z-meine[hidden],.c6z-meine:empty{display:none}
 .c6z-meine>*{pointer-events:auto}

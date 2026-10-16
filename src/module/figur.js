@@ -689,12 +689,12 @@ function male(el, opt) {
         }
       }
     }
-    // Schweben: ein leiser Grundzustand, nie lauter als Carl selbst (≈ 7 Einheiten, ein Atemzug von 4,6 s)
-    // Schweben nur, wo es Sinn hat: oben im Himmel und Teleskop, oder einen Augenblick vor Freude.
-    // In den Haupträumen steht und sitzt Carl auf dem Boden (Kontaktschatten), er atmet nur.
-    if (z.schwebAn === null) { var rv = raumVon(f); z.schwebOben = rv === 'netz' || rv === 'teleskop'; }
-    var schwebDarf = z.schwebAn === true || (z.schwebAn === null && z.schwebOben) || (z.schwebAn !== false && z.name === 'froh' && z.glueh > jetzt);
-    z.schweb.z = (schwebDarf && !klein && !z.sitzen && !z.imGf && !z.fliegt && !(z.gang && !z.gang.flug) && z.name !== 'schlaeft' && !z.nickt) ? 1 : 0;
+    // Schweben: ein leiser Grundzustand in jedem Raum, wo Carl steht (nicos Wunsch vom 11.10.: „die ganze Zeit ein bisschen“),
+    // nie lauter als Carl selbst (≈ 7 Einheiten, ein Atemzug von 4,6 s). Er landet, wenn er sitzt, geht, schläft, nickt,
+    // im Gefährt ist oder fliegt; der Kontaktschatten bleibt am Boden und wird nur kleiner und blasser.
+    // Bei reduzierter Bewegung steht er still auf dem Boden (ein Standbild schwebt nicht). opt.schweben === false schaltet es ab.
+    var schwebDarf = z.schwebAn !== false;
+    z.schweb.z = (schwebDarf && !ruhig && !klein && !z.sitzen && !z.imGf && !z.fliegt && !(z.gang && !z.gang.flug) && z.name !== 'schlaeft' && !z.nickt) ? 1 : 0;
     var sw = klemm(z.schweb.x, 0, 1.15), swPh = t * Math.PI * 2 / 4.6;
     var schwebLift = sw * (7 + (ruhig ? 0 : Math.sin(swPh) * 2.2));
     if (!ruhig && sw > 0.01) neigZ += Math.sin(swPh + 0.8) * 0.6 * sw;

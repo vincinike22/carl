@@ -1,6 +1,6 @@
-/* Carls Brief: Umschlag am Boden, großes Blatt beim Öffnen */
+/* Carls Brief: Umschlag im Postfach der Rezeption, großes Blatt beim Öffnen */
 .c6r-a-brief{width:80px}
-.c6z-computer .c6r-a-brief{width:96px}
+.c6rz-computer .c6r-a-brief{width:96px}
 .c6r-a-umschlag svg{filter:drop-shadow(1px 2px 0 rgba(43,39,34,.12))}
 .c6r-a-fuer{display:none}
 html:not(.c6k-ruhig) .c6r-a-brief:not([hidden]) .c6r-a-siegel{animation:c6r-a-atem 3.6s ease-in-out infinite;transform-origin:36px 31px;transform-box:view-box}
@@ -33,6 +33,10 @@ html:not(.c6k-ruhig) .c6r-a-brief:not([hidden]) .c6r-a-siegel{animation:c6r-a-at
 .c6r-a-zu:focus-visible{outline:3px solid #b4460c;outline-offset:2px}
 .c6r-a-anrede{margin:2px 0 4px;font:700 24px/30px Caveat,cursive;color:#2b2722}
 .c6r-a-text{margin:0;font:600 23px/30px Caveat,cursive;color:#2b2722;-webkit-hyphens:manual;hyphens:manual}
+.c6r-a-text+.c6r-a-text{margin-top:8px}
+.c6r-a-frage{font-weight:700}
+.c6r-a-woher{margin:10px 0 0;font:500 12.5px/1.35 Figtree,system-ui,sans-serif;color:#6f6a61;opacity:0;transition:opacity .5s ease .7s}
+.c6r-a-gelesen .c6r-a-woher{opacity:1}
 .c6r-a-gruss{display:flex;align-items:center;justify-content:flex-end;gap:6px;margin:8px 0 0;font:700 23px/30px Caveat,cursive;color:#2b2722}
 .c6r-a-blatt-zeichen{display:inline-block;width:26px;height:26px}
 .c6r-a-blatt-zeichen svg{display:block;width:100%;height:100%}

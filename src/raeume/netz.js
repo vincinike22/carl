@@ -1725,7 +1725,7 @@
           schwung = 0;
           var d = g.ding;
           if (!d) schliessen();
-          else if (d.art === 'planet') fliegZu(d.id, true);
+          else if (d.art === 'planet') vonOben(d.id);
           else if (d.art === 'mond') fliegZu(d.id, true, d.mond && d.mond.id);
           else if (d.art === 'nadel') zeigNadel(d.n);
           else if (d.art === 'knoten') zeigKnoten(d.k);
@@ -1797,7 +1797,7 @@
           li.setAttribute('data-id', p.id);
           b.type = 'button'; b.textContent = p.d.titel + ' öffnen';
           var pf = pflanzeVon(p.id); if (pf.st >= 0) b.setAttribute('aria-label', p.d.titel + ' öffnen. ' + pf.name + '.');
-          b.onclick = function () { fliegZu(p.id, true); };
+          b.onclick = function () { vonOben(p.id); };
           b.onfocus = function () { fliegZu(p.id, false); };
           li.appendChild(b); listeEl.appendChild(li);
         });
@@ -1842,6 +1842,58 @@
           if (!v) { blatt.querySelector('#c6w-perle-in').focus(); return; }
           C6.strings.perle(id, v);
           zeigFaden(id);
+          stimme('Hängt jetzt als Zettel in „' + s.titel + '“.', 4000);
+        };
+      }
+      // Ein Planet von oben: was dort wächst, was zuletzt geschah, ein Satz zum Stand (nur gezählt, nichts erfunden),
+      // dieselben vier Karten wie unten im Space – und hinein geht es mit einem Tipp.
+      function standSatz(id) {
+        var x = (C6.S && C6.S.spaces && C6.S.spaces[id]) || {};
+        var eig = (x.notizen || []).filter(function (n) { return n && !n.von && !/^Fund\s*·/.test(String(n.t || '')); }).length;
+        var funde = (x.notizen || []).filter(function (n) { return n && (n.von === 'fund' || /^Fund\s*·/.test(String(n.t || ''))); }).length;
+        var st = {}; try { st = C6.bausteine && C6.bausteine.stand ? C6.bausteine.stand(id) || {} : {}; } catch (e) { st = {}; }
+        var wz = 0; try { wz = C6.werkzeug && C6.werkzeug.alle ? C6.werkzeug.alle(id).length : 0; } catch (e) { wz = 0; }
+        if (!eig && !funde && !x.kern && !st.naechster) return satz('himmel.standLeer', 'Noch leer. Der erste Zettel ist der Samen.');
+        var t = [];
+        t.push(eig === 1 ? 'Ein Zettel von dir' : (eig ? eig + ' Zettel von dir' : 'Noch kein Zettel von dir'));
+        if (funde) t.push(funde === 1 ? 'ein Fund' : funde + ' Funde');
+        if (wz) t.push(wz === 1 ? 'ein Werkzeug' : wz + ' Werkzeuge');
+        var s1 = t.length > 1 ? t.slice(0, -1).join(', ') + ' und ' + t[t.length - 1] : t[0];
+        var s2 = x.kern ? 'Der Kernsatz steht' : 'noch kein Kernsatz';
+        var s3 = st.naechster ? 'Nächster Schritt: „' + kuerze(st.naechster, 50) + '“' + (st.tag && st.tag.wann ? ', ' + String(st.tag.wann).replace(/\.$/, '') : '') + '.' : 'Ein nächster Schritt fehlt.';
+        return s1 + ', ' + s2 + '. ' + s3;
+      }
+      function vonOben(id) {
+        var s = C6.strings.hol(id); if (!s) return;
+        fliegZu(id, false);
+        var pf = pflanzeVon(id), g = C6.strings.geschichte(id), z = g.length ? g[g.length - 1] : null;
+        var x = (C6.S && C6.S.spaces && C6.S.spaces[id]) || {};
+        var eig = (x.notizen || []).filter(function (n) { return n && !n.von && !/^Fund\s*·/.test(String(n.t || '')); }).length;
+        var bild = ''; try { bild = C6.space && C6.space.pflanzeBild ? C6.space.pflanzeBild(Math.max(0, pf.st), s.farbe) : ''; } catch (e) { bild = ''; }
+        var zul = !z ? '' : z.art === 'anfang' ? 'Angefangen am ' + C6.strings.datum(z.ts) : (z.art === 'knoten' ? 'Sternbild mit „' + esc(kuerze(z.mit, 30)) + '“: ' : z.art === 'nadel' ? 'Kernsatz: ' : '') + '„' + esc(kuerze(z.t, 90)) + '“';
+        oeffne('<p class="c6w-kicker"><i style="background:' + s.farbe + '"></i>Von oben · seit ' + C6.strings.datum(s.erstellt) + '</p>' +
+          '<h2 class="c6w-titel">' + esc(s.titel) + '</h2>' +
+          '<div class="c6w-oben"><div class="c6w-oben-pflanze" aria-hidden="true">' + (pf.st >= 0 ? bild : '') + '</div><div class="c6w-oben-text">' +
+          '<p class="c6w-oben-pf">' + esc(pf.name) + '</p>' +
+          (z && z.art !== 'anfang' ? '<p class="c6w-oben-zuletzt"><small>Zuletzt · ' + C6.strings.datum(z.ts) + '</small>' + zul + '</p>' : '') +
+          '<p class="c6w-oben-stand c6w-carl">' + esc(standSatz(id)) + '</p></div></div>' +
+          (eig && C6.vorschlaege ? '<div class="c6w-oben-vs"></div>' : '<form class="c6w-perle-form"><label class="c6w-nur-lesbar" for="c6w-perle-in">Ein Zettel für diesen Space</label><input id="c6w-perle-in" class="c6w-feld" autocomplete="off" maxlength="200" placeholder="Ein Zettel, ein Satz reicht"><button class="c6w-knopf" type="submit">An die Leine</button></form>') +
+          '<button type="button" class="c6w-knopf c6w-haupt c6w-oben-hin">' + esc(satz('himmel.hinein', 'Hineingehen')) + '</button>'
+        );
+        blatt.querySelector('.c6w-oben-hin').onclick = function () { fliegZu(id, true); };
+        var vsEl = blatt.querySelector('.c6w-oben-vs');
+        if (vsEl) C6.vorschlaege.male(vsEl, {
+          quelle: { sid: id },
+          knoten: function (a, b) { schliessen(true); lesen(); sternbildMoment(a, b); },
+          bei: function () { lesen(); weiter(); if (!blatt.hidden && blatt.contains(vsEl)) { var st = blatt.querySelector('.c6w-oben-stand'); if (st) st.textContent = standSatz(id); } }
+        });
+        var fo = blatt.querySelector('.c6w-perle-form');
+        if (fo) fo.onsubmit = function (ev) {
+          ev.preventDefault();
+          var v = blatt.querySelector('#c6w-perle-in').value.trim();
+          if (!v) { blatt.querySelector('#c6w-perle-in').focus(); return; }
+          if (C6.space && C6.space.zettel) C6.space.zettel(id, v); else C6.strings.perle(id, v);
+          lesen(); vonOben(id);
           stimme('Hängt jetzt als Zettel in „' + s.titel + '“.', 4000);
         };
       }
@@ -1923,7 +1975,7 @@
         lesen();
         if (!C6.ruhig) neuWachsen[id] = performance.now();
         var n = welt.planeten.length;
-        stimme(n === 1 ? '„' + v + '“ ist dein erster Planet. Unten ist er ein Space. Tipp ihn an, dann gehen wir hinein.' : '„' + v + '“ ist aufgegangen. Tipp ihn an, dann gehen wir hinein.', 6000);
+        stimme(n === 1 ? '„' + v + '“ ist dein erster Planet. Unten ist er ein Space. Tipp ihn an, dann siehst du ihn von oben.' : '„' + v + '“ ist aufgegangen. Tipp ihn an, dann siehst du ihn von oben.', 6000);
         setTimeout(function () { fliegZu(id, false); }, C6.ruhig ? 0 : 700);
         wink();
         weiter();
@@ -1940,7 +1992,7 @@
         setTimeout(function () {
           if (!aktiv || C6.jetzt !== 'netz' || C6.strings.alle().length) return;
           var p = null;
-          try { p = C6.frag(frage, [{ text: 'Passt', wert: 'ja' }, { text: 'Anders', wert: 'anders' }]); } catch (e) { p = null; }
+          try { p = C6.frag(frage, [{ text: '„' + kuerze(t, 28) + '“ aufgehen lassen', wert: 'ja' }, { text: 'Einen anderen Namen', wert: 'anders' }]); } catch (e) { p = null; }
           if (!p || !p.then) return;
           p.then(function (w) {
             if (!aktiv || C6.jetzt !== 'netz') return;
@@ -2111,7 +2163,7 @@
             try { C6.S.himmel = C6.S.himmel && typeof C6.S.himmel === 'object' ? C6.S.himmel : {}; if (n) C6.S.himmel.begruesst = Date.now(); } catch (e) {}
             if (fragtErst) { /* Carl fragt gerade nach dem ersten Planeten: ein Satz zur Zeit */ }
             else if (!n) stimme(satz('himmel.leer', 'Dein Himmel ist noch still. Woran denkst du gerade? Daraus wird dein erster Planet.'), 9000);
-            else stimme(satz('himmel.raum', 'Das bist du, in der Mitte. Alles, woran du denkst, kreist um dich. Tipp einen Planeten an, dann fliegen wir hin.'), 7000);
+            else stimme(satz('himmel.raum', 'Das bist du, in der Mitte. Alles, woran du denkst, kreist um dich. Tipp einen Planeten an, dann schauen wir ihn von oben an.'), 7000);
           }
           if (o.zeig === 'neu') setTimeout(neuerPlanet, 400);
           wink();

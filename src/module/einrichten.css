@@ -83,3 +83,169 @@ html.c6e-auf .c6k-sprech,html.c6e-auf .c6k-chips{opacity:0!important;pointer-eve
 }
 .c6e-fertig{margin-right:4px}
 .c6e-blatt{padding-right:16px}
+
+/* ===== s13 · Der Katalog als gedrucktes Heft =====
+   Ein Heft aus Papier in rotem Einband. Jede Seite ein Sortiment im festen Raster: sechs Felder, fünf Dinge und ein Satz.
+   Jedes Ding gleich fotografiert: gleicher Grund, gleiche Bodenlinie, gleicher Schatten. Was sich ändert, ist nur das Ding.
+   Die Farbe eines Sortiments steht nur am Register und unter der Kolumne. */
+.c6e-blatt.c6e-heft{--e-papier:#fbf6ec;--e-papier2:#f3e9d6;--e-falz:#e3d3b5;--e-tinte:#2b2722;--e-leise:#6f6a61;--e-stempel:#b23a1e;--e-einband:#c23d30;
+  left:max(56px,4%);right:auto;top:calc(var(--c6-oben,60px) + 18px);bottom:auto;width:min(440px,46%);height:min(624px,calc(100% - var(--c6-oben,60px) - var(--c6-unten,140px) - 30px));max-height:none;
+  padding:0;border:0;border-radius:0;background:none;box-shadow:none;overflow:visible;color:var(--e-tinte);outline:none}
+/* die Szene tritt zurück: ein leiser Schatten fällt vom Heft in den Raum */
+.c6e-heft::before{content:"";position:absolute;left:-60%;right:-60%;top:-40%;bottom:-40%;z-index:-2;pointer-events:none;background:radial-gradient(closest-side,rgba(43,39,34,.2),rgba(43,39,34,0))}
+/* Einband und Buchblock */
+.c6e-buch{position:relative;box-sizing:border-box;width:100%;height:100%;padding:7px;border:2px solid var(--e-tinte);border-radius:6px 10px 10px 6px;perspective:1800px;
+  background:linear-gradient(160deg,#d04b3c 0%,var(--e-einband) 46%,#a5332a 100%);box-shadow:0 22px 44px -18px rgba(43,39,34,.55),0 3px 0 rgba(43,39,34,.75)}
+.c6e-seiten{position:relative;display:flex;height:100%;border-radius:2px;box-shadow:1px 1px 0 #ece2ce,2px 2px 0 #d9cbb0,3px 3px 0 #ebe1cd,4px 4px 0 rgba(43,39,34,.3)}
+.c6e-seite{position:relative;flex:1 1 0;min-width:0;box-sizing:border-box;display:flex;flex-direction:column;padding:16px 18px 12px;
+  background:linear-gradient(90deg,var(--e-falz) 0,var(--e-papier2) 4%,var(--e-papier) 20%,var(--e-papier) 86%,#f6eedd 100%)}
+.c6e-doppel .c6e-seite-l{background:linear-gradient(270deg,var(--e-falz) 0,var(--e-papier2) 4%,var(--e-papier) 20%,var(--e-papier) 86%,#f6eedd 100%)}
+/* der Falz in der Mitte der Doppelseite */
+.c6e-doppel::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:18px;transform:translateX(-50%);pointer-events:none;background:linear-gradient(90deg,rgba(43,39,34,0),rgba(43,39,34,.16) 48%,rgba(43,39,34,.05) 52%,rgba(43,39,34,0))}
+/* Kolumne: Sortiment und was es ist */
+.c6e-kolumne{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:0 0 6px;border-bottom:3px solid var(--c6e-farbe,#ccc)}
+.c6e-kolumne b{min-width:0;font:600 20px/1.15 Fraunces,Georgia,serif;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.c6e-kolumne span{flex:none;font:italic 400 14px/1.2 Fraunces,Georgia,serif;color:var(--e-leise)}
+/* das Raster: sechs Felder, immer gleich */
+.c6e-raster{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:12px 12px;padding:14px 2px 4px}
+.c6e-doppel .c6e-raster{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));gap:12px 16px}
+@media (min-width:1200px){.c6e-blatt.c6e-heft{width:min(660px,47%)}}
+.c6e-folio{height:30px;padding-top:12px;box-sizing:border-box;font:italic 400 13px/18px Fraunces,Georgia,serif;color:var(--e-leise);text-align:right;padding-right:34px}
+.c6e-seite-l .c6e-folio{text-align:left;padding-left:34px;padding-right:0}
+/* eine Ware */
+.c6e-ware{position:relative;min-width:0;min-height:0;display:grid;grid-template-rows:minmax(0,1fr) auto auto;gap:3px;padding:0;border:0;background:none;color:inherit;font:inherit;text-align:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.c6e-ware:focus-visible{outline:3px solid var(--fokus,#b4460c);outline-offset:3px;border-radius:4px}
+/* der Rahmen: ein Studio – Wand, Bodenlinie, ein weicher Schatten unter dem Ding */
+.c6e-rahmen{position:relative;min-height:0;overflow:hidden;border-radius:3px;box-sizing:border-box;padding:7% 9% 8%;display:flex;align-items:flex-end;justify-content:center;
+  background:linear-gradient(180deg,#f3ead8 0,#ede2cc 74%,#ddcdaf 74.6%,#e6d8bd 100%);box-shadow:inset 0 0 0 1.5px rgba(43,39,34,.2),inset 0 10px 18px -12px rgba(43,39,34,.2);transition:transform .16s ease}
+.c6e-rahmen::after{content:"";position:absolute;left:24%;right:24%;bottom:7%;height:8%;border-radius:50%;background:radial-gradient(closest-side,rgba(43,39,34,.26),rgba(43,39,34,0));pointer-events:none}
+.c6e-abb{position:relative;z-index:1;display:block;width:100%;height:100%}
+.c6e-abb svg{display:block;width:100%;height:100%;overflow:visible}
+/* Lampen: abends fotografiert, damit man das Licht sieht */
+.c6e-rahmen-licht{padding:5% 7% 7%;background:linear-gradient(180deg,#d9c8aa 0,#cfbd9c 74%,#bba783 74.6%,#c6b291 100%)}
+.c6e-rahmen-licht::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 46% at 50% 34%,color-mix(in srgb,var(--c6e-licht,#ffd58a) 55%,transparent),transparent);pointer-events:none}
+.c6e-ware:hover .c6e-rahmen{transform:translateY(-2px)}
+.c6e-ware:active .c6e-rahmen{transform:translateY(0) scale(.985)}
+/* Space: ein Foto mit weißem Rand */
+.c6e-rahmen-foto{padding:5px;background:#fffdf8;box-shadow:0 1px 2px rgba(43,39,34,.2),0 4px 10px -4px rgba(43,39,34,.22)}
+.c6e-rahmen-foto::after{display:none}
+.c6e-rahmen-foto svg{display:block;width:100%;height:100%;border-radius:1px}
+.c6e-heft .c6e-name{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.4em;margin-top:3px;font:600 14.5px/1.2 Fraunces,Georgia,serif;color:var(--e-tinte)}
+.c6e-unter{font:italic 400 13px/1.25 Fraunces,Georgia,serif;color:var(--e-leise)}
+.c6e-preiszeile{min-height:30px;display:flex;align-items:center;justify-content:center;gap:6px}
+/* der Preis: eine Plakette von Hand, mit Loch und Faden */
+.c6e-plakette{position:relative;display:inline-flex;align-items:center;gap:3px;padding:1px 10px 0 8px;border:1.5px solid var(--e-tinte);border-radius:3px;background:#fffaf0;color:var(--e-tinte);font:700 23px/1.15 Caveat,cursive;transform:rotate(-2.5deg);box-shadow:1px 2px 0 rgba(43,39,34,.28)}
+.c6e-plakette svg{width:17px;height:17px;flex:none}
+.c6e-plakette b{font-weight:700}
+.c6e-ware:nth-child(2n) .c6e-plakette{transform:rotate(2deg)}
+.c6e-plakette-deins{border-color:rgba(43,39,34,.35);color:#4a6a33;box-shadow:none}
+.c6e-heft .c6e-zuteuer .c6e-preis{opacity:1}
+.c6e-zuteuer .c6e-plakette{border-color:rgba(43,39,34,.45);color:#6f6a61;box-shadow:none}
+/* der Stempel: „steht da“, „leuchtet“ */
+.c6e-stempel{position:relative;z-index:2;display:inline-block;padding:5px 8px 4px;border:2px solid currentColor;border-radius:5px;outline:1px solid currentColor;outline-offset:2px;
+  color:var(--e-stempel);background:rgba(251,246,236,.5);font:800 11.5px/1 Figtree,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;transform:rotate(-5deg);opacity:.92;mix-blend-mode:multiply;pointer-events:none}
+.c6e-landet{animation:c6e-stempeln .38s cubic-bezier(.2,.9,.3,1.15) both}
+@keyframes c6e-stempeln{0%{opacity:0;transform:translateY(-34px) scale(2.2) rotate(-20deg)}58%{opacity:.95;transform:translateY(0) scale(.88) rotate(-4deg)}100%{opacity:.92;transform:scale(1) rotate(-5deg)}}
+.c6e-steht:has(.c6e-landet) .c6e-rahmen{animation:c6e-druck .38s ease-out}
+@keyframes c6e-druck{55%{transform:scale(.975)}}
+/* das sechste Feld: ein Satz von Hand */
+.c6e-feld-satz{margin:0;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:10px 12px;box-sizing:border-box;border:1.5px dashed rgba(43,39,34,.24);border-radius:4px;
+  overflow:hidden;font:600 19px/1.15 Caveat,cursive;color:#5d574e;text-align:center}
+.c6e-doppel .c6e-feld-satz{font-size:21px}
+.c6e-feld-satz{grid-column:-2/-1;grid-row:-2/-1}
+.c6e-feld-satz small{display:inline-flex;align-items:center;gap:4px;white-space:nowrap;font:600 19px/1 Caveat,cursive;color:var(--e-leise)}
+.c6e-feld-satz small svg{width:16px;height:16px}
+.c6e-leer-heft{grid-column:1/-1;grid-row:1/-1;align-self:center;margin:0 10%;font:600 24px/1.25 Caveat,cursive;color:#5d574e;text-align:center}
+/* Innendeckel: Titel, Inhalt, Tasche */
+.c6e-seite-inhalt{justify-content:flex-start;padding:26px 30px 18px}
+.c6e-titelblatt{margin:6px 0 0;font:700 64px/1 Caveat,cursive;letter-spacing:-.01em}
+.c6e-unterzeile{margin:6px 0 22px;font:italic 400 16px/1.35 Fraunces,Georgia,serif;color:var(--e-leise)}
+.c6e-inhalt{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.c6e-inhalt-zeile{display:flex;align-items:baseline;gap:8px;width:100%;min-height:44px;padding:0 2px;border:0;background:none;color:var(--e-tinte);font:500 17px/1.2 Fraunces,Georgia,serif;cursor:pointer;text-align:left}
+.c6e-inhalt-zeile span{position:relative;padding-left:16px}
+.c6e-inhalt-zeile span::before{content:"";position:absolute;left:0;top:50%;width:9px;height:9px;margin-top:-4px;border-radius:2px;background:var(--c6e-farbe);box-shadow:0 0 0 1.5px var(--e-tinte)}
+.c6e-inhalt-zeile i{flex:1 1 auto;border-bottom:2px dotted rgba(43,39,34,.3);transform:translateY(-4px)}
+.c6e-inhalt-zeile b{font:italic 600 16px/1 Fraunces,Georgia,serif}
+.c6e-inhalt-zeile:hover span{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
+.c6e-inhalt-zeile:focus-visible{outline:3px solid var(--fokus,#b4460c);outline-offset:2px;border-radius:4px}
+.c6e-tasche{margin:auto 0 0;padding-top:16px;border-top:1.5px solid rgba(74,96,128,.28);display:flex;align-items:center;gap:5px;font:600 24px/1 Caveat,cursive;color:#5d574e}
+.c6e-tasche svg{width:20px;height:20px}
+.c6e-seite-ende{justify-content:center;align-items:center}
+.c6e-ende{margin:0;font:600 22px/1.3 Caveat,cursive;color:var(--e-leise)}
+/* Register am Rand */
+.c6e-register{position:absolute;z-index:-1;top:52px;bottom:40px;right:-31px;width:36px;display:flex;flex-direction:column;gap:5px}
+.c6e-reiter{flex:1 1 0;max-height:104px;min-height:44px;width:100%;margin:0;padding:8px 0 8px 4px;border:2px solid var(--e-tinte);border-left:0;border-radius:0 10px 10px 0;background:var(--c6e-farbe);color:var(--e-tinte);cursor:pointer;
+  writing-mode:vertical-rl;font:700 13px/1 Figtree,system-ui,sans-serif;letter-spacing:.02em;transform:translateX(-7px);filter:saturate(.75) brightness(.96);transition:transform .16s ease,filter .16s ease;box-shadow:2px 2px 0 rgba(43,39,34,.35)}
+.c6e-reiter:hover{transform:translateX(-3px)}
+.c6e-reiter.c6e-an{transform:none;filter:none;box-shadow:3px 3px 0 var(--e-tinte)}
+.c6e-reiter:focus-visible{outline:3px solid var(--fokus,#b4460c);outline-offset:2px}
+/* Blättern: Eselsohren an den äußeren Ecken */
+.c6e-blaettern{position:absolute;z-index:3;bottom:7px;width:44px;height:44px;padding:0;border:0;cursor:pointer;color:var(--e-tinte);background:none;-webkit-tap-highlight-color:transparent}
+.c6e-blaettern[hidden]{display:none}
+.c6e-blaettern::before{content:"";position:absolute;inset:0;transition:transform .16s ease}
+.c6e-vor{right:7px}
+.c6e-vor::before{inset:auto 0 0 auto;width:38px;height:38px;clip-path:polygon(100% 0,0 100%,0 0);background:linear-gradient(135deg,#f6eedd 0,#e6d6b8 60%)}
+.c6e-zurueck{left:7px}
+.c6e-zurueck::before{inset:auto auto 0 0;width:38px;height:38px;clip-path:polygon(0 0,100% 100%,100% 0);background:linear-gradient(225deg,#f6eedd 0,#e6d6b8 60%)}
+.c6e-blaettern svg{position:absolute;width:20px;height:20px;bottom:5px}
+.c6e-vor svg{right:5px}
+.c6e-zurueck svg{left:5px}
+.c6e-blaettern:hover::before{transform:scale(1.12)}
+.c6e-blaettern:focus-visible{outline:3px solid var(--fokus,#b4460c);outline-offset:-3px;border-radius:6px}
+/* Carls Zettel: was gerade geschah, eingesteckt unten am Heft */
+.c6e-heft .c6e-hinweis{position:absolute;z-index:4;left:50%;bottom:-16px;width:max-content;max-width:86%;margin:0;padding:6px 14px 4px;transform:translateX(-50%) rotate(-1.4deg);background:#fffaf0;color:#7a3414;
+  font:700 20px/1.15 Caveat,cursive;font-style:normal;text-align:center;box-shadow:0 1px 2px rgba(43,39,34,.2),0 4px 10px -4px rgba(43,39,34,.25);pointer-events:none}
+.c6e-heft .c6e-hinweis:empty{display:none}
+/* zuklappen */
+.c6e-blatt.c6e-heft .c6e-zuklappen{position:absolute;z-index:5;top:-16px;right:-16px;width:44px;height:44px;min-height:0;margin:0;padding:0;border-radius:50%;border:2px solid var(--e-tinte);background:var(--e-papier);color:var(--e-tinte);box-shadow:2px 2px 0 var(--e-tinte);display:flex;align-items:center;justify-content:center}
+.c6e-zuklappen svg{width:20px;height:20px}
+/* der Deckel: liegt offen links (unsichtbar), schwingt beim Auf- und Zuklappen über den Falz */
+.c6e-deckel{position:absolute;z-index:6;top:7px;bottom:7px;right:7px;width:calc(50% - 7px);box-sizing:border-box;transform-origin:0 50%;transform:rotateY(-178deg);backface-visibility:hidden;-webkit-backface-visibility:hidden;pointer-events:none;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;border:2px solid var(--e-tinte);border-radius:2px 6px 6px 2px;background:linear-gradient(160deg,#fdfaf3,#f1e7d3);box-shadow:4px 0 10px -6px rgba(43,39,34,.4)}
+.c6e-deckel-ruecken{position:absolute;left:0;top:0;bottom:0;width:15%;background:#d62a26;border-right:2px solid var(--e-tinte)}
+.c6e-deckel-titel{margin-left:15%;font:700 68px/1 Caveat,cursive;color:var(--e-tinte);transform:rotate(-6deg)}
+.c6e-deckel svg{margin-left:15%;width:96px;height:auto;transform:rotate(-6deg)}
+.c6e-heft:not(.c6e-heft-doppel) .c6e-deckel{left:7px;width:auto;transform:rotateY(-110deg);opacity:0}
+/* Blätter zum Ausblenden in anderen Räumen */
+html.c6k-ruhig .c6e-landet,html.c6k-ruhig .c6e-steht .c6e-rahmen{animation:none}
+@media (prefers-reduced-motion: reduce){.c6e-landet,.c6e-steht .c6e-rahmen{animation:none}.c6e-reiter,.c6e-rahmen,.c6e-blaettern::before{transition:none}}
+
+/* iPhone: eine Seite, drei mal zwei Felder, unten über dem Feld, nie höher als zwei Drittel */
+@media (max-width:819px){
+  .c6e-blatt.c6e-heft{left:10px;right:auto;width:calc(100% - 52px);top:auto;bottom:calc(var(--c6-unten,140px) + 10px);height:min(64vh,500px)}
+  .c6e-heft .c6e-raster{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:12px 10px;padding-top:12px}
+  .c6e-seite{padding:12px 12px 8px 16px}
+  .c6e-kolumne b{font-size:18px}
+  .c6e-kolumne span{font-size:13px}
+  .c6e-heft .c6e-name{font-size:13px;hyphens:manual}
+  .c6e-seite{padding-bottom:0}
+  .c6e-folio{height:46px;padding-top:24px}
+  .c6e-plakette{font-size:21px;padding-left:6px;padding-right:8px}
+  .c6e-feld-satz{font-size:18px;padding:6px}
+  .c6e-feld-satz small{font-size:16px;gap:2px}
+  .c6e-register{right:-34px;top:44px;bottom:26px}
+  .c6e-reiter{font-size:12px;max-height:96px}
+  .c6e-stempel{font-size:10px;padding:4px 6px 3px}
+  .c6e-seite-inhalt{padding:18px 20px 14px}
+  .c6e-titelblatt{font-size:52px}
+  .c6e-unterzeile{margin-bottom:12px;font-size:15px}
+  .c6e-heft .c6e-hinweis{font-size:18px}
+  .c6e-heft::before{left:-20%;right:-20%;top:-30%;bottom:-10%}
+}
+
+/* s13 · Das Blatt im Space und beim UFO: eine Musterkarte aus demselben Papier wie das Heft (Bedienung unverändert) */
+.c6e-blatt:not(.c6e-heft){border-top:7px solid #c23d30;background:linear-gradient(180deg,#fbf6ec,#f6eedd);box-shadow:0 18px 36px -16px rgba(43,39,34,.5),0 3px 0 rgba(43,39,34,.75)}
+.c6e-blatt:not(.c6e-heft) .c6e-kopf{background:#fbf6ec}
+.c6e-blatt:not(.c6e-heft) .c6e-reihe{min-height:40px;padding:0 12px;border:0;border-radius:0;background:none;color:#5d574e;font:500 16px/1 Fraunces,Georgia,serif;box-shadow:inset 0 -2px 0 rgba(43,39,34,.12)}
+.c6e-blatt:not(.c6e-heft) .c6e-reihe.c6e-an{background:none;color:#2b2722;font-weight:600;box-shadow:inset 0 -3px 0 #c23d30}
+.c6e-blatt:not(.c6e-heft) .c6e-reihen{gap:2px 6px}
+.c6e-blatt:not(.c6e-heft) .c6e-karte{border:0;border-radius:4px;background:none;box-shadow:none;padding:0 0 4px;gap:4px}
+.c6e-blatt:not(.c6e-heft) .c6e-karte .c6e-bild{box-sizing:border-box;width:100px;height:84px;padding:8px 10px 9px;border-radius:3px;background:linear-gradient(180deg,#f3ead8 0,#ede2cc 74%,#ddcdaf 74.6%,#e6d8bd 100%);box-shadow:inset 0 0 0 1.5px rgba(43,39,34,.2)}
+.c6e-blatt:not(.c6e-heft) .c6e-karte .c6e-bild svg{width:100%;height:100%}
+.c6e-blatt:not(.c6e-heft) .c6e-karte .c6e-bild-licht::before{width:76px;height:60px}
+.c6e-blatt:not(.c6e-heft) .c6e-karte.c6e-gewaehlt{background:none;transform:translateY(-4px);box-shadow:none}
+.c6e-blatt:not(.c6e-heft) .c6e-karte.c6e-gewaehlt .c6e-bild{box-shadow:inset 0 0 0 1.5px rgba(43,39,34,.2),0 0 0 3px #e8621a}
+.c6e-blatt:not(.c6e-heft) .c6e-name{font:600 13.5px/1.2 Fraunces,Georgia,serif}
+.c6e-blatt:not(.c6e-heft) .c6e-preis{font:700 20px/1 Caveat,cursive;color:#2b2722}
+.c6e-blatt:not(.c6e-heft) .c6e-preis span{font-weight:700}
+.c6e-blatt:not(.c6e-heft) .c6e-chip{border-width:1.5px;font:500 15px/1 Fraunces,Georgia,serif}

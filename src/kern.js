@@ -2145,7 +2145,7 @@ function nimmWohin(w, t) {
   if (w !== '+neu') return gehaengt(w, t, false);
   // ein neuer Space: Carl schlägt einen kurzen Namen vor, der ganze Satz bleibt sein Samen
   var vor = kurzname(t);
-  C6.frag('Ich nenn ihn „' + vor + '“?', [{ t: 'Passt', wert: 'ja' }, { t: 'Anders', wert: 'anders' }], { leise: true, id: 'satz-name' }).then(function (n) {
+  C6.frag('Ich nenn ihn „' + vor + '“?', [{ t: 'So nennen', wert: 'ja' }, { t: 'Anderer Name', wert: 'anders' }], { leise: true, id: 'satz-name' }).then(function (n) {
     if (n === 'ja') return neuerSpace(vor, t);
     if (n !== 'anders') return;
     C6.frag('Wie soll er heißen?', [], { frei: true, id: 'satz-name-frei', platzhalter: 'Ein kurzer Name …' }).then(function (eig) {

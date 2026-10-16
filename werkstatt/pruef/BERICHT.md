@@ -1,6 +1,6 @@
 # Prüfbericht Carl 6
 
-16.10.2026 13:52
+16.10.2026 15:40
 
 **Gesamt: nicht grün**
 
@@ -28,7 +28,7 @@ Start: `rezeption`
 |---|---|---|
 | Blase hält ihre Größe beim Schreiben | grün | 74 74 74 74 74 74 74 74 74 74 74 74 |
 | Antwort-Chips: sichtbar, Wahl kommt an | grün | {"n": 3, "sicht": "visible", "a": "Müde"} |
-| Text tippen, Raum wechseln, zurück: Text noch da | grün | {"dock": "Ein Satz, der bleibt", "raum": null, "scroll": 120, "gespeichert": "Ein Satz, der bleibt"} |
+| Text tippen, Raum wechseln, zurück: Text noch da | grün | {"dock": "Ein Satz, der bleibt", "raum": null, "scroll": null, "gespeichert": "Ein Satz, der bleibt"} |
 | #c6 scrollt nicht nach Tippen und Raumwechsel | grün | 0/0 |
 | Wischen oben (y=250): nach links und zurück | grün | rezeption→zuhause→rezeption |
 | Wischen unten (y=560): nach links und zurück | grün | rezeption→zuhause→rezeption |
@@ -62,7 +62,7 @@ Start: `rezeption`
 |---|---|---|
 | Blase hält ihre Größe beim Schreiben | grün | 79 79 79 79 79 79 79 79 79 79 79 79 |
 | Antwort-Chips: sichtbar, Wahl kommt an | grün | {"n": 3, "sicht": "visible", "a": "Müde"} |
-| Text tippen, Raum wechseln, zurück: Text noch da | grün | {"dock": "Ein Satz, der bleibt", "raum": null, "scroll": 61, "gespeichert": "Ein Satz, der bleibt"} |
+| Text tippen, Raum wechseln, zurück: Text noch da | grün | {"dock": "Ein Satz, der bleibt", "raum": null, "scroll": null, "gespeichert": "Ein Satz, der bleibt"} |
 | #c6 scrollt nicht nach Tippen und Raumwechsel | grün | 0/0 |
 | Höhenfahrt Boden → Vogelflug → Boden | grün | vogel → boden |
 | Keine Konsolenfehler in den Tests | grün |  |

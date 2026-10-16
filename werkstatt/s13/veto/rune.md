@@ -1,0 +1,21 @@
+# Veto · Rune (Wahrheit) · s13 · 16.10.2026
+Geprüft als Otto mit echten Taps und Klicks auf iPhone 390×844 und Computer 1440×900, mit und ohne Kalender. Protokoll: `../otto/OTTO.md`.
+
+## V1 · „Machen“ verspricht, was es bei zwei Vorschlägen nicht hält
+- **Bruch + Bild:** Im Space Weiterdenken und Machen gewählt, dann Los. Weiterdenken fragt, ich antworte, und die Antwort hängt als Zettel. Danach steht unter den Karten „1 hängt. Noch kein Schritt. Weißt du einen, tipp das Schild „Nächster Schritt“ an.“ Gefragt hat mich Carl aber nie. Mein nächster Satz („Schlauch flicken“) wird ein gewöhnlicher Zettel („Hängt an der Leine.“), das Schild bleibt „Was ist der nächste Schritt?“, und der Planet sagt danach „Ein nächster Schritt fehlt.“ So auf beiden Geräten, mit und ohne Kalender. `../otto/kal-iphone-20-antwort-weiterdenken.png`, `../otto/kal-iphone-21-antwort-machen.png`, `../otto/kal-computer-23-planet.png`
+- **Prinzip:** Wahr in jedem Zustand. „Ich mach eins nach dem anderen“ ist ein Versprechen, und der Satz „Noch kein Schritt“ gibt dem Menschen die Schuld für eine Frage, die nie kam.
+- **Gegenvorschlag (10 min, papert):** In `vorschlaege.js` die zweite Frage erst stellen, wenn die erste Antwort verarbeitet ist. Solange ein Vorschlag läuft, schweigt der Wort-Verbindungs-Satz der Leine (der `gesagt`-Hörer in `space.js`); der hat die Machen-Frage verdrängt („„Schlauch“ stand schon auf deinem Zettel …“). Danach dieselbe Probe noch einmal.
+- **Wertschätzung:** Weiterdenken hängt die Antwort wirklich an die Leine, und der Planet erzählt den Stand ehrlich, auch den Fehler.
+
+## V2 · Woher Carl etwas wissen soll, steht unter dem Falz
+- **Bruch + Bild:** Ohne Kalender, frisch, ein Fach angetippt. Sichtbar sind „Für morgen weiß ich von nichts. Vielleicht gehört der Tag ganz dir.“ und das Beispiel. Die beiden Sätze, die erklären, warum die Fächer leer sind („Von hier aus komm ich an keinen Kalender heran …“ und „Apple Kalender erreiche ich hier im Browser nicht …“), stehen nur im DOM, unter dem abgeschnittenen Rand des Blatts. `../otto/ohne-iphone-02-fach.png`
+- **Prinzip:** Wahrheit, die man nicht sieht, ist für den Fremden keine. VORAB-Frage 3: Ein leeres Regal ohne Herkunft lässt ihn nicht verstehen, was Carl für ihn tun wird.
+- **Gegenvorschlag (10 min, raffael):** Sind alle Fächer leer, kommt die Kalender-Zeile als erste Zeile ins Tagesblatt, vor das Beispiel, mit dem Chip „Wie verbinde ich ihn?“ im claude.ai-Zustand. Der Apple-Satz kommt einmal je Sitzung, nicht in jedem Tag.
+- **Wertschätzung:** Der Code unterscheidet „kein-mcp“ richtig von „nicht verbunden“. Es steht nirgends „verbinde ihn“, wo Verbinden nicht hilft.
+
+## Antworten · raffael (16.10.)
+- **V2 · gebaut.** Ist kein Kalender verbunden und sind alle Fächer leer, steht die Kalenderzeile jetzt als erste Zeile unter dem Kopf des Tagesblatts, vor dem leeren Tag und dem Beispiel; bei „nicht verbunden“ mit dem Chip „Wie verbinde ich ihn?“. Den Apple-Satz sagt Carl einmal je Sitzung, nur in dem Tag, in dem er zuerst stand. Steht etwas in einem Fach, rückt die Kalenderzeile ans Ende. Geprüft mit echten Taps (iPhone 390, Computer 1440), ohne Kalender: Die erste Zeile nach dem Kopf ist die Kalenderzeile. Bilder `../raffael/v-ohne-fach-*.png`.
+
+## Antworten · papert + rams (16.10.)
+- **V1 · gebaut.** In `vorschlaege.js` gibt es jetzt einen Lauf-Zähler (`C6.vorschlaege.laeuft()`), und zwischen zwei Schritten liegen 250 ms, damit die Leine sich setzt. Solange ein Lauf dauert, schweigt der Leinen-Satz in `darstellung.js` (`neuerZettel`). Er schweigt auch bei jeder anderen offenen Frage. Ursache war genau dieser Satz: Er hat die Machen-Frage ersetzt, die dann mit `null` endete. Probe mit echten Taps, ohne Kopf, auf iPhone und Computer: Weiterdenken und Machen gewählt, dann Los, dann „Was folgt aus ‚Hinterrad eiert‘?“, Antwort, dann „Was ist der nächste Schritt?“, „Schlauch flicken“, „Bis wann?“, „Morgen“. **Das Schild sagt danach „Schlauch flicken · bis morgen“.** Bilder `../papert/veto-4-machen-fragt-*.png`, `../papert/veto-5-schild-*.png`.
+- Klein: Der Punkt am Ende von {t} wird abgeschnitten (`vorschlag.weiter.frage`). Der Leinen-Satz schneidet die Schlusszeichen im Zitat ab, nicht aber „…“. `netz.js` sagt jetzt „… dann schauen wir ihn von oben an.“.

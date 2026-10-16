@@ -249,6 +249,16 @@
     o = o || {};
     if (!el || !spec) return null;
     var klein = !!o.klein;
+    // Vorbereitungen (Karteikarten, Packliste, Merkzettel) malt ihr eigenes Modul: groß das Ding, klein ein Satz
+    if (spec.vb && C6.vorbereitung && C6.vorbereitung.oeffne) {
+      var vbMal = function () {
+        if (!klein) { C6.vorbereitung.oeffne(el, Object.assign({}, spec.vb, { werkzeugId: spec.id })); return; }
+        el.innerHTML = '<div class="c6wz-werkzeug c6wz-klein-form" style="--wz:' + esc(spec.farbe || T) + '"><div class="c6wz-kopf"><button type="button" class="c6wz-name-knopf" aria-label="' + esc(spec.name) + ' groß öffnen"><span class="c6wz-zeichen">' + zeichen(spec.zeichen, spec.farbe) + '</span><b class="c6wz-name">' + esc(spec.name) + '</b></button></div><div class="c6wz-teil"><p class="c6wz-text">' + esc(C6.vorbereitung.klein ? C6.vorbereitung.klein(spec) : '') + '</p></div></div>';
+        var nk0 = el.querySelector('.c6wz-name-knopf'); if (nk0) nk0.onclick = function () { gross(spec.id); };
+      };
+      vbMal();
+      return { el: el, neu: vbMal };
+    }
     function zeichne() {
       var d = daten(spec);
       var teile = klein ? (spec.teile || []).slice(0, 1) : (spec.teile || []);
@@ -383,7 +393,7 @@
       }
       el.innerHTML = (r ? '<h3 class="c6wz-titel">„' + esc(kurz(r.satz, 90)) + '“</h3>' + (letztesAnders && !gleich ? '<p class="c6wz-leise c6wz-anders-zeile">Anders: ' + esc(kurz(letztesAnders, 90)) + '</p>' : '') : '<p class="c6wz-leise">' + esc(gebautT) + '</p>') +
         '<div class="c6wz-vorschau"></div>' +
-        '<div class="c6wz-wahl"><button type="button" class="c6wz-knopf c6wz-haupt" data-w="passt">Passt</button><button type="button" class="c6wz-knopf" data-w="anders">Anders</button></div>';
+        '<div class="c6wz-wahl"><button type="button" class="c6wz-knopf c6wz-haupt" data-w="passt">' + esc(r ? stimme('nebenMich', null, 'Neben mich stellen') : stimme('aufstellen', null, 'Aufstellen')) + '</button><button type="button" class="c6wz-knopf" data-w="anders">' + esc(stimme('andersBauen', null, 'Anders bauen')) + '</button></div>';
       male(el.querySelector('.c6wz-vorschau'), sp);
       el.querySelector('[data-w=passt]').onclick = function () { if (r) rzFertig(sp, r); else wohin(sp, sid, nr); };
       el.querySelector('[data-w=anders]').onclick = function () {
@@ -578,6 +588,7 @@
     var f = w.sid && C6.strings && C6.strings.hol ? C6.strings.hol(w.sid) : null;
     var d = daten(w);
     el.parentNode.classList.add('c6wz-blatt-gross');
+    if (w.vb) el.parentNode.classList.add('c6wz-blatt-vb');
     var kick = el.parentNode.querySelector('.c6wz-kicker');
     if (kick) kick.innerHTML = 'Werkzeug' + (f ? ' <span class="c6wz-wo"><i style="background:' + esc(f.farbe || T) + '"></i>steht in „' + esc(kurz(f.titel, 26)) + '“</span>' : '') + (w.ts ? ' <span class="c6wz-seit">seit ' + esc(datumText(tag(new Date(w.ts)))) + '</span>' : '');
     var bz = bezugSatz(w, d);
