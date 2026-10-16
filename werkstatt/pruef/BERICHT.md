@@ -1,6 +1,6 @@
 # Prüfbericht Carl 6
 
-16.10.2026 12:33
+16.10.2026 12:38
 
 **Gesamt: nicht grün**
 
@@ -13,7 +13,7 @@ Start: `rezeption`
 | Raum | Fehler | Überlauf | Tippziele < 44 | Überdeckt | Kontrast | Blase/Chips | Scroll | Bild |
 |---|---|---|---|---|---|---|---|---|
 | zuhause | – | – | button.c6k-hk „Hoch in den Himmel“ 101×38 | – | – | Blase ← button.c6z-ding.c6z-fenster „Fenster“ (30 %)<br>Chips ← button.c6z-ding.c6z-knaeuel „Knäuel“ (29 %) | – | `pruef/iphone-zuhause.png` |
-| space | – | – | button.c6k-hk „Hoch in den Himmel“ 101×38 | – | – | – | – | `pruef/iphone-space.png` |
+| fahrrad | – | – | button.c6k-hk „Hoch in den Himmel“ 101×38 | button.c6s-f-pkt „Rahmen. Ändern“ ← path<br>button.c6s-f-pkt „Hinterrad. Ändern“ ← circle<br>button.c6s-f-pkt „Vorderrad. Ändern“ ← circle<br>button.c6s-f-pkt „Sattel. Ändern“ ← path<br>button.c6s-f-pkt „Lenker. Ändern“ ← path<br>button.c6s-f-pkt „Klingel. Ändern“ ← path<br>… +4 | – | – | – | `pruef/iphone-fahrrad.png` |
 
 | Test | Ergebnis | Messung |
 |---|---|---|
@@ -38,7 +38,7 @@ Start: `rezeption`
 | Raum | Fehler | Überlauf | Tippziele < 44 | Überdeckt | Kontrast | Blase/Chips | Scroll | Bild |
 |---|---|---|---|---|---|---|---|---|
 | zuhause | – | – | button.c6k-hk „Hoch in den Himmel“ 101×38 | button.c6z-ding.c6z-bild „Zum Fahrrad“ ← rect | – | – | – | `pruef/computer-zuhause.png` |
-| space | – | – | button.c6k-hk „Hoch in den Himmel“ 101×38 | – | – | – | – | `pruef/computer-space.png` |
+| fahrrad | – | – | button.c6k-hk „Hoch in den Himmel“ 101×38 | button.c6s-f-pkt „Rahmen. Ändern“ ← path<br>button.c6s-f-pkt „Hinterrad. Ändern“ ← circle<br>button.c6s-f-pkt „Vorderrad. Ändern“ ← circle<br>button.c6s-f-pkt „Sattel. Ändern“ ← path<br>button.c6s-f-pkt „Lenker. Ändern“ ← path<br>button.c6s-f-pkt „Klingel. Ändern“ ← path<br>… +4 | – | – | – | `pruef/computer-fahrrad.png` |
 
 | Test | Ergebnis | Messung |
 |---|---|---|

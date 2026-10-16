@@ -189,7 +189,7 @@ C6.raum({
       '<button type="button" class="c6z-ding c6z-lampe" data-tiefe="mitte" aria-label="Stehlampe" aria-pressed="false"><i class="c6m-schatten" data-sw="1.1" data-sh=".16"></i><span class="c6z-lampe-bild">' + LAMPE + '</span><i class="c6z-glut"></i></button>' +
       '<button type="button" class="c6z-ding c6z-tuer" data-tiefe="mitte" aria-label="Zur Werkstatt"><i class="c6m-schatten" data-sw=".86" data-sh=".07"></i>' + TUER + '<span class="c6z-schild">Werkstatt</span></button>' +
       '<div class="c6z-ding c6m-gruen" data-tiefe="mitte" aria-hidden="true"><i class="c6m-schatten" data-sw=".7" data-sh=".12"></i>' + GRUEN + '</div>' +
-      '<button type="button" class="c6z-ding c6z-sessel" data-tiefe="mitte" aria-label="Sessel"><i class="c6m-schatten" data-sw=".92" data-sh=".12"></i><span class="c6z-sessel-bild">' + sesselSvg() + '</span><i class="c6z-katalog-heft" aria-hidden="true">' + HEFT + '</i></button>' +
+      '<button type="button" class="c6z-ding c6z-sessel" data-tiefe="mitte" aria-label="Sessel"><i class="c6m-schatten" data-sw=".92" data-sh=".12"></i><span class="c6z-sessel-bild">' + sesselSvg() + '</span></button>' +
       '<div class="c6z-teppich c6m-teppich" data-tiefe="nah" aria-hidden="true">' + TEPPICH + '</div>' +
       '<div class="c6z-sofa" data-tiefe="mitte" aria-hidden="true"><i class="c6m-schatten" data-sw=".9" data-sh=".1"></i>' + SOFA + '</div>' +
       '<div class="c6z-carl"></div>' +
@@ -779,7 +779,7 @@ C6.raum({
       var svg = x && x.svg ? x.svg : SESSEL;
       if (b._svg === svg) return;
       var erst = !!b._svg; b._svg = svg; b.innerHTML = svg;
-      el.sessel.setAttribute('aria-label', 'Katalog auf dem Sessel' + (x && x.name ? ' (' + x.name + ')' : ''));
+      el.sessel.setAttribute('aria-label', 'Sessel' + (x && x.name ? ' (' + x.name + ')' : '') + '. Andere Sessel findest du im Katalog in der Garage');
       el.sessel.setAttribute('data-sessel', x ? x.id : 'alt');
       if (erst && !ruhig() && el.sessel.animate) el.sessel.animate([{ transform: 'translateY(-14px) scale(1.02)', opacity: 0.4 }, { transform: 'translateY(2px) scale(.99,1.01)', opacity: 1, offset: 0.6 }, { transform: 'none' }], { duration: 520, easing: 'cubic-bezier(.3,.7,.3,1)' });
       clearTimeout(schattenUhr); schattenUhr = setTimeout(schatten, 80);
@@ -790,7 +790,8 @@ C6.raum({
       regung();
       if (ctl) { var r = el.sessel.getBoundingClientRect(); ctl.schau(r.left + r.width / 2, r.top + r.height / 2); setTimeout(function () { ctl && ctl.schau(); }, 1400); }
       if (!ruhig() && el.sessel.animate) el.sessel.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(-1.2deg)' }, { transform: 'rotate(.8deg)' }, { transform: 'rotate(0)' }], { duration: 420, easing: 'ease-in-out' });
-      try { if (C6.einrichten && C6.einrichten.oeffne) C6.einrichten.oeffne({ ort: 'zuhause' }); } catch (e) { }
+      // der Katalog liegt seit 16.10. in der Garage (alles, was Carl und seine Räume verändert, an einem Ort)
+      try { var sk = (C6.stimme && C6.stimme.sag && C6.stimme.sag('zuhause.sesselKatalog')) || 'Den Katalog hab ich in die Garage gelegt. Dort ist alles, was mich und meine Räume verändert.'; if (C6.sag) C6.sag(sk, { merken: false }); } catch (e) { }
     });
     try { C6.bus.on('einrichten', function (d) { if (d && d.ort === 'zuhause') sesselMalen(); }); } catch (e) { }
     // Der Knäuel ist der Anfang: er rollt ein Stück zum Brett, ein roter Faden läuft mit, und das Feld wartet auf einen Satz.
@@ -874,7 +875,7 @@ C6.raum({
     staunenAn(el.kalender, 'zuhause.kalender', 'Das ist dein Wochenende mit mir: sechs Kästchen, Samstag und Sonntag. Tipp drauf, dann siehst du, was drin steht.');
     staunenAn(el.regal, 'zuhause.regal', 'Das Bücherbord führt in die Bibliothek.');
     staunenAn(el.tuer, 'zuhause.tuer', 'Die Tür führt in die Werkstatt. Dort hängen die Werkzeuge.');
-    staunenAn(el.sessel, 'zuhause.sessel', 'Auf dem Sessel liegt der Katalog: Lampen und Dinge für deine Spaces, und andere Sessel. Tipp drauf.');
+    staunenAn(el.sessel, 'zuhause.sessel', 'Mein Sessel. Einen anderen holst du dir im Katalog in der Garage.');
     el.verlauf.addEventListener('click', function () { regung(); gespraechZeigen(); });
 
     // ---------- Der Vogel am Fenster (kommt, wenn du eine Weile still bist) ----------

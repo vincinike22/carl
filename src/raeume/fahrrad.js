@@ -447,6 +447,7 @@ C6.raum({
       '      <div class="c6s-g-bank">' + werkbankSvg() + '</div>' +
       '      <div class="c6s-g-schrankplatz"></div>' +
       '      <button type="button" class="c6s-g-glas" aria-label="Münzglas"></button>' +
+      '      <button type="button" class="c6s-g-heft" aria-label="Katalog: Lampen, Dinge und Sessel für deine Räume. Antippen öffnet ihn" data-c6-schild></button>' +
       '      <button type="button" class="c6s-g-ufo" aria-label="UFO"></button>' +
       '      <button type="button" class="c6s-g-tafel" aria-label="Quest-Tafel" data-c6-schild></button>' +
       '    </div>' +
@@ -483,6 +484,13 @@ C6.raum({
     var ufoEl = buehne.querySelector('.c6s-g-ufo');
     var tafelEl = buehne.querySelector('.c6s-g-tafel'), tafelBlatt = buehne.querySelector('.c6s-g-tafelblatt');
     var torEl = bmxKnopf, bankEl = buehne.querySelector('.c6s-g-bank'), glasEl = buehne.querySelector('.c6s-g-glas'), schrankPlatz = buehne.querySelector('.c6s-g-schrankplatz');
+    // Der Katalog (seit 16.10. hier, nicht mehr im Zuhause): ein Heft, das am Schrank lehnt – alles, was Carl und seine Räume verändert, an einem Ort
+    var heftEl = buehne.querySelector('.c6s-g-heft');
+    if (heftEl) {
+      try { heftEl.innerHTML = (C6.einrichten && C6.einrichten.heft) || ''; } catch (e) {}
+      heftEl.hidden = !(C6.einrichten && typeof C6.einrichten.oeffne === 'function');
+      heftEl.addEventListener('click', function () { try { C6.einrichten.oeffne({ ort: 'zuhause' }); } catch (e) {} });
+    }
     var leitG = svg.querySelector('.c6s-r-leit');
     var ctl = null, aktiv = null;
     var gTeil = {}; Array.prototype.forEach.call(svg.querySelectorAll('.c6s-r-teil'), function (g) { gTeil[g.dataset.teil] = g; });
@@ -1138,6 +1146,7 @@ C6.raum({
         setze(bankEl, w * 0.5 - bb / 2, h - naht - 2, bb);
         var sb = Math.min(w * 0.17, 210);
         setze(schrankPlatz.querySelector('.c6s-g-schrank'), w * 0.985 - sb, h - naht - 16, sb);
+        if (heftEl) { var hb = Math.max(44, Math.min(64, sb * 0.3)); setze(heftEl, w * 0.985 - sb - hb - 6, h - naht - 14, hb); }
         var gb = cs * SP, gl = w * 0.985 - sb - gb - w * 0.008;
         setze(schrankPlatz.querySelector('.c6s-g-spiegel'), gl, h - naht - 26, gb);
         cx = gl - cs * 0.3;
@@ -1156,6 +1165,7 @@ C6.raum({
         setze(bankEl, w * 0.33 - bbi / 2 + w * 0.12, h - naht - 1, bbi);
         var sbi = sa ? w * 0.34 : w * 0.27;
         setze(schrankPlatz.querySelector('.c6s-g-schrank'), w * 0.99 - sbi, h - naht - 4, sbi);
+        if (heftEl) { var hbi = Math.max(44, Math.min(56, sbi * 0.4)); setze(heftEl, w * 0.99 - sbi - hbi - 2, h - naht - 2, hbi); }
         var gbi = cs * SP, gli = w * 0.99 - sbi - gbi - 2;
         setze(schrankPlatz.querySelector('.c6s-g-spiegel'), gli, h - naht - (sa ? 12 : 10), gbi);
         cx = gli - cs * 0.3;

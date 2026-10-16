@@ -297,3 +297,10 @@ button.c6s-g-q:active{background:rgba(241,237,228,.1)}
 .c6s-sp-nochmal[hidden]{display:none}
 @media (prefers-reduced-motion:reduce){.c6s-sp-innen{transition:none}.c6s-g-schrank:hover .c6s-l-einzel-socke{animation:none}}
 html.c6-ruhig .c6s-sp-innen{transition:none}
+
+/* Der Katalog lehnt am Schrank (16.10.): ein Heft, Tipp öffnet den Katalog; bei offenem Schrank tritt es zurück wie Bank und Tor */
+.c6s-g-heft{position:absolute;z-index:1;min-width:44px;min-height:44px;padding:0;border:0;background:none;cursor:pointer;display:flex;align-items:flex-end;justify-content:center;transform-origin:50% 100%;transition:opacity .3s,transform .2s;-webkit-tap-highlight-color:transparent}
+.c6s-g-heft svg{display:block;width:100%;height:auto;overflow:visible;filter:drop-shadow(2px 3px 0 rgba(43,39,34,.18))}
+.c6s-g-heft:hover,.c6s-g-heft:focus-visible{transform:translateY(-3px) rotate(-2deg)}
+.c6s-g-heft[hidden]{display:none}
+.c6s-g-schrank-auf .c6s-g-heft{opacity:0;pointer-events:none}
