@@ -1,0 +1,347 @@
+<title>Der Weg von bicycle</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Figtree:wght@400;500;600;700&family=Caveat:wght@600;700&display=swap">
+<style>
+/* Layout: ein Spielbrett auf Carls Papier. Fünf Bahnen (was bicycle baut) laufen durch fünf Abschnitte (wann).
+   Eine senkrechte Linie „heute“ mit Carl als Spielfigur. Gestrichelt = Bleistift = noch nicht gebaut.
+   Orange nur für den nächsten Zug, Nadelrot nur für Entscheidungen, Gold für den Horizont. */
+:root{
+  --papier:#fbf7f0; --blatt:#fffdf9; --sand:#f4eee4; --sand2:#efe7da; --linie:#d8cfc0; --tusche:#2b2722; --grau:#6f6a61;
+  --orange:#e8621a; --orange-dunkel:#b4460c; --orange-weich:#fbe3d2;
+  --nadel:#d62a26; --gruen:#4f8a5b; --gruen-weich:#dcebdc; --gold:#b8862b; --gold-weich:#f6ecd0;
+  --himmel:#0b0f22; --himmel2:#1d2445; --himmel-text:#eef0ff; --himmel-grau:#aab2dc;
+  --serif:"Fraunces",Georgia,"Times New Roman",serif; --sans:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif; --hand:"Caveat","Comic Sans MS",cursive;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --papier:#1a1713; --blatt:#242019; --sand:#2b2620; --sand2:#332d25; --linie:#453d33; --tusche:#f1ebe0; --grau:#b9ae9f;
+  --orange:#f08a4b; --orange-dunkel:#f5a06b; --orange-weich:#3f2a1b; --nadel:#ef6a5f; --gruen:#8fc29f; --gruen-weich:#22332a;
+  --gold:#d9bf7a; --gold-weich:#3a3220; --himmel:#07091a; --himmel2:#151b38; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --papier:#1a1713; --blatt:#242019; --sand:#2b2620; --sand2:#332d25; --linie:#453d33; --tusche:#f1ebe0; --grau:#b9ae9f;
+  --orange:#f08a4b; --orange-dunkel:#f5a06b; --orange-weich:#3f2a1b; --nadel:#ef6a5f; --gruen:#8fc29f; --gruen-weich:#22332a;
+  --gold:#d9bf7a; --gold-weich:#3a3220; --himmel:#07091a; --himmel2:#151b38; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papier);color:var(--tusche);font-family:var(--sans);font-size:16px;line-height:1.5}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:32px 72px}
+h1,h2,h3{font-family:var(--serif);margin:0;line-height:1.15;text-wrap:balance}
+h1{font-size:clamp(30px,5vw,50px);font-weight:700}
+h2{font-size:clamp(22px,3vw,30px);font-weight:600;margin-bottom:6px}
+p{margin:0 0 10px}
+.kopfzeile{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--grau);margin-bottom:14px}
+.kurz{color:var(--grau);font-size:14px}
+.blatt{background:var(--blatt);border:1.5px solid var(--tusche);box-shadow:6px 6px 0 var(--sand2),6px 6px 0 1.5px var(--tusche);border-radius:4px;padding:20px 22px;margin-top:22px}
+.hand{font-family:var(--hand);font-weight:700}
+
+/* Kopf */
+.titel{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center}
+.titel svg{width:80px;height:80px}
+@media (max-width:560px){.titel{grid-template-columns:1fr}.titel svg{width:60px;height:60px}}
+.stern{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:22px}
+.stern>div{min-width:0;padding:14px 16px;border-radius:4px;background:var(--sand);border:1px solid var(--linie)}
+.stern .wer{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--grau);margin-bottom:6px}
+.stern .satz{font-family:var(--serif);font-size:18px;line-height:1.3}
+.stern .nord{background:var(--himmel);color:var(--himmel-text);border-color:var(--himmel)}
+.stern .nord .wer{color:var(--himmel-grau)}
+@media (max-width:820px){.stern{grid-template-columns:1fr}}
+
+/* Legende */
+.legende{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:18px;font-size:13px;color:var(--grau);align-items:center}
+.legende span{display:inline-flex;align-items:center;gap:7px}
+.mk{width:18px;height:14px;border-radius:3px;display:inline-block;border:1.5px solid var(--tusche);background:var(--blatt)}
+.mk.geplant{border-style:dashed;border-color:var(--grau);background:transparent}
+.mk.jetzt{border-color:var(--orange);background:var(--orange-weich)}
+.mk.horizont{border-color:var(--gold);background:var(--gold-weich)}
+.pin{width:9px;height:9px;border-radius:50%;background:var(--nadel);display:inline-block;box-shadow:0 0 0 2px var(--blatt)}
+
+/* Brett */
+.brett-rahmen{overflow-x:auto;margin-top:16px;padding-bottom:6px}
+.brett{display:grid;grid-template-columns:150px repeat(5,minmax(178px,1fr));gap:0;min-width:1080px;position:relative}
+.kopf-zelle{padding:44px 10px 12px;border-bottom:1.5px solid var(--tusche);position:relative}
+.kopf-zelle b{display:block;font-family:var(--serif);font-size:16px}
+.kopf-zelle small{color:var(--grau);font-size:12px}
+.kopf-zelle.heute b{color:var(--orange-dunkel)}
+.bahn{padding:14px 12px 14px 0;border-bottom:1px solid var(--linie);display:flex;flex-direction:column;justify-content:center}
+.bahn b{font-family:var(--serif);font-size:16px;line-height:1.2}
+.bahn small{color:var(--grau);font-size:12.5px;line-height:1.35;margin-top:3px}
+.zelle{padding:12px 8px;border-bottom:1px solid var(--linie);display:flex;flex-direction:column;gap:8px;position:relative;min-width:0}
+.zelle.heute-spalte{background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--orange-weich) 55%,transparent) 50%,transparent)}
+.feld{background:var(--blatt);border:1.5px solid var(--tusche);border-radius:4px;padding:9px 10px 10px;font-size:13.5px;line-height:1.38;position:relative;min-width:0}
+.feld h3{font-size:14.5px;font-weight:600;margin-bottom:3px;padding-right:12px}
+.feld p{margin:0;color:var(--grau)}
+.feld .q{display:block;margin-top:6px;font-size:11px;color:var(--grau);letter-spacing:.02em}
+.feld.gegangen{box-shadow:3px 3px 0 var(--sand2)}
+.feld.jetzt{border-color:var(--orange);background:var(--orange-weich);box-shadow:3px 3px 0 color-mix(in srgb,var(--orange) 35%,transparent)}
+.feld.jetzt p{color:var(--tusche)}
+.feld.geplant{border-style:dashed;border-color:var(--grau);background:transparent}
+.feld.horizont{border-color:var(--gold);background:var(--gold-weich)}
+.feld.horizont p{color:var(--tusche)}
+.feld .pin{position:absolute;top:9px;right:9px}
+.leer{font-family:var(--hand);font-size:17px;color:var(--grau);padding:6px 2px;opacity:.8}
+
+/* Figur auf der Heute-Linie */
+.figur{position:absolute;top:-6px;width:46px;height:46px;transform:translateX(-50%);pointer-events:none}
+.figur-zeichen{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;color:var(--grau)}
+.figur-zeichen svg{width:30px;height:30px;flex:none}
+
+/* Telefon: Bahn für Bahn statt Gitter */
+.handy{display:none}
+@media (max-width:760px){
+  .brett-rahmen{display:none}
+  .handy{display:block;margin-top:14px}
+  .hbahn{margin-top:18px}
+  .hbahn>h3{font-size:19px}
+  .hbahn>small{display:block;color:var(--grau);font-size:13px;margin:2px 0 10px}
+  .hschritt{display:grid;grid-template-columns:86px minmax(0,1fr);gap:10px;align-items:start;margin-top:8px}
+  .hschritt .wann{font-size:12px;color:var(--grau);padding-top:10px;line-height:1.25}
+  .hschritt .wann.heute{color:var(--orange-dunkel);font-weight:600}
+  .hschritt .felder{display:flex;flex-direction:column;gap:8px;min-width:0}
+}
+
+/* Tore */
+.tore{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:12px}
+.tor{min-width:0;border:1.5px solid var(--tusche);border-radius:4px;padding:12px 14px;background:var(--blatt)}
+.tor .wann{font-family:var(--hand);font-size:20px;color:var(--orange-dunkel);line-height:1}
+.tor h3{font-size:16px;margin:4px 0 6px}
+.tor p{font-size:13.5px;margin:0}
+.tor.geplant{border-style:dashed;border-color:var(--grau);background:transparent}
+@media (max-width:900px){.tore{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.tore{grid-template-columns:1fr}}
+
+/* Seele */
+.seele{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:12px}
+.rolle{min-width:0;background:var(--sand);border:1px solid var(--linie);border-radius:4px;padding:10px 12px;font-size:13.5px}
+.rolle b{font-family:var(--serif);font-size:15px;display:block;margin-bottom:2px}
+.rolle.erst{background:var(--gold-weich);border-color:var(--gold)}
+@media (max-width:900px){.seele{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:460px){.seele{grid-template-columns:1fr}}
+.axiome{margin:14px 0 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:8px}
+.axiome li{font-size:13px;border:1px solid var(--linie);border-radius:99px;padding:4px 11px;background:var(--blatt)}
+
+/* Offen */
+.offen{counter-reset:o;list-style:none;margin:12px 0 0;padding:0;display:grid;gap:10px}
+.offen li{position:relative;padding:12px 14px 12px 46px;border:1px solid var(--linie);border-radius:4px;background:var(--sand)}
+.offen li::before{counter-increment:o;content:counter(o);position:absolute;left:14px;top:12px;width:22px;height:22px;border-radius:50%;background:var(--nadel);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.offen b{font-family:var(--serif);font-size:15.5px}
+.offen .q{display:block;font-size:12px;color:var(--grau);margin-top:4px}
+
+.quellen{font-size:13px;color:var(--grau);margin-top:36px;line-height:1.6}
+.quellen code{font-size:12px}
+.lese{max-width:70ch}
+</style>
+
+<div class="wrap">
+  <div class="kopfzeile">bicycle · der ganze Weg · Stand 19.10.2026 · Vitruvian mit Rune</div>
+  <div class="titel">
+    <svg viewBox="0 0 100 100" role="img" aria-label="Carl, ein Kiesel mit Keimblatt, als Spielfigur">
+      <ellipse cx="50" cy="92" rx="26" ry="4" fill="rgba(0,0,0,.12)"/>
+      <path d="M47 30 C47 20 52 14 60 12 C58 20 54 26 49 31 Z" fill="#6fa36a" stroke="#2b2722" stroke-width="1.5"/>
+      <path d="M50 30 C50 20 45 14 37 12 C39 20 43 26 48 31 Z" fill="#8cc085" stroke="#2b2722" stroke-width="1.5"/>
+      <path d="M49 30 V36" stroke="#2b2722" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M18 62 C18 42 34 34 50 34 C66 34 82 42 82 62 C82 76 70 84 50 84 C30 84 18 76 18 62 Z" fill="#f3ede2" stroke="#2b2722" stroke-width="2"/>
+      <path d="M20 70 C30 82 70 82 80 70 C76 82 60 86 50 86 C40 86 24 82 20 70 Z" fill="#2b2722"/>
+      <circle cx="40" cy="58" r="5.5" fill="#f0a830"/><circle cx="60" cy="58" r="5.5" fill="#f0a830"/>
+      <circle cx="41" cy="57" r="2.4" fill="#2b2722"/><circle cx="61" cy="57" r="2.4" fill="#2b2722"/>
+      <path d="M45 68 Q50 72 55 68" stroke="#2b2722" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      <rect x="40" y="84" width="6" height="8" rx="2" fill="#4a6fb5" stroke="#2b2722" stroke-width="1.2"/><rect x="54" y="84" width="6" height="8" rx="2" fill="#4a6fb5" stroke="#2b2722" stroke-width="1.2"/>
+    </svg>
+    <div>
+      <h1>Der Weg von bicycle</h1>
+      <p class="kurz lese" style="margin-top:8px">Das ganze Vorhaben auf einem Brett, nicht nur Carls App: das Gedächtnis und das Denken, Carls Körper vom Mac bis zur Box und zur Brille, das Ökosystem mit anderen, die Firma mit ihrem Markt, und die Geschichte, mit der bicycle in die Welt kommt. Jedes Feld nennt seine Quelle in nicos Dokumenten.</p>
+    </div>
+  </div>
+
+  <div class="stern">
+    <div class="nord"><div class="wer">Nordstern · nico, 24.09.</div><div class="satz">Die Zeit nach den Umwegen. Maus, Tastatur und Touchpad waren Umwege; das Interface verschwindet in dem Maß, in dem der Computer dich kennt.</div></div>
+    <div><div class="wer">Mission · bicycle</div><div class="satz">Die inspirierendste Technologiefirma, gebaut für den menschlichen Geist. Menschen machen das Verbinden von Gedanken zur Gewohnheit.</div></div>
+    <div><div class="wer">Das Bild · seit dem ersten Dokument</div><div class="satz">Ein Fahrrad für den Geist, egal welcher Geist davor sitzt. Carl passt sich dir an, nicht du dich ihm.</div></div>
+  </div>
+
+  <div class="blatt">
+    <h2>Das Brett</h2>
+    <p class="kurz lese">Fünf Bahnen, fünf Abschnitte. Die Spielfigur steht heute in Ring 0: Carl HQ ist bis Runde s14 gebaut, der 30-Tage-Test mit Gründern und Kreativen soll spätestens am 01.11. starten.</p>
+    <div class="legende">
+      <span><i class="mk"></i>gegangen</span>
+      <span><i class="mk jetzt"></i>der nächste Zug</span>
+      <span><i class="mk geplant"></i>geplant (Bleistift)</span>
+      <span><i class="mk horizont"></i>Horizont</span>
+      <span><i class="pin"></i>von nico entschieden</span>
+    </div>
+
+    <div class="brett-rahmen" id="brett-rahmen">
+      <div class="brett" id="brett"></div>
+    </div>
+    <div class="handy" id="handy"></div>
+  </div>
+
+  <div class="blatt">
+    <h2>Die Tore</h2>
+    <p class="kurz lese">Jeder Abschnitt endet in einem Tor. Erst wenn es offen ist, geht es weiter.</p>
+    <div class="tore">
+      <div class="tor"><div class="wann">ab 01.11.2026</div><h3>Der Test</h3><p>3–5 Gründer und Kreative, 30 Tage, Mac und iPhone. Erfolg: mindestens 3 von 7 Brücken in Woche 1, und an Tag 30 nutzt die Hälfte Carl noch dreimal pro Woche.</p></div>
+      <div class="tor"><div class="wann">bis 01.12.2026</div><h3>Tor 0 · Keim</h3><p>Drei fremde Tester bauen in Woche 1 aus einem eigenen Satz etwas Eigenes, nutzen es an mindestens 3 Tagen, und mindestens 2 staunen ungefragt.</p></div>
+      <div class="tor geplant"><div class="wann">bis Mai 2027</div><h3>Tor 1 · Wurzeln</h3><p>40 von 100 nach 60 Tagen aktiv, jeder Zweite hat etwas gebaut, kein Tester hat ein Terminal gesehen.</p></div>
+      <div class="tor geplant"><div class="wann">ab Juni 2027</div><h3>Tor 2 · Stamm</h3><p>Wiederkehrender Umsatz, Menschen erzählen ungefragt von ihrem Ding, ein OpenClaw-Nutzer zieht um und bleibt.</p></div>
+    </div>
+  </div>
+
+  <div class="blatt">
+    <h2>Was auf jedem Feld gleich bleibt</h2>
+    <p class="kurz lese">Die Form wechselt vom Mac zum Objekt, zur Brille und zur Box. Was Carl für einen Menschen tut, bleibt gleich. Seit dem Kompass vom 05.10. ist der Anstoß die erste Rolle: Carl stößt an, statt zu erledigen. Die anderen vier dienen ihm.</p>
+    <div class="seele">
+      <div class="rolle erst"><b>Anstoß</b>stößt dein Wissen neu zusammen; die Verbindung ziehst du selbst</div>
+      <div class="rolle"><b>Zweites Gehirn</b>hält deine Gedanken, Ziele und Pläne</div>
+      <div class="rolle"><b>Sekretär</b>ordnet Zeit und nächste Schritte</div>
+      <div class="rolle"><b>Freund</b>urteilt nicht, ist immer da, ganz privat</div>
+      <div class="rolle"><b>Coach</b>fragt das Richtige, wenn du feststeckst</div>
+    </div>
+    <ul class="axiome" aria-label="Axiome">
+      <li>lokal und dir gehörend</li><li>Gedächtnis ist der Kern, das Modell ist austauschbar</li><li>Markdown ist die Wahrheit</li><li>eine Sache exzellent</li><li>einfach: einstecken, reden, es wird, was dein Kopf braucht</li><li>Sicherheit liegt im Code</li><li>Name bleibt Carl</li>
+    </ul>
+  </div>
+
+  <div class="blatt">
+    <h2>Noch offen auf dem Brett</h2>
+    <p class="kurz lese">Diese Stellen widersprechen sich in den Dokumenten oder warten auf nicos Wort.</p>
+    <ol class="offen">
+      <li><b>Zwei Linien, ein Carl.</b> Der Mac-Kern (Gedächtnis, Funke, Brücke, Raum; Test ab 01.11.) und Carl HQ im Browser (das Hotel; Tor am 01.12.) laufen nebeneinander. Welche Linie trägt Ring 1, und wird Hermes der Motor unter beiden?<span class="q">KOMPASS v3 · PLAN · GRUNDKONSTRUKT „Offen: Hermes als Motor“</span></li>
+      <li><b>Wann kommt das Funke-Objekt?</b> Die Schwachstellen-Liste setzt es auf Dezember, der Kompass schreibt „Nicht jetzt: Funke-Objekt/Box · AR/VR“.<span class="q">vision/22 · KOMPASS §7</span></li>
+      <li><b>Abo oder nicht.</b> Ein Abo nur, wenn sein Wert täglich nachweisbar ist; das muss der Test erst zeigen.<span class="q">vision/13 §2 · vision/14</span></li>
+      <li><b>Denken über den Server.</b> Für Fremde denkt Carl heute über einen Server (Einwilligung im Onboarding), das Gedächtnis bleibt auf den Geräten. Ab wann denkt Carl ganz lokal?<span class="q">KOMPASS §5 · Annahme 8</span></li>
+      <li><b>Förderung und Gründung.</b> Der Plan: Förderantrag zuerst, dann gründen. Ein Datum dafür steht noch nirgends.<span class="q">vision/22</span></li>
+    </ol>
+  </div>
+
+  <p class="quellen lese"><b>Quellen</b> (nicos Dokumente, gelesen am 19.10.2026): Repo <code>bicycle-ai-carl</code>: <code>docs/KOMPASS.md</code> (v3, 05.10.), <code>docs/PLAN.md</code>, <code>vision/13</code> Axiome und MVP, <code>14</code> Vision und Oura-Moment, <code>19</code> Funke-Schleife, <code>20</code> Das Ende der Umwege, <code>21</code> VR/AR-Strategie, <code>22</code> Schwachstellen, <code>HACK_002_Einreichung</code>. Projekt Carl HQ: <code>GRUNDKONSTRUKT.md</code> (14.–17.10.), <code>GRUNDSAETZE.md</code>, <code>STAND.md</code>, <code>werkstatt/VISION.md</code> (08.10.). Skill <code>bicycle-ai</code> (Hardware-Vision, Markteintritt, Markengeschichte). Ungeprüft: Der Stand des Mac-Kerns nach dem 05.10. (letzter Eintrag im Repo); der PLAN wurde seitdem nicht fortgeschrieben.</p>
+</div>
+
+<script>
+(function(){
+  var SP=[
+    {id:'weg',t:'Gegangen',s:'2023 – Okt. 2026'},
+    {id:'r0',t:'Ring 0 · jetzt',s:'bis 01.12.2026',heute:true},
+    {id:'r1',t:'Ring 1 · Wurzeln',s:'Dez. 2026 – Mai 2027'},
+    {id:'r2',t:'Ring 2 · Stamm',s:'ab Juni 2027 · Launch'},
+    {id:'hz',t:'Horizont',s:'danach'}
+  ];
+  // a: gegangen | jetzt | geplant | horizont ; n: von nico entschieden
+  var BAHNEN=[
+    {t:'Carl, das Denken',s:'Gedächtnis, Funke, Spaces, Werkzeuge',f:{
+      weg:[
+        {a:'gegangen',h:'Die Idee von 2023',p:'Ein privater Begleiter, der dich kennt. Ein Satz von 2023 kam 2026 zurück und passte genau.',q:'KOMPASS · Legende'},
+        {a:'gegangen',h:'Der Mac-Kern',p:'Lokales Gedächtnis in Markdown, Funke und Brücke, dein Raum in 3D.',q:'vision/19 · 20'},
+        {a:'gegangen',n:1,h:'Spaces sind das Herz',p:'Jede Idee hat ihren Weg aus Bausteinen; Carls Brief einmal am Tag.',q:'KOMPASS v3, 05.10.'},
+        {a:'gegangen',n:1,h:'Carl HQ, das Hotel',p:'Räume mit Verb, das Harness geordnet, Runden s12–s14 (v33).',q:'GRUNDKONSTRUKT, 14.–17.10.'}],
+      r0:[
+        {a:'jetzt',h:'Test mit Gründern',p:'Brief, Brücke, Ideen, Raum, Carl auf Mac und iPhone, 30 Tage.',q:'PLAN · Teststart spätestens 01.11.'},
+        {a:'jetzt',h:'Carl HQ: s15',p:'Fortschritt an einem Ort (Rad), Schreibstube, Personaltür.',q:'STAND, 17.10.'}],
+      r1:[
+        {a:'geplant',h:'Mac-App ohne Terminal',p:'Gedächtnis als Dateien, Lernschleife, Kosten-Deckel, Sandbox ab Werk.',q:'GRUNDKONSTRUKT R1'},
+        {a:'geplant',n:1,h:'Umzug per Knopf',p:'Seele, Gedächtnis und Werkzeuge aus OpenClaw oder Hermes holen.',q:'entschieden 14.10.'},
+        {a:'geplant',h:'Eigene Werkzeuge',p:'„Du willst eine App? Bau sie mit Carl, nur für dich.“',q:'KOMPASS, 05.10.'}],
+      r2:[
+        {a:'geplant',h:'Bleib dran',p:'Carl arbeitet über Nacht weiter, bis es fertig ist; Routing zwischen Modellen.',q:'GRUNDKONSTRUKT R2'}],
+      hz:[
+        {a:'horizont',h:'Die Eingabe verschwindet',p:'Carl schlägt vor, bevor du fragst, und zeigt, wo deine Gedanken zusammenlaufen.',q:'GRUNDKONSTRUKT · Nordstern'}]
+    }},
+    {t:'Carls Körper',s:'wo Carl wohnt, wie du ihn erreichst',f:{
+      weg:[
+        {a:'gegangen',h:'Mac und iPhone',p:'Das iPhone kann alles auch ohne Mac; der Abgleich ist verschlüsselt.',q:'KOMPASS §5'},
+        {a:'gegangen',h:'Im Browser',p:'Carl HQ läuft auf claude.ai, auf dem Dock und am Home-Bildschirm.',q:'GRUNDKONSTRUKT R0'}],
+      r0:[],
+      r1:[
+        {a:'geplant',h:'Das Funke-Objekt',p:'Augen glimmen, Gedanken-Fänger, Mikrofon-Schieber, Licht als Zustand, Tresor auf Karte; 30–60 € und ein Wochenende.',q:'vision/20 · laut vision/22 im Dezember'},
+        {a:'geplant',n:1,h:'Schreib mir auf WhatsApp',p:'Der erste Kanal; danach iMessage, wenn die Mac-App steht.',q:'entschieden 14.10.'},
+        {a:'geplant',h:'Dein Raum in der Brille',p:'Über das offene Web: zuerst ein Raum im VR-Headset, dann der Funke als Zeile in einer AR-Brille.',q:'vision/21, nach dem Test'}],
+      r2:[
+        {a:'geplant',n:1,h:'Die Carl-Box',p:'Dasselbe Gesicht wie das Objekt, jetzt mit eigenem Gehirn. Einstecken, reden; Monitor, Fernseher, Handy.',q:'vision/20 · „Objekt ist der erste Schritt zur Box“, entschieden 24.09.'},
+        {a:'geplant',h:'Weitere Brillen',p:'Android-Brillen mit Display, Apple später; nativ erst dort, wo Nutzer sind.',q:'vision/21'}],
+      hz:[
+        {a:'horizont',h:'Nach den Umwegen',p:'Keine Maus, keine Tastatur: Sprache, Geste, Blick. Carls Räume werden Orte.',q:'vision/20 · Annahme 9'}]
+    }},
+    {t:'Mit anderen',s:'Ökosystem und geteiltes Wissen',f:{
+      weg:[
+        {a:'gegangen',h:'Das Teleskop',p:'Fertige Werkzeuge anderer ansehen und übernehmen, mit Bauplan vorab.',q:'Carl HQ, s9'}],
+      r0:[
+        {a:'jetzt',h:'Die ersten Tester',p:'Gründer und Kreative aus dem eigenen Umfeld (Telos, Hackathon).',q:'KOMPASS §8'}],
+      r1:[
+        {a:'geplant',h:'Erst auf Apple bauen',p:'Siri und Kurzbefehle, Apple Home, Watch als Türen zu Carl. Der Kern bleibt offen.',q:'vision/20 · Apple-Strategie'},
+        {a:'geplant',h:'Das Wissensregal',p:'Carl zieht veröffentlichtes Wissen mit Quelle in dein Gedächtnis.',q:'vision/14 · KOMPASS §4'}],
+      r2:[
+        {a:'geplant',h:'Geteilte Welten',p:'Parks und Werkzeuge von anderen; die Bibliothek, in der man stöbert und herunterlädt.',q:'GRUNDKONSTRUKT R2 · vision/14'},
+        {a:'geplant',h:'Dann in den Apfel beißen',p:'Mit der eigenen Box braucht Carl Apple nicht mehr; dein Gedächtnis kommt mit.',q:'vision/20'}],
+      hz:[
+        {a:'horizont',h:'Das kollektive Teleskop',p:'Wer seine Blickwinkel teilt, baut mit anderen ein Teleskop, und es entstehen neue.',q:'werkstatt/VISION, 08.10.'}]
+    }},
+    {t:'Die Firma',s:'Markt, Geld, Team',f:{
+      weg:[
+        {a:'gegangen',h:'Hackathon',p:'Carl als Prototyp eingereicht, dazu ein Drehbuch, in dem Carl sich selbst vorstellt.',q:'HACK_002_Einreichung'},
+        {a:'gegangen',h:'Kostenprognose',p:'Zwölf Monate durchgerechnet.',q:'business/Kostenprognose'}],
+      r0:[
+        {a:'geplant',h:'Förderantrag',p:'Erst den Antrag schreiben, dann gründen. Ein Datum steht noch nicht.',q:'vision/22'}],
+      r1:[
+        {a:'geplant',h:'100 Menschen, 60 Tage',p:'Das Tor 1 entscheidet, ob Carl trägt.',q:'GRUNDKONSTRUKT'}],
+      r2:[
+        {a:'geplant',h:'Pre-Seed und Team',p:'Von 1.000 zu 10.000 Menschen.',q:'GRUNDKONSTRUKT R2'},
+        {a:'geplant',h:'100 Geräte verschenken',p:'An Journalisten und frühe Nutzer, sie zerlegen es öffentlich; danach neu bauen. Nachfrage vor Größe.',q:'bicycle-ai · Markteintritt'},
+        {a:'geplant',h:'Ein faires Abo',p:'Nur mit täglich nachweisbarem Wert; Cloud für ausgewähltes Gedächtnis frühestens im zweiten Jahr, Schlüssel bleiben bei dir.',q:'vision/13 · 14'}],
+      hz:[
+        {a:'horizont',h:'Europa, lokal, deins',p:'Die inspirierendste Technologiefirma, gebaut für den menschlichen Geist.',q:'vision/14 · GRUNDKONSTRUKT'}]
+    }},
+    {t:'Die Geschichte',s:'Marke und Erzählung',f:{
+      weg:[
+        {a:'gegangen',n:1,h:'Carl bleibt Carl',p:'Ein Kiesel mit Keimblatt, Bernstein-Augen, Socken. Papier, Tusche, Briefe statt Benachrichtigungen.',q:'KOMPASS · GESTALTUNG'},
+        {a:'gegangen',h:'Carl stellt sich vor',p:'„I help you understand your truest self. bicycle helps you fulfil your truest potential.“',q:'HACK_002 · Drehbuch, Szene 8'}],
+      r0:[],
+      r1:[
+        {a:'geplant',h:'Die Website mit dem Himmel',p:'Nach dem Test: dein Gedächtnis als Himmel, zum Staunen.',q:'PLAN'}],
+      r2:[
+        {a:'geplant',h:'Der Film',p:'Das Mädchen, das von einem Fahrrad träumte: Schwarzweiß, nur sie in Farbe. Sie ist der Mensch, bicycle zeigt ihr den Weg.',q:'bicycle-ai · Markengeschichte'}],
+      hz:[
+        {a:'horizont',h:'Menschen erzählen ungefragt',p:'Von ihrem eigenen Ding, und davon, wohin ihr Fahrrad sie gebracht hat.',q:'Tor 2'}]
+    }}
+  ];
+
+  function feld(x, zeigeWann){
+    var d=document.createElement('div'); d.className='feld '+x.a;
+    if(x.n){var p=document.createElement('i');p.className='pin';p.title='von nico entschieden';d.appendChild(p);}
+    var h=document.createElement('h3'); h.textContent=x.h; d.appendChild(h);
+    var t=document.createElement('p'); t.textContent=x.p; d.appendChild(t);
+    var q=document.createElement('span'); q.className='q'; q.textContent=x.q; d.appendChild(q);
+    return d;
+  }
+  // Gitter (Computer)
+  var B=document.getElementById('brett');
+  var ecke=document.createElement('div'); ecke.className='kopf-zelle'; B.appendChild(ecke);
+  SP.forEach(function(s){var k=document.createElement('div');k.className='kopf-zelle'+(s.heute?' heute':'');k.innerHTML='<b></b><small></small>';k.querySelector('b').textContent=s.t;k.querySelector('small').textContent=s.s;B.appendChild(k);});
+  BAHNEN.forEach(function(b){
+    var l=document.createElement('div'); l.className='bahn'; l.innerHTML='<b></b><small></small>'; l.querySelector('b').textContent=b.t; l.querySelector('small').textContent=b.s; B.appendChild(l);
+    SP.forEach(function(s){
+      var z=document.createElement('div'); z.className='zelle'+(s.heute?' heute-spalte':'');
+      var liste=b.f[s.id]||[];
+            liste.forEach(function(x){z.appendChild(feld(x));});
+      B.appendChild(z);
+    });
+  });
+  // Spielfigur über der Heute-Spalte
+  var fig=document.querySelector('.titel svg').cloneNode(true); fig.setAttribute('class','figur'); fig.setAttribute('aria-hidden','true');
+  var kopfHeute=B.querySelector('.kopf-zelle.heute');
+    fig.style.left='50%'; kopfHeute.appendChild(fig);
+
+  // Bahn für Bahn (Telefon)
+  var H=document.getElementById('handy');
+  BAHNEN.forEach(function(b){
+    var w=document.createElement('section'); w.className='hbahn';
+    var h=document.createElement('h3'); h.textContent=b.t; w.appendChild(h);
+    var s0=document.createElement('small'); s0.textContent=b.s; w.appendChild(s0);
+    SP.forEach(function(s){
+      var liste=b.f[s.id]||[]; if(!liste.length) return;
+      var r=document.createElement('div'); r.className='hschritt';
+      var wann=document.createElement('div'); wann.className='wann'+(s.heute?' heute':''); wann.textContent=s.t+(s.heute?' · hier stehst du':''); r.appendChild(wann);
+      var fe=document.createElement('div'); fe.className='felder'; liste.forEach(function(x){fe.appendChild(feld(x));}); r.appendChild(fe);
+      w.appendChild(r);
+    });
+    H.appendChild(w);
+  });
+})();
+</script>
