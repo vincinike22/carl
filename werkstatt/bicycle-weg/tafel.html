@@ -3,10 +3,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Figtree:wght@400;600&family=Caveat:wght@600;700&display=swap">
 <style>
-/* Layout: oben die Tafel 60 × 40 cm im Maßstab (1 Einheit = 1 mm), darunter Hilfslinien, Reihenfolge und Schriftgrößen. */
+/* Layout: oben die Tafel 60 × 40 cm im Maßstab (1 Einheit = 1 mm) als Spielbrett mit einem Weg, der sich in drei Reihen schlängelt.
+   Darunter Maße der Kreis-Mitten, Reihenfolge, Schriftgrößen. */
 :root{
   --papier:#fbf7f0; --blatt:#fffdf9; --sand:#f4eee4; --linie:#d8cfc0; --tusche:#2b2722; --grau:#6f6a61; --orange:#e8621a;
-  --tafel:#141414; --kreide:#f2efe6; --kreide2:#bdb8ad; --mass:#e8a94a;
   --serif:"Fraunces",Georgia,serif; --sans:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif; --hand:"Caveat","Comic Sans MS",cursive;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--papier:#1a1713;--blatt:#242019;--sand:#2b2620;--linie:#453d33;--tusche:#f1ebe0;--grau:#b9ae9f;--orange:#f08a4b;color-scheme:dark}}
@@ -28,57 +28,52 @@ h2{font-size:22px;margin:30px 0 8px}
 @media (max-width:760px){.zwei{grid-template-columns:1fr}}
 .karte{min-width:0;background:var(--blatt);border:1.5px solid var(--tusche);border-radius:4px;padding:14px 16px;box-shadow:5px 5px 0 var(--sand)}
 .karte h3{font-family:var(--serif);font-size:17px;margin:0 0 6px}
-ol,ul{margin:0;padding-left:20px}
+ol{margin:0;padding-left:20px}
 li{margin-bottom:6px}
+.tab{overflow-x:auto}
 table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
 th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--linie);vertical-align:top}
 th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--grau);font-weight:600}
-.zeichen{display:flex;flex-wrap:wrap;gap:10px 22px;font-size:14.5px}
+.zeichen{display:flex;flex-wrap:wrap;gap:10px 22px;font-size:14.5px;margin-top:14px}
 .zeichen span{display:inline-flex;align-items:center;gap:8px}
+.zeichen svg{flex:none}
 .m{display:inline-block;width:18px;height:18px;border-radius:50%}
 </style>
 
 <div class="wrap">
   <h1>Kreideplan bicycle</h1>
-  <p class="kurz" style="margin-top:8px">Der Weg von bicycle für deine Tafel, 60 × 40 cm. Oben siehst du, wie sie aussehen soll, im richtigen Maßstab. Darunter stehen die Maße der Hilfslinien und die Reihenfolge. Die zwei Magnete bekommen Aufgaben: der pinke ist Carl, die Spielfigur, der weiße das nächste Tor.</p>
+  <p class="kurz" style="margin-top:8px">Der Weg von bicycle als Spielbrett für deine Tafel, 60 × 40 cm. Ein Weg, ein Feld nach dem anderen: Er beginnt oben links, schlängelt sich durch drei Reihen und endet unten rechts beim Stern. Jede Reihe ist ein Abschnitt, jedes Tor schließt ihn ab. Der pinke Magnet ist Carl, die Spielfigur, der weiße steht auf dem nächsten Tor.</p>
 
-  <div class="tafel"><svg id="tafel" viewBox="0 0 600 400" role="img" aria-label="Tafel 60 mal 40 Zentimeter mit fünf Bahnen und fünf Abschnitten"></svg></div>
+  <div class="tafel"><svg id="tafel" viewBox="0 0 600 400" role="img" aria-label="Spielbrett 60 mal 40 Zentimeter: ein Weg aus 18 Feldern in drei Reihen, von der Idee 2023 bis zum Horizont"></svg></div>
   <div class="schalter">
     <button type="button" id="b-mass" aria-pressed="true">Maße zeigen</button>
-    <button type="button" id="b-linien" aria-pressed="true">Hilfslinien zeigen</button>
   </div>
 
-  <div class="zeichen" style="margin-top:14px">
-    <span>✓ gegangen</span>
-    <span><svg width="38" height="10" aria-hidden="true"><line x1="0" y1="5" x2="38" y2="5" stroke="currentColor" stroke-width="2" stroke-dasharray="5 4"/></svg> geplant (gestrichelt unterstreichen)</span>
-    <span>★ Horizont</span>
-    <span><i class="m" style="background:#e94b9b"></i> Carl, die Spielfigur</span>
-    <span><i class="m" style="background:#eceae4;border:1px solid var(--grau)"></i> das nächste Tor</span>
+  <div class="zeichen">
+    <span><svg width="22" height="22" aria-hidden="true"><circle cx="11" cy="11" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6.5 11.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2"/></svg> gegangen</span>
+    <span><svg width="22" height="22" aria-hidden="true"><circle cx="11" cy="11" r="9" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 3"/></svg> geplant (gestrichelter Kreis)</span>
+    <span><svg width="26" height="22" aria-hidden="true"><path d="M4 21V7q9-8 18 0v14" fill="none" stroke="currentColor" stroke-width="2"/></svg> Tor</span>
+    <span>★ Ziel</span>
+    <span><i class="m" style="background:#e94b9b"></i> Carl</span>
+    <span><i class="m" style="background:#eceae4;border:1px solid var(--grau)"></i> nächstes Tor</span>
   </div>
 
-  <h2>Hilfslinien</h2>
-  <p class="kurz">Erst ganz leicht mit Lineal vorzeichnen, alles in Zentimetern. Waagrecht gemessen von der Oberkante, senkrecht von der linken Kante.</p>
+  <h2>Wo die Felder hinkommen</h2>
+  <p class="kurz">Kreis-Mitten in Zentimetern, gemessen von der linken und der oberen Kante. Für die Kreise reicht ein Glas mit etwa 3,5 cm Boden zum Umfahren.</p>
   <div class="zwei">
-    <div class="karte"><h3>Waagrecht (von oben)</h3>
-      <table><thead><tr><th>bei</th><th>trennt</th></tr></thead><tbody>
-        <tr><td>5 cm</td><td>Titelzeile · Spaltenköpfe</td></tr>
-        <tr><td>9 cm</td><td>Spaltenköpfe · Bahn „Denken“ (kräftig)</td></tr>
-        <tr><td>14,5 cm</td><td>Denken · Körper</td></tr>
-        <tr><td>20 cm</td><td>Körper · Mit anderen</td></tr>
-        <tr><td>25,5 cm</td><td>Mit anderen · Firma</td></tr>
-        <tr><td>31 cm</td><td>Firma · Geschichte</td></tr>
-        <tr><td>36 cm</td><td>Geschichte · Tore (kräftig)</td></tr>
-      </tbody></table>
+    <div class="karte"><h3>Die drei Reihen</h3>
+      <div class="tab"><table><thead><tr><th>Reihe</th><th>Höhe</th><th>Richtung</th><th>Abschnitt</th></tr></thead><tbody>
+        <tr><td>1</td><td>10 cm</td><td>nach rechts →</td><td>bis 01.12.2026</td></tr>
+        <tr><td>2</td><td>21 cm</td><td>← nach links</td><td>Dez. 2026 – Mai 2027</td></tr>
+        <tr><td>3</td><td>32 cm</td><td>nach rechts →</td><td>ab Juni 2027</td></tr>
+      </tbody></table></div>
     </div>
-    <div class="karte"><h3>Senkrecht (von links)</h3>
-      <table><thead><tr><th>bei</th><th>trennt</th></tr></thead><tbody>
-        <tr><td>9 cm</td><td>Bahnnamen · Gegangen</td></tr>
-        <tr><td>19 cm</td><td>Gegangen · Ring 0 (kräftig)</td></tr>
-        <tr><td>29 cm</td><td>Ring 0 · Ring 1 (kräftig)</td></tr>
-        <tr><td>39 cm</td><td>Ring 1 · Ring 2</td></tr>
-        <tr><td>49 cm</td><td>Ring 2 · Horizont</td></tr>
-      </tbody></table>
-      <p class="kurz" style="margin:10px 0 0">Die Spalte Ring 0 (19–29 cm) rahmst du kräftig ein: Dort stehst du gerade.</p>
+    <div class="karte"><h3>Die sechs Spalten</h3>
+      <div class="tab"><table><thead><tr><th>Spalte</th><th>von links</th></tr></thead><tbody>
+        <tr><td>1</td><td>6 cm</td></tr><tr><td>2</td><td>15,6 cm</td></tr><tr><td>3</td><td>25,2 cm</td></tr>
+        <tr><td>4</td><td>34,8 cm</td></tr><tr><td>5</td><td>44,4 cm</td></tr><tr><td>6</td><td>54 cm</td></tr>
+      </tbody></table></div>
+      <p class="kurz" style="margin:10px 0 0">In Reihe 2 läuft der Weg zurück: Feld 7 liegt in Spalte 6, Feld 12 in Spalte 1.</p>
     </div>
   </div>
 
@@ -86,93 +81,96 @@ th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--grau
   <div class="zwei">
     <div class="karte"><h3>So gehst du vor</h3>
       <ol>
-        <li>Hilfslinien leicht vorzeichnen (Tabellen oben).</li>
-        <li>Die kräftigen Linien nachziehen und die Spalte Ring 0 einrahmen.</li>
-        <li>Titelzeile, dann Spaltenköpfe, dann die fünf Bahnnamen.</li>
-        <li>Die Felder Bahn für Bahn, von links nach rechts.</li>
-        <li>Zeichen setzen: ✓ hinter Gegangenes, Geplantes gestrichelt unterstreichen, ★ in den Horizont.</li>
-        <li>Unten die Tore. Dann den pinken Magneten auf „Test 01.11.“, den weißen auf „Tor 0“.</li>
-        <li>Hilfslinien mit einem trockenen Finger wegwischen, wo sie stören.</li>
+        <li>Die 18 Kreis-Mitten mit einem kleinen Punkt markieren (Tabellen oben).</li>
+        <li>Den Weg von Kreis zu Kreis ziehen: in jeder Reihe gerade, an den Enden ein Bogen nach unten.</li>
+        <li>Die Kreise umfahren. Gegangenes durchgezogen mit ✓, Geplantes gestrichelt, Tore als Bogen, das Ziel als Stern.</li>
+        <li>Die Namen unter die Kreise, dann am Reihenanfang den Abschnitt.</li>
+        <li>Oben den Titel. Den pinken Magneten auf Feld 5, den weißen auf Tor 0 (Feld 6).</li>
       </ol>
     </div>
     <div class="karte"><h3>Schriftgrößen</h3>
-      <table><thead><tr><th>was</th><th>Höhe</th></tr></thead><tbody>
-        <tr><td>Titelzeile</td><td>ca. 2,4 cm</td></tr>
-        <tr><td>Spaltenköpfe, Bahnnamen</td><td>ca. 1,4 cm</td></tr>
-        <tr><td>Daten unter den Köpfen</td><td>ca. 0,9 cm</td></tr>
-        <tr><td>Felder (höchstens 3 Zeilen)</td><td>ca. 1,1 cm</td></tr>
-        <tr><td>Tore</td><td>ca. 1,1 cm</td></tr>
-      </tbody></table>
-      <p class="kurz" style="margin:10px 0 0">Eine Zeile im Feld hat höchstens 13 Zeichen; dann passt sie in 10 cm.</p>
+      <div class="tab"><table><thead><tr><th>was</th><th>Höhe</th></tr></thead><tbody>
+        <tr><td>Titel</td><td>ca. 2,4 cm</td></tr>
+        <tr><td>Name unter dem Kreis (höchstens 2 Zeilen)</td><td>ca. 1,1 cm</td></tr>
+        <tr><td>Nummer im Kreis</td><td>ca. 1,4 cm</td></tr>
+        <tr><td>Abschnitt am Reihenanfang</td><td>ca. 0,9 cm</td></tr>
+      </tbody></table></div>
+      <p class="kurz" style="margin:10px 0 0">Eine Zeile unter dem Kreis hat höchstens 12 Zeichen; dann bleibt sie in ihrer Spalte.</p>
     </div>
   </div>
 
-  <h2>Wenn ein Zug geschafft ist</h2>
-  <p class="kurz">Setz ein ✓ dahinter und zieh Carl, den pinken Magneten, ein Feld weiter. Ist ein Tor offen, wandert der weiße Magnet zum nächsten. Die Langfassung jedes Feldes mit Quelle steht auf der Seite „Der Weg von bicycle“.</p>
+  <h2>Woher die Reihenfolge kommt</h2>
+  <p class="kurz">Bis zum Tor 1 steht sie so in deinen Dokumenten (Plan, Kompass, Grundkonstrukt, Schwachstellen-Liste). Ab Juni 2027 nennen sie nur, was kommt, nicht in welcher Folge. Die dritte Reihe ist darum ein Vorschlag: erst Geld und Team, dann die Box, dann 100 Stück an die Presse, dann der Film zum Start. Geteilte Welten, Bibliothek und die übrigen Felder stehen auf der Seite „Der Weg von bicycle“.</p>
 </div>
 
 <script>
 (function(){
   var NS='http://www.w3.org/2000/svg', S=document.getElementById('tafel');
   function el(n,a,p){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);(p||S).appendChild(e);return e;}
-  var KR='#f2efe6', KR2='#bdb8ad', MASS='#e8a94a', FONT='Caveat, "Comic Sans MS", cursive';
-  // Grund
+  var KR='#f2efe6', KR2='#bdb8ad', GOLD='#f3dc9b', MASS='#e8a94a', FONT='Caveat, "Comic Sans MS", cursive';
+  function txt(x,y,s,size,o){o=o||{};var t=el('text',{x:x,y:y,fill:o.c||KR,'font-family':FONT,'font-weight':700,'font-size':size,'text-anchor':o.a||'middle'},o.p);t.textContent=s;return t;}
   el('rect',{x:0,y:0,width:600,height:400,fill:'#141414'});
-  // Spalten (mm) und Zeilen (mm)
-  var X=[0,90,190,290,390,490,600], Y=[0,50,90,145,200,255,310,360,400];
-  // Hilfslinien
-  var gL=el('g',{id:'linien',stroke:KR2,'stroke-width':0.8,opacity:.55});
-  [90,145,200,255,310].forEach(function(y){el('line',{x1:0,x2:600,y1:y,y2:y},gL);});
-  [90,390,490].forEach(function(x){el('line',{x1:x,x2:x,y1:50,y2:400},gL);});
-  // Kräftige Linien
-  var gK=el('g',{stroke:KR,'stroke-width':2.2,'stroke-linecap':'round'});
-  el('line',{x1:8,x2:592,y1:90,y2:90},gK); el('line',{x1:8,x2:592,y1:360,y2:360},gK);
-  el('line',{x1:190,x2:190,y1:56,y2:394},gK); el('line',{x1:290,x2:290,y1:56,y2:394},gK);
-  // Ring-0-Rahmen
-  el('rect',{x:193,y:58,width:94,height:333,fill:'none',stroke:KR,'stroke-width':1.6,'stroke-dasharray':'none',rx:4,opacity:.9});
-  function txt(x,y,s,size,o){o=o||{};var t=el('text',{x:x,y:y,fill:o.c||KR,'font-family':FONT,'font-weight':700,'font-size':size,'text-anchor':o.a||'start'},o.p);t.textContent=s;return t;}
-  // Titel
-  txt(10,33,'bicycle · nach den Umwegen',24);
-  txt(590,33,'ein Fahrrad für jeden Geist ★',14,{a:'end',c:KR2});
-  // Spaltenköpfe
-  var K=[['Gegangen','bis Okt. 26'],['Ring 0 jetzt','bis 01.12.'],['Ring 1','Dez – Mai 27'],['Ring 2','ab Juni 27'],['Horizont ★','danach']];
-  K.forEach(function(k,i){var x=X[i+1]+8;txt(x,72,k[0],14);txt(x,84,k[1],9.5,{c:KR2});});
-  // Bahnen
-  var B=['Denken','Körper','Mit anderen','Firma','Geschichte'];
-  B.forEach(function(b,i){txt(8,Y[i+2]+22,b,14);});
-  // Felder: [Text, art]  art: g = gegangen ✓, p = geplant (gestrichelt), j = jetzt, h = Horizont
-  var F=[
-    [[['Idee 2023','g'],['Mac-Kern','g'],['Carl HQ','g']],[['Test 01.11.','j'],['s15: Rad','j']],[['Mac-App','p'],['Umzug-Knopf','p']],[['Bleib dran','p']],[['Eingabe','h'],['verschwindet','h']]],
-    [[['Mac+iPhone','g'],['Browser','g']],[],[['Funke-Objekt','p'],['WhatsApp','p'],['VR-Raum','p']],[['Carl-Box','p'],['Brillen','p']],[['ohne Maus','h'],['& Tastatur','h']]],
-    [[['Teleskop','g']],[['erste Tester','j']],[['Apple-Türen','p'],['Wissensregal','p']],[['Geteilte','p'],['Welten','p'],['Bibliothek','p']],[['gemeinsames','h'],['Teleskop','h']]],
-    [[['Hackathon','g'],['Kosten 12 M','g']],[['Förderantrag','p']],[['gründen ?','p']],[['Pre-Seed','p'],['100 Geräte','p'],['faires Abo','p']],[['Europa,','h'],['lokal, deins','h']]],
-    [[['Carl bleibt','g'],['Drehbuch','g']],[],[['Website','p']],[['Der Film','p']],[['Menschen','h'],['erzählen','h']]]
-  ];
-  F.forEach(function(reihe,r){
-    reihe.forEach(function(zelle,c){
-      var x=X[c+1]+8, y0=Y[r+2]+15;
-      zelle.forEach(function(z,i){
-        var y=y0+i*14, s=z[0]+(z[1]==='g'?' ✓':'');
-        var t=txt(x,y,s,11.5,{c:z[1]==='h'?'#f3dc9b':KR});
-        if(z[1]==='p'){var w=Math.min(84,s.length*5.6);el('line',{x1:x,x2:x+w,y1:y+2.5,y2:y+2.5,stroke:KR2,'stroke-width':1,'stroke-dasharray':'3.5 3'});}
-      });
-    });
-  });
-  // Tore
-  txt(8,377,'✓ gegangen',9.5,{c:KR2}); txt(8,390,'– – geplant',9.5,{c:KR2});
-  txt(198,383,'Tor 0 · 3 staunen',11.5); txt(298,383,'Tor 1 · 40 von 100',11.5); txt(398,383,'Tor 2 · Umsatz',11.5); txt(498,383,'★ Horizont',10,{c:KR2});
-  // Magnete
-  var mg=el('g',{});
-  el('circle',{cx:276,cy:104,r:7,fill:'#e94b9b',stroke:'#00000055','stroke-width':1},mg); el('circle',{cx:273.5,cy:101.5,r:2,fill:'#ffffff88'},mg);
-  el('circle',{cx:276,cy:378,r:7,fill:'#eceae4',stroke:'#00000055','stroke-width':1},mg); el('circle',{cx:273.5,cy:375.5,r:2,fill:'#ffffffcc'},mg);
-  // Maße
-  var gM=el('g',{id:'masse',fill:MASS,'font-family':'Figtree, system-ui, sans-serif','font-size':8,'font-weight':600});
-  [50,90,145,200,255,310,360].forEach(function(y){var t=el('text',{x:597,y:y-2,'text-anchor':'end'},gM);t.textContent=(y/10).toString().replace('.',',')+' cm';});
-  [90,190,290,390,490].forEach(function(x){var t=el('text',{x:x+2,y:397},gM);t.textContent=(x/10)+' cm';});
 
-  function schalter(id,ziel){var b=document.getElementById(id),z=document.getElementById(ziel);
-    try{var v=localStorage.getItem('kp-'+id);if(v==='0'){b.setAttribute('aria-pressed','false');z.style.display='none';}}catch(e){}
-    b.addEventListener('click',function(){var an=b.getAttribute('aria-pressed')!=='true';b.setAttribute('aria-pressed',an?'true':'false');z.style.display=an?'':'none';try{localStorage.setItem('kp-'+id,an?'1':'0');}catch(e){}});}
-  schalter('b-mass','masse'); schalter('b-linien','linien');
+  var XS=[60,156,252,348,444,540], YS=[100,210,320], R=17;
+  // art: g gegangen · j jetzt · p geplant · t Tor · z Ziel
+  var FELD=[
+    ['g','Idee 2023'],['g','Mac-Kern'],['g','Hackathon'],['g','Carl HQ'],['j','Test','01.11.'],['t','Tor 0','01.12.'],
+    ['p','Förderantrag','→ gründen'],['p','Funke-','Objekt'],['p','Mac-App','+ Umzug'],['p','WhatsApp'],['p','VR-Raum'],['t','Tor 1','40 von 100'],
+    ['p','Pre-Seed','+ Team'],['p','Carl-Box'],['p','100 Stück','an die Presse'],['p','Der Film','zum Start'],['t','Tor 2','Umsatz'],['z','ohne Maus','& Tastatur']
+  ];
+  function pos(i){var r=Math.floor(i/6), c=i%6; if(r===1) c=5-c; return {x:XS[c], y:YS[r], r:r};}
+
+  // Titel
+  txt(12,38,'bicycle · der Weg nach den Umwegen',24,{a:'start'});
+  txt(588,38,'ein Feld nach dem anderen',13,{a:'end',c:KR2});
+
+  // Weg
+  var d='M'+(XS[0]-R-18)+' '+YS[0];
+  for(var i=0;i<18;i++){var p=pos(i); d+=' L'+p.x+' '+p.y;
+    if(i===5) d+=' C'+(p.x+52)+' '+p.y+' '+(p.x+52)+' '+YS[1]+' '+p.x+' '+YS[1];
+    if(i===11) d+=' C'+(p.x-52)+' '+p.y+' '+(p.x-52)+' '+YS[2]+' '+p.x+' '+YS[2];}
+  el('path',{d:d,fill:'none',stroke:KR2,'stroke-width':2,'stroke-linecap':'round','stroke-linejoin':'round',opacity:.85});
+  txt(XS[0]-R-22,YS[0]-6,'Start',10,{a:'end',c:KR2});
+
+  // Abschnitte am Reihenanfang
+  txt(14,YS[0]-30,'bis 01.12.2026',10,{a:'start',c:KR2});
+  txt(528,YS[1]-30,'Dez. 26 – Mai 27',10,{a:'end',c:KR2});
+  txt(46,YS[2]-30,'ab Juni 2027',10,{a:'start',c:KR2});
+
+  FELD.forEach(function(f,i){
+    var p=pos(i), art=f[0], g=el('g',{});
+    if(art==='t'){
+      el('path',{d:'M'+(p.x-R)+' '+(p.y+R)+' V'+(p.y-4)+' Q'+p.x+' '+(p.y-R-14)+' '+(p.x+R)+' '+(p.y-4)+' V'+(p.y+R),fill:'#141414',stroke:KR,'stroke-width':2.4,'stroke-dasharray':i===5?'none':'5 4'},g);
+      txt(p.x,p.y+6,f[1],12.5,{p:g});
+    } else if(art==='z'){
+      el('circle',{cx:p.x,cy:p.y,r:R,fill:'#141414',stroke:GOLD,'stroke-width':2,'stroke-dasharray':'5 4'},g);
+      txt(p.x,p.y+9,'★',26,{c:GOLD,p:g});
+    } else {
+      el('circle',{cx:p.x,cy:p.y,r:R,fill:'#141414',stroke:KR,'stroke-width':art==='p'?1.8:2.2,'stroke-dasharray':art==='p'?'5 4':'none'},g);
+      if(art==='j') el('circle',{cx:p.x,cy:p.y,r:R+5,fill:'none',stroke:KR,'stroke-width':1.6},g);
+      txt(p.x,p.y+5,art==='g'?'✓':String(i+1),art==='g'?16:14,{p:g});
+    }
+    var c=art==='z'?GOLD:KR;
+    if(art!=='t') txt(p.x,p.y+R+(art==='j'?20:14),f[1],11.5,{c:c,p:g});
+    var unten=art==='t'?f[2]:f[2];
+    if(unten) txt(p.x,p.y+R+(art==='t'?14:(art==='j'?33:27)),unten,art==='t'?11.5:10.5,{c:art==='z'?GOLD:(art==='t'?KR:KR2),p:g});
+  });
+
+  // Magnete: Carl auf Feld 5, der weiße auf Tor 0
+  var p5=pos(4), p6=pos(5);
+  el('circle',{cx:p5.x+20,cy:p5.y-20,r:7,fill:'#e94b9b',stroke:'#00000066','stroke-width':1});
+  el('circle',{cx:p5.x+17.5,cy:p5.y-22.5,r:2,fill:'#ffffff88'});
+  el('circle',{cx:p6.x+20,cy:p6.y-22,r:7,fill:'#eceae4',stroke:'#00000066','stroke-width':1});
+  el('circle',{cx:p6.x+17.5,cy:p6.y-24.5,r:2,fill:'#ffffffcc'});
+
+  // Maße
+  var gM=el('g',{id:'masse',fill:MASS,stroke:'none','font-family':'Figtree, system-ui, sans-serif','font-size':8,'font-weight':600});
+  XS.forEach(function(x){var t=el('text',{x:x,y:396,'text-anchor':'middle'},gM);t.textContent=(x/10).toString().replace('.',',')+' cm';
+    el('line',{x1:x,x2:x,y1:386,y2:380,stroke:MASS,'stroke-width':1},gM);});
+  YS.forEach(function(y){var t=el('text',{x:597,y:y+3,'text-anchor':'end'},gM);t.textContent=(y/10)+' cm';});
+
+  var b=document.getElementById('b-mass'), z=document.getElementById('masse');
+  try{if(localStorage.getItem('kp-mass')==='0'){b.setAttribute('aria-pressed','false');z.style.display='none';}}catch(e){}
+  b.addEventListener('click',function(){var an=b.getAttribute('aria-pressed')!=='true';b.setAttribute('aria-pressed',an?'true':'false');z.style.display=an?'':'none';try{localStorage.setItem('kp-mass',an?'1':'0');}catch(e){}});
 })();
 </script>
